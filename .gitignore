@@ -1,6 +1,14 @@
 assets/*
 !assets/.gitignore
+!assets/js/
+!assets/css/
+!assets/fonts/
+!assets/images/
+!assets/font-awesome/
+!assets/avatars/
+!assets/bootstrap/
 protected/runtime/*
 !protected/runtime/.gitignore
 protected/data/*.db
 themes/classic/views/
+/nbproject/private/
