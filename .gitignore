@@ -12,3 +12,5 @@ protected/runtime/*
 protected/data/*.db
 themes/classic/views/
 /nbproject/private/
+/nbproject/project.properties
+/nbproject/project.xml
