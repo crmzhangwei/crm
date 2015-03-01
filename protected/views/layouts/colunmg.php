@@ -424,431 +424,137 @@
                                 <i class="menu-icon fa fa-tachometer"></i>
                                 <span class="menu-text"> Dashboard </span>
                             </a>
-
                             <b class="arrow"></b>
                         </li>
 
-                        <li class="">
+
+                        
+                        <li class="hsub">
                             <a href="#" class="dropdown-toggle">
-                                <i class="menu-icon fa fa-desktop"></i>
-                                <span class="menu-text"> UI &amp; Elements </span>
+                                <i class="menu-icon fa fa-group"></i>
+                                <span class="menu-text"> 客户管理 </span>
 
                                 <b class="arrow fa fa-angle-down"></b>
                             </a>
 
                             <b class="arrow"></b>
+                            <?php $this->widget('zii.widgets.CMenu',array(
+                                'items'=>array(
+                                    array('label'=>'查询分配', 'url'=>array('/site/index')),
+                                    array('label'=>'客户资源分配', 'url'=>array('/site/page', 'view'=>'about')),
+                                    array('label'=>'公海资源', 'url'=>array('/site/contact')),
+                                    ),
+                                'htmlOptions'=>array('class'=>'submenu nav-hide'),
+                            )); ?>                      
+                        </li>                       
 
-                            <ul class="submenu">
-                                <li class="">
-                                    <a href="#" class="dropdown-toggle">
-                                        <i class="menu-icon fa fa-caret-right"></i>
 
-                                        Layouts
-                                        <b class="arrow fa fa-angle-down"></b>
-                                    </a>
-
-                                    <b class="arrow"></b>
-
-                                    <ul class="submenu">
-                                        <li class="">
-                                            <a href="top-menu.html">
-                                                <i class="menu-icon fa fa-caret-right"></i>
-                                                Top Menu
-                                            </a>
-
-                                            <b class="arrow"></b>
-                                        </li>
-
-                                        <li class="">
-                                            <a href="mobile-menu-1.html">
-                                                <i class="menu-icon fa fa-caret-right"></i>
-                                                Default Mobile Menu
-                                            </a>
-
-                                            <b class="arrow"></b>
-                                        </li>
-
-                                        <li class="">
-                                            <a href="mobile-menu-2.html">
-                                                <i class="menu-icon fa fa-caret-right"></i>
-                                                Mobile Menu 2
-                                            </a>
-
-                                            <b class="arrow"></b>
-                                        </li>
-
-                                        <li class="">
-                                            <a href="mobile-menu-3.html">
-                                                <i class="menu-icon fa fa-caret-right"></i>
-                                                Mobile Menu 3
-                                            </a>
-
-                                            <b class="arrow"></b>
-                                        </li>
-                                    </ul>
-                                </li>
-
-                                <li class="">
-                                    <a href="typography.html">
-                                        <i class="menu-icon fa fa-caret-right"></i>
-                                        Typography
-                                    </a>
-
-                                    <b class="arrow"></b>
-                                </li>
-
-                                <li class="">
-                                    <a href="elements.html">
-                                        <i class="menu-icon fa fa-caret-right"></i>
-                                        Elements
-                                    </a>
-
-                                    <b class="arrow"></b>
-                                </li>
-
-                                <li class="">
-                                    <a href="buttons.html">
-                                        <i class="menu-icon fa fa-caret-right"></i>
-                                        Buttons &amp; Icons
-                                    </a>
-
-                                    <b class="arrow"></b>
-                                </li>
-
-                                <li class="">
-                                    <a href="treeview.html">
-                                        <i class="menu-icon fa fa-caret-right"></i>
-                                        Treeview
-                                    </a>
-
-                                    <b class="arrow"></b>
-                                </li>
-
-                                <li class="">
-                                    <a href="jquery-ui.html">
-                                        <i class="menu-icon fa fa-caret-right"></i>
-                                        jQuery UI
-                                    </a>
-
-                                    <b class="arrow"></b>
-                                </li>
-
-                                <li class="">
-                                    <a href="nestable-list.html">
-                                        <i class="menu-icon fa fa-caret-right"></i>
-                                        Nestable Lists
-                                    </a>
-
-                                    <b class="arrow"></b>
-                                </li>
-
-                                <li class="">
-                                    <a href="#" class="dropdown-toggle">
-                                        <i class="menu-icon fa fa-caret-right"></i>
-
-                                        Three Level Menu
-                                        <b class="arrow fa fa-angle-down"></b>
-                                    </a>
-
-                                    <b class="arrow"></b>
-
-                                    <ul class="submenu">
-                                        <li class="">
-                                            <a href="#">
-                                                <i class="menu-icon fa fa-leaf green"></i>
-                                                Item #1
-                                            </a>
-
-                                            <b class="arrow"></b>
-                                        </li>
-
-                                        <li class="">
-                                            <a href="#" class="dropdown-toggle">
-                                                <i class="menu-icon fa fa-pencil orange"></i>
-
-                                                4th level
-                                                <b class="arrow fa fa-angle-down"></b>
-                                            </a>
-
-                                            <b class="arrow"></b>
-
-                                            <ul class="submenu">
-                                                <li class="">
-                                                    <a href="#">
-                                                        <i class="menu-icon fa fa-plus purple"></i>
-                                                        Add Product
-                                                    </a>
-
-                                                    <b class="arrow"></b>
-                                                </li>
-
-                                                <li class="">
-                                                    <a href="#">
-                                                        <i class="menu-icon fa fa-eye pink"></i>
-                                                        View Products
-                                                    </a>
-
-                                                    <b class="arrow"></b>
-                                                </li>
-                                            </ul>
-                                        </li>
-                                    </ul>
-                                </li>
-                            </ul>
-                        </li>
-
-                        <li class="">
+                        <li class="hsub">
                             <a href="#" class="dropdown-toggle">
-                                <i class="menu-icon fa fa-list"></i>
-                                <span class="menu-text"> Tables </span>
-
+                                <i class="menu-icon fa fa-stack-exchange"></i>
+                                <span class="menu-text"> 机会管理 </span>
                                 <b class="arrow fa fa-angle-down"></b>
                             </a>
 
                             <b class="arrow"></b>
-
-                            <ul class="submenu">
-                                <li class="">
-                                    <a href="tables.html">
-                                        <i class="menu-icon fa fa-caret-right"></i>
-                                        Simple &amp; Dynamic
-                                    </a>
-
-                                    <b class="arrow"></b>
-                                </li>
-
-                                <li class="">
-                                    <a href="jqgrid.html">
-                                        <i class="menu-icon fa fa-caret-right"></i>
-                                        jqGrid plugin
-                                    </a>
-
-                                    <b class="arrow"></b>
-                                </li>
-                            </ul>
+                            <?php $this->widget('zii.widgets.CMenu',array(
+                                'items'=>array(
+                                    array('label'=>'安排联系机会', 'url'=>array('/site/index')),
+                                    array('label'=>'我的机会', 'url'=>array('/site/page', 'view'=>'about')),
+                                    array('label'=>'未联系机会', 'url'=>array('/site/contact')),
+                                    ),
+                                'htmlOptions'=>array('class'=>'submenu nav-hide'),
+                            )); ?>                      
                         </li>
 
-                        <li class="">
-                            <a href="#" class="dropdown-toggle">
-                                <i class="menu-icon fa fa-pencil-square-o"></i>
-                                <span class="menu-text"> Forms </span>
 
+                        <li class="hsub">
+                            <a href="#" class="dropdown-toggle">
+                                <i class="menu-icon fa fa-table"></i>
+                                <span class="menu-text"> 报表分析 </span>
                                 <b class="arrow fa fa-angle-down"></b>
                             </a>
 
                             <b class="arrow"></b>
-
-                            <ul class="submenu">
-                                <li class="">
-                                    <a href="form-elements.html">
-                                        <i class="menu-icon fa fa-caret-right"></i>
-                                        Form Elements
-                                    </a>
-
-                                    <b class="arrow"></b>
-                                </li>
-
-                                <li class="">
-                                    <a href="form-wizard.html">
-                                        <i class="menu-icon fa fa-caret-right"></i>
-                                        Wizard &amp; Validation
-                                    </a>
-
-                                    <b class="arrow"></b>
-                                </li>
-
-                                <li class="">
-                                    <a href="wysiwyg.html">
-                                        <i class="menu-icon fa fa-caret-right"></i>
-                                        Wysiwyg &amp; Markdown
-                                    </a>
-
-                                    <b class="arrow"></b>
-                                </li>
-
-                                <li class="">
-                                    <a href="dropzone.html">
-                                        <i class="menu-icon fa fa-caret-right"></i>
-                                        Dropzone File Upload
-                                    </a>
-
-                                    <b class="arrow"></b>
-                                </li>
-                            </ul>
+                            <?php $this->widget('zii.widgets.CMenu',array(
+                                'items'=>array(
+                                    array('label'=>'业绩报表', 'url'=>array('/site/index')),
+                                    array('label'=>'联系量统计', 'url'=>array('/site/page', 'view'=>'about')),
+                                    array('label'=>'话务员工作统计', 'url'=>array('/site/contact')),
+                                    array('label'=>'安排时间分布', 'url'=>array('/site/contact')),
+                                    array('label'=>'开3, 4类跟踪分析', 'url'=>array('/site/contact')),
+                                    array('label'=>'新分资源跟踪分析', 'url'=>array('/site/contact')),
+                                    array('label'=>'成交师开14，15，17类跟踪分析', 'url'=>array('/site/contact')),
+                                    array('label'=>'资源录入统计', 'url'=>array('/site/contact')),
+                                    array('label'=>'售后-联系量统计', 'url'=>array('/site/contact')),
+                                    array('label'=>'售后-新分资源跟踪分析', 'url'=>array('/site/contact')),
+                                    array('label'=>'售后-续费会员分析', 'url'=>array('/site/contact')),
+                                    ),
+                                'htmlOptions'=>array('class'=>'submenu nav-hide'),
+                            )); ?>                      
                         </li>
 
-                        <li class="">
-                            <a href="widgets.html">
+
+                        <li class="hsub">
+                            <a href="#" class="dropdown-toggle">
+                                <i class="menu-icon fa fa-key"></i>
+                                <span class="menu-text"> 权限管理 </span>
+                                <b class="arrow fa fa-angle-down"></b>
+                            </a>
+
+                            <b class="arrow"></b>
+                            <?php $this->widget('zii.widgets.CMenu',array(
+                                'items'=>array(
+                                    array('label'=>'用户管理', 'url'=>array('/site/index')),
+                                    array('label'=>'部门管理', 'url'=>array('/site/page', 'view'=>'about')),
+                                    array('label'=>'组别管理', 'url'=>array('/site/contact')),
+                                    array('label'=>'部门组别管理', 'url'=>array('/site/contact')),
+                                    array('label'=>'菜单资源管理', 'url'=>array('/site/contact')),
+                                    array('label'=>'角色管理', 'url'=>array('/site/contact')),
+                                    array('label'=>'权限配置', 'url'=>array('/site/contact')),
+                                    ),
+                                'htmlOptions'=>array('class'=>'submenu nav-hide'),
+                            )); ?>                      
+                        </li>
+                        
+
+                        <li class="hsub">
+                            <a href="#" class="dropdown-toggle">
                                 <i class="menu-icon fa fa-list-alt"></i>
-                                <span class="menu-text"> Widgets </span>
-                            </a>
-
-                            <b class="arrow"></b>
-                        </li>
-
-                        <li class="">
-                            <a href="calendar.html">
-                                <i class="menu-icon fa fa-calendar"></i>
-
-                                <span class="menu-text">
-                                    Calendar
-
-                                    <span class="badge badge-transparent tooltip-error" title="2 Important Events">
-                                        <i class="ace-icon fa fa-exclamation-triangle red bigger-130"></i>
-                                    </span>
-                                </span>
-                            </a>
-
-                            <b class="arrow"></b>
-                        </li>
-
-                        <li class="">
-                            <a href="gallery.html">
-                                <i class="menu-icon fa fa-picture-o"></i>
-                                <span class="menu-text"> Gallery </span>
-                            </a>
-
-                            <b class="arrow"></b>
-                        </li>
-
-                        <li class="">
-                            <a href="#" class="dropdown-toggle">
-                                <i class="menu-icon fa fa-tag"></i>
-                                <span class="menu-text"> More Pages </span>
-
+                                <span class="menu-text"> 财务数据 </span>
                                 <b class="arrow fa fa-angle-down"></b>
                             </a>
 
                             <b class="arrow"></b>
-
-                            <ul class="submenu">
-                                <li class="">
-                                    <a href="profile.html">
-                                        <i class="menu-icon fa fa-caret-right"></i>
-                                        User Profile
-                                    </a>
-
-                                    <b class="arrow"></b>
-                                </li>
-
-                                <li class="">
-                                    <a href="inbox.html">
-                                        <i class="menu-icon fa fa-caret-right"></i>
-                                        Inbox
-                                    </a>
-
-                                    <b class="arrow"></b>
-                                </li>
-
-                                <li class="">
-                                    <a href="pricing.html">
-                                        <i class="menu-icon fa fa-caret-right"></i>
-                                        Pricing Tables
-                                    </a>
-
-                                    <b class="arrow"></b>
-                                </li>
-
-                                <li class="">
-                                    <a href="invoice.html">
-                                        <i class="menu-icon fa fa-caret-right"></i>
-                                        Invoice
-                                    </a>
-
-                                    <b class="arrow"></b>
-                                </li>
-
-                                <li class="">
-                                    <a href="timeline.html">
-                                        <i class="menu-icon fa fa-caret-right"></i>
-                                        Timeline
-                                    </a>
-
-                                    <b class="arrow"></b>
-                                </li>
-
-                                <li class="">
-                                    <a href="email.html">
-                                        <i class="menu-icon fa fa-caret-right"></i>
-                                        Email Templates
-                                    </a>
-
-                                    <b class="arrow"></b>
-                                </li>
-
-                                <li class="">
-                                    <a href="login.html">
-                                        <i class="menu-icon fa fa-caret-right"></i>
-                                        Login &amp; Register
-                                    </a>
-
-                                    <b class="arrow"></b>
-                                </li>
-                            </ul>
+                            <?php $this->widget('zii.widgets.CMenu',array(
+                                'items'=>array(
+                                    array('label'=>'财务数据录入', 'url'=>array('/site/index')),
+                                    array('label'=>'财务数据查询', 'url'=>array('/site/page', 'view'=>'about')),
+                                    ),
+                                'htmlOptions'=>array('class'=>'submenu nav-hide'),
+                            )); ?>                      
                         </li>
 
-                        <li class="">
+
+                        <li class="hsub">
                             <a href="#" class="dropdown-toggle">
-                                <i class="menu-icon fa fa-file-o"></i>
-
-                                <span class="menu-text">
-                                    Other Pages
-
-                                    <span class="badge badge-primary">5</span>
-                                </span>
-
+                                <i class="menu-icon fa fa-user-md"></i>
+                                <span class="menu-text"> 售后管理 </span>
                                 <b class="arrow fa fa-angle-down"></b>
                             </a>
 
                             <b class="arrow"></b>
-
-                            <ul class="submenu">
-                                <li class="">
-                                    <a href="faq.html">
-                                        <i class="menu-icon fa fa-caret-right"></i>
-                                        FAQ
-                                    </a>
-
-                                    <b class="arrow"></b>
-                                </li>
-
-                                <li class="">
-                                    <a href="error-404.html">
-                                        <i class="menu-icon fa fa-caret-right"></i>
-                                        Error 404
-                                    </a>
-
-                                    <b class="arrow"></b>
-                                </li>
-
-                                <li class="">
-                                    <a href="error-500.html">
-                                        <i class="menu-icon fa fa-caret-right"></i>
-                                        Error 500
-                                    </a>
-
-                                    <b class="arrow"></b>
-                                </li>
-
-                                <li class="">
-                                    <a href="grid.html">
-                                        <i class="menu-icon fa fa-caret-right"></i>
-                                        Grid
-                                    </a>
-
-                                    <b class="arrow"></b>
-                                </li>
-
-                                <li class="">
-                                    <a href="blank.html">
-                                        <i class="menu-icon fa fa-caret-right"></i>
-                                        Blank Page
-                                    </a>
-
-                                    <b class="arrow"></b>
-                                </li>
-                            </ul>
+                            <?php $this->widget('zii.widgets.CMenu',array(
+                                'items'=>array(
+                                    array('label'=>'新分客户', 'url'=>array('/site/index')),
+                                    array('label'=>'今日联系', 'url'=>array('/site/page', 'view'=>'about')),
+                                    array('label'=>'遗留数据', 'url'=>array('/site/page', 'view'=>'about')),
+                                    array('label'=>'查询分配', 'url'=>array('/site/page', 'view'=>'about')),
+                                    ),
+                                'htmlOptions'=>array('class'=>'submenu nav-hide'),
+                            )); ?>                      
                         </li>
+
                     </ul><!-- /.nav-list -->
 
                     <div class="sidebar-toggle sidebar-collapse" id="sidebar-collapse">
