@@ -23,4 +23,15 @@ class Gcontroller extends CController
 	 * for more details on how to specify this property.
 	 */
 	public $breadcrumbs=array();
+      
+        /**
+	 * @return array action filters
+	 */
+        public function __construct($id, $module = null) {
+            if(Yii::app()->user->isGuest)
+            {
+                $this->redirect(Yii::app()->user->loginUrl);
+            }
+            parent::__construct($id, $module);
+        }
 }

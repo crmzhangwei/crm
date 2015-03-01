@@ -95,8 +95,8 @@ $this->breadcrumbs=array(
 
 													<label class="block clearfix">
 														<span class="block input-icon input-icon-right">
-                                                                                                                        <?php echo $form->passwordField($model,'password',array('class'=>'form-control','placeholder'=>'Password')); ?>
-                                                                                                                        <?php echo $form->error($model,'password'); ?>
+                                                                                                                        <?php echo $form->passwordField($model,'pass',array('class'=>'form-control','placeholder'=>'Password')); ?>
+                                                                                                                        <?php echo $form->error($model,'pass'); ?>
 															<i class="ace-icon fa fa-lock"></i>
 														</span>
 													</label>

@@ -8,8 +8,9 @@
 class LoginForm extends CFormModel
 {
 	public $username;
-	public $password;
+	public $pass;
 	public $rememberMe;
+        public $login_time;
 
 	private $_identity;
 
@@ -22,11 +23,11 @@ class LoginForm extends CFormModel
 	{
 		return array(
 			// username and password are required
-			array('username, password', 'required','message'=>'请输入用户名和密码'),
+			array('username, pass', 'required','message'=>'请输入用户名和密码'),
 			// rememberMe needs to be a boolean
 			array('rememberMe', 'boolean'),
 			// password needs to be authenticated
-			array('password', 'authenticate','message'=>'账号或密码不正确'),
+			array('pass', 'authenticate','message'=>'账号或密码不正确'),
 		);
 	}
 
@@ -48,9 +49,9 @@ class LoginForm extends CFormModel
 	{
 		if(!$this->hasErrors())
 		{
-			$this->_identity=new UserIdentity($this->username,$this->password);
+			$this->_identity=new UserIdentity($this->username,$this->pass);
 			if(!$this->_identity->authenticate())
-				$this->addError('password','账号或密码不正确');
+				$this->addError('pass','账号或密码不正确');
 		}
 	}
 
@@ -62,7 +63,7 @@ class LoginForm extends CFormModel
 	{
 		if($this->_identity===null)
 		{
-			$this->_identity=new UserIdentity($this->username,$this->password);
+			$this->_identity=new UserIdentity($this->username,$this->pass);
 			$this->_identity->authenticate();
 		}
 		if($this->_identity->errorCode===UserIdentity::ERROR_NONE)

@@ -15,6 +15,7 @@ return array(
 	'import'=>array(
 		'application.models.*',
 		'application.components.*',
+                'application.modules.User.models.*',
 	),
         'defaultController'=>'default',
 	'modules'=>array(

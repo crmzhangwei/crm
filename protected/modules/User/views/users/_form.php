@@ -30,6 +30,12 @@
 		<?php echo $form->passwordField($model,'pass',array('size'=>50,'maxlength'=>50)); ?>
 		<?php echo $form->error($model,'pass'); ?>
 	</div>
+        
+        <div class="row">
+		<?php echo $form->labelEx($model,'pass_repeat'); ?>
+		<?php echo $form->passwordField($model,'pass_repeat',array('size'=>50,'maxlength'=>50)); ?>
+		<?php echo $form->error($model,'pass_repeat'); ?>
+	</div>
 
 	<div class="row">
 		<?php echo $form->labelEx($model,'name'); ?>
