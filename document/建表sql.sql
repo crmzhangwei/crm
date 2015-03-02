@@ -1,4 +1,4 @@
- CREATE TABLE `c_users` (
+CREATE TABLE `c_users` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键',
   `eno` varchar(10) NOT NULL DEFAULT '' COMMENT '工号',
   `pass` varchar(50) NOT NULL COMMENT '密码',
@@ -12,8 +12,12 @@
   `group` mediumint(5) DEFAULT NULL COMMENT '组别',
   `ismaster` tinyint(1) DEFAULT NULL COMMENT '是否精英',
   `status` tinyint(2) DEFAULT NULL COMMENT '状态',
+  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  ` login_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '最后登录时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+
+
 
 CREATE TABLE `c_group_info` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键',
