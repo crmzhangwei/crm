@@ -7,20 +7,20 @@
 // CWebApplication properties can be configured here.
 return array(
 	'basePath'=>dirname(__FILE__).DIRECTORY_SEPARATOR.'..',
-	'name'=>'My Web Application',
-
+	'name'=>'crm',
 	// preloading 'log' component
 	'preload'=>array('log'),
-
+        'language'=>'zh_cn',
 	// autoloading model and component classes
 	'import'=>array(
 		'application.models.*',
 		'application.components.*',
+                'application.modules.User.models.*',
 	),
-
+        'defaultController'=>'default',
 	'modules'=>array(
 		// uncomment the following to enable the Gii tool
-		
+		'User',
 		'gii'=>array(
 			'class'=>'system.gii.GiiModule',
 			'password'=>false,
