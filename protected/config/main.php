@@ -16,8 +16,8 @@ return array(
 		'application.models.*',
 		'application.components.*',
                 'application.modules.User.models.*',
-	),
-        'defaultController'=>'default',
+        ),
+        'defaultController'=>'User/users/index',
 	'modules'=>array(
 		// uncomment the following to enable the Gii tool
 		'User',
