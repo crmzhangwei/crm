@@ -121,7 +121,7 @@ class UsersController extends GController
 	 * Lists all models.
 	 */
 	public function actionIndex()
-	{
+	{       
 		$dataProvider=new CActiveDataProvider('Users');
 		$this->render('index',array(
 			'dataProvider'=>$dataProvider,
