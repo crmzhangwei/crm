@@ -16,8 +16,8 @@ return array(
 		'application.models.*',
 		'application.components.*',
                 'application.modules.User.models.*',
-	),
-        'defaultController'=>'default',
+        ),
+        'defaultController'=>'User/users/index',
 	'modules'=>array(
 		// uncomment the following to enable the Gii tool
 		'User',
@@ -55,7 +55,7 @@ return array(
 
 		'errorHandler'=>array(
 			// use 'site/error' action to display errors
-			'errorAction'=>'site/error',
+			//'errorAction'=>'site/error',
 		),
 
 		'log'=>array(
@@ -66,11 +66,11 @@ return array(
 					'levels'=>'error, warning',
 				),
 				// uncomment the following to show log messages on web pages
-				/*
+				
 				array(
 					'class'=>'CWebLogRoute',
 				),
-				*/
+				
 			),
 		),
 
