@@ -533,8 +533,8 @@
                             <b class="arrow"></b>
                             <?php $this->widget('zii.widgets.CMenu',array(
                                 'items'=>array(
-                                    array('label'=>'财务数据录入', 'url'=>array('/site/index')),
-                                    array('label'=>'财务数据查询', 'url'=>array('/site/page', 'view'=>'about')),
+                                    array('label'=>'财务数据录入', 'url'=>array('/Finance/finance/create')),
+                                    array('label'=>'财务数据查询', 'url'=>array('/Finance/finance/index')),
                                     ),
                                 'htmlOptions'=>array('class'=>'submenu nav-hide'),
                             )); ?>                      
