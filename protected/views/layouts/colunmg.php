@@ -440,7 +440,7 @@
                             <b class="arrow"></b>
                             <?php $this->widget('zii.widgets.CMenu',array(
                                 'items'=>array(
-                                    array('label'=>'查询分配', 'url'=>array('/site/index')),
+                                    array('label'=>'查询分配', 'url'=>array('/Customer/customer_Info/customerList')),
                                     array('label'=>'客户资源分配', 'url'=>array('/site/page', 'view'=>'about')),
                                     array('label'=>'公海资源', 'url'=>array('/site/contact')),
                                     ),
