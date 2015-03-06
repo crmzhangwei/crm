@@ -59,7 +59,7 @@ $this->breadcrumbs=array(
 									<span class="red">CRM</span>
 									<span class="grey" id="id-text2">客户关系管理系统</span>
 								</h1>
-								<h4 class="blue" id="id-company-text">&copy;深圳市广明发信息科技有限公司</h4>
+								<h4 class="blue" id="id-company-text">&copy;信息科技有限公司</h4>
 							</div>
 
 							<div class="space-6"></div>
@@ -95,8 +95,8 @@ $this->breadcrumbs=array(
 
 													<label class="block clearfix">
 														<span class="block input-icon input-icon-right">
-                                                                                                                        <?php echo $form->passwordField($model,'password',array('class'=>'form-control','placeholder'=>'Password')); ?>
-                                                                                                                        <?php echo $form->error($model,'password'); ?>
+                                                                                                                        <?php echo $form->passwordField($model,'pass',array('class'=>'form-control','placeholder'=>'Password')); ?>
+                                                                                                                        <?php echo $form->error($model,'pass'); ?>
 															<i class="ace-icon fa fa-lock"></i>
 														</span>
 													</label>

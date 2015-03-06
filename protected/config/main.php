@@ -15,8 +15,9 @@ return array(
 	'import'=>array(
 		'application.models.*',
 		'application.components.*',
-	),
-        'defaultController'=>'default',
+                'application.modules.User.models.*',
+        ),
+        'defaultController'=>'User/users/index',
 	'modules'=>array(
 		// uncomment the following to enable the Gii tool
 		'User',
@@ -27,7 +28,7 @@ return array(
 			// If removed, Gii defaults to localhost only. Edit carefully to taste.
 			'ipFilters'=>array('127.0.0.1','::1'),
 		),
-		
+                'Finance',
 	),
 
 	// application components
@@ -55,7 +56,7 @@ return array(
 
 		'errorHandler'=>array(
 			// use 'site/error' action to display errors
-			'errorAction'=>'site/error',
+			//'errorAction'=>'site/error',
 		),
 
 		'log'=>array(
@@ -66,11 +67,11 @@ return array(
 					'levels'=>'error, warning',
 				),
 				// uncomment the following to show log messages on web pages
-				/*
+				
 				array(
 					'class'=>'CWebLogRoute',
 				),
-				*/
+				
 			),
 		),
 

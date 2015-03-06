@@ -1,155 +1,159 @@
- CREATE TABLE `c_users` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Ö÷¼ü',
-  `eno` varchar(10) NOT NULL DEFAULT '' COMMENT '¹¤ºÅ',
-  `pass` varchar(50) NOT NULL COMMENT 'ÃÜÂë',
-  `name` varchar(20) DEFAULT '' COMMENT 'ĞÕÃû',
-  `username` varchar(30) NOT NULL COMMENT 'ÓÃ»§Ãû',
-  `birth` date DEFAULT NULL COMMENT 'ÉúÈÕ',
-  `sex` tinyint(2) NOT NULL DEFAULT '1' COMMENT 'ĞÔ±ğ',
-  `tel` varchar(20) NOT NULL COMMENT 'µç»°ºÅÂë',
+CREATE TABLE `c_users` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'ä¸»é”®',
+  `eno` varchar(10) NOT NULL DEFAULT '' COMMENT 'å·¥å·',
+  `pass` varchar(50) NOT NULL COMMENT 'å¯†ç ',
+  `name` varchar(20) DEFAULT '' COMMENT 'å§“å',
+  `username` varchar(30) NOT NULL COMMENT 'ç”¨æˆ·å',
+  `birth` date DEFAULT NULL COMMENT 'ç”Ÿæ—¥',
+  `sex` tinyint(2) NOT NULL DEFAULT '1' COMMENT 'æ€§åˆ«',
+  `tel` varchar(20) NOT NULL COMMENT 'ç”µè¯å·ç ',
   `qq` varchar(15) DEFAULT NULL COMMENT 'qq',
-  `dept` mediumint(4) NOT NULL COMMENT '²¿ÃÅ',
-  `group` mediumint(5) DEFAULT NULL COMMENT '×é±ğ',
-  `ismaster` tinyint(1) DEFAULT NULL COMMENT 'ÊÇ·ñ¾«Ó¢',
-  `status` tinyint(2) DEFAULT NULL COMMENT '×´Ì¬',
+  `dept` mediumint(4) NOT NULL COMMENT 'éƒ¨é—¨',
+  `group` mediumint(5) DEFAULT NULL COMMENT 'ç»„åˆ«',
+  `manager_id` int not null COMMENT 'ä¸»ç®¡id',
+  `ismaster` tinyint(1) DEFAULT NULL COMMENT 'æ˜¯å¦ç²¾è‹±',
+  `status` tinyint(2) DEFAULT NULL COMMENT 'çŠ¶æ€',
+  `create_time` int NOT NULL COMMENT 'åˆ›å»ºæ—¶é—´',
+  `login_time` int NOT NULL COMMENT 'æœ€åç™»å½•æ—¶é—´',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+
 
 CREATE TABLE `c_group_info` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Ö÷¼ü',
-  `name` varchar(100) NOT NULL DEFAULT '' COMMENT '×éÃû',
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'ä¸»é”®',
+  `name` varchar(100) NOT NULL DEFAULT '' COMMENT 'ç»„å',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `c_dept_info` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Ö÷¼ü',
-  `name` varchar(100) NOT NULL DEFAULT '' COMMENT '²¿ÃÅÃû³Æ', 
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'ä¸»é”®',
+  `name` varchar(100) NOT NULL DEFAULT '' COMMENT 'éƒ¨é—¨åç§°', 
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `c_dept_group` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Ö÷¼ü',
-  `dept_id` int COMMENT '²¿ÃÅid',
-  `group_id` int COMMENT '×é±ğid',
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'ä¸»é”®',
+  `dept_id` int COMMENT 'éƒ¨é—¨id',
+  `group_id` int COMMENT 'ç»„åˆ«id',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `c_role_info` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Ö÷¼ü',
-  `name` varchar(100) COMMENT '½ÇÉ«Ãû³Æ',
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'ä¸»é”®',
+  `name` varchar(100) COMMENT 'è§’è‰²åç§°',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-##################
+ 
 CREATE TABLE `c_user_role` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Ö÷¼ü',
-  `user_id` int COMMENT 'ÓÃ»§id',
-  `role_id` int COMMENT '½ÇÉ«id',
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'ä¸»é”®',
+  `user_id` int NOT NULL COMMENT 'ç”¨æˆ·id',
+  `role_id` int NOT NULL COMMENT 'è§’è‰²id',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `c_menu_info` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Ö÷¼ü',
-  `name` varchar(100) COMMENT '×ÊÔ´Ãû³Æ',
-  `url` varchar(100) COMMENT '×ÊÔ´url',
-  `parent_id` int COMMENT 'ÉÏ¼¶×ÊÔ´id',
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'ä¸»é”®',
+  `name` varchar(100) NOT NULL COMMENT 'èµ„æºåç§°',
+  `url` varchar(100) NOT NULL COMMENT 'èµ„æºurl',
+  `parent_id` int COMMENT 'ä¸Šçº§èµ„æºid',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `c_privilege` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Ö÷¼ü',
-  `menu_id` int COMMENT '×ÊÔ´id',
-  `role_id` int COMMENT '½ÇÉ«id',
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'ä¸»é”®',
+  `menu_id` int NOT NULL COMMENT 'èµ„æºid',
+  `role_id` int NOT NULL COMMENT 'è§’è‰²id',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `c_cust_type` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Ö÷¼ü',
-  `type_no` varchar(5) COMMENT 'ÀàĞÍ±àºÅ',
-  `type_name` varchar(100) COMMENT 'ÀàĞÍÃû³Æ',
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'ä¸»é”®',
+  `type_no` varchar(5) NOT NULL COMMENT 'ç±»å‹ç¼–å·',
+  `type_name` varchar(100) NOT NULL COMMENT 'ç±»å‹åç§°',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `c_customer_Info` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Ö÷¼ü',
-  `cust_no` varchar(10) COMMENT '¿Í»§±àºÅ',
-  `cust_name` varchar(100) COMMENT '¿Í»§Ãû³Æ',
-  `shop_name` varchar(100) COMMENT 'µêÆÌÃû³Æ',
-  `corp_name` varchar(100) COMMENT '¹«Ë¾Ãû³Æ',
-  `shop_url` varchar(100) COMMENT 'µêÆÌÍøÖ·',
-  `shop_addr` varchar(100) COMMENT 'µêÆÌµØ³Æ',
-  `phone` varchar(20) COMMENT 'µç»°',
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'ä¸»é”®',
+  `cust_no` varchar(10) COMMENT 'å®¢æˆ·ç¼–å·',
+  `cust_name` varchar(100) COMMENT 'å®¢æˆ·åç§°',
+  `shop_name` varchar(100) COMMENT 'åº—é“ºåç§°',
+  `corp_name` varchar(100) COMMENT 'å…¬å¸åç§°',
+  `shop_url` varchar(100) COMMENT 'åº—é“ºç½‘å€',
+  `shop_addr` varchar(100) COMMENT 'åº—é“ºåœ°ç§°',
+  `phone` varchar(20) COMMENT 'ç”µè¯',
   `qq` varchar(20) COMMENT 'QQ',
-  `mail` varchar(50) COMMENT 'ÓÊÏä',
-  `datafrom` varchar(100) COMMENT 'Êı¾İÀ´Ô´',
-  `category` int COMMENT 'ËùÊôÀàÄ¿',
-  `cust_type` int COMMENT '¿Í»§·ÖÀà',
-  `eno` varchar(10) COMMENT 'ËùÊô¹¤ºÅ',
-  `assign_eno` varchar(10) COMMENT '·ÖÅäÈË',
-  `assign_time` DATETIME COMMENT '·ÖÅäÊ±¼ä',
-  `next_time` DATETIME COMMENT 'ÏÂ´ÎÁªÏµÊ±¼ä',
-  `memo` varchar(100) COMMENT '±¸×¢',
-  `create_time` datetime COMMENT '´´½¨Ê±¼ä',
-  `creator` int COMMENT '´´½¨ÈË',
+  `mail` varchar(50) COMMENT 'é‚®ç®±',
+  `datafrom` varchar(100) COMMENT 'æ•°æ®æ¥æº',
+  `category` int COMMENT 'æ‰€å±ç±»ç›®',
+  `cust_type` int COMMENT 'å®¢æˆ·åˆ†ç±»',
+  `eno` varchar(10) COMMENT 'æ‰€å±å·¥å·',
+  `assign_eno` varchar(10) COMMENT 'åˆ†é…äºº',
+  `assign_time` int COMMENT 'åˆ†é…æ—¶é—´',
+  `next_time` int COMMENT 'ä¸‹æ¬¡è”ç³»æ—¶é—´',
+  `memo` varchar(100) COMMENT 'å¤‡æ³¨',
+  `create_time` int NOT NULL COMMENT 'åˆ›å»ºæ—¶é—´',
+  `creator` int NOT NULL COMMENT 'åˆ›å»ºäºº',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `c_cust_convt_detail` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Ö÷¼ü',
-  `lib_type` int COMMENT '¿âÀàĞÍ',
-  `cust_id` int COMMENT '¿Í»§id',
-  `cust_type_1` int COMMENT 'Ô­Ê¼Àà±ğ',
-  `cust_type_2` int COMMENT '×ª»»Àà±ğ',
-  `convt_time` datetime COMMENT '×ª»»Ê±¼ä',
-  `user_id`  int COMMENT '²Ù×÷ÈË',
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'ä¸»é”®',
+  `lib_type` int NOT NULL COMMENT 'åº“ç±»å‹',
+  `cust_id` int NOT NULL COMMENT 'å®¢æˆ·id',
+  `cust_type_1` int NOT NULL COMMENT 'åŸå§‹ç±»åˆ«',
+  `cust_type_2` int NOT NULL COMMENT 'è½¬æ¢ç±»åˆ«',
+  `convt_time` int NOT NULL COMMENT 'è½¬æ¢æ—¶é—´',
+  `user_id`  int NOT NULL COMMENT 'æ“ä½œäºº',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `c_note_info` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Ö÷¼ü', 
-  `cust_id` int COMMENT '¿Í»§id',
-  `cust_info` varchar(200) COMMENT '¿Í»§Çé¿ö',
-  `requirement` varchar(200) COMMENT 'ÍÚĞèÇó',
-  `service` varchar(200) COMMENT '½éÉÜ·şÎñ',
-  `dissent` varchar(200) COMMENT 'ÒìÒé´¦Àí',
-  `next_followup` varchar(200) COMMENT 'ÏÂ´Î¸ú½ø´¦Àí',
-  `memo` varchar(200) COMMENT '±¸×¢',
-  `isvalid` boolean COMMENT 'ÊÇ·ñÓĞĞ§',
-  `iskey` boolean COMMENT 'ÊÇ·ñÖØµã',
-  `next_contact` datetime COMMENT 'ÏÂ´ÎÁªÏµÊ±¼ä',
-  `record_path` varchar(200) COMMENT 'Â¼ÒôÂ·¾¶',
-  `eno` int COMMENT '¹¤ºÅ',
-  `create_time` datetime COMMENT '´´½¨Ê±¼ä',
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'ä¸»é”®', 
+  `cust_id` int NOT NULL COMMENT 'å®¢æˆ·id',
+  `cust_info` varchar(200) COMMENT 'å®¢æˆ·æƒ…å†µ',
+  `requirement` varchar(200) COMMENT 'æŒ–éœ€æ±‚',
+  `service` varchar(200) COMMENT 'ä»‹ç»æœåŠ¡',
+  `dissent` varchar(200) COMMENT 'å¼‚è®®å¤„ç†',
+  `next_followup` varchar(200) COMMENT 'ä¸‹æ¬¡è·Ÿè¿›å¤„ç†',
+  `memo` varchar(200) COMMENT 'å¤‡æ³¨',
+  `isvalid` boolean COMMENT 'æ˜¯å¦æœ‰æ•ˆ',
+  `iskey` boolean COMMENT 'æ˜¯å¦é‡ç‚¹',
+  `next_contact` int COMMENT 'ä¸‹æ¬¡è”ç³»æ—¶é—´',
+  `record_path` varchar(200) COMMENT 'å½•éŸ³è·¯å¾„',
+  `eno` int NOT NULL COMMENT 'å·¥å·',
+  `create_time` int NOT NULL COMMENT 'åˆ›å»ºæ—¶é—´',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `c_dial_detail` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Ö÷¼ü',
-  `eno` varchar(10) COMMENT '¹¤ºÅ',
-  `dial_time` datetime COMMENT '°Î´òÊ±¼ä',
-  `dial_long` float COMMENT '°Î´òÊ±³¤',
-  `dial_num` int COMMENT '°Î´ò´ÎÊı',
-  `order` int COMMENT '×ª»»Ê±¼ä', 
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'ä¸»é”®',
+  `eno` varchar(10) NOT NULL COMMENT 'å·¥å·',
+  `dial_time` int NOT NULL COMMENT 'æ‹”æ‰“æ—¶é—´',
+  `dial_long` float NOT NULL COMMENT 'æ‹”æ‰“æ—¶é•¿',
+  `dial_num` int default 1 COMMENT 'æ‹”æ‰“æ¬¡æ•°',
+  `order` int NOT NULL default 0 COMMENT 'é¡ºåºå·', 
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `c_dic` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Ö÷¼ü',
-  `code` varchar(10) COMMENT '±àºÅ',
-  `name` varchar(100) COMMENT 'Ãû³Æ',
-  `ctype` varchar(20) COMMENT 'ÀàĞÍ', 
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'ä¸»é”®',
+  `code` varchar(10) NOT NULL COMMENT 'ç¼–å·',
+  `name` varchar(100) NOT NULL COMMENT 'åç§°',
+  `ctype` varchar(20) NOT NULL COMMENT 'ç±»å‹', 
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `c_finance` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Ö÷¼ü',
-  `cust_id` int COMMENT '¿Í»§id',
-  `sale_user` int COMMENT 'ÏúÊÛÈËÔ±',
-  `trans_user` int COMMENT 'Ì¸µ¥Ê¦',
-  `acct_number` int COMMENT 'µ½ÕËµ¥Êı',
-  `acct_amount` float COMMENT 'µ½ÕË½ğ¶î',
-  `acct_time` datetime COMMENT 'µ½ÕËÊ±¼ä',
-  `creator` int COMMENT '´´½¨ÈË',
-  `create_time` datetime COMMENT '´´½¨Ê±¼ä',
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'ä¸»é”®',
+  `cust_id` int NOT NULL COMMENT 'å®¢æˆ·id',
+  `sale_user` int NOT NULL COMMENT 'é”€å”®äººå‘˜',
+  `trans_user` int NOT NULL COMMENT 'è°ˆå•å¸ˆ',
+  `acct_number` int NOT NULL COMMENT 'åˆ°è´¦å•æ•°',
+  `acct_amount` float NOT NULL COMMENT 'åˆ°è´¦é‡‘é¢',
+  `acct_time` int NOT NULL COMMENT 'åˆ°è´¦æ—¶é—´',
+  `creator` int NOT NULL COMMENT 'åˆ›å»ºäºº',
+  `create_time` int NOT NULL COMMENT 'åˆ›å»ºæ—¶é—´',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

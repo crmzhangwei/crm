@@ -1,12 +1,21 @@
+
 <?php /* @var $this Controller */ ?>
-<?php $this->beginContent('//layouts/maing'); ?>
-<div id="content">
-	<?php echo $content; ?>
-</div><!-- content -->
-<?php $this->endContent(); ?>
+<!DOCTYPE html>
+<html >
+    <head>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+        <meta charset="utf-8" />
+        <title><?php echo CHtml::encode($this->pageTitle); ?></title>
 
+        <meta name="description" content="overview &amp; stats" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+        <!-- blueprint CSS framework -->
+	<link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/css/screen.css" media="screen, projection">
+	<link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/css/print.css" media="print">
+	<!--[if lt IE 8]>
+	<link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/css/ie.css" media="screen, projection">
+	<![endif]-->
 
-<<<<<<< HEAD
 	<link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/css/main.css">
 	<link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/css/form.css">
 
@@ -432,7 +441,7 @@
                             <b class="arrow"></b>
                             <?php $this->widget('zii.widgets.CMenu',array(
                                 'items'=>array(
-                                    array('label'=>'查询分配', 'url'=>array('/Customer/customer_Info/customerList')),
+                                    array('label'=>'查询分配', 'url'=>array('/site/index')),
                                     array('label'=>'客户资源分配', 'url'=>array('/site/page', 'view'=>'about')),
                                     array('label'=>'公海资源', 'url'=>array('/site/contact')),
                                     ),
@@ -487,7 +496,7 @@
                         </li>
 
 
-                        <li class="hsub">
+                        <li class="hsub  <?php if ($this->module->id =="User"):echo 'open';endif;?>"/>
                             <a href="#" class="dropdown-toggle">
                                 <i class="menu-icon fa fa-key"></i>
                                 <span class="menu-text"> 权限管理 </span>
@@ -495,9 +504,13 @@
                             </a>
 
                             <b class="arrow"></b>
-                            <?php $this->widget('zii.widgets.CMenu',array(
+                            <?php 
+                                $display='';
+                               
+                               if ($this->module->id =="User"){ $display='block'; }
+                               $this->widget('zii.widgets.CMenu',array(
                                 'items'=>array(
-                                    array('label'=>'用户管理', 'url'=>array('/site/index')),
+                                    array('label'=>'用户管理', 'url'=>array('/User/users/index')),
                                     array('label'=>'部门管理', 'url'=>array('/site/page', 'view'=>'about')),
                                     array('label'=>'组别管理', 'url'=>array('/site/contact')),
                                     array('label'=>'部门组别管理', 'url'=>array('/site/contact')),
@@ -505,7 +518,7 @@
                                     array('label'=>'角色管理', 'url'=>array('/site/contact')),
                                     array('label'=>'权限配置', 'url'=>array('/site/contact')),
                                     ),
-                                'htmlOptions'=>array('class'=>'submenu nav-hide'),
+                                'htmlOptions'=>array('class'=>'submenu nav_show','style'=>"display:$display;"),
                             )); ?>                      
                         </li>
                         
@@ -520,8 +533,8 @@
                             <b class="arrow"></b>
                             <?php $this->widget('zii.widgets.CMenu',array(
                                 'items'=>array(
-                                    array('label'=>'财务数据录入', 'url'=>array('/site/index')),
-                                    array('label'=>'财务数据查询', 'url'=>array('/site/page', 'view'=>'about')),
+                                    array('label'=>'财务数据录入', 'url'=>array('/Finance/finance/create')),
+                                    array('label'=>'财务数据查询', 'url'=>array('/Finance/finance/index')),
                                     ),
                                 'htmlOptions'=>array('class'=>'submenu nav-hide'),
                             )); ?>                      
@@ -827,5 +840,3 @@
             </script>
         </body>
     </html>
-=======
->>>>>>> f5a0846deb16dd7fcf646abf7b5027ec73cb9ccf

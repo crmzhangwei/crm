@@ -1,6 +1,6 @@
 <?php
 
-class UsersController extends GController
+class FinanceController extends GController
 {
 	/**
 	 * @var string the default layout for the views. Defaults to '//layouts/column2', meaning
@@ -28,16 +28,16 @@ class UsersController extends GController
 	{
 		return array(
 			array('allow',  // allow all users to perform 'index' and 'view' actions
-				'actions'=>array('index','view'),
+				'actions'=>array('index','view','create'),
 				'users'=>array('*'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
 				'actions'=>array('create','update'),
-				'users'=>array('@'),
+				'users'=>array('*'),
 			),
 			array('allow', // allow admin user to perform 'admin' and 'delete' actions
 				'actions'=>array('admin','delete'),
-				'users'=>array('admin'),
+				'users'=>array('*'),
 			),
 			array('deny',  // deny all users
 				'users'=>array('*'),
@@ -62,14 +62,14 @@ class UsersController extends GController
 	 */
 	public function actionCreate()
 	{
-		$model=new Users;
+		$model=new Finance;
 
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
 
-		if(isset($_POST['Users']))
+		if(isset($_POST['Finance']))
 		{
-			$model->attributes=$_POST['Users'];
+			$model->attributes=$_POST['Finance'];
 			if($model->save())
 				$this->redirect(array('view','id'=>$model->id));
 		}
@@ -91,9 +91,9 @@ class UsersController extends GController
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
 
-		if(isset($_POST['Users']))
+		if(isset($_POST['Finance']))
 		{
-			$model->attributes=$_POST['Users'];
+			$model->attributes=$_POST['Finance'];
 			if($model->save())
 				$this->redirect(array('view','id'=>$model->id));
 		}
@@ -121,8 +121,8 @@ class UsersController extends GController
 	 * Lists all models.
 	 */
 	public function actionIndex()
-	{       
-		$dataProvider=new CActiveDataProvider('Users');
+	{
+		$dataProvider=new CActiveDataProvider('Finance');
 		$this->render('index',array(
 			'dataProvider'=>$dataProvider,
 		));
@@ -133,10 +133,10 @@ class UsersController extends GController
 	 */
 	public function actionAdmin()
 	{
-		$model=new Users('search');
+		$model=new Finance('search');
 		$model->unsetAttributes();  // clear any default values
-		if(isset($_GET['Users']))
-			$model->attributes=$_GET['Users'];
+		if(isset($_GET['Finance']))
+			$model->attributes=$_GET['Finance'];
 
 		$this->render('admin',array(
 			'model'=>$model,
@@ -147,12 +147,12 @@ class UsersController extends GController
 	 * Returns the data model based on the primary key given in the GET variable.
 	 * If the data model is not found, an HTTP exception will be raised.
 	 * @param integer $id the ID of the model to be loaded
-	 * @return Users the loaded model
+	 * @return Finance the loaded model
 	 * @throws CHttpException
 	 */
 	public function loadModel($id)
 	{
-		$model=Users::model()->findByPk($id);
+		$model=Finance::model()->findByPk($id);
 		if($model===null)
 			throw new CHttpException(404,'The requested page does not exist.');
 		return $model;
@@ -160,11 +160,11 @@ class UsersController extends GController
 
 	/**
 	 * Performs the AJAX validation.
-	 * @param Users $model the model to be validated
+	 * @param Finance $model the model to be validated
 	 */
 	protected function performAjaxValidation($model)
 	{
-		if(isset($_POST['ajax']) && $_POST['ajax']==='users-form')
+		if(isset($_POST['ajax']) && $_POST['ajax']==='finance-form')
 		{
 			echo CActiveForm::validate($model);
 			Yii::app()->end();
