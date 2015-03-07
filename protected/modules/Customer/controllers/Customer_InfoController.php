@@ -4,7 +4,9 @@ class Customer_InfoController extends GController
 {
 	public function actionCustomerList()
 	{
-		$this->render('customerList');
+		$customer_model = new Customer_Info;
+		/*$customerInfo = $customer_model->findAll();*/
+		$this->render('customerList', array('customer_model'=>$customer_model));
 	}
 	
 
