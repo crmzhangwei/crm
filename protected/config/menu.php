@@ -42,7 +42,7 @@ return array(
     ),
     
      'User' => array(
-        'label' => '权限管理','icon' => 'fa fa-key', 'url' => array('/User/'),
+        'label' => '权限管理','icon' => 'menu-icon fa fa-key', 'url' => array('/User/'),
         'items' => array(
                 array('label' => '用户管理', 'url' => array('/User/users/index')),
                 array('label' => '部门管理', 'url' => array('/site/page', 'view' => 'about')),
@@ -55,7 +55,7 @@ return array(
     ),
     
      'Finance' => array(
-        'label' => '财务数据', 'icon' => 'fa fa-list-alt','url' => array('/Finance/'),
+        'label' => '财务数据', 'icon' => 'menu-icon fa fa-list-alt','url' => array('/Finance/'),
          'items' => array(
             array('label' => '财务数据录入', 'url' => array('/Finance/finance/create')),
             array('label' => '财务数据查询', 'url' => array('/Finance/finance/index')),
@@ -63,7 +63,7 @@ return array(
     ),
    
       'Service' => array(
-        'label' => '售后管理', 'icon' => ' fa fa-user-md','url' => array('/Service/'),
+        'label' => '售后管理', 'icon' => 'menu-icon  fa fa-user-md','url' => array('/Service/'),
          'items' => array(
             array('label' => '新分客户', 'url' => array('/site/index')),
             array('label' => '今日联系', 'url' => array('/site/page', 'view' => 'about')),
