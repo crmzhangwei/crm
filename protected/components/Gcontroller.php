@@ -6,7 +6,7 @@
  * and open the template in the editor.
  */
 
-class Gcontroller extends CController
+class Gcontroller extends Controller
 {
 	/**
 	 * @var string the default layout for the controller view. Defaults to '//layouts/column1',
