@@ -17,12 +17,14 @@ class Gcontroller extends CController
 	 * @var array context menu items. This property will be assigned to {@link CMenu::items}.
 	 */
 	public $menu=array();
+        public $allMenu =array();
 	/**
 	 * @var array the breadcrumbs of the current page. The value of this property will
 	 * be assigned to {@link CBreadcrumbs::links}. Please refer to {@link CBreadcrumbs::links}
 	 * for more details on how to specify this property.
 	 */
 	public $breadcrumbs=array();
+        public $moduelid;
       
         /**
 	 * @return array action filters
@@ -32,6 +34,9 @@ class Gcontroller extends CController
             {
                 $this->redirect(Yii::app()->user->loginUrl);
             }
+            $this->moduelid=$module->id;
+            $this->allMenu = Yii::app()->params['items'];
             parent::__construct($id, $module);
+           // var_dump(Yii::app()->params['items']);
         }
 }
