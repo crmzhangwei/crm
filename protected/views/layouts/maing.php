@@ -170,6 +170,7 @@
             <!-- ace scripts -->
             <script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/js/ace-elements.min.js"></script>
             <script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/js/ace.min.js"></script>
+            <script src="<?php echo Yii::app()->request->baseUrl; ?>/static/js/common.js"></script>
 
             <!-- inline scripts related to this page -->
             <script type="text/javascript">
