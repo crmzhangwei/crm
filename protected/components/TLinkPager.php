@@ -1,14 +1,4 @@
 <?php
-
-/**
- *  TLinkPager.php 通用分页，继承CLinkPager，修改了常用的属性
- *  ============================================================================
- *  Copyright (c) 2014 TO8TO Ltd.
- *  Web: http://www.to8to.com
- *  License: http://www.to8to.com/license.txt
- *  ============================================================================
- *  $Id: TLinkPager.php 88448 2015-03-02 03:31:28Z
- */
 class TLinkPager extends CLinkPager {
 
     /**
@@ -70,7 +60,6 @@ class TLinkPager extends CLinkPager {
         $buttons = $this->createPageButtons();
 
         if (($pageCount = $this->getPageCount()) > 1) {
-            ########  Start 指定页数翻页  ########
             $params = $_GET;
             $currPage = isset($_GET['page']) ? intval($_GET['page']) : 1;
             unset($params['page']);
@@ -81,7 +70,6 @@ class TLinkPager extends CLinkPager {
                 }
             }
             $url = Yii::app()->controller->createPageUrl($params);
-            ########  End 指定页数翻页  ########
         }
 
         if (empty($buttons))
