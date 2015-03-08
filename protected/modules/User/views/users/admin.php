@@ -52,7 +52,16 @@ $('.search-form form').submit(function(){
 	'id'=>'users-grid',
 	'dataProvider'=>$dataProvider,
 	'columns'=>array(
-		'id',
+                 array('class' => 'CCheckBoxColumn',
+                    'name' => 'id',
+                    'id' => 'select',
+                    'selectableRows' => 2,
+                    'headerTemplate' => '{item}',
+                    'htmlOptions' => array(
+                        'width' => '20',
+                    ),
+                ),
+                 'id',
 		'eno',
 		'name',
 		'username',
