@@ -5,7 +5,13 @@ class Customer_InfoController extends GController
 	public function actionCustomerList()
 	{
 		$customer_model = new Customer_Info;
-		/*$customerInfo = $customer_model->findAll();*/
+		if (isset($_POST['Customer_Info'])) {
+			foreach ($_POST['Customer_Info'] as $key => $value) {
+				$customer_model->$key = $value;
+			}
+			echo '<pre>';
+			print_r($customer_model);
+		}
 		$this->render('customerList', array('customer_model'=>$customer_model));
 	}
 	

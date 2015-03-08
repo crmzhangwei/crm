@@ -19,7 +19,9 @@
 				<td><?php echo $form->textField($customer_model, 'phone');?></td>&nbsp;&nbsp;
 				<td><?php echo $form->label($customer_model, 'qq');?></td>
 				<td><?php echo $form->textField($customer_model, 'qq');?></td>
+				<td><input type="submit" value="查询"></td>
 			</tr>
+
 		</table>
     <?php $this->endWidget();?>
     <table border="1" width="600px">
