@@ -24,6 +24,8 @@ class Users extends CActiveRecord
     
         public $pass_repeat;   //验证密码再次输入
         public $login_time;
+        public $searchtype;
+        public $keyword;
 	/**
 	 * @return string the associated database table name
 	 */
@@ -47,7 +49,7 @@ class Users extends CActiveRecord
 			array('name, tel', 'length', 'max'=>20),
 			array('username', 'length', 'max'=>30),
 			array('qq', 'length', 'max'=>15),
-			array('birth, pass_repeat, create_time, login_time', 'safe'),
+			array('birth, pass_repeat, create_time, login_time,searchtype,keyword', 'safe'),
                         array('pass','compare'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
@@ -120,15 +122,36 @@ class Users extends CActiveRecord
                 
 		$criteria->compare('id',$this->id,true);
 		$criteria->compare('eno',$this->eno,true);
-		$criteria->compare('name',$this->name,true);
-		$criteria->compare('username',$this->username,true);
-		$criteria->compare('birth',$this->birth,true);
-		$criteria->compare('tel',$this->tel,true);
-		$criteria->compare('qq',$this->qq,true);
+		//$criteria->compare('name',$this->name,true);
+		//$criteria->compare('username',$this->username,true);
+		//$criteria->compare('birth',$this->birth,true);
+		//$criteria->compare('tel',$this->tel,true);
+		//$criteria->compare('qq',$this->qq,true);
 		$criteria->compare('dept',$this->dept);
 		$criteria->compare('group',$this->group);
 		$criteria->compare('ismaster',$this->ismaster);
 		$criteria->compare('status',$this->status);
+                
+                if($this->keyword)
+                {
+                    switch ($this->searchtype)
+                   {
+                       case 1:
+                           $criteria->addCondition("name like :keyword");
+                           $criteria->params[':keyword'] = "%{$this->keyword}%";
+                           break;
+                       case 2:
+                           $criteria->addCondition("username like :keyword");
+                           $criteria->params[':keyword'] = "%{$this->keyword}%";
+                           break;
+                       case 3:
+                           $criteria->compare('tel', $this->keyword, true);
+                           break;
+                       case 4:
+                           $criteria->compare('qq', $this->keyword, true);
+                           break;
+                   }
+                }
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
@@ -153,5 +176,15 @@ class Users extends CActiveRecord
          
         public function encrypt($value) {
             return md5($value);
+        }
+        
+        static function getSearchArr()
+        {
+            return array(
+                1=>'姓名',
+                2=>'用户名',
+                3=>'电话',
+                4=>'QQ',
+            );
         }
 }

@@ -1,0 +1,29 @@
+1.测试分页，数据不够怎么办
+
+答：使用蠕虫复制，一变二，二变四。四变八。八变十六。多执行几次就有了。
+
+范例 insert into wish(name,wish) select name,wish from wish;
+
+c_users 表的话就是   先 select COLUMN_NAME from information_schema.COLUMNS where table_name = 'c_users';  把找到的字段属列出来。随便复制几个就行了。
+
+再
+insert into c_users(eno,
+pass,
+name,
+username,
+birth,
+sex,
+tel,
+qq) select eno,
+pass,
+name,
+username,
+birth,
+sex,
+tel,qq from c_users;
+
+这样数据就有了。
+
+
+
+

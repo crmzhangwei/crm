@@ -16,6 +16,7 @@ return array(
 		'application.models.*',
 		'application.components.*',
                 'application.modules.User.models.*',
+                'zii.widgets.grid.CGridView',
         ),
         'defaultController'=>'User/users/index',
 	'modules'=>array(

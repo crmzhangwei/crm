@@ -3,20 +3,17 @@
 /* @var $model Users */
 
 $this->breadcrumbs=array(
-	'Users'=>array('index'),
-	'Manage',
+	'权限管理'=>array('index'),
+	'查看用户',
 );
 
 $this->menu=array(
-	array('label'=>'List Users', 'url'=>array('index')),
-	array('label'=>'Create Users', 'url'=>array('create')),
+	array('label'=>'用户例表', 'url'=>array('index')),
+	array('label'=>'创建用户', 'url'=>array('create')),
 );
 
 Yii::app()->clientScript->registerScript('search', "
-$('.search-button').click(function(){
-	$('.search-form').toggle();
-	return false;
-});
+
 $('.search-form form').submit(function(){
 	$('#users-grid').yiiGridView('update', {
 		data: $(this).serialize()
@@ -26,42 +23,64 @@ $('.search-form form').submit(function(){
 ");
 ?>
 
-<h1>Manage Users</h1>
-
-<p>
-You may optionally enter a comparison operator (<b>&lt;</b>, <b>&lt;=</b>, <b>&gt;</b>, <b>&gt;=</b>, <b>&lt;&gt;</b>
-or <b>=</b>) at the beginning of each of your search values to specify how the comparison should be done.
-</p>
-
-<?php echo CHtml::link('Advanced Search','#',array('class'=>'search-button')); ?>
-<div class="search-form" style="display:none">
-<?php $this->renderPartial('_search',array(
-	'model'=>$model,
+<?php $form=$this->beginWidget('CActiveForm', array(
+	'action'=>Yii::app()->createUrl($this->route),
+	'method'=>'get',
 )); ?>
-</div><!-- search-form -->
+       <div class="form-group">
+             <div class="btn-group">
+                            <a href="javascript:void(0)" onclick="javascript:openwinx('<?= Yii::app()->createUrl('User/users/create') ?>','')" class="btn btn-sm btn-primary" > 
+                                <i class="icon-plus"></i>新建用户
+                            </a>
+             </div>        
+             <?php echo $form->label($model,'eno');  ?>
+             <?php echo $form->textField($model,'eno',array('size'=>10,'maxlength'=>10)); ?>
+             <?php echo $form->dropDownList($model,'searchtype',Users::getsearchArr(),array('style'=>"height:34px;"));?>
+             <?php echo $form->textField($model,'keyword',array('size'=>30,'maxlength'=>30)); ?>
+            
+             <button class="btn btn-sm btn-primary" type="submit">
+            <i class="icon-search"></i>
+            搜 索
+            </button>
+        </div>
 
-<?php $this->widget('zii.widgets.grid.CGridView', array(
+<?php $this->endWidget(); ?>
+
+<?php 
+        $dataProvider = $model->search();
+        $this->widget('GGridView', array(
 	'id'=>'users-grid',
-	'dataProvider'=>$model->search(),
-	'filter'=>$model,
+	'dataProvider'=>$dataProvider,
 	'columns'=>array(
 		'id',
 		'eno',
-		'pass',
 		'name',
 		'username',
-		'birth',
-		/*
-		'sex',
 		'tel',
 		'qq',
 		'dept',
 		'group',
 		'ismaster',
 		'status',
-		*/
 		array(
 			'class'=>'CButtonColumn',
+                         'htmlOptions'=>array(
+                        'width'=>'100',
+                        'style'=>'text-align:center',
+                    ),
 		),
 	),
 )); ?>
+
+<div class="table-page"> 
+    <div class="col-sm-6">
+        共<span class="orange"><?=$dataProvider->totalItemCount ?></span>条记录
+        <a href="javascript:void(0);" js_type="publish" class="btn  btn-minier btn-sm btn-success publish"><i class=" icon-ok icon-large"></i>设置精英</a> <a href="javascript:void(0);" js_type="cancel_publish"  class="btn  btn-minier btn-sm btn-warning publish"> <i class="icon-lock icon-large"></i>取消精英</a> 
+    </div>
+    <div class="col-sm-6 no-padding-right">
+        <?php
+        $dataProvider->pagination->pageVar = 'page';
+        $this->widget('GLinkPager', array('pages' => $dataProvider->pagination,));
+        ?>
+    </div>
+</div>  		

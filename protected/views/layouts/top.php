@@ -32,9 +32,19 @@
                     <?php echo CHtml::encode(Yii::app()->name); ?>
                 </small>
             </a>
+             <?php
+                $this->widget('GMenu', array(
+                    'activateParents' => true,
+                    'menuType' => 'top',
+                    'htmlOptions' => array('class' => 'nav navbar-nav to-navbar-nav', 'id' => 'topMenu'),
+                    'items' => $this->menu,
+                ));
+            ?> 
         </div>
 
         <div class="navbar-buttons navbar-header pull-right" role="navigation">
+            
+             
             <ul class="nav ace-nav">
                 <li class="grey">
                     <a data-toggle="dropdown" class="dropdown-toggle" href="#">
