@@ -10,12 +10,12 @@
 	'action'=>Yii::app()->createUrl($this->route),
 	'method'=>'get',
 )); ?>
-
+<!--
 	<div class="row">
 		<?php echo $form->label($model,'id'); ?>
 		<?php echo $form->textField($model,'id',array('size'=>10,'maxlength'=>10)); ?>
 	</div>
-
+-->
 	<div class="row">
 		<?php echo $form->label($model,'cust_id'); ?>
 		<?php echo $form->textField($model,'cust_id'); ?>
@@ -57,7 +57,7 @@
 	</div>
 
 	<div class="row buttons">
-		<?php echo CHtml::submitButton('Search'); ?>
+		<?php echo CHtml::submitButton('搜索'); ?>
 	</div>
 
 <?php $this->endWidget(); ?>

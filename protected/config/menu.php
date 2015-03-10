@@ -58,17 +58,24 @@ return array(
         'label' => '财务数据', 'icon' => 'menu-icon fa fa-list-alt','url' => array('/Finance/'),
          'items' => array(
             array('label' => '财务数据录入', 'url' => array('/Finance/finance/create')),
-            array('label' => '财务数据查询', 'url' => array('/Finance/finance/index')),
+            array('label' => '财务数据查询', 'url' => array('/Finance/finance/admin')),
         ),
     ),
    
       'Service' => array(
         'label' => '售后管理', 'icon' => 'menu-icon  fa fa-user-md','url' => array('/Service/'),
          'items' => array(
-            array('label' => '新分客户', 'url' => array('/site/index')),
-            array('label' => '今日联系', 'url' => array('/site/page', 'view' => 'about')),
-            array('label' => '遗留数据', 'url' => array('/site/page', 'view' => 'about')),
-            array('label' => '查询分配', 'url' => array('/site/page', 'view' => 'about')),
+            array('label' => '新分客户', 'url' => array('/Service/service/admin')),
+            array('label' => '今日联系', 'url' => array('/Service/service/admin')),
+            array('label' => '遗留数据', 'url' => array('/Service/service/admin')),
+            array('label' => '查询分配', 'url' => array('/Service/service/admin')),
+        ),
+    ),
+      'baseinfo' => array(
+        'label' => '基础数据管理', 'icon' => 'menu-icon  fa fa-user-md','url' => array('/Service/'),
+         'items' => array(
+            array('label' => '客户分类', 'url' => array('/Custtype/custtype/admin')),
+            array('label' => '字典数据', 'url' => array('/Dictionary/dic/admin')),
         ),
     ),
 );

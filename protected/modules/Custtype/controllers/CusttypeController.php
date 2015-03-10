@@ -1,6 +1,6 @@
 <?php
 
-class FinanceController extends GController
+class CusttypeController extends GController
 {
 	/**
 	 * @var string the default layout for the views. Defaults to '//layouts/column2', meaning
@@ -28,16 +28,16 @@ class FinanceController extends GController
 	{
 		return array(
 			array('allow',  // allow all users to perform 'index' and 'view' actions
-				'actions'=>array('index','view','create'),
+				'actions'=>array('index','view'),
 				'users'=>array('*'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('create','update'),
-				'users'=>array('*'),
+				'actions'=>array('create','update','admin'),
+				'users'=>array('@'),
 			),
 			array('allow', // allow admin user to perform 'admin' and 'delete' actions
 				'actions'=>array('admin','delete'),
-				'users'=>array('*'),
+				'users'=>array('admin'),
 			),
 			array('deny',  // deny all users
 				'users'=>array('*'),
@@ -62,17 +62,14 @@ class FinanceController extends GController
 	 */
 	public function actionCreate()
 	{
-		$model=new Finance;
+		$model=new CustType;
 
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
 
-		if(isset($_POST['Finance']))
+		if(isset($_POST['CustType']))
 		{
-			$model->attributes=$_POST['Finance'];
-                        //增加创建人，增加时间
-                        $model->setAttribute("creator", '');
-                        $model->setAttribute("create_time", '');
+			$model->attributes=$_POST['CustType'];
 			if($model->save())
 				$this->redirect(array('view','id'=>$model->id));
 		}
@@ -94,9 +91,9 @@ class FinanceController extends GController
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
 
-		if(isset($_POST['Finance']))
+		if(isset($_POST['CustType']))
 		{
-			$model->attributes=$_POST['Finance'];
+			$model->attributes=$_POST['CustType'];
 			if($model->save())
 				$this->redirect(array('view','id'=>$model->id));
 		}
@@ -125,7 +122,7 @@ class FinanceController extends GController
 	 */
 	public function actionIndex()
 	{
-		$dataProvider=new CActiveDataProvider('Finance');
+		$dataProvider=new CActiveDataProvider('CustType');
 		$this->render('index',array(
 			'dataProvider'=>$dataProvider,
 		));
@@ -136,10 +133,10 @@ class FinanceController extends GController
 	 */
 	public function actionAdmin()
 	{
-		$model=new Finance('search');
+		$model=new CustType('search');
 		$model->unsetAttributes();  // clear any default values
-		if(isset($_GET['Finance']))
-			$model->attributes=$_GET['Finance'];
+		if(isset($_GET['CustType']))
+			$model->attributes=$_GET['CustType'];
 
 		$this->render('admin',array(
 			'model'=>$model,
@@ -150,12 +147,12 @@ class FinanceController extends GController
 	 * Returns the data model based on the primary key given in the GET variable.
 	 * If the data model is not found, an HTTP exception will be raised.
 	 * @param integer $id the ID of the model to be loaded
-	 * @return Finance the loaded model
+	 * @return CustType the loaded model
 	 * @throws CHttpException
 	 */
 	public function loadModel($id)
 	{
-		$model=Finance::model()->findByPk($id);
+		$model=CustType::model()->findByPk($id);
 		if($model===null)
 			throw new CHttpException(404,'The requested page does not exist.');
 		return $model;
@@ -163,11 +160,11 @@ class FinanceController extends GController
 
 	/**
 	 * Performs the AJAX validation.
-	 * @param Finance $model the model to be validated
+	 * @param CustType $model the model to be validated
 	 */
 	protected function performAjaxValidation($model)
 	{
-		if(isset($_POST['ajax']) && $_POST['ajax']==='finance-form')
+		if(isset($_POST['ajax']) && $_POST['ajax']==='cust-type-form')
 		{
 			echo CActiveForm::validate($model);
 			Yii::app()->end();

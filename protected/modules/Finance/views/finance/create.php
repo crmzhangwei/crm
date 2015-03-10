@@ -13,6 +13,6 @@ $this->menu=array(
 );
 ?>
 
-<h1>Create Finance</h1>
+<h1>新增财务数据</h1>
 
 <?php $this->renderPartial('_form', array('model'=>$model)); ?>

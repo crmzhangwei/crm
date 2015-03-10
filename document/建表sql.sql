@@ -69,6 +69,7 @@ CREATE TABLE `c_privilege` (
 
 CREATE TABLE `c_cust_type` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `lib_type` int NOT NULL COMMENT '库类型',
   `type_no` varchar(5) NOT NULL COMMENT '类型编号',
   `type_name` varchar(100) NOT NULL COMMENT '类型名称',
   PRIMARY KEY (`id`)
@@ -89,6 +90,7 @@ CREATE TABLE `c_customer_Info` (
   `category` int COMMENT '所属类目',
   `cust_type` int COMMENT '客户分类',
   `eno` varchar(10) COMMENT '所属工号',
+  `iskey` int COMMENT '是否重点',
   `assign_eno` varchar(10) COMMENT '分配人',
   `assign_time` int COMMENT '分配时间',
   `next_time` int COMMENT '下次联系时间',
@@ -153,6 +155,58 @@ CREATE TABLE `c_finance` (
   `acct_number` int NOT NULL COMMENT '到账单数',
   `acct_amount` float NOT NULL COMMENT '到账金额',
   `acct_time` int NOT NULL COMMENT '到账时间',
+  `creator` int NOT NULL COMMENT '创建人',
+  `create_time` int NOT NULL COMMENT '创建时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `c_trans_cust_info` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `cust_id` int NOT NULL COMMENT '客户id',
+  `cust_no` varchar(10) NOT NULL COMMENT '客户编号',
+  `cust_type` int NOT NULL COMMENT '客户类型',
+  `eno` varchar(10) NOT NULL COMMENT '所属工号',
+  `assign_eno` varchar(10) NOT NULL COMMENT '分配人',
+  `assign_time` int NOT NULL COMMENT '分配时间',
+  `next_time` int NOT NULL COMMENT '下次联系时间',
+  `memo` int NOT NULL COMMENT '备注',
+  `creator` int NOT NULL COMMENT '创建人',
+  `create_time` int NOT NULL COMMENT '创建时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE `c_aftermarket_cust_Info` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `cust_id` int NOT NULL COMMENT '客户id',
+  `cust_no` varchar(10) NOT NULL COMMENT '客户编号',
+  `cust_type` int NOT NULL COMMENT '客户类型',
+  `webchat` varchar(20) NOT NULL COMMENT '微信',
+  `ww` varchar(20) NOT NULL COMMENT '旺旺',
+  `eno` varchar(10) NOT NULL COMMENT '所属工号',
+  `assign_eno` varchar(10) NOT NULL COMMENT '分配人',
+  `assign_time` int NOT NULL COMMENT '分配时间',
+  `next_time` int NOT NULL COMMENT '下次联系时间',
+  `memo` int NOT NULL COMMENT '备注',
+  `creator` int NOT NULL COMMENT '创建人',
+  `create_time` int NOT NULL COMMENT '创建时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `c_contract_info` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `cust_id` int NOT NULL COMMENT '客户id',
+  `service_limit` varchar(10) NOT NULL COMMENT '服务期限',
+  `total_money` int NOT NULL COMMENT '总金额',
+  `pay_type` int NOT NULL COMMENT '支付方式',
+  `pay_time` int NOT NULL COMMENT '支付时间',
+  `promise` varchar(200) NOT NULL COMMENT '合同承诺',
+  `first_pay` varchar(10) NOT NULL COMMENT '第一次支付金额',
+  `second_pay` varchar(10) NOT NULL COMMENT '第二次支付金额',
+  `third_pay` varchar(10) NOT NULL COMMENT '第三次支付金额',
+  `fourth_pay` int NOT NULL COMMENT '第四次支付金额',
+  `comm_royalty` int NOT NULL COMMENT '佣金提成',
+  `comm_pay_time` int NOT NULL COMMENT '佣金支付时间',
   `creator` int NOT NULL COMMENT '创建人',
   `create_time` int NOT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`)

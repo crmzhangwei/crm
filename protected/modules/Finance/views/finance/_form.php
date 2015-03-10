@@ -15,17 +15,13 @@
 	'enableAjaxValidation'=>false,
 )); ?>
 
-	<p class="note">Fields with <span class="required">*</span> are required.</p>
+	<p class="note"><span class="required">*</span>字段为必填项.</p>
 
 	<?php echo $form->errorSummary($model); ?>
 
-	<div class="row">
-		<?php echo $form->labelEx($model,'cust_id'); ?>
-		<?php echo $form->textField($model,'cust_id'); ?>
-		<?php echo $form->error($model,'cust_id'); ?>
-	</div>
-
-	<div class="row">
+	 
+     
+        <div class="row" >
 		<?php echo $form->labelEx($model,'sale_user'); ?>
 		<?php echo $form->textField($model,'sale_user'); ?>
 		<?php echo $form->error($model,'sale_user'); ?>
@@ -53,22 +49,10 @@
 		<?php echo $form->labelEx($model,'acct_time'); ?>
 		<?php echo $form->textField($model,'acct_time'); ?>
 		<?php echo $form->error($model,'acct_time'); ?>
-	</div>
-
-	<div class="row">
-		<?php echo $form->labelEx($model,'creator'); ?>
-		<?php echo $form->textField($model,'creator'); ?>
-		<?php echo $form->error($model,'creator'); ?>
-	</div>
-
-	<div class="row">
-		<?php echo $form->labelEx($model,'create_time'); ?>
-		<?php echo $form->textField($model,'create_time'); ?>
-		<?php echo $form->error($model,'create_time'); ?>
-	</div>
+	</div> 
 
 	<div class="row buttons">
-		<?php echo CHtml::submitButton($model->isNewRecord ? 'Create' : 'Save'); ?>
+		<?php echo CHtml::submitButton($model->isNewRecord ? '创建' : 'Save'); ?>
 	</div>
 
 <?php $this->endWidget(); ?>
