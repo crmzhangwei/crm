@@ -35,13 +35,13 @@ $form = $this->beginWidget('CActiveForm', array(
     </div>        
     <?php echo $form->label($model, 'iskey'); ?>
     <?php echo $form->dropDownList($model, 'iskey', array('全部', '是', '否'), array('style' => "height:34px;")); ?>
-     <?php echo $form->label($model, 'iskey'); ?>
+    <?php echo $form->label($model, 'iskey'); ?>
     <?php echo $form->dropDownList($model, 'iskey', array('全部', '是', '否'), array('style' => "height:34px;")); ?>
     <?php echo $form->label($model, 'phone'); ?>
     <?php echo $form->textField($model, 'phone', array('size' => 15, 'maxlength' => 15)); ?>
     <?php echo $form->label($model, 'cust_type'); ?>
-    <?php echo $form->dropDownList($model, 'cust_type', Users::getsearchArr(), array('style' => "height:34px;")); ?>至
-    <?php echo $form->dropDownList($model, 'cust_type', Users::getsearchArr(), array('style' => "height:34px;")); ?>
+    <?php echo $form->dropDownList($model, 'cust_type',$this->genCustTypeArray(), array('style' => "height:34px;")); ?>至
+    <?php echo $form->dropDownList($model, 'cust_type', $this->genCustTypeArray(), array('style' => "height:34px;")); ?>
     <button class="btn btn-sm btn-primary" type="submit">
         <i class="icon-search"></i>
         搜 索
