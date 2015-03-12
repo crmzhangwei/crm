@@ -170,4 +170,27 @@ class UsersController extends GController
 			Yii::app()->end();
 		}
 	}
+        
+        /**
+         * 获取用户的角色数组
+         */
+        public function getRoleArr() {
+            return CHtml::listData(RoleInfo::model()->findAll(), 'id', 'name');
+        }
+        
+        /**
+         * 获取用户所属组别数组 
+         */
+        public function getGroupArr() {
+             return CHtml::listData(GroupInfo::model()->findAll(), 'id', 'name');
+        }
+        
+        /**
+         * 获取状态数组
+         */
+        public function getStatusArr() {
+            
+            return array(1=>'在职',2=>'离职');
+            
+        }
 }

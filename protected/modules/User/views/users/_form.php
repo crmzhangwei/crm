@@ -51,7 +51,7 @@
 
 	<div class="row">
 		<?php echo $form->labelEx($model,'birth'); ?>
-		<?php echo $form->textField($model,'birth'); ?>
+		<?php echo $form->textField($model,'birth',array('class'=>"Wdate", 'onClick'=>"WdatePicker()",'style'=>'height:30px;')); ?>
 		<?php echo $form->error($model,'birth'); ?>
 	</div>
 
@@ -81,19 +81,19 @@
 
 	<div class="row">
 		<?php echo $form->labelEx($model,'group'); ?>
-		<?php echo $form->textField($model,'group'); ?>
+		<?php echo $form->dropDownList($model,'group',$this->getGroupArr()); ?>
 		<?php echo $form->error($model,'group'); ?>
 	</div>
 
 	<div class="row">
 		<?php echo $form->labelEx($model,'ismaster'); ?>
-		<?php echo $form->textField($model,'ismaster'); ?>
+		<?php echo $form->radioButtonList($model,'ismaster',array('否','是'),array('separator'=>'')); ?>
 		<?php echo $form->error($model,'ismaster'); ?>
 	</div>
 
 	<div class="row">
 		<?php echo $form->labelEx($model,'status'); ?>
-		<?php echo $form->textField($model,'status'); ?>
+		<?php echo $form->dropDownList($model,'status',$this->getStatusArr()); ?>
 		<?php echo $form->error($model,'status'); ?>
 	</div>
 
