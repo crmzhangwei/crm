@@ -41,17 +41,22 @@ or <b>=</b>)，用以指定查询条件.
 <?php
 $this->widget('zii.widgets.CMenu', array('items'=> $this->menu));
 ?>
-<?php $this->widget('zii.widgets.grid.CGridView', array(
+<?php 
+ $dataProvider = $model->search(); 
+$this->widget('GGridView', array(
 	'id'=>'finance-grid',
-	'dataProvider'=>$model->search(),
+	'dataProvider'=>$dataProvider,
 	'filter'=>null,
 	'columns'=>array(
 		'id',
-		'cust_id',
-		'sale_user',
-		'trans_user',
+		'cust_name',
+		'sale_user_name',
+		'trans_user_name',
 		'acct_number',
 		'acct_amount',
+                array('name'=>'acct_time',  
+                    'value'=>'date("Y-m-d",$data->acct_time)',//格式化日期  
+                ),  
 		/*
 		'acct_time',
 		'creator',
@@ -62,3 +67,14 @@ $this->widget('zii.widgets.CMenu', array('items'=> $this->menu));
 		),
 	),
 )); ?>
+
+<div class="table-page"> 
+    <div class="col-sm-6">
+        共<span class="orange"><?=$dataProvider->totalItemCount ?></span>条记录 
+    </div>
+    <div class="col-sm-6 no-padding-right">
+        <?php 
+        $this->widget('GLinkPager', array('pages' => $dataProvider->getPagination(),));
+        ?>
+    </div>
+</div> 
