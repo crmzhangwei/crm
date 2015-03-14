@@ -28,7 +28,7 @@ class FinanceController extends GController
 	{
 		return array(
 			array('allow',  // allow all users to perform 'index' and 'view' actions
-				'actions'=>array('index','view','create'),
+				'actions'=>array('index','view','create','test'),
 				'users'=>array('*'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
@@ -70,11 +70,14 @@ class FinanceController extends GController
 		if(isset($_POST['Finance']))
 		{
 			$model->attributes=$_POST['Finance'];
-                        //增加创建人，增加时间
-                        $model->setAttribute("creator", '');
-                        $model->setAttribute("create_time", '');
+                        //增加创建人，增加时间 
+                        $acct_time = $model->getAttribute("acct_time");
+                        $iAcctTime=  strtotime($acct_time);
+                        $model->setAttribute("acct_time", $iAcctTime);
+                        $model->setAttribute("creator", '1');
+                        $model->setAttribute("create_time", time());
 			if($model->save())
-				$this->redirect(array('view','id'=>$model->id));
+				$this->redirect(array('admin'));
 		}
 
 		$this->render('create',array(
@@ -130,7 +133,20 @@ class FinanceController extends GController
 			'dataProvider'=>$dataProvider,
 		));
 	}
+         /**
+	 * test
+	 */
+	public function actionTest()
+	{
+		 $model=new Finance('search');
+		$model->unsetAttributes();  // clear any default values
+		if(isset($_GET['Finance']))
+			$model->attributes=$_GET['Finance'];
 
+		$this->renderPartial('custlist',array(
+			'model'=>$model,
+		)); 
+	}
 	/**
 	 * Manages all models.
 	 */

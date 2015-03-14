@@ -19,7 +19,13 @@
 
 	<?php echo $form->errorSummary($model); ?>
 
-	 
+	 <div class="row" >
+		<?php echo $form->labelEx($model,'cust_id'); ?>
+		<?php echo $form->textField($model,'cust_id'); ?> 
+                <?php  echo CHtml::button("...",array('name'=>'btn_cust_pop','id'=>'id_btn_cust_pop'));?>
+                <?php echo $form->error($model,'cust_id'); ?> 
+             
+	</div>
      
         <div class="row" >
 		<?php echo $form->labelEx($model,'sale_user'); ?>
@@ -47,7 +53,27 @@
 
 	<div class="row">
 		<?php echo $form->labelEx($model,'acct_time'); ?>
-		<?php echo $form->textField($model,'acct_time'); ?>
+		<!--<?php echo $form->textField($model,'acct_time'); ?>-->
+                <?php
+                        $this->widget('zii.widgets.jui.CJuiDatePicker',array(
+                        'language'=>'zh_cn',
+			'name'=>'Finance[acct_time]',
+			'value'=>Date('Y-m-d'),
+			'options'=>array(
+			            'showAnim'=>'fold',
+			            'showOn'=>'both',
+			            'buttonImage'=>'',
+                                    'maxDate'=>'new Date()',
+			            'buttonImageOnly'=>false,
+			            'dateFormat'=>'yy-mm-dd',
+			),
+			'htmlOptions'=>array(
+			            'style'=>'height:28px',
+                                    'readonly'=>'readonly',
+			            'maxlength'=>8,
+			),
+    ));
+?>
 		<?php echo $form->error($model,'acct_time'); ?>
 	</div> 
 
@@ -58,3 +84,16 @@
 <?php $this->endWidget(); ?>
 
 </div><!-- form -->
+
+<script type="text/javascript">  
+  
+        $("#id_btn_cust_pop").click(function(){  
+            if (window.showModalDialog) {
+                window.showModalDialog('index.php?r=/Finance/finance/test',self,'dialogHeight: 500px; dialogWidth: 800px; dialogTop: 200px; dialogLeft: 300px;');
+            }else{
+               window.open('index.php?r=/Finance/finance/test','self','modal=yes,width=800,height=500,resizable=no,scrollbars=no'); 
+            }
+            
+        });
+        
+</script>
