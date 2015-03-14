@@ -10,6 +10,5 @@ return array(
 	'username' => 'root',
 	'password' => 'zhenai.123',
 	'charset' => 'utf8',
-	'tablePrefix'=>'c_'
-	
+	'tablePrefix'=>'c_',
 );
