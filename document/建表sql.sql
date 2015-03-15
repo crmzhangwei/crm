@@ -88,7 +88,7 @@ CREATE TABLE `c_customer_Info` (
   `mail` varchar(50) COMMENT '邮箱',
   `datafrom` varchar(100) COMMENT '数据来源',
   `category` int COMMENT '所属类目',
-  `cust_type` int COMMENT '客户分类',
+  `cust_type` int NOT NULL DEFAULT 0 COMMENT '客户分类',
   `eno` varchar(10) COMMENT '所属工号',
   `iskey` int COMMENT '是否重点',
   `assign_eno` varchar(10) COMMENT '分配人',
