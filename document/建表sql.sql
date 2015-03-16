@@ -214,8 +214,7 @@ CREATE TABLE `c_black_info` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键', 
   `cust_id` int NOT NULL COMMENT '客户id',
   `lib_type` int NOT NULL COMMENT '来源库',
-  `cust_type` int NOT NULL COMMENT '客户分类',
-  `memo` varchar(100) COMMENT '备注',
+  `cust_type` int NOT NULL COMMENT '客户分类', 
   `create_time` int NOT NULL COMMENT '创建时间',
   `creator` int NOT NULL COMMENT '创建人',
   PRIMARY KEY (`id`)
