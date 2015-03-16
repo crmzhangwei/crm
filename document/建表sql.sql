@@ -76,8 +76,7 @@ CREATE TABLE `c_cust_type` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `c_customer_Info` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键',
-  `cust_no` varchar(10) COMMENT '客户编号',
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键', 
   `cust_name` varchar(100) COMMENT '客户名称',
   `shop_name` varchar(100) COMMENT '店铺名称',
   `corp_name` varchar(100) COMMENT '公司名称',
@@ -94,6 +93,7 @@ CREATE TABLE `c_customer_Info` (
   `assign_eno` varchar(10) COMMENT '分配人',
   `assign_time` int COMMENT '分配时间',
   `next_time` int COMMENT '下次联系时间',
+  `status` int COMMENT '状态',
   `memo` varchar(100) COMMENT '备注',
   `create_time` int NOT NULL COMMENT '创建时间',
   `creator` int NOT NULL COMMENT '创建人',
@@ -163,7 +163,6 @@ CREATE TABLE `c_finance` (
 CREATE TABLE `c_trans_cust_info` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键',
   `cust_id` int NOT NULL COMMENT '客户id',
-  `cust_no` varchar(10) NOT NULL COMMENT '客户编号',
   `cust_type` int NOT NULL COMMENT '客户类型',
   `eno` varchar(10) NOT NULL COMMENT '所属工号',
   `assign_eno` varchar(10) NOT NULL COMMENT '分配人',
@@ -179,7 +178,6 @@ CREATE TABLE `c_trans_cust_info` (
 CREATE TABLE `c_aftermarket_cust_Info` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键',
   `cust_id` int NOT NULL COMMENT '客户id',
-  `cust_no` varchar(10) NOT NULL COMMENT '客户编号',
   `cust_type` int NOT NULL COMMENT '客户类型',
   `webchat` varchar(20) NOT NULL COMMENT '微信',
   `ww` varchar(20) NOT NULL COMMENT '旺旺',
@@ -209,5 +207,16 @@ CREATE TABLE `c_contract_info` (
   `comm_pay_time` int NOT NULL COMMENT '佣金支付时间',
   `creator` int NOT NULL COMMENT '创建人',
   `create_time` int NOT NULL COMMENT '创建时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `c_black_info` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键', 
+  `cust_id` int NOT NULL COMMENT '客户id',
+  `lib_type` int NOT NULL COMMENT '来源库',
+  `cust_type` int NOT NULL COMMENT '客户分类',
+  `memo` varchar(100) COMMENT '备注',
+  `create_time` int NOT NULL COMMENT '创建时间',
+  `creator` int NOT NULL COMMENT '创建人',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
