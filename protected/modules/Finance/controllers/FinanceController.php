@@ -28,12 +28,12 @@ class FinanceController extends GController
 	{
 		return array(
 			array('allow',  // allow all users to perform 'index' and 'view' actions
-				'actions'=>array('index','view','create','test'),
+				'actions'=>array('index','view',),
 				'users'=>array('*'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('create','update'),
-				'users'=>array('*'),
+				'actions'=>array('create','update','create','PopCustList'),
+				'users'=>array('@'),
 			),
 			array('allow', // allow admin user to perform 'admin' and 'delete' actions
 				'actions'=>array('admin','delete'),
@@ -136,16 +136,23 @@ class FinanceController extends GController
          /**
 	 * test
 	 */
-	public function actionTest()
+	public function actionPopCustList()
 	{
-		 $model=new Finance('search');
+		$model=new CustomerInfo('search');
 		$model->unsetAttributes();  // clear any default values
-		if(isset($_GET['Finance']))
-			$model->attributes=$_GET['Finance'];
-
-		$this->renderPartial('custlist',array(
+		if(isset($_GET['CustomerInfo']))
+			$model->attributes=$_GET['CustomerInfo'];
+		 
+                if(isset($_GET['isajax'])){
+                    $this->renderPartial('_custlist',array(
 			'model'=>$model,
-		)); 
+                    )); 
+                }else{
+                    $this->renderPartial('custlist',array(
+			'model'=>$model,
+                    )); 
+                }        
+		
 	}
 	/**
 	 * Manages all models.
@@ -156,10 +163,10 @@ class FinanceController extends GController
 		$model->unsetAttributes();  // clear any default values
 		if(isset($_GET['Finance']))
 			$model->attributes=$_GET['Finance'];
-
-		$this->render('admin',array(
+                $this->render('admin',array(
 			'model'=>$model,
-		));
+                    ));        
+		
 	}
 
 	/**

@@ -32,7 +32,7 @@ class ServiceController extends GController
 				'users'=>array('*'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('create','update','admin'),
+				'actions'=>array('create','update','admin','newList','todayList','oldList'),
 				'users'=>array('@'),
 			),
 			array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -129,7 +129,7 @@ class ServiceController extends GController
 	}
 
 	/**
-	 * Manages all models.
+	 * 查询分配
 	 */
 	public function actionAdmin()
 	{
@@ -142,7 +142,49 @@ class ServiceController extends GController
 			'model'=>$model,
 		));
 	}
+        
+        /**
+	 * 新分客户
+	 */
+	public function actionNewList()
+	{
+		$model=new CustomerInfo('search');
+		$model->unsetAttributes();  // clear any default values
+		if(isset($_GET['CustomerInfo']))
+			$model->attributes=$_GET['CustomerInfo'];
 
+		$this->render('newlist',array(
+			'model'=>$model,
+		));
+	}
+        /**
+	 * 今日联系
+	 */
+	public function actionTodayList()
+	{
+		$model=new CustomerInfo('search');
+		$model->unsetAttributes();  // clear any default values
+		if(isset($_GET['CustomerInfo']))
+			$model->attributes=$_GET['CustomerInfo'];
+
+		$this->render('todaylist',array(
+			'model'=>$model,
+		));
+	}
+         /**
+	 * 遗留数据
+	 */
+	public function actionOldList()
+	{
+		$model=new CustomerInfo('search');
+		$model->unsetAttributes();  // clear any default values
+		if(isset($_GET['CustomerInfo']))
+			$model->attributes=$_GET['CustomerInfo'];
+
+		$this->render('oldlist',array(
+			'model'=>$model,
+		));
+	}
 	/**
 	 * Returns the data model based on the primary key given in the GET variable.
 	 * If the data model is not found, an HTTP exception will be raised.

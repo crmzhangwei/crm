@@ -65,9 +65,9 @@ return array(
       'Service' => array(
         'label' => '售后管理', 'icon' => 'menu-icon  fa fa-user-md','url' => array('/Service/'),
          'items' => array(
-            array('label' => '新分客户', 'url' => array('/Service/service/admin')),
-            array('label' => '今日联系', 'url' => array('/Service/service/admin')),
-            array('label' => '遗留数据', 'url' => array('/Service/service/admin')),
+            array('label' => '新分客户', 'url' => array('/Service/service/newList')),
+            array('label' => '今日联系', 'url' => array('/Service/service/todayList')),
+            array('label' => '遗留数据', 'url' => array('/Service/service/oldList')),
             array('label' => '查询分配', 'url' => array('/Service/service/admin')),
         ),
     ),

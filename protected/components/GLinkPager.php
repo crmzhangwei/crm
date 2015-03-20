@@ -54,6 +54,30 @@ class GLinkPager extends CLinkPager {
      * @var string
      */
     public $htmlOptions = array('class' => 'pagination pull-right');
-
-
+    
+    public $isajax=0;
+    
+    /**
+	 * Creates a page button.
+	 * You may override this method to customize the page buttons.
+	 * @param string $label the text label for the button
+	 * @param integer $page the page number
+	 * @param string $class the CSS class for the page button.
+	 * @param boolean $hidden whether this page button is visible
+	 * @param boolean $selected whether this page button is selected
+	 * @return string the generated button
+	 */
+	protected function createPageButton($label,$page,$class,$hidden,$selected)
+	{
+                if($this->isajax){
+                    if($hidden || $selected)
+			$class.=' '.($hidden ? $this->hiddenPageCssClass : $this->selectedPageCssClass);
+                        $url = $this->createPageUrl($page);
+                        $url.="&isajax=1";
+                    return '<li class="'.$class.'">'.CHtml::link($label,'#',array('onclick'=>'getList(\''.$url.'\');')).'</li>';  
+                }else{
+                    return parent::createPageButton($label, $page, $class, $hidden, $selected);
+                }
+		
+	}
 }

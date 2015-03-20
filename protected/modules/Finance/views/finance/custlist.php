@@ -42,8 +42,20 @@
             <![endif]--> 
             <base target="_self">
     </head>
-<h1>财务数据</h1>
-
+<h1>选择客户</h1>
+<script type="text/javascript">
+    function getList(url){  
+        $.ajax({  
+        url:url,  
+        success:function(html){  
+            $('#search_list').html(html);  
+        }  
+        });  
+    return false; 
+    }
+    
+    
+</script>
 <p>
 你可以在输入框的开始处输入 (<b>&lt;</b>, <b>&lt;=</b>, <b>&gt;</b>, <b>&gt;=</b>, <b>&lt;&gt;</b>
 or <b>=</b>)，用以指定查询条件.
@@ -51,66 +63,55 @@ or <b>=</b>)，用以指定查询条件.
 
 <?php echo CHtml::link('高级搜索','#',array('class'=>'search-button')); ?>
 <div class="search-form" style="display:none">
-<?php $this->renderPartial('_search',array(
+<?php $this->renderPartial('_search_cust',array(
 	'model'=>$model,
 )); ?>
 </div><!-- search-form -->
- 
-<?php 
- $dataProvider = $model->search(); 
-$this->widget('GGridView', array(
-	'id'=>'finance-grid',
-	'dataProvider'=>$dataProvider,
-	'filter'=>null, 
-	'columns'=>array(
-            array('class' => 'CCheckBoxColumn',
-                    'name' => 'id',
-                    'id' => 'select',
-                    'selectableRows' => 1,
-                    'headerTemplate' => '{item}',
-                    'htmlOptions' => array(
-                        'width' => '20',
-                    ),
-                ),
-		'id',
-		'cust_id',
-		'sale_user',
-		'trans_user',
-		'acct_number',
-		'acct_amount',
-                array('name'=>'acct_time',  
-                    'value'=>'date("Y-m-d",$data->acct_time)',//格式化日期  
-                ),  
-		/*
-		'acct_time',
-		'creator',
-		'create_time',
-		*/
-		 
-	),
-)); ?>
 
-<div class="table-page"> 
-    <div class="col-sm-6">
-        共<span class="orange"><?=$dataProvider->totalItemCount ?></span>条记录 
-    </div>
-    <div class="col-sm-6 no-padding-right">
-        <?php 
-        $this->widget('GLinkPager', array('pages' => $dataProvider->getPagination(),));
-        ?>
-    </div>
-</div> 
+<div id="search_list"> 
+    <?php $this->renderPartial('_custlist',array(
+	'model'=>$model,
+)); 
+?>  
+</div> <!-- search_list-->  
+ 
 <script type="text/javascript">
 $('.search-button').click(function(){
 	$('.search-form').toggle();
 	return false;
 });
 $('.search-form form').submit(function(){
-	$('#finance-grid').yiiGridView('update', {
-		data: $(this).serialize()
-	});
+      var url = $(this).attr('action');
+      url=url+"&isajax=1"; 
+      $.ajax(url,{   
+        data:$(this).serialize(),
+        success:function(html){  
+            $('.search-form').toggle();
+            $('#search_list').html(html);  
+            }  
+        });
 	return false;
 });
+
+    function selectone(){ 
+       var oselected = $("input[type=checkbox]:checked");
+       if(!oselected||oselected.length==0){
+           alert("请选择一条记录");
+           return false;
+       }
+       if(oselected&&oselected.length>1){
+           alert("只能选择一条记录");
+           return false;
+       }
+       var selval = oselected.val(); 
+        if(window.showModalDialog){ 
+             window.returnValue = selval; 
+             window.close(); 
+        }else{
+            window.opener.document.getElementById("Finance_cust_id").value=selval;
+            window.close(); 
+        } 
+    }
  </script>
  
      </body>

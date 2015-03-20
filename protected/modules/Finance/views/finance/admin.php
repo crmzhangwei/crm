@@ -16,12 +16,13 @@ $('.search-button').click(function(){
 	$('.search-form').toggle();
 	return false;
 });
-$('.search-form form').submit(function(){
-	$('#finance-grid').yiiGridView('update', {
+$('.search-form form').submit(function(){ 
+        $('#finance-grid').yiiGridView('update', {
 		data: $(this).serialize()
 	});
 	return false;
-});
+}); 
+
 ");
 ?>
 
@@ -41,6 +42,7 @@ or <b>=</b>)，用以指定查询条件.
 <?php
 $this->widget('zii.widgets.CMenu', array('items'=> $this->menu));
 ?>
+<div id="search_list">
 <?php 
  $dataProvider = $model->search(); 
 $this->widget('GGridView', array(
@@ -67,7 +69,7 @@ $this->widget('GGridView', array(
 		),
 	),
 )); ?>
-
+ 
 <div class="table-page"> 
     <div class="col-sm-6">
         共<span class="orange"><?=$dataProvider->totalItemCount ?></span>条记录 
@@ -78,3 +80,4 @@ $this->widget('GGridView', array(
         ?>
     </div>
 </div> 
+ </div><!-- search_list-->

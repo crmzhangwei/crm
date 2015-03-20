@@ -28,6 +28,14 @@
  */
 class CustomerInfo extends CActiveRecord
 {
+        public $dept;           //部门
+        public $group;          //组别
+        public $webchat;        //微信
+        public $ww;             //主旺
+        public $service_limit;//服务期限
+        public $createtime_start;
+        public $createtime_end;
+        public $total_money;
 	/**
 	 * @return string the associated database table name
 	 */
@@ -74,7 +82,12 @@ class CustomerInfo extends CActiveRecord
 	{
 		return array(
 			'id' => '主键',
-			'cust_no' => '客户编号',
+                        'dept'=>'部门',
+                        'group'=>'组别',
+                        'webchat'=>'微信',
+                        'ww'=>'主旺', 
+                        'service_limit'=>'服务期限',
+                        'total_money'=>'总金额',
 			'cust_name' => '客户名称',
 			'shop_name' => '店铺名称',
 			'corp_name' => '公司名称',
@@ -109,20 +122,12 @@ class CustomerInfo extends CActiveRecord
 	 * @return CActiveDataProvider the data provider that can return the models
 	 * based on the search/filter conditions.
 	 */
-	public function search()
+	public function searchNewList()
 	{
 		// @todo Please modify the following code to remove attributes that should not be searched.
 
-		$criteria=new CDbCriteria;
-
-		$criteria->compare('id',$this->id,true);
-		$criteria->compare('cust_no',$this->cust_no,true);
-		$criteria->compare('cust_name',$this->cust_name,true);
-		$criteria->compare('shop_name',$this->shop_name,true);
-		$criteria->compare('corp_name',$this->corp_name,true);
-		$criteria->compare('shop_url',$this->shop_url,true);
-		$criteria->compare('shop_addr',$this->shop_addr,true);
-		$criteria->compare('phone',$this->phone,true);
+		$criteria=new CDbCriteria;  
+		$criteria->compare('cust_name',$this->cust_name,true); 
 		$criteria->compare('qq',$this->qq,true);
 		$criteria->compare('mail',$this->mail,true);
 		$criteria->compare('datafrom',$this->datafrom,true);
@@ -132,16 +137,125 @@ class CustomerInfo extends CActiveRecord
 		$criteria->compare('iskey',$this->iskey);
 		$criteria->compare('assign_eno',$this->assign_eno,true);
 		$criteria->compare('assign_time',$this->assign_time);
-		$criteria->compare('next_time',$this->next_time);
-		$criteria->compare('memo',$this->memo,true);
-		$criteria->compare('create_time',$this->create_time);
-		$criteria->compare('creator',$this->creator);
-
+		$criteria->compare('next_time',$this->next_time); 
+                $criteria->select="t.id,t.cust_name,t.cust_type,t.category,t.qq,s.webchat,s.ww,c.service_limit ";
+                $criteria->join=" left join c_aftermarket_cust_Info s on t.id=s.cust_id ".
+                                " left join c_contract_info c on t.id=c.cust_id ";
+                //$criteria->addCondition(" t.id=1");
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
 		));
 	}
 
+        /**
+	 * Retrieves a list of models based on the current search/filter conditions.
+	 *
+	 * Typical usecase:
+	 * - Initialize the model fields with values from filter form.
+	 * - Execute this method to get CActiveDataProvider instance which will filter
+	 * models according to data in model fields.
+	 * - Pass data provider to CGridView, CListView or any similar widget.
+	 *
+	 * @return CActiveDataProvider the data provider that can return the models
+	 * based on the search/filter conditions.
+	 */
+	public function search()
+	{
+		// @todo Please modify the following code to remove attributes that should not be searched.
+
+		$criteria=new CDbCriteria;  
+		$criteria->compare('cust_name',$this->cust_name,true); 
+		$criteria->compare('qq',$this->qq,true);
+		$criteria->compare('mail',$this->mail,true);
+		$criteria->compare('datafrom',$this->datafrom,true);
+		$criteria->compare('category',$this->category);
+		$criteria->compare('cust_type',$this->cust_type);
+		$criteria->compare('eno',$this->eno,true);
+		$criteria->compare('iskey',$this->iskey);
+		$criteria->compare('assign_eno',$this->assign_eno,true);
+		$criteria->compare('assign_time',$this->assign_time);
+		$criteria->compare('next_time',$this->next_time); 
+                $criteria->select="t.id,t.cust_name,t.cust_type,t.category,t.qq,s.webchat,s.ww,c.service_limit ";
+                $criteria->join=" left join c_aftermarket_cust_Info s on t.id=s.cust_id ".
+                                " left join c_contract_info c on t.id=c.cust_id ";
+                //$criteria->addCondition(" t.id=1");
+		return new CActiveDataProvider($this, array(
+			'criteria'=>$criteria,
+		));
+	}
+        
+        /**
+	 * Retrieves a list of models based on the current search/filter conditions.
+	 *
+	 * Typical usecase:
+	 * - Initialize the model fields with values from filter form.
+	 * - Execute this method to get CActiveDataProvider instance which will filter
+	 * models according to data in model fields.
+	 * - Pass data provider to CGridView, CListView or any similar widget.
+	 *
+	 * @return CActiveDataProvider the data provider that can return the models
+	 * based on the search/filter conditions.
+	 */
+	public function searchTodayList()
+	{
+		// @todo Please modify the following code to remove attributes that should not be searched.
+
+		$criteria=new CDbCriteria;  
+		$criteria->compare('cust_name',$this->cust_name,true); 
+		$criteria->compare('qq',$this->qq,true);
+		$criteria->compare('mail',$this->mail,true);
+		$criteria->compare('datafrom',$this->datafrom,true);
+		$criteria->compare('category',$this->category);
+		$criteria->compare('cust_type',$this->cust_type);
+		$criteria->compare('eno',$this->eno,true);
+		$criteria->compare('iskey',$this->iskey);
+		$criteria->compare('assign_eno',$this->assign_eno,true);
+		$criteria->compare('assign_time',$this->assign_time);
+		$criteria->compare('next_time',$this->next_time); 
+                $criteria->select="t.id,t.cust_name,t.cust_type,t.category,t.qq,s.webchat,s.ww,c.service_limit ";
+                $criteria->join=" left join c_aftermarket_cust_Info s on t.id=s.cust_id ".
+                                " left join c_contract_info c on t.id=c.cust_id ";
+                //$criteria->addCondition(" t.id=1");
+		return new CActiveDataProvider($this, array(
+			'criteria'=>$criteria,
+		));
+	}
+        /**
+	 * Retrieves a list of models based on the current search/filter conditions.
+	 *
+	 * Typical usecase:
+	 * - Initialize the model fields with values from filter form.
+	 * - Execute this method to get CActiveDataProvider instance which will filter
+	 * models according to data in model fields.
+	 * - Pass data provider to CGridView, CListView or any similar widget.
+	 *
+	 * @return CActiveDataProvider the data provider that can return the models
+	 * based on the search/filter conditions.
+	 */
+	public function searchOldList()
+	{
+		// @todo Please modify the following code to remove attributes that should not be searched.
+
+		$criteria=new CDbCriteria;  
+		$criteria->compare('cust_name',$this->cust_name,true); 
+		$criteria->compare('qq',$this->qq,true);
+		$criteria->compare('mail',$this->mail,true);
+		$criteria->compare('datafrom',$this->datafrom,true);
+		$criteria->compare('category',$this->category);
+		$criteria->compare('cust_type',$this->cust_type);
+		$criteria->compare('eno',$this->eno,true);
+		$criteria->compare('iskey',$this->iskey);
+		$criteria->compare('assign_eno',$this->assign_eno,true);
+		$criteria->compare('assign_time',$this->assign_time);
+		$criteria->compare('next_time',$this->next_time); 
+                $criteria->select="t.id,t.cust_name,t.cust_type,t.category,t.qq,s.webchat,s.ww,c.service_limit ";
+                $criteria->join=" left join c_aftermarket_cust_Info s on t.id=s.cust_id ".
+                                " left join c_contract_info c on t.id=c.cust_id ";
+                //$criteria->addCondition(" t.id=1");
+		return new CActiveDataProvider($this, array(
+			'criteria'=>$criteria,
+		));
+	}
 	/**
 	 * Returns the static model of the specified AR class.
 	 * Please note that you should have this exact method in all your CActiveRecord descendants!

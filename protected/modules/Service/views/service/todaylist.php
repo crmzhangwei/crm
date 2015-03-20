@@ -35,14 +35,14 @@ or <b>=</b>)，用以指定查询条件.
 
 <?php echo CHtml::link('Advanced Search','#',array('class'=>'search-button')); ?>
 <div class="search-form" style="display:none">
-<?php $this->renderPartial('_search_admin',array(
+<?php $this->renderPartial('_search',array(
 	'model'=>$model,
 )); ?>
 </div><!-- search-form -->
 
 <?php $this->widget('zii.widgets.grid.CGridView', array(
 	'id'=>'customer-info-grid',
-	'dataProvider'=>$model->search(),
+	'dataProvider'=>$model->searchTodayList(),
 	'filter'=>null,
 	'columns'=>array(
 		'id', 

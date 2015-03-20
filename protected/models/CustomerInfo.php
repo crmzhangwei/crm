@@ -132,5 +132,23 @@ class CustomerInfo extends CActiveRecord {
     public static function model($className = __CLASS__) {
         return parent::model($className);
     }
+    
+     public function searchForPoplist() {
+        // @todo Please modify the following code to remove attributes that should not be searched.
+
+        $criteria = new CDbCriteria;
+        if ($this->phone) {
+            $criteria->compare('phone', $this->phone, true);
+        }
+        if ($this->qq) {
+            $criteria->compare('qq', $this->qq,true);
+        }
+        if ($this->cust_name) {
+            $criteria->compare('cust_name', $this->cust_name,true);
+        }
+        return new CActiveDataProvider($this, array(
+            'criteria' => $criteria,
+        ));
+    }
 
 }

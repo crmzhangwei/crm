@@ -89,9 +89,10 @@
   
         $("#id_btn_cust_pop").click(function(){  
             if (window.showModalDialog) {
-                window.showModalDialog('index.php?r=/Finance/finance/test',self,'dialogHeight: 500px; dialogWidth: 800px; dialogTop: 200px; dialogLeft: 300px;');
+                var result = window.showModalDialog('index.php?r=/Finance/finance/PopCustList',self,'dialogHeight: 550px; dialogWidth: 960px; dialogTop: 200px; dialogLeft: 300px;');
+                $("#Finance_cust_id").val(result);
             }else{
-               window.open('index.php?r=/Finance/finance/test','self','modal=yes,width=800,height=500,resizable=no,scrollbars=no'); 
+               window.open('index.php?r=/Finance/finance/PopCustList','self','modal=yes,width=960,height=560,resizable=no,scrollbars=no'); 
             }
             
         });
