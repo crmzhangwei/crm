@@ -74,7 +74,7 @@ class UsersController extends GController
 				$this->redirect(array('view','id'=>$model->id));
 		}
 
-		$this->render('create',array(
+		$this->renderPartial('create',array(
 			'model'=>$model,
 		));
 	}

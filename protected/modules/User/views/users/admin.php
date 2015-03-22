@@ -29,7 +29,7 @@ $('.search-form form').submit(function(){
 )); ?>
        <div class="form-group">
              <div class="btn-group">
-                            <a href="javascript:void(0)" onclick="javascript:openwinx('<?= Yii::app()->createUrl('User/users/create') ?>','')" class="btn btn-sm btn-primary" > 
+                            <a href="javascript:void(0)" id ='create_user'  class="btn btn-sm btn-primary" > 
                                 <i class="icon-plus"></i>新建用户
                             </a>
              </div>        
@@ -93,3 +93,13 @@ $('.search-form form').submit(function(){
         ?>
     </div>
 </div>  		
+
+<script>
+    $(function()
+    {
+        $('#create_user').click(function()
+        {
+           public.dialog('增加用户', '<?= Yii::app()->createUrl('User/users/create') ?>',{},700);
+        })
+    })
+</script>
