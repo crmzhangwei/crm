@@ -30,3 +30,51 @@ function openwinx(url, name, w, h) {
     window.open(url, name, "top=100,left=400,width=" + w + ",height=" + h + ",toolbar=no,menubar=no,scrollbars=yes,resizable=yes,location=no,status=no");
 }
 
+var public={};
+public.dialog = function(options) {
+    if (arguments.length > 1) {
+        options = {
+            title: arguments[0],
+            url: arguments[1],
+            data: arguments[2] || {},
+            width: arguments[3] || 600
+        };
+    }
+    var defaults = {
+        title: '',
+        id: '',
+        url: '',
+        width: 600,
+        type: 'get',
+        dataType: 'html',
+        timeout: 10000, 
+        data: {}
+    };
+    var settings = $.extend({}, defaults, options);
+    $.ajax({
+        url: settings.url,
+        type: settings.type,
+        timeout: options.timeout, 
+        data: settings.data,
+        dataType: options.dataType,
+        beforeSend: function() {
+     
+        },
+        success: function(result) {
+            bootbox.dialog({
+                title: settings.title,
+                width: settings.width,
+                id: settings.id,
+                message: result
+            });
+        },
+        error: function() {
+            bootbox.alert('系统繁忙，请稍候再试!');
+        },
+        complete: function() {
+           
+        }
+    });
+
+};
+
