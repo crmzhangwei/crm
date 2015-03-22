@@ -13,6 +13,7 @@ CREATE TABLE `c_users` (
   `manager_id` int not null COMMENT '主管id',
   `ismaster` tinyint(1) DEFAULT NULL COMMENT '是否精英',
   `status` tinyint(2) DEFAULT NULL COMMENT '状态',
+  `cust_num` int NOT NULL DEFAULT 0 COMMENT '已分配资源数',
   `create_time` int NOT NULL COMMENT '创建时间',
   `login_time` int NOT NULL COMMENT '最后登录时间',
   PRIMARY KEY (`id`)
@@ -219,3 +220,4 @@ CREATE TABLE `c_black_info` (
   `creator` int NOT NULL COMMENT '创建人',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
