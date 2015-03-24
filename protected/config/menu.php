@@ -44,13 +44,13 @@ return array(
      'User' => array(
         'label' => '权限管理','icon' => 'menu-icon fa fa-key', 'url' => array('/User/'),
         'items' => array(
-                array('label' => '用户管理', 'url' => array('/User/users/index')),
-                array('label' => '部门管理', 'url' => array('/User/deptinfo/index' )),
-                array('label' => '组别管理', 'url' => array('/User/groupinfo/index')),
-                array('label' => '部门组别管理', 'url' => array('/User/deptgroup/index')),
-                array('label' => '菜单资源管理', 'url' => array('/User/menuinfo/index')),
-                array('label' => '角色管理', 'url' => array('/User/roleinfo/index')),
-                array('label' => '权限配置', 'url' => array('/User/privilege/index')),
+                array('label' => '用户管理', 'url' => array('/User/users/admin')),
+                array('label' => '部门管理', 'url' => array('/User/deptinfo/admin' )),
+                array('label' => '组别管理', 'url' => array('/User/groupinfo/admin')),
+                array('label' => '部门组别管理', 'url' => array('/User/deptgroup/admin')),
+                array('label' => '菜单资源管理', 'url' => array('/User/menuinfo/admin')),
+                array('label' => '角色管理', 'url' => array('/User/roleinfo/admin')),
+                array('label' => '权限配置', 'url' => array('/User/privilege/admin')),
             ),
     ),
     
