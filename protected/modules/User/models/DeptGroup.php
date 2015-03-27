@@ -10,6 +10,8 @@
  */
 class DeptGroup extends CActiveRecord
 {
+        public $group_name;
+        public $group_id;
 	/**
 	 * @return string the associated database table name
 	 */
@@ -53,6 +55,8 @@ class DeptGroup extends CActiveRecord
 			'id' => '主键',
 			'dept_id' => '部门id',
 			'group_id' => '组别id',
+			'group_name' => '组名',
+			'dept_name' => '部门',
 		);
 	}
 

@@ -28,11 +28,11 @@ class FinanceController extends GController
 	{
 		return array(
 			array('allow',  // allow all users to perform 'index' and 'view' actions
-				'actions'=>array('index','view',),
+				'actions'=>array('index','view','test'),
 				'users'=>array('*'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('create','update','create','PopCustList'),
+				'actions'=>array('create','update','create','PopCustList','DeptGroupArr','UserArr'),
 				'users'=>array('@'),
 			),
 			array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -134,7 +134,7 @@ class FinanceController extends GController
 		));
 	}
          /**
-	 * test
+	 * 弹出客户列表数据
 	 */
 	public function actionPopCustList()
 	{
@@ -196,4 +196,53 @@ class FinanceController extends GController
 			Yii::app()->end();
 		}
 	}
+        
+        /**
+         * 获取部门数组 
+         */
+        public function getDeptArr() {
+             return CHtml::listData(DeptInfo::model()->findAll(), 'id', 'name');
+        }
+        /**
+         * 获取部门下组别数组 
+         */
+        public function getDeptGroupArr($deptid,$isajax) { 
+            if($isajax){
+                $sql ="select t.group_id,g.name as group_name from {{dept_group}} t left join {{group_info}} g on t.group_id=g.id where t.dept_id=:dept_id"; 
+                echo json_encode(DeptGroup::model()->findAllBySql($sql,array(':dept_id'=>$deptid)));
+            }else{
+                $sql ="select t.group_id,g.name as group_name from {{dept_group}} t left join {{group_info}} g on t.group_id=g.id where t.dept_id=:dept_id";
+                return CHtml::listData(DeptGroup::model()->findAllBySql($sql,array(':dept_id'=>$deptid)), 'group_id', 'group_name');
+            } 
+            
+        }
+         /**
+         * 获取部门下组别数组 
+         */
+        public function getUserArr($deptid,$groupid,$isajax) {
+            if($isajax){ 
+                $sql ="select id,name from {{users}} where `dept`=:dept_id and `group`=:group_id"; 
+                echo json_encode(Users::model()->findAllBySql($sql,array(':dept_id'=>$deptid,':group_id'=>$groupid)));
+            }else{ 
+             return CHtml::listData(Users::model()->findAll("`dept`=:dept_id and `group`=:group_id",array(':dept_id'=>$deptid,':group_id'=>$groupid)), 'id', 'name');
+            }
+        }
+        
+        /**
+         * ajax 获取部门下组别数组 
+         */
+        public function actionDeptGroupArr($deptid) {
+            $sql ="select t.group_id,g.name as group_name from {{dept_group}} t left join {{group_info}} g on t.group_id=g.id where t.dept_id=:dept_id"; 
+            echo json_encode(DeptGroup::model()->findAllBySql($sql,array(':dept_id'=>$deptid)));
+        }
+        /**
+         * ajax 获取部门,组别下所有用户数组 
+         */
+        public function actionUserArr($deptid,$groupid) {
+           $sql ="select id,name from {{users}} where `dept`=:dept_id and `group`=:group_id"; 
+            echo json_encode(Users::model()->findAllBySql($sql,array(':dept_id'=>$deptid,':group_id'=>$groupid)));
+        }
+        public function actionTest(){
+            
+        }
 }
