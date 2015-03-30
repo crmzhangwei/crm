@@ -20,6 +20,8 @@ class Finance extends CActiveRecord
         public $cust_name;  
         public $sale_user_name;
         public $trans_user_name;
+        public $dept;
+        public $group;
 	/**
 	 * @return string the associated database table name
 	 */

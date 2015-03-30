@@ -26,6 +26,10 @@ class Users extends CActiveRecord
         public $login_time;
         public $searchtype;
         public $keyword;
+        public $id;
+        public $name;
+                       
+        
 	/**
 	 * @return string the associated database table name
 	 */

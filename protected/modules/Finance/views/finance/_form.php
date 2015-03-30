@@ -3,7 +3,41 @@
 /* @var $model Finance */
 /* @var $form CActiveForm */
 ?>
-
+<script type="text/javascript">
+     function changeDept(obj){
+            var vUrl = "index.php?r=/Finance/finance/DeptGroupArr&deptid="+obj.value;
+            $.getJSON(vUrl,function(jsonObj){  
+                        if(jsonObj){
+                            $("#Finance_group").empty();
+                            $.each(jsonObj, function(i, item) { 
+                            $("<option></option>")
+                            .val(item.group_id)
+                            .text(item.group_name)
+                            .appendTo($("#Finance_group"));
+                        });
+                        changeGroup();
+                        } 
+                    }   
+                );
+        }
+     function changeGroup(){
+            var dept = $("#Finance_dept").val();
+            var group = $("#Finance_group").val();
+            var vUrl = "index.php?r=/Finance/finance/UserArr&deptid="+dept+"&groupid="+group;
+            $.getJSON(vUrl,function(jsonObj){  
+                        if(jsonObj){
+                            $("#Finance_sale_user").empty();
+                            $.each(jsonObj, function(i, item) {  
+                            $("<option></option>")
+                            .val(item.id)
+                            .text(item.name)
+                            .appendTo($("#Finance_sale_user"));
+                        });
+                        } 
+                    }   
+                );
+        }
+    </script>
 <div class="form">
 
 <?php $form=$this->beginWidget('CActiveForm', array(
@@ -18,64 +52,54 @@
 	<p class="note"><span class="required">*</span>字段为必填项.</p>
 
 	<?php echo $form->errorSummary($model); ?>
-
-	 <div class="row" >
-		<?php echo $form->labelEx($model,'cust_id'); ?>
-		<?php echo $form->textField($model,'cust_id'); ?> 
-                <?php  echo CHtml::button("...",array('name'=>'btn_cust_pop','id'=>'id_btn_cust_pop'));?>
-                <?php echo $form->error($model,'cust_id'); ?> 
-             
-	</div>
-     
-        <div class="row" >
-		<?php echo $form->labelEx($model,'sale_user'); ?>
-		<?php echo $form->textField($model,'sale_user'); ?>
-		<?php echo $form->error($model,'sale_user'); ?>
-	</div>
-
-	<div class="row">
-		<?php echo $form->labelEx($model,'trans_user'); ?>
-		<?php echo $form->textField($model,'trans_user'); ?>
-		<?php echo $form->error($model,'trans_user'); ?>
-	</div>
-
-	<div class="row">
-		<?php echo $form->labelEx($model,'acct_number'); ?>
-		<?php echo $form->textField($model,'acct_number'); ?>
-		<?php echo $form->error($model,'acct_number'); ?>
-	</div>
-
-	<div class="row">
-		<?php echo $form->labelEx($model,'acct_amount'); ?>
-		<?php echo $form->textField($model,'acct_amount'); ?>
-		<?php echo $form->error($model,'acct_amount'); ?>
-	</div>
-
-	<div class="row">
-		<?php echo $form->labelEx($model,'acct_time'); ?>
-		<!--<?php echo $form->textField($model,'acct_time'); ?>-->
-                <?php
-                        $this->widget('zii.widgets.jui.CJuiDatePicker',array(
-                        'language'=>'zh_cn',
-			'name'=>'Finance[acct_time]',
-			'value'=>Date('Y-m-d'),
-			'options'=>array(
-			            'showAnim'=>'fold',
-			            'showOn'=>'both',
-			            'buttonImage'=>'',
-                                    'maxDate'=>'new Date()',
-			            'buttonImageOnly'=>false,
-			            'dateFormat'=>'yy-mm-dd',
-			),
-			'htmlOptions'=>array(
-			            'style'=>'height:28px',
-                                    'readonly'=>'readonly',
-			            'maxlength'=>8,
-			),
-    ));
-?>
-		<?php echo $form->error($model,'acct_time'); ?>
-	</div> 
+        
+        <table class="table table-bordered">
+            <tr>
+                <td width="10%"> <?php echo $form->labelEx($model,'cust_id'); ?></td> 
+                <td>
+                    <?php echo $form->textField($model,'cust_id'); ?>
+                    <?php  echo CHtml::button("...",array('name'=>'btn_cust_pop','id'=>'id_btn_cust_pop'));?>
+                    <?php echo $form->error($model,'cust_id'); ?> 
+                </td>
+            </tr> 
+            <tr>
+                <td width="10%"> <?php echo $form->labelEx($model,'sale_user'); ?></td> 
+                <td> 
+                    <?php echo $form->dropDownList($model, "dept", $this->getDeptArr(),array("onchange"=>"javascript:changeDept(this);")) ?>
+                    <?php echo $form->dropDownList($model, "group", $this->getDeptGroupArr(1,false),array("onchange"=>"javascript:changeGroup()")) ?> 
+                    <?php echo $form->dropDownList($model, "sale_user", $this->getUserArr(1,1,false)) ?>
+                    <?php echo $form->error($model,'sale_user'); ?>
+                </td>
+            </tr> 
+            <tr>
+                <td width="10%"><?php echo $form->labelEx($model,'trans_user'); ?></td> 
+                <td>
+                    <?php echo $form->textField($model,'trans_user'); ?>
+                    <?php echo $form->error($model,'trans_user'); ?>
+                </td>
+            </tr>
+            <tr>
+                <td width="10%"><?php echo $form->labelEx($model,'acct_number'); ?></td> 
+                <td>
+                   <?php echo $form->textField($model,'acct_number'); ?>
+                    <?php echo $form->error($model,'acct_number'); ?>
+                </td>
+            </tr>
+            <tr>
+                <td width="10%"><?php echo $form->labelEx($model,'acct_amount'); ?></td> 
+                <td>
+                   <?php echo $form->textField($model,'acct_amount'); ?>
+                    <?php echo $form->error($model,'acct_amount'); ?>
+                </td>
+            </tr>
+            <tr>
+                <td width="10%"><?php echo $form->labelEx($model,'acct_time'); ?></td> 
+                <td>
+                   <?php echo $form->textField($model,'acct_time',array('class'=>"Wdate", 'onClick'=>"WdatePicker()",'style'=>'height:30px;')); ?>
+		   <?php echo $form->error($model,'acct_time'); ?>
+                </td>
+            </tr>
+        </table>  
 
 	<div class="row buttons">
 		<?php echo CHtml::submitButton($model->isNewRecord ? '创建' : 'Save'); ?>
