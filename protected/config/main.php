@@ -17,6 +17,7 @@ return array(
 		'application.components.*',
                 'application.modules.User.models.*',
                 'zii.widgets.grid.CGridView',
+                'application.extensions.PHPExcel.*',
         ),
         'defaultController'=>'User/users/index',
 	'modules'=>array(
