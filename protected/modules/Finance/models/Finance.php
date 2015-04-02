@@ -65,7 +65,7 @@ class Finance extends CActiveRecord
 	{
 		return array(
 			'id' => 'ID',
-			'cust_id' => '客户id',
+			'cust_id' => '客户',
 			'sale_user' => '销售人员',
 			'trans_user' => '谈单师',
 			'acct_number' => '到账单数',

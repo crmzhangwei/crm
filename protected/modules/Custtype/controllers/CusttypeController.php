@@ -71,7 +71,7 @@ class CusttypeController extends GController
 		{
 			$model->attributes=$_POST['CustType'];
 			if($model->save())
-				$this->redirect(array('view','id'=>$model->id));
+				$this->redirect(array('admin'));
 		}
 
 		$this->render('create',array(
@@ -95,7 +95,7 @@ class CusttypeController extends GController
 		{
 			$model->attributes=$_POST['CustType'];
 			if($model->save())
-				$this->redirect(array('view','id'=>$model->id));
+				$this->redirect(array('admin'));
 		}
 
 		$this->render('update',array(
@@ -170,4 +170,13 @@ class CusttypeController extends GController
 			Yii::app()->end();
 		}
 	}
+        
+        /**
+         * 获取库类型数组
+         * need to do when role has done.
+         */
+        public function getLibArr() {
+            $sql ="select code,name from {{dic}} t where ctype='lib_type'"; 
+            return  CHtml::listData(Dic::model()->findAllBySql($sql),'code','name');
+        }
 }

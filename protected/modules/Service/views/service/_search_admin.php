@@ -30,13 +30,9 @@
 
 	<div class="row">
 		<?php echo $form->label($model,'ww'); ?>
-		<?php echo $form->textField($model,'datafrom',array('size'=>20,'maxlength'=>20)); ?>
+		<?php echo $form->textField($model,'ww',array('size'=>20,'maxlength'=>20)); ?>
 	</div>
-
-	<div class="row">
-		<?php echo $form->label($model,'category'); ?>
-		<?php echo $form->textField($model,'category'); ?>
-	</div> 
+ 
 	 
 
 	<div class="row buttons">

@@ -15,7 +15,7 @@
 
 	<div class="row">
 		<?php echo $form->label($model,'lib_type'); ?>
-		<?php echo $form->textField($model,'lib_type'); ?>
+		<?php echo  $form->dropDownList($model, "lib_type", $this->getLibArr()) ?>
 	</div>
 
 	<div class="row">

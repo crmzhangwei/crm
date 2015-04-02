@@ -18,24 +18,30 @@
 	<p class="note"><span class="required">*</span>为必填项.</p>
 
 	<?php echo $form->errorSummary($model); ?>
-
-	<div class="row">
-		<?php echo $form->labelEx($model,'code'); ?>
-		<?php echo $form->textField($model,'code',array('size'=>10,'maxlength'=>10)); ?>
-		<?php echo $form->error($model,'code'); ?>
-	</div>
-
-	<div class="row">
-		<?php echo $form->labelEx($model,'name'); ?>
-		<?php echo $form->textField($model,'name',array('size'=>60,'maxlength'=>100)); ?>
-		<?php echo $form->error($model,'name'); ?>
-	</div>
-
-	<div class="row">
-		<?php echo $form->labelEx($model,'ctype'); ?>
-		<?php echo $form->textField($model,'ctype',array('size'=>20,'maxlength'=>20)); ?>
-		<?php echo $form->error($model,'ctype'); ?>
-	</div>
+        <table class="table table-bordered">
+            <tr>
+                <td width="10%"><?php echo $form->labelEx($model,'code'); ?></td> 
+                <td>
+                    <?php echo $form->textField($model,'code',array('size'=>10,'maxlength'=>10)); ?>
+                    <?php echo $form->error($model,'code'); ?> 
+                </td>
+            </tr>
+            <tr>
+                <td width="10%"><?php echo $form->labelEx($model,'name'); ?></td> 
+                <td>
+                    <?php echo $form->textField($model,'name',array('size'=>60,'maxlength'=>100)); ?>
+                    <?php echo $form->error($model,'name'); ?> 
+                </td>
+            </tr>
+            <tr>
+                <td width="10%"><?php echo $form->labelEx($model,'ctype'); ?></td> 
+                <td>
+                    <?php echo $form->textField($model,'ctype',array('size'=>20,'maxlength'=>20)); ?>
+                    <?php echo $form->error($model,'ctype'); ?> 
+                </td>
+            </tr>
+        </table>
+	 
 
 	<div class="row buttons">
 		<?php echo CHtml::submitButton($model->isNewRecord ? '创建' : 'Save'); ?>

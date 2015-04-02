@@ -3,13 +3,11 @@
 /* @var $model CustomerInfo */
 
 $this->breadcrumbs=array(
-	'Customer Infos'=>array('index'),
-	'Manage',
+	'售后管理'=>array('index'),
+	'查询分配',
 );
 
-$this->menu=array(
-	array('label'=>'List CustomerInfo', 'url'=>array('index')),
-	array('label'=>'Create CustomerInfo', 'url'=>array('create')),
+$this->menu=array( 
 );
 
 Yii::app()->clientScript->registerScript('search', "
@@ -33,25 +31,27 @@ $('.search-form form').submit(function(){
 or <b>=</b>)，用以指定查询条件.
 </p>
 
-<?php echo CHtml::link('Advanced Search','#',array('class'=>'search-button')); ?>
+<?php echo CHtml::link('高级搜索','#',array('class'=>'search-button')); ?>
 <div class="search-form" style="display:none">
 <?php $this->renderPartial('_search_admin',array(
 	'model'=>$model,
 )); ?>
 </div><!-- search-form -->
 
-<?php $this->widget('zii.widgets.grid.CGridView', array(
-	'id'=>'customer-info-grid',
-	'dataProvider'=>$model->search(),
+<?php 
+$dataProvider = $model->search();
+$this->widget('GGridView', array(
+	'id'=>'service-grid',
+	'dataProvider'=>$dataProvider,
 	'filter'=>null,
 	'columns'=>array(
-		'id', 
-		'cust_name',
-		'cust_type',
+		'id',   
+                array('name'=>'cust_id','value'=>'$data->cust_name'),
+                array('name'=>'cust_type','value'=>'$data->cust_type_name'),
 		'qq',
 		'webchat',
                 'ww',
-                'category',
+                array('name'=>'category','value'=>'$data->category_name'),
                 'service_limit',
 		/*
 		'shop_addr',
@@ -75,3 +75,14 @@ or <b>=</b>)，用以指定查询条件.
 		),
 	),
 )); ?>
+
+<div class="table-page"> 
+    <div class="col-sm-6">
+        共<span class="orange"><?=$dataProvider->totalItemCount ?></span>条记录 
+    </div>
+    <div class="col-sm-6 no-padding-right">
+        <?php 
+        $this->widget('GLinkPager', array('pages' => $dataProvider->getPagination(),));
+        ?>
+    </div>
+</div>

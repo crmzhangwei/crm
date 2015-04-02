@@ -36,6 +36,7 @@ class CustomerInfo extends CActiveRecord
         public $createtime_start;
         public $createtime_end;
         public $total_money;
+        public $cust_type_name; //客户分类名称
 	/**
 	 * @return string the associated database table name
 	 */
@@ -132,15 +133,17 @@ class CustomerInfo extends CActiveRecord
 		$criteria->compare('mail',$this->mail,true);
 		$criteria->compare('datafrom',$this->datafrom,true);
 		$criteria->compare('category',$this->category);
-		$criteria->compare('cust_type',$this->cust_type);
+		$criteria->compare('s.cust_type',$this->cust_type);
 		$criteria->compare('eno',$this->eno,true);
 		$criteria->compare('iskey',$this->iskey);
 		$criteria->compare('assign_eno',$this->assign_eno,true);
 		$criteria->compare('assign_time',$this->assign_time);
 		$criteria->compare('next_time',$this->next_time); 
-                $criteria->select="t.id,t.cust_name,t.cust_type,t.category,t.qq,s.webchat,s.ww,c.service_limit ";
-                $criteria->join=" left join c_aftermarket_cust_Info s on t.id=s.cust_id ".
-                                " left join c_contract_info c on t.id=c.cust_id ";
+                $criteria->select="t.id,t.cust_name,s.cust_type,ct.type_name as cust_type_name,t.category,t.qq,s.webchat,s.ww,c.service_limit ";
+                $criteria->join=" left join {{aftermarket_cust_Info}} s on t.id=s.cust_id ".
+                                " left join {{cust_type}} ct on ct.type_no=s.cust_type and ct.lib_type=3 ".
+                                " left join {{contract_info}} c on t.id=c.cust_id ";
+                
                 //$criteria->addCondition(" t.id=1");
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
@@ -169,15 +172,16 @@ class CustomerInfo extends CActiveRecord
 		$criteria->compare('mail',$this->mail,true);
 		$criteria->compare('datafrom',$this->datafrom,true);
 		$criteria->compare('category',$this->category);
-		$criteria->compare('cust_type',$this->cust_type);
+		$criteria->compare('s.cust_type',$this->cust_type);
 		$criteria->compare('eno',$this->eno,true);
 		$criteria->compare('iskey',$this->iskey);
 		$criteria->compare('assign_eno',$this->assign_eno,true);
 		$criteria->compare('assign_time',$this->assign_time);
 		$criteria->compare('next_time',$this->next_time); 
-                $criteria->select="t.id,t.cust_name,t.cust_type,t.category,t.qq,s.webchat,s.ww,c.service_limit ";
-                $criteria->join=" left join c_aftermarket_cust_Info s on t.id=s.cust_id ".
-                                " left join c_contract_info c on t.id=c.cust_id ";
+                $criteria->select="t.id,t.cust_name,s.cust_type,t.category,t.qq,s.webchat,s.ww,c.service_limit ";
+                $criteria->join=" left join {{aftermarket_cust_Info}} s on t.id=s.cust_id ".
+                                " left join {{cust_type}} c on c.type_no=s.cust_type ".
+                                " left join {{contract_info}} c on t.id=c.cust_id ";
                 //$criteria->addCondition(" t.id=1");
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,

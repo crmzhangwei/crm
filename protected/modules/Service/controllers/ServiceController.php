@@ -133,10 +133,10 @@ class ServiceController extends GController
 	 */
 	public function actionAdmin()
 	{
-		$model=new CustomerInfo('search');
+		$model=new AftermarketCustInfo('search');
 		$model->unsetAttributes();  // clear any default values
-		if(isset($_GET['CustomerInfo']))
-			$model->attributes=$_GET['CustomerInfo'];
+		if(isset($_GET['AftermarketCustInfo']))
+			$model->attributes=$_GET['AftermarketCustInfo'];
 
 		$this->render('admin',array(
 			'model'=>$model,
@@ -148,11 +148,15 @@ class ServiceController extends GController
 	 */
 	public function actionNewList()
 	{
-		$model=new CustomerInfo('search');
+		$model=new AftermarketCustInfo('search');
 		$model->unsetAttributes();  // clear any default values
-		if(isset($_GET['CustomerInfo']))
-			$model->attributes=$_GET['CustomerInfo'];
-
+		if(isset($_GET['AftermarketCustInfo'])){
+			$model->attributes=$_GET['AftermarketCustInfo'];  
+                        $model->cust_name=$_GET['AftermarketCustInfo']['cust_name']; 
+                        $model->qq=$_GET['AftermarketCustInfo']['qq'];
+                        $model->dept=$_GET['AftermarketCustInfo']['dept'];
+                        $model->group=$_GET['AftermarketCustInfo']['group'];
+                }
 		$this->render('newlist',array(
 			'model'=>$model,
 		));
@@ -162,11 +166,15 @@ class ServiceController extends GController
 	 */
 	public function actionTodayList()
 	{
-		$model=new CustomerInfo('search');
+		$model=new AftermarketCustInfo('search');
 		$model->unsetAttributes();  // clear any default values
-		if(isset($_GET['CustomerInfo']))
-			$model->attributes=$_GET['CustomerInfo'];
-
+		if(isset($_GET['AftermarketCustInfo'])){
+			$model->attributes=$_GET['AftermarketCustInfo'];
+                        $model->cust_name=$_GET['AftermarketCustInfo']['cust_name']; 
+                        $model->qq=$_GET['AftermarketCustInfo']['qq'];
+                        $model->dept=$_GET['AftermarketCustInfo']['dept'];
+                        $model->group=$_GET['AftermarketCustInfo']['group'];
+                }
 		$this->render('todaylist',array(
 			'model'=>$model,
 		));
@@ -176,11 +184,15 @@ class ServiceController extends GController
 	 */
 	public function actionOldList()
 	{
-		$model=new CustomerInfo('search');
+		$model=new AftermarketCustInfo('search');
 		$model->unsetAttributes();  // clear any default values
-		if(isset($_GET['CustomerInfo']))
-			$model->attributes=$_GET['CustomerInfo'];
-
+		if(isset($_GET['AftermarketCustInfo'])){
+			$model->attributes=$_GET['AftermarketCustInfo'];
+                        $model->cust_name=$_GET['AftermarketCustInfo']['cust_name']; 
+                        $model->qq=$_GET['AftermarketCustInfo']['qq'];
+                        $model->dept=$_GET['AftermarketCustInfo']['dept'];
+                        $model->group=$_GET['AftermarketCustInfo']['group'];
+                }
 		$this->render('oldlist',array(
 			'model'=>$model,
 		));
@@ -212,4 +224,27 @@ class ServiceController extends GController
 			Yii::app()->end();
 		}
 	}
+        /**
+         * 获取类目数组
+         * @return type
+         */
+        public function getCategoryArr(){
+            $sql ="select code,name from {{dic}} where ctype='cust_category'";
+            return CHtml::listData(Dic::model()->findAllBySql($sql), 'code', 'name');
+        }
+        
+        /**
+         * 获取部门数组 
+         */
+        public function getDeptArr() {
+             return CHtml::listData(DeptInfo::model()->findAll(), 'id', 'name');
+        }
+         /**
+         * 获取客户分类数组
+         * @return type
+         */
+        public function getCustTypeArr(){
+            $sql ="select type_no,type_name from {{cust_type}} where lib_type='3'"; 
+            return CHtml::listData(CustType::model()->findAllBySql($sql), 'type_no', 'type_name');
+        }
 }

@@ -73,8 +73,8 @@
             </tr> 
             <tr>
                 <td width="10%"><?php echo $form->labelEx($model,'trans_user'); ?></td> 
-                <td>
-                    <?php echo $form->textField($model,'trans_user'); ?>
+                <td> 
+                    <?php echo $form->dropDownList($model, "trans_user", $this->getAllTransUser()) ?>
                     <?php echo $form->error($model,'trans_user'); ?>
                 </td>
             </tr>

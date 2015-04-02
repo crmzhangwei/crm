@@ -217,7 +217,7 @@ class FinanceController extends GController
             
         }
          /**
-         * 获取部门下组别数组 
+         * 获取部门,组别下的用户数组 
          */
         public function getUserArr($deptid,$groupid,$isajax) {
             if($isajax){ 
@@ -227,21 +227,24 @@ class FinanceController extends GController
              return CHtml::listData(Users::model()->findAll("`dept`=:dept_id and `group`=:group_id",array(':dept_id'=>$deptid,':group_id'=>$groupid)), 'id', 'name');
             }
         }
-        
+         
         /**
-         * ajax 获取部门下组别数组 
+         * 获取所有谈单师用户数组 
+         * need to do when role has done.
          */
-        public function actionDeptGroupArr($deptid) {
-            $sql ="select t.group_id,g.name as group_name from {{dept_group}} t left join {{group_info}} g on t.group_id=g.id where t.dept_id=:dept_id"; 
-            echo json_encode(DeptGroup::model()->findAllBySql($sql,array(':dept_id'=>$deptid)));
+        public function getAllTransUser() {
+            $sql ="select id,name from {{users}} t where exists (select 1 from {{user_role}} where role_id=1 and user_id=t.id  )"; 
+            return  CHtml::listData(Users::model()->findAllBySql($sql),'id','name');
         }
         /**
          * ajax 获取部门,组别下所有用户数组 
          */
         public function actionUserArr($deptid,$groupid) {
-           $sql ="select id,name from {{users}} where `dept`=:dept_id and `group`=:group_id"; 
+            $sql ="select id,name from {{users}} where `dept`=:dept_id and `group`=:group_id"; 
             echo json_encode(Users::model()->findAllBySql($sql,array(':dept_id'=>$deptid,':group_id'=>$groupid)));
         }
+        
+        
         public function actionTest(){
             
         }

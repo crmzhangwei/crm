@@ -11,6 +11,7 @@
  */
 class CustType extends CActiveRecord {
 
+    public $lib_type_name;
     /**
      * @return string the associated database table name
      */
@@ -78,7 +79,8 @@ class CustType extends CActiveRecord {
         $criteria->compare('lib_type', $this->lib_type);
         $criteria->compare('type_no', $this->type_no, true);
         $criteria->compare('type_name', $this->type_name, true);
-
+        $criteria->select="t.id,t.lib_type,t.type_no,t.type_name,d.name as lib_type_name";
+        $criteria->join=" left join {{dic}} d on t.lib_type=d.code and d.ctype='lib_type'";
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
         ));

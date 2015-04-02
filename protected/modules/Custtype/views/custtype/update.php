@@ -3,9 +3,9 @@
 /* @var $model CustType */
 
 $this->breadcrumbs=array(
-	'Cust Types'=>array('index'),
+	'客户分类'=>array('admin'),
 	$model->id=>array('view','id'=>$model->id),
-	'Update',
+	'修改',
 );
 
 $this->menu=array(
@@ -16,6 +16,6 @@ $this->menu=array(
 );
 ?>
 
-<h1>Update CustType <?php echo $model->id; ?></h1>
+<h1>修改客户分类 <?php echo $model->id; ?></h1>
 
 <?php $this->renderPartial('_form', array('model'=>$model)); ?>

@@ -18,25 +18,29 @@
 	<p class="note"><span class="required">*</span>为必填项.</p>
 
 	<?php echo $form->errorSummary($model); ?>
-
-	<div class="row">
-		<?php echo $form->labelEx($model,'lib_type'); ?>
-		<?php echo $form->textField($model,'lib_type'); ?>
-		<?php echo $form->error($model,'lib_type'); ?>
-	</div>
-
-	<div class="row">
-		<?php echo $form->labelEx($model,'type_no'); ?>
-		<?php echo $form->textField($model,'type_no',array('size'=>5,'maxlength'=>5)); ?>
-		<?php echo $form->error($model,'type_no'); ?>
-	</div>
-
-	<div class="row">
-		<?php echo $form->labelEx($model,'type_name'); ?>
-		<?php echo $form->textField($model,'type_name',array('size'=>60,'maxlength'=>100)); ?>
-		<?php echo $form->error($model,'type_name'); ?>
-	</div>
-
+         <table class="table table-bordered">
+            <tr>
+                <td width="10%"><?php echo $form->labelEx($model,'lib_type'); ?></td> 
+                <td>
+                    <?php echo  $form->dropDownList($model, "lib_type", $this->getLibArr()) ?>
+                    <?php echo $form->error($model,'lib_type'); ?> 
+                </td>
+            </tr> 
+            <tr>
+                <td width="10%"><?php echo $form->labelEx($model,'type_no'); ?></td> 
+                <td>
+                    <?php echo $form->textField($model,'type_no'); ?>
+                    <?php echo $form->error($model,'type_no'); ?> 
+                </td>
+            </tr>
+            <tr>
+                <td width="10%"><?php echo $form->labelEx($model,'type_name'); ?></td> 
+                <td>
+                    <?php echo $form->textField($model,'type_name'); ?>
+                    <?php echo $form->error($model,'type_name'); ?> 
+                </td>
+            </tr>
+         </table> 
 	<div class="row buttons">
 		<?php echo CHtml::submitButton($model->isNewRecord ? '创建' : 'Save'); ?>
 	</div>

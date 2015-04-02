@@ -3,7 +3,7 @@
 /* @var $model CustType */
 
 $this->breadcrumbs=array(
-	'Cust Types'=>array('index'),
+	'客户分类'=>array('admin'),
 	$model->id,
 );
 
@@ -16,7 +16,7 @@ $this->menu=array(
 );
 ?>
 
-<h1>View CustType #<?php echo $model->id; ?></h1>
+<h1>查看客户分类 #<?php echo $model->id; ?></h1>
 
 <?php $this->widget('zii.widgets.CDetailView', array(
 	'data'=>$model,

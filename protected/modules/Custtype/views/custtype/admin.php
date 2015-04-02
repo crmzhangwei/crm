@@ -43,13 +43,15 @@ or <b>=</b>)，用以指定查询条件.
 $this->widget('zii.widgets.CMenu', array('items'=> $this->menu));
 ?>
 </p>
-<?php $this->widget('zii.widgets.grid.CGridView', array(
+<?php 
+$dataProvider = $model->search(); 
+$this->widget('GGridView', array(
 	'id'=>'cust-type-grid',
-	'dataProvider'=>$model->search(),
+	'dataProvider'=>$dataProvider,
 	'filter'=>null,
 	'columns'=>array(
-		'id',
-		'lib_type',
+		'id', 
+                array('name'=>'lib_type','value'=>'$data->lib_type_name'),
 		'type_no',
 		'type_name',
 		array(
@@ -57,3 +59,14 @@ $this->widget('zii.widgets.CMenu', array('items'=> $this->menu));
 		),
 	),
 )); ?>
+
+<div class="table-page"> 
+    <div class="col-sm-6">
+        共<span class="orange"><?=$dataProvider->totalItemCount ?></span>条记录 
+    </div>
+    <div class="col-sm-6 no-padding-right">
+        <?php 
+        $this->widget('GLinkPager', array('pages' => $dataProvider->getPagination(),));
+        ?>
+    </div>
+</div>
