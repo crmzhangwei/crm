@@ -72,6 +72,7 @@ $this->widget('GGridView', array(
 		*/
 		array(
 			'class'=>'CButtonColumn',
+                        'template'=>'',  
 		),
 	),
 )); ?>

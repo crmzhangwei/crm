@@ -29,7 +29,7 @@ class AftermarketCustInfo extends CActiveRecord
         public $service_limit;  
         public $createtime_start;
         public $createtime_end;
-        public $total_money; 
+        public $total_money;  
         
 	/**
 	 * @return string the associated database table name
@@ -64,7 +64,7 @@ class AftermarketCustInfo extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-//                    'cust_id'=>array(self::HAS_ONE, 'CustomerInfo', 'id'), 
+                     'cust'=>array(self::BELONGS_TO, 'CustomerInfo', 'cust_id'), 
 //                    'cust_type'=>array(self::HAS_ONE, 'CustType', 'id'), 
 //                    'service_limit'=>array(self::HAS_ONE, 'ContractInfo', 'cust_id'), 
 		);
@@ -80,7 +80,7 @@ class AftermarketCustInfo extends CActiveRecord
                         'dept'=>'部门',
                         'group'=>'组别',
 			'cust_id' => '客户',
-			'cust_name' => '客户',
+			'cust_name' => '客户', 
 			'cust_type' => '客户分类',
 			'webchat' => '微信',
 			'ww' => '旺旺',
@@ -93,7 +93,17 @@ class AftermarketCustInfo extends CActiveRecord
 			'memo' => '备注',
 			'creator' => '创建人',
 			'create_time' => '创建时间',
-                        'total_money'=>'金额'
+                        'total_money'=>'金额',
+                        'cust[cust_name]' => '客户名称',
+			'cust[shop_name]' => '店铺名称',
+                        'cust[corp_name]' => '公司名称',
+                        'cust[shop_url]' => '店铺网址',
+                        'cust[shop_addr]' => '店铺地址',
+                        'cust[phone]' => '电话',
+                    'cust[qq]' => 'QQ',
+                    'cust[mail]' => '邮箱',
+                    'cust[datafrom]' => '数据来源',
+                     'cust[iskey]' => '是否重点',
 		);
 	}
 

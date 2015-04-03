@@ -36,6 +36,7 @@
         <![endif]-->
         <link rel="stylesheet" href="<?php echo Yii::app()->request->baseUrl; ?>/assets/css/ace-skins.min.css" />
         <link rel="stylesheet" href="<?php echo Yii::app()->request->baseUrl; ?>/assets/css/ace-rtl.min.css" />
+        <link rel="stylesheet" href="<?php echo Yii::app()->request->baseUrl; ?>/assets/css/jquery-ui.min.css" />
 
         <!--[if lte IE 9]>
           <link rel="stylesheet" href="<?php echo Yii::app()->request->baseUrl; ?>/assets/css/ace-ie.min.css" />
@@ -160,6 +161,7 @@
             <script src="assets/js/excanvas.min.js"></script>
             <![endif]-->
             <script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/js/jquery-ui.custom.min.js"></script>
+            <script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/js/jquery-ui.min.js"></script>
             <script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/js/jquery.ui.touch-punch.min.js"></script>
             <script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/js/jquery.easypiechart.min.js"></script>
             <script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/js/jquery.sparkline.min.js"></script>

@@ -73,6 +73,8 @@ $this->widget('GGridView', array(
 		*/
 		array(
 			'class'=>'CButtonColumn',
+                        'template'=>'{update}', 
+                        'updateButtonLabel'=>'查看客户详情'
 		),
 	),
 )); ?>

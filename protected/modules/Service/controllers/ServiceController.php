@@ -87,7 +87,11 @@ class ServiceController extends GController
 	public function actionUpdate($id)
 	{
 		$model=$this->loadModel($id);
-
+                $sharedNote = NoteInfo::model();
+                $sharedNote->setAttribute("cust_id", $model->cust_id); 
+                $historyNote = NoteInfo::model();
+                $historyNote->setAttribute("cust_id", $model->cust_id);
+                $noteinfo = new NoteInfo();
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
 
@@ -100,6 +104,9 @@ class ServiceController extends GController
 
 		$this->render('update',array(
 			'model'=>$model,
+                        'sharedNote'=>$sharedNote,
+                        'historyNote'=>$historyNote,
+                        'noteinfo'=>$noteinfo,
 		));
 	}
 
@@ -206,7 +213,19 @@ class ServiceController extends GController
 	 */
 	public function loadModel($id)
 	{
-		$model=CustomerInfo::model()->findByPk($id);
+		//$model=CustomerInfo::model()->findByPk($id);
+                $sql="select c.cust_name,c.corp_name,c.shop_name,c.shop_url,c.shop_addr,c.phone,c.qq,c.mail,c.datafrom,".
+                        "d.name as category_name,ct.type_name as cust_type_name,t.eno,t.assign_eno,t.assign_time,t.next_time,t.memo,t.create_time,t.creator".
+                        " from {{aftermarket_cust_info}} t ".
+                        " left join {{customer_info}} c on t.cust_id=c.id".
+                        " left join {{contract_info}} ci on t.cust_id=ci.cust_id".
+                        " left join {{dic}} d on c.category=d.code and d.ctype='cust_category' ".
+                        " left join {{cust_type}} ct on ct.type_no=t.cust_type and ct.lib_type=3 ".
+                        " where t.id=:id"
+                        ;
+                
+                //$model = AftermarketCustInfo::model()->findBySql($sql,array(':id'=>$id));
+                $model = AftermarketCustInfo::model()->findByPk($id); 
 		if($model===null)
 			throw new CHttpException(404,'The requested page does not exist.');
 		return $model;

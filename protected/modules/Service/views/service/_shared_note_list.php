@@ -1,23 +1,13 @@
 <?php
 /* @var $this ServiceController */
-/* @var $model CustomerInfo */
-
-$this->breadcrumbs=array(
-	'售后管理'=>array('index'),
-	'新分客户',
-);
-
-$this->menu=array(
-	 
-);
-
+/* @var $model CustomerInfo */ 
 Yii::app()->clientScript->registerScript('search', "
 $('.search-button').click(function(){
 	$('.search-form').toggle();
 	return false;
 });
 $('.search-form form').submit(function(){
-	$('#service-grid').yiiGridView('update', {
+	$('#sharenote-grid').yiiGridView('update', {
 		data: $(this).serialize()
 	});
 	return false;
@@ -25,7 +15,7 @@ $('.search-form form').submit(function(){
 ");
 ?>
 
-<h1>售后</h1>
+<h1>共享小记</h1>
 
 <p>
 你可以在输入框的开始处输入 (<b>&lt;</b>, <b>&lt;=</b>, <b>&gt;</b>, <b>&gt;=</b>, <b>&lt;&gt;</b>
@@ -34,47 +24,25 @@ or <b>=</b>)，用以指定查询条件.
 
 <?php echo CHtml::link('高级搜索','#',array('class'=>'search-button')); ?>
 <div class="search-form" style="display:none">
-<?php $this->renderPartial('_search',array(
-	'model'=>$model,
-)); ?>
-</div><!-- search-form -->
+ 
+</div>
+<!-- search-form -->
 
 <?php 
- $dataProvider = $model->searchNewList(); 
+$dataProvider = $model->searchSharedNote($model->cust_id);
 $this->widget('GGridView', array(
-	'id'=>'service-grid',
+	'id'=>'sharenote-grid',
 	'dataProvider'=>$dataProvider,
 	'filter'=>null,
 	'columns'=>array(
-		'id',   
-                array('name'=>'cust_id','value'=>'$data->cust_name'),
-                array('name'=>'cust_type','value'=>'$data->cust_type_name'),
-		'qq',
-		'webchat',
-                'ww',
-                array('name'=>'category','value'=>'$data->category_name'),
-                'service_limit',
-		/*
-		'shop_addr',
-		'phone',
-		'qq',
-		'mail',
-		'datafrom',
-		'category',
-		'cust_type',
-		'eno',
-		'iskey',
-		'assign_eno',
-		'assign_time',
-		'next_time',
-		'memo',
-		'create_time',
-		'creator',
-		*/
+		'id',    
+		'cust_info',
+		'requirement',
+                'service', 
+                'next_contact', 
 		array(
 			'class'=>'CButtonColumn',
-                        'template'=>'{update}', 
-                        'updateButtonLabel'=>'查看客户详情'
+                        'template'=>'',  
 		),
 	),
 )); ?>
