@@ -9,14 +9,14 @@ $this->breadcrumbs = array(
 
 Yii::app()->clientScript->registerScript('search', "
 $('.search-button').click(function(){
-	$('.search-form').toggle();
-	return false;
+  $('.search-form').toggle();
+  return false;
 });
 $('.search-form form').submit(function(){
-	$('#customer-info-grid').yiiGridView('update', {
-		data: $(this).serialize()
-	});
-	return false;
+  $('#customer-info-grid').yiiGridView('update', {
+    data: $(this).serialize()
+  });
+  return false;
 });
 ");
 ?>
@@ -33,15 +33,15 @@ $form = $this->beginWidget('CActiveForm', array(
             <i class="icon-plus"></i>新建用户
         </a>
     </div>        
-    <?php echo $form->label($model, 'iskey'); ?>
-    <?php echo $form->dropDownList($model, 'iskey', array('全部', '是', '否'), array('style' => "height:34px;")); ?>
+    <?php echo $form->label($model, 'contact_7_day'); ?>
+    <?php echo $form->dropDownList($model, 'contact_7_day', array('全部', '是'), array('style' => "height:34px;")); ?>
     <?php echo $form->label($model, 'iskey'); ?>
     <?php echo $form->dropDownList($model, 'iskey', array('全部', '是', '否'), array('style' => "height:34px;")); ?>
     <?php echo $form->label($model, 'phone'); ?>
     <?php echo $form->textField($model, 'phone', array('size' => 15, 'maxlength' => 15)); ?>
     <?php echo $form->label($model, 'cust_type'); ?>
-    <?php echo $form->dropDownList($model, 'cust_type',$this->genCustTypeArray(), array('style' => "height:34px;")); ?>至
-    <?php echo $form->dropDownList($model, 'cust_type', $this->genCustTypeArray(), array('style' => "height:34px;")); ?>
+    <?php echo $form->dropDownList($model, 'cust_type_from',$this->genCustTypeArray(), array('style' => "height:34px;")); ?>至
+    <?php echo $form->dropDownList($model, 'cust_type_to', $this->genCustTypeArray(), array('style' => "height:34px;")); ?>
     <button class="btn btn-sm btn-primary" type="submit">
         <i class="icon-search"></i>
         搜 索
@@ -53,7 +53,7 @@ $form = $this->beginWidget('CActiveForm', array(
 $this->widget('GGridView', array(
     'id' => 'customer-info-grid',
     'dataProvider' => $model->search(),
-//	'filter'=>$model,
+//  'filter'=>$model,
     'columns' => array(
         array('class' => 'CCheckBoxColumn',
             'name' => 'id',
