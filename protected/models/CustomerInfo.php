@@ -28,6 +28,10 @@
  */
 class CustomerInfo extends CActiveRecord {
 
+    public $cust_type_from;
+    public $cust_type_to;
+    public $contact_7_day;
+
     /**
      * @return string the associated database table name
      */
@@ -91,6 +95,7 @@ class CustomerInfo extends CActiveRecord {
             'memo' => '备注',
             'create_time' => '创建时间',
             'creator' => '创建人',
+            'contact_7_day'=>'七天内联系过',
         );
     }
 
@@ -113,8 +118,11 @@ class CustomerInfo extends CActiveRecord {
         if ($this->phone) {
             $criteria->compare('phone', $this->phone, true);
         }
-        if ($this->cust_type) {
-            $criteria->compare('cust_type', $this->cust_type);
+        if ($this->cust_type_from && $this->cust_type_to) {
+            $criteria->addBetweenCondition('cust_type',  intval($this->cust_type_from),  intval($this->cust_type_to));
+        }
+        if($this->contact_7_day){
+            
         }
         if ($this->iskey) {
             $criteria->compare('iskey', $this->iskey);
