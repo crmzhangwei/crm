@@ -54,7 +54,7 @@ class CustomerInfo extends CActiveRecord {
             array('mail', 'length', 'max' => 50),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, cust_no, cust_name, shop_name, corp_name, shop_url, shop_addr, phone, qq, mail, datafrom, category, cust_type, eno, iskey, assign_eno, assign_time, next_time, memo, create_time, creator', 'safe', 'on' => 'search'),
+            array('id, cust_no,contact_7_day,cust_type_from,cust_type_to, cust_name, shop_name, corp_name, shop_url, shop_addr, phone, qq, mail, datafrom, category, cust_type, eno, iskey, assign_eno, assign_time, next_time, memo, create_time, creator', 'safe', 'on' => 'search'),
         );
     }
 
