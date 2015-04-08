@@ -159,4 +159,5 @@
 	        $('#userinfo').html(optStr);
 	    },'json')
     }
+    
 </script> 
