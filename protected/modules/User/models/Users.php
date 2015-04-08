@@ -46,8 +46,8 @@ class Users extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('pass, username, tel, dept', 'required'),
-			array('sex, dept, group, ismaster, status', 'numerical', 'integerOnly'=>true),
+			array('pass, username, tel, dept_id', 'required'),
+			array('sex, dept_id, group_id, ismaster, status', 'numerical', 'integerOnly'=>true),
 			array('eno', 'length', 'max'=>10),
 			array('pass', 'length', 'max'=>50),
 			array('name, tel', 'length', 'max'=>20),
@@ -57,7 +57,7 @@ class Users extends CActiveRecord
                         array('pass','compare'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, eno, pass, name, username, birth, sex, tel, qq, dept, group, ismaster, status', 'safe', 'on'=>'search'),
+			array('id, eno, pass, name, username, birth, sex, tel, qq, dept_id, group_id, ismaster, status', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -97,8 +97,8 @@ class Users extends CActiveRecord
 			'sex' => '性别',
 			'tel' => '电话',
 			'qq' => 'QQ',
-			'dept' => '部门',
-			'group' => '组别',
+			'dept_id' => '部门',
+			'group_id' => '组别',
 			'ismaster' => '是否精英',
 			'status' => '状态',
                         'pass_repeat'=>'重复密码',
@@ -131,8 +131,8 @@ class Users extends CActiveRecord
 		//$criteria->compare('birth',$this->birth,true);
 		//$criteria->compare('tel',$this->tel,true);
 		//$criteria->compare('qq',$this->qq,true);
-		$criteria->compare('dept',$this->dept);
-		$criteria->compare('group',$this->group);
+		$criteria->compare('dept_id',$this->dept_id);
+		$criteria->compare('group_id',$this->group_id);
 		$criteria->compare('ismaster',$this->ismaster);
 		$criteria->compare('status',$this->status);
                 

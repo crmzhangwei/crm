@@ -16,7 +16,7 @@ return array(
     'Chance' => array(
         'label' => '机会管理', 'icon' => 'menu-icon fa fa-stack-exchange','url' => array('/Chance/'),
          'items' => array(
-                    array('label' => '安排联系机会', 'url' => array('/site/index')),
+                    array('label' => '安排联系机会', 'url' => array('/chance/customerinfo/admin')),
                     array('label' => '我的机会', 'url' => array('/site/page', 'view' => 'about')),
                     array('label' => '未联系机会', 'url' => array('/site/contact')),
            ),

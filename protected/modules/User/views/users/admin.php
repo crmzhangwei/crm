@@ -99,7 +99,7 @@ $('.search-form form').submit(function(){
     {
         $('#create_user').click(function()
         {
-           public.dialog('增加用户', '<?= Yii::app()->createUrl('User/users/create') ?>',{},700);
+           public.dialog('增加用户', '<?= Yii::app()->createUrl('User/users/create') ?>',{},900);
         })
     })
 </script>

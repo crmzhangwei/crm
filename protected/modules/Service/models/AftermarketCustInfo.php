@@ -124,7 +124,7 @@ class AftermarketCustInfo extends CActiveRecord
 		$criteria->compare('c.qq',$this->qq,true); 
 		$criteria->compare('u.dept',$this->dept); 
 		$criteria->compare('u.group',$this->group);
-                $criteria->select="c.id,c.cust_name,t.cust_type,ct.type_name as cust_type_name,c.category,d.name as category_name,c.qq,t.webchat,t.ww,ci.service_limit ";
+                $criteria->select="t.id,c.cust_name,t.cust_type,ct.type_name as cust_type_name,c.category,d.name as category_name,c.qq,t.webchat,t.ww,ci.service_limit ";
                 $criteria->join=" left join {{customer_info}} c on t.cust_id = c.id ".
                                 " left join {{users}} u on t.eno=u.eno ".
                                 " left join {{cust_type}} ct on ct.type_no=t.cust_type and ct.lib_type=3 ".
@@ -164,7 +164,7 @@ class AftermarketCustInfo extends CActiveRecord
 		$criteria->compare('c.qq',$this->qq,true); 
 		$criteria->compare('u.dept',$this->dept); 
 		$criteria->compare('u.group',$this->group);
-                $criteria->select="c.id,c.cust_name,t.cust_type,ct.type_name as cust_type_name,c.category,d.name as category_name,c.qq,t.webchat,t.ww,ci.service_limit ";
+                $criteria->select="t.id,c.cust_name,t.cust_type,ct.type_name as cust_type_name,c.category,d.name as category_name,c.qq,t.webchat,t.ww,ci.service_limit ";
                 $criteria->join=" left join {{customer_info}} c on t.cust_id = c.id ".
                                 " left join {{users}} u on t.eno=u.eno ".
                                 " left join {{cust_type}} ct on ct.type_no=t.cust_type and ct.lib_type=3 ".
@@ -204,7 +204,7 @@ class AftermarketCustInfo extends CActiveRecord
 		$criteria->compare('c.qq',$this->qq,true); 
 		$criteria->compare('u.dept',$this->dept); 
 		$criteria->compare('u.group',$this->group);
-                $criteria->select="c.id,c.cust_name,t.cust_type,ct.type_name as cust_type_name,c.category,d.name as category_name,c.qq,t.webchat,t.ww,ci.service_limit ";
+                $criteria->select="t.id,c.cust_name,t.cust_type,ct.type_name as cust_type_name,c.category,d.name as category_name,c.qq,t.webchat,t.ww,ci.service_limit ";
                 $criteria->join=" left join {{customer_info}} c on t.cust_id = c.id ".
                                 " left join {{users}} u on t.eno=u.eno ".
                                 " left join {{cust_type}} ct on ct.type_no=t.cust_type and ct.lib_type=3 ".
@@ -239,7 +239,7 @@ class AftermarketCustInfo extends CActiveRecord
 		$criteria->compare('c.qq',$this->qq,true); 
 		$criteria->compare('u.dept',$this->dept); 
 		$criteria->compare('u.group',$this->group);
-                $criteria->select="c.id,c.cust_name,t.cust_type,ct.type_name as cust_type_name,c.category,d.name as category_name,c.qq,t.webchat,t.ww,ci.service_limit ";
+                $criteria->select="t.id,c.cust_name,t.cust_type,ct.type_name as cust_type_name,c.category,d.name as category_name,c.qq,t.webchat,t.ww,ci.service_limit ";
                 $criteria->join=" left join {{customer_info}} c on t.cust_id = c.id ".
                                 " left join {{users}} u on t.eno=u.eno ".
                                 " left join {{cust_type}} ct on ct.type_no=t.cust_type and ct.lib_type=3 ".

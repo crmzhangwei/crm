@@ -34,7 +34,7 @@ $('.search-form form').submit(function(){
 )); ?>
        <div class="form-group">
              <div class="btn-group">
-                <a href="javascript:void(0)" onclick="javascript:openwinx('<?= Yii::app()->createUrl('Customer/customerinfo/create') ?>','')" class="btn btn-sm btn-primary" > 
+                <a href="javascript:void(0)" id="add_customer" class="btn btn-sm btn-primary" > 
                     <i class="icon-plus"></i>添加客户
                 </a>
              </div>        
@@ -48,7 +48,7 @@ $('.search-form form').submit(function(){
             </button>
             
             <div class="btn-group" style="float:right;">
-                <a href="javascript:void(0)" onclick="javascript:openwinx('<?= Yii::app()->createUrl('Customer/customerinfo/batchCustomer') ?>','')" class="btn btn-sm btn-primary" > 
+                <a href="javascript:void(0)" id="batch_input" class="btn btn-sm btn-primary" > 
                     <i class="icon-plus"></i>EXCEL批量导入
                 </a>
             </div> 
@@ -101,4 +101,20 @@ $('.search-form form').submit(function(){
         $this->widget('GLinkPager', array('pages' => $dataProvider->pagination,));
         ?>
     </div>
-</div>  		
+</div>
+
+<script>
+    $(function()
+    {
+        $('#add_customer').click(function()
+        {
+           public.dialog('添加客户', '<?= Yii::app()->createUrl("Customer/customerinfo/create") ?>',{},700);
+        });
+
+        $('#batch_input').click(function()
+        {
+           public.dialog('EXCEL批量导入', '<?= Yii::app()->createUrl("Customer/customerinfo/batchCustomer") ?>',{},700);
+        });
+        
+    })
+</script>  		

@@ -186,6 +186,12 @@ class UsersController extends GController
         }
         
         /**
+         * 获取用户所属部門数组 
+         */
+        public function getDeptArr() {
+             return CHtml::listData(DeptInfo::model()->findAll(), 'id', 'name');
+        }
+        /**
          * 获取状态数组
          */
         public function getStatusArr() {
