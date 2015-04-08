@@ -221,10 +221,10 @@ class FinanceController extends GController
          */
         public function getUserArr($deptid,$groupid,$isajax) {
             if($isajax){ 
-                $sql ="select id,name from {{users}} where `dept`=:dept_id and `group`=:group_id"; 
+                $sql ="select id,name from {{users}} where `dept_id`=:dept_id and `group_id`=:group_id"; 
                 echo json_encode(Users::model()->findAllBySql($sql,array(':dept_id'=>$deptid,':group_id'=>$groupid)));
             }else{ 
-             return CHtml::listData(Users::model()->findAll("`dept`=:dept_id and `group`=:group_id",array(':dept_id'=>$deptid,':group_id'=>$groupid)), 'id', 'name');
+             return CHtml::listData(Users::model()->findAll("`dept_id`=:dept_id and `group_id`=:group_id",array(':dept_id'=>$deptid,':group_id'=>$groupid)), 'id', 'name');
             }
         }
          

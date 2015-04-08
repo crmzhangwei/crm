@@ -67,8 +67,8 @@ $('.search-form form').submit(function(){
 		'username',
 		'tel',
 		'qq',
-		'dept',
-		'group',
+		'dept_id',
+		'group_id',
 		'ismaster',
 		'status',
 		array(
