@@ -46,13 +46,12 @@ class AftermarketCustInfo extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('cust_id, cust_type, webchat, ww, eno, assign_eno, assign_time, next_time, memo, creator, create_time', 'required'),
-			array('cust_id, cust_type, assign_time, next_time, memo, creator, create_time', 'numerical', 'integerOnly'=>true),
+			array('cust_type,category', 'required'), 
 			array('webchat, ww', 'length', 'max'=>20),
 			array('eno, assign_eno', 'length', 'max'=>10),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, cust_id, cust_type, webchat, ww, eno, assign_eno, assign_time, next_time, memo, creator, create_time，dept,group,category', 'safe', 'on'=>'search'),
+			array('id, cust_id, cust_type, webchat, ww, eno, assign_eno, assign_time, next_time, memo, dept,group,category', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -64,7 +63,7 @@ class AftermarketCustInfo extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-                     'cust'=>array(self::BELONGS_TO, 'CustomerInfo', 'cust_id'), 
+                    // 'cust'=>array(self::BELONGS_TO, 'CustomerInfo', 'cust_id'),  
 //                    'cust_type'=>array(self::HAS_ONE, 'CustType', 'id'), 
 //                    'service_limit'=>array(self::HAS_ONE, 'ContractInfo', 'cust_id'), 
 		);
@@ -99,11 +98,13 @@ class AftermarketCustInfo extends CActiveRecord
                         'cust[corp_name]' => '公司名称',
                         'cust[shop_url]' => '店铺网址',
                         'cust[shop_addr]' => '店铺地址',
+                        'cust[category]' =>'类目',
                         'cust[phone]' => '电话',
-                    'cust[qq]' => 'QQ',
-                    'cust[mail]' => '邮箱',
-                    'cust[datafrom]' => '数据来源',
-                     'cust[iskey]' => '是否重点',
+                        'cust[qq]' => 'QQ',
+                        'cust[mail]' => '邮箱',
+                        'cust[datafrom]' => '数据来源',
+                        'cust[iskey]' => '是否重点',
+                        
 		);
 	}
 
@@ -124,7 +125,8 @@ class AftermarketCustInfo extends CActiveRecord
 		$criteria->compare('c.qq',$this->qq,true); 
 		$criteria->compare('u.dept',$this->dept); 
 		$criteria->compare('u.group',$this->group);
-                $criteria->select="t.id,c.cust_name,t.cust_type,ct.type_name as cust_type_name,c.category,d.name as category_name,c.qq,t.webchat,t.ww,ci.service_limit ";
+                $criteria->select="c.id,c.cust_name,t.cust_type,ct.type_name as cust_type_name,c.category,d.name as category_name,c.qq,t.webchat,t.ww,ci.service_limit ";
+                 
                 $criteria->join=" left join {{customer_info}} c on t.cust_id = c.id ".
                                 " left join {{users}} u on t.eno=u.eno ".
                                 " left join {{cust_type}} ct on ct.type_no=t.cust_type and ct.lib_type=3 ".
@@ -132,7 +134,8 @@ class AftermarketCustInfo extends CActiveRecord
                                 " left join {{contract_info}} ci on t.cust_id=ci.cust_id ";
                 $sort = new CSort();
                 $sort->attributes=array(
-                    'defaultOrder'=>'id desc',
+                    'defaultOrder'=>'c.id desc',
+                    'id'=>array('asc'=>'c.id asc','desc'=>'c.id desc'),
                     'cust_id'=>array('asc'=>'c.cust_name asc','desc'=>'c.cust_name desc'),
                     'cust_type'=>array('asc'=>'ct.type_name asc','desc'=>'ct.type_name desc'),
                     'qq',

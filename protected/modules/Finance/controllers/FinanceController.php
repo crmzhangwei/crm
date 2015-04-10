@@ -74,7 +74,7 @@ class FinanceController extends GController
                         $acct_time = $model->getAttribute("acct_time");
                         $iAcctTime=  strtotime($acct_time);
                         $model->setAttribute("acct_time", $iAcctTime);
-                        $model->setAttribute("creator", '1');
+                        $model->setAttribute("creator", Yii::app()->user->id);
                         $model->setAttribute("create_time", time());
 			if($model->save())
 				$this->redirect(array('admin'));
