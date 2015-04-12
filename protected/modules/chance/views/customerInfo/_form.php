@@ -15,15 +15,9 @@
 	'enableAjaxValidation'=>false,
 )); ?>
 
-	<p class="note">Fields with <span class="required">*</span> are required.</p>
+	<p class="note">带<span class="required">*</span>未必填项</p>
 
 	<?php echo $form->errorSummary($model); ?>
-
-	<div class="row">
-		<?php echo $form->labelEx($model,'cust_no'); ?>
-		<?php echo $form->textField($model,'cust_no',array('size'=>10,'maxlength'=>10)); ?>
-		<?php echo $form->error($model,'cust_no'); ?>
-	</div>
 
 	<div class="row">
 		<?php echo $form->labelEx($model,'cust_name'); ?>

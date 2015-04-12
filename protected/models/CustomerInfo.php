@@ -5,7 +5,6 @@
  *
  * The followings are the available columns in table '{{customer_info}}':
  * @property string $id
- * @property string $cust_no
  * @property string $cust_name
  * @property string $shop_name
  * @property string $corp_name
@@ -48,13 +47,13 @@ class CustomerInfo extends CActiveRecord {
         return array(
             array('create_time, creator', 'required'),
             array('category, cust_type, iskey, assign_time, next_time, create_time, creator', 'numerical', 'integerOnly' => true),
-            array('cust_no, eno, assign_eno', 'length', 'max' => 10),
+            array('eno, assign_eno', 'length', 'max' => 10),
             array('cust_name, shop_name, corp_name, shop_url, shop_addr, datafrom, memo', 'length', 'max' => 100),
             array('phone, qq', 'length', 'max' => 20),
             array('mail', 'length', 'max' => 50),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, cust_no,contact_7_day,cust_type_from,cust_type_to, cust_name, shop_name, corp_name, shop_url, shop_addr, phone, qq, mail, datafrom, category, cust_type, eno, iskey, assign_eno, assign_time, next_time, memo, create_time, creator', 'safe', 'on' => 'search'),
+            array('id,contact_7_day,cust_type_from,cust_type_to, cust_name, shop_name, corp_name, shop_url, shop_addr, phone, qq, mail, datafrom, category, cust_type, eno, iskey, assign_eno, assign_time, next_time, memo, create_time, creator', 'safe', 'on' => 'search'),
         );
     }
 
@@ -75,12 +74,11 @@ class CustomerInfo extends CActiveRecord {
     public function attributeLabels() {
         return array(
             'id' => '主键',
-            'cust_no' => '客户编号',
             'cust_name' => '客户名称',
             'shop_name' => '店铺名称',
             'corp_name' => '公司名称',
             'shop_url' => '店铺网址',
-            'shop_addr' => '店铺地称',
+            'shop_addr' => '店铺地址',
             'phone' => '电话',
             'qq' => 'QQ',
             'mail' => '邮箱',
