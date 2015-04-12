@@ -35,6 +35,7 @@ return array(
         'Custtype',
         'Dictionary',
         'Service',
+		'chance'
 	),
 
 	// application components
