@@ -32,7 +32,7 @@ class ServiceController extends GController
 				'users'=>array('*'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('create','update','admin','newList','todayList','oldList'),
+				'actions'=>array('update','admin','newList','todayList','oldList','dial','message','mail'),
 				'users'=>array('@'),
 			),
 			array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -56,28 +56,7 @@ class ServiceController extends GController
 		));
 	}
 
-	/**
-	 * Creates a new model.
-	 * If creation is successful, the browser will be redirected to the 'view' page.
-	 */
-	public function actionCreate()
-	{
-		$model=new CustomerInfo;
-
-		// Uncomment the following line if AJAX validation is needed
-		// $this->performAjaxValidation($model);
-
-		if(isset($_POST['CustomerInfo']))
-		{
-			$model->attributes=$_POST['CustomerInfo'];
-			if($model->save())
-				$this->redirect(array('view','id'=>$model->id));
-		}
-
-		$this->render('create',array(
-			'model'=>$model,
-		));
-	}
+	 
 
 	/**
 	 * Updates a particular model.
@@ -87,11 +66,21 @@ class ServiceController extends GController
 	public function actionUpdate($id)
 	{
 		$model=$this->loadModel($id);
+                $model->setAttribute("create_time", date("Y-m-d", $model->getAttribute("create_time")));
+                $model->setAttribute("assign_time", date("Y-m-d", $model->getAttribute("assign_time")));
+                $model->setAttribute("next_time", date("Y-m-d", $model->getAttribute("next_time")));
                 $sharedNote = NoteInfo::model();
-                $sharedNote->setAttribute("cust_id", $model->cust_id); 
+                $sharedNote->setAttribute("cust_id", $model->id); 
                 $historyNote = NoteInfo::model();
-                $historyNote->setAttribute("cust_id", $model->cust_id);
-                $noteinfo = new NoteInfo();
+                $historyNote->setAttribute("cust_id", $model->id);
+                $noteinfo = new NoteInfo(); 
+                $noteinfo->setAttribute("iskey", 0);
+                $noteinfo->setAttribute("isvalid", 0);
+                if($model->contract){
+                    $model->contract['create_time']= date("Y-m-d",$model->contract['create_time']);
+                    $model->contract['comm_pay_time']= date("Y-m-d",$model->contract['comm_pay_time']);
+                    $model->contract['pay_time']= date("Y-m-d",$model->contract['pay_time']);
+                }
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
 
@@ -101,12 +90,15 @@ class ServiceController extends GController
 			if($model->save())
 				$this->redirect(array('view','id'=>$model->id));
 		}
-
+                $user = Users::model()->findByPk(Yii::app()->user->id);
+                
+                
 		$this->render('update',array(
 			'model'=>$model,
                         'sharedNote'=>$sharedNote,
                         'historyNote'=>$historyNote,
                         'noteinfo'=>$noteinfo,
+                        'loginuser'=>$user,
 		));
 	}
 
@@ -155,7 +147,7 @@ class ServiceController extends GController
 	 */
 	public function actionNewList()
 	{
-		$model=new AftermarketCustInfo('search');
+		$model=new AftermarketCustInfo('searchNewList');
 		$model->unsetAttributes();  // clear any default values
 		if(isset($_GET['AftermarketCustInfo'])){
 			$model->attributes=$_GET['AftermarketCustInfo'];  
@@ -213,19 +205,8 @@ class ServiceController extends GController
 	 */
 	public function loadModel($id)
 	{
-		//$model=CustomerInfo::model()->findByPk($id);
-                $sql="select c.cust_name,c.corp_name,c.shop_name,c.shop_url,c.shop_addr,c.phone,c.qq,c.mail,c.datafrom,".
-                        "d.name as category_name,ct.type_name as cust_type_name,t.eno,t.assign_eno,t.assign_time,t.next_time,t.memo,t.create_time,t.creator".
-                        " from {{aftermarket_cust_info}} t ".
-                        " left join {{customer_info}} c on t.cust_id=c.id".
-                        " left join {{contract_info}} ci on t.cust_id=ci.cust_id".
-                        " left join {{dic}} d on c.category=d.code and d.ctype='cust_category' ".
-                        " left join {{cust_type}} ct on ct.type_no=t.cust_type and ct.lib_type=3 ".
-                        " where t.id=:id"
-                        ;
+		$model=CustomerInfo::model()->findByPk($id); 
                 
-                //$model = AftermarketCustInfo::model()->findBySql($sql,array(':id'=>$id));
-                $model = AftermarketCustInfo::model()->findByPk($id); 
 		if($model===null)
 			throw new CHttpException(404,'The requested page does not exist.');
 		return $model;
@@ -265,5 +246,26 @@ class ServiceController extends GController
         public function getCustTypeArr(){
             $sql ="select type_no,type_name from {{cust_type}} where lib_type='3'"; 
             return CHtml::listData(CustType::model()->findAllBySql($sql), 'type_no', 'type_name');
+        }
+        /**
+         * 拔打电话
+         * @param type $cust_id
+         */
+        public function actionDial($cust_id){
+            
+        }
+        /**
+         * 发短信
+         * @param type $cust_id
+         */
+        public function actionMessage($cust_id){
+            
+        }
+        /**
+         * 发邮件
+         * @param type $cust_id
+         */
+        public function actionMail($cust_id){
+            
         }
 }

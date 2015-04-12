@@ -1,3 +1,4 @@
+
 <?php
 /* @var $this ServiceController */
 /* @var $model CustomerInfo */
@@ -53,24 +54,7 @@ $this->widget('GGridView', array(
 		'webchat',
                 'ww',
                 array('name'=>'category','value'=>'$data->category_name'),
-                'service_limit',
-		/*
-		'shop_addr',
-		'phone',
-		'qq',
-		'mail',
-		'datafrom',
-		'category',
-		'cust_type',
-		'eno',
-		'iskey',
-		'assign_eno',
-		'assign_time',
-		'next_time',
-		'memo',
-		'create_time',
-		'creator',
-		*/
+                'service_limit', 
 		array(
 			'class'=>'CButtonColumn',
                         'template'=>'{update}', 

@@ -3,16 +3,14 @@
 /* @var $model Users */
 
 $this->breadcrumbs=array(
-	'Users'=>array('index'),
-	'Create',
+	'用户管理'=>array(''),
+	'创建用户',
 );
 
 $this->menu=array(
-	array('label'=>'List Users', 'url'=>array('index')),
-	array('label'=>'Manage Users', 'url'=>array('admin')),
+	array('label'=>'用户例表', 'url'=>array('index')),
+	array('label'=>'管理用户', 'url'=>array('admin')),
 );
 ?>
-
-<h1>Create Users</h1>
 
 <?php $this->renderPartial('_form', array('model'=>$model)); ?>

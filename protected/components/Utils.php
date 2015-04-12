@@ -35,5 +35,25 @@ class Utils {
         }
         return $result;
     }
-
+    /**
+     * 隐藏电话号码中间4位
+     * @param type $phone
+     */
+    public static function hidePhone($phone){
+        return substr_replace($phone,'****',3,4); 
+    }
+    /**
+     * 隐藏邮件地址中间3位
+     * @param type $email
+     */
+    public static function hideEmail($email){
+        return substr_replace($email,'****',3,3); 
+    }
+    /**
+     * 隐藏QQ中间3位
+     * @param type $qq 
+     */
+    public static function hideQq($qq){
+        return substr_replace($qq,'****',3,3); 
+    }
 }

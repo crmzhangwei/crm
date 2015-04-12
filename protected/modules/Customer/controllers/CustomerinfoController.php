@@ -38,10 +38,11 @@ class CustomerinfoController extends GController
 	public function actionCreate()
 	{
 		$model=new CustomerInfo;
-
+		$groupArr = Userinfo::getGroup();
+		/*echo '<pre>';
+		print_r($groupArr);die();*/
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
-
 		if(isset($_POST['CustomerInfo']))
 		{
 			$model->attributes=$_POST['CustomerInfo'];
@@ -50,9 +51,18 @@ class CustomerinfoController extends GController
 				$this->redirect(array('view','id'=>$model->id));
 		}
 
-		$this->render('create',array(
+		$this->renderPartial('create',array(
 			'model'=>$model,
+			'groupArr'=>$groupArr,
+
 		));
+	}
+
+	public function actiongetUsers()
+	{
+		$gid = Yii::app()->request->getparam('gid');
+		$userinfo = Userinfo::getUserbygid($gid);
+		echo json_encode($userinfo);
 	}
 
 	/**
@@ -110,58 +120,50 @@ class CustomerinfoController extends GController
 	public function actionAdmin()
 	{
 		$model=new CustomerInfo('search');
+	
 		$model->unsetAttributes();  // clear any default values
 		if(isset($_GET['CustomerInfo']))
 			$model->attributes=$_GET['CustomerInfo'];
 
 		$this->render('admin',array(
 			'model'=>$model,
+			
 		));
 	}
-
+    
 	public function actionBatchCustomer(){
 		$model = new CustomerInfo;
 		if ($_FILES) {
-			//print_r($_FILES['batchFile']['tmp_name']);
-			$PHPExcel = new PHPExcel();
-	        $PHPReader = new PHPExcel_Reader_Excel2007();
 	        $file = $_FILES['batchFile']['tmp_name'];
-	        if(!$PHPReader->canRead($file)){
-	           	$PHPReader = new PHPExcel_Reader_Excel5();
-	          	if(!$PHPReader->canRead($file)){
-	             	return false;
-	           }
+	        $fileArr = UploadExcel::upExcel($file);
+	        $creator = Yii::app()->user->id;
+	        $create_time = time();
+	        if ($fileArr) {
+	        	$sql = "insert into {{customer_info}} (cust_name,phone,qq,mail,memo,creator,create_time) values";
+	        	foreach ((array)$fileArr as $k => $v) {
+	        		if (!$v[0]) {
+	        			exit("<script>alert(\"对不起, 第".$k."行中的客户姓名不能为空, 请填写后重新提交。\");
+	        				javascript:history.go(-1);</script>");
+	        		}
+	        		elseif (!$v[1] && !$v[2]) {
+	        			exit("<script>alert(\"对不起, 第".$k."行中的电话和QQ二选一必填, 请填写后重新提交。\");
+	        				javascript:history.go(-1);</script>");
+	        		}
+	        		elseif ($v[3] && !preg_match('/^[\w\_\.]+@[\w\_]+[\.\w+]+$/', $v[3])) {//邮箱匹配, 非必填项
+	        			exit("<script>alert(\"对不起, 第".$k."行中的邮箱格式不正确, 请填写后重新提交。\");
+	        				javascript:history.go(-1);</script>");
+	        		}
+	        		else{
+	        			$sql .= "('{$v[0]}','{$v[1]}','{$v[2]}','{$v[3]}','{$v[4]}', $creator, $create_time),";
+	        		}	
+	        	}
+	        	$sql = trim($sql,',');
+	        	$command=yii::app()->db->createCommand($sql);
+	        	$num = $command->execute();
+	        	exit("<script>alert(\"恭喜你, 成功插入".$num."条数据。\");javascript:history.go(-1);</script>");	
 	        }
-	        
-	        $PHPExcel = $PHPReader->load($file);
-	        $currentSheet = $PHPExcel->getSheet(0);//读取第一个工作表
-	        $allColumn = $currentSheet->getHighestColumn();//取得最大的列号
-	        $allRow = $currentSheet->getHighestRow();//取得一共有多少行
-	        /**从第二行开始输出，因为excel表中第一行为列名*/
-	        $arr=array();
-	        for($currentRow = 2;$currentRow <= $allRow;$currentRow++){
-	            /**从第A列开始输出*/
-	            for($currentColumn= 'A';$currentColumn<= $allColumn; $currentColumn++){
-	                $val = $currentSheet->getCellByColumnAndRow(ord($currentColumn) - 65,$currentRow)->getValue(); /*ord()将字符转为十进制数*/
-
-	                /**如果输出汉字有乱码，则需将输出内容用iconv函数进行编码转换，如下将gb2312编码转为utf-8编码输出*/
-	                //$arr[$currentRow][]=  iconv('utf-8','gb2312', $val)."＼t";
-	                $arr[$currentRow][]=  trim($val);
-	            }
-	        }
-	        //删除全部为空的行
-	        foreach ($arr as $key=>$vals){
-	            $tmp = '';
-	            foreach($vals as $v){
-	                $tmp .= $v;
-	            }
-	            if(!$tmp) unset($arr[$key]);
-	        }
-	        echo '<pre>';
-	        print_r($arr);die();
-	        return $arr;
 		}
-		$this->render('batchCustomer', array('model'=>$model));
+		$this->renderPartial('batchCustomer', array('model'=>$model));
 	}
 
 	/**

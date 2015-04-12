@@ -127,6 +127,16 @@
 		<?php echo $form->error($model,'creator'); ?>
 	</div>
 
+	<div class="row">
+		<?php echo $form->labelEx($model,'eno'); ?>
+		<?php echo CHtml::dropDownList('group','',$groupArr,array('onchange'=>'listuser(this)'));?>
+		<select id='userinfo'>
+			
+		</select>
+		<?php echo $form->textField($model,'eno',array('size'=>10,'maxlength'=>10)); ?>
+		<?php echo $form->error($model,'eno'); ?>
+	</div> 
+
 	<div class="row buttons">
 		<?php echo CHtml::submitButton($model->isNewRecord ? 'Create' : 'Save'); ?>
 	</div>
@@ -134,3 +144,20 @@
 <?php $this->endWidget(); ?>
 
 </div><!-- form -->
+<script>
+    function listuser(obj)
+    {
+      	var gid = $(obj).val();
+      	var optStr = '<option value ="0">---请选择---</option>';
+      	$.post("./index.php?r=Customer/customerinfo/getUsers",{'gid':gid},function(data)
+	    {
+	    	
+	    	for(i in data)
+	        {
+	         	optStr += '<option value ='+i+'>'+data[i]+'</option>';
+	        }
+	        $('#userinfo').html(optStr);
+	    },'json')
+    }
+    
+</script> 

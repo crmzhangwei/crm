@@ -1,7 +1,7 @@
 <?php
 
 /**
- * This is the model class for table "{{dic}}".
+ * 数据字典的模型类.
  *
  * The followings are the available columns in table '{{dic}}':
  * @property string $id

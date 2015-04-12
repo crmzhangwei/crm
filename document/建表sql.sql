@@ -8,8 +8,8 @@ CREATE TABLE `c_users` (
   `sex` tinyint(2) NOT NULL DEFAULT '1' COMMENT '性别',
   `tel` varchar(20) NOT NULL COMMENT '电话号码',
   `qq` varchar(15) DEFAULT NULL COMMENT 'qq',
-  `dept` mediumint(4) NOT NULL COMMENT '部门',
-  `group` mediumint(5) DEFAULT NULL COMMENT '组别',
+  `dept_id` mediumint(4) NOT NULL COMMENT '部门',
+  `group_id` mediumint(5) DEFAULT NULL COMMENT '组别',
   `manager_id` int not null COMMENT '主管id',
   `ismaster` tinyint(1) DEFAULT NULL COMMENT '是否精英',
   `status` tinyint(2) DEFAULT NULL COMMENT '状态',
@@ -124,7 +124,7 @@ CREATE TABLE `c_note_info` (
   `isvalid` boolean COMMENT '是否有效',
   `iskey` boolean COMMENT '是否重点',
   `next_contact` int COMMENT '下次联系时间',
-  `record_path` varchar(200) COMMENT '录音路径',
+  `dial_id` int COMMENT '电话拔打id',
   `eno` int NOT NULL COMMENT '工号',
   `create_time` int NOT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`)
@@ -136,7 +136,8 @@ CREATE TABLE `c_dial_detail` (
   `dial_time` int NOT NULL COMMENT '拔打时间',
   `dial_long` float NOT NULL COMMENT '拔打时长',
   `dial_num` int default 1 COMMENT '拔打次数',
-  `order` int NOT NULL default 0 COMMENT '顺序号', 
+  `record_path` varchar(200) default '' COMMENT '录音路径', 
+  `isok` boolean default false COMMENT '是否成功',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
