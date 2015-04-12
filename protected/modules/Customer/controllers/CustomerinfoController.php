@@ -38,24 +38,36 @@ class CustomerinfoController extends GController
 	public function actionCreate()
 	{
 		$model=new CustomerInfo;
-		$groupArr = Userinfo::getGroup();
-		/*echo '<pre>';
-		print_r($groupArr);die();*/
+		$deptArr = Userinfo::getDept();
+		$deptArr = array_merge(array('0'=>'--请选择部门--'), $deptArr);
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
+
 		if(isset($_POST['CustomerInfo']))
 		{
 			$model->attributes=$_POST['CustomerInfo'];
-			$model->create_time = strtotime($model->create_time);
+
+			$model->assign_eno = Yii::app()->user->id;//分配人
+			$model->assign_time = time();//分配时间
+			$model->create_time = time();
+			$model->creator = Yii::app()->user->id;
 			if($model->save())
+				Yii::app()->db->createCommand()->update('{{Users}}',array('cust_num' =>new CDbExpression('cust_num+1')),"eno='{$model->eno}'");
+				//Users::model()->updateAll(array('cust_num'=>'cust_num+1'),'eno=:eno',array(":eno"=>$model->eno)); 
 				$this->redirect(array('view','id'=>$model->id));
 		}
 
 		$this->renderPartial('create',array(
 			'model'=>$model,
-			'groupArr'=>$groupArr,
-
+			//'groupArr'=>$groupArr,
+			'deptArr'=>$deptArr,
 		));
+	}
+
+	public function actionGetGroup(){
+		$deptid = yii::app()->request->getparam('deptid');
+		$deptinfo = Userinfo::getGroupById($deptid);
+		echo json_encode($deptinfo);
 	}
 
 	public function actiongetUsers()
@@ -119,8 +131,8 @@ class CustomerinfoController extends GController
 	 */
 	public function actionAdmin()
 	{
+		//echo Yii::app()->user->id.'<br>'.Yii::app()->user->name;
 		$model=new CustomerInfo('search');
-	
 		$model->unsetAttributes();  // clear any default values
 		if(isset($_GET['CustomerInfo']))
 			$model->attributes=$_GET['CustomerInfo'];

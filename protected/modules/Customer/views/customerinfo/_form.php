@@ -115,25 +115,29 @@
 		<?php echo $form->error($model,'memo'); ?>
 	</div>
 
-	<div class="row">
+	<!-- <div class="row">
 		<?php echo $form->labelEx($model,'create_time'); ?>
 		<?php echo $form->textField($model,'create_time',array('class'=>"Wdate", 'onClick'=>"WdatePicker()",'style'=>'height:30px;')); ?>
 		<?php echo $form->error($model,'create_time'); ?>
-	</div>
+	</div> -->
 
-	<div class="row">
+	<!-- <div class="row">
 		<?php echo $form->labelEx($model,'creator'); ?>
 		<?php echo $form->textField($model,'creator',array('size'=>16,'maxlength'=>16)); ?>
 		<?php echo $form->error($model,'creator'); ?>
-	</div>
+	</div> -->
 
 	<div class="row">
 		<?php echo $form->labelEx($model,'eno'); ?>
-		<?php echo CHtml::dropDownList('group','',$groupArr,array('onchange'=>'listuser(this)'));?>
-		<select id='userinfo'>
-			
+		<?php echo CHtml::dropDownList('dept','',$deptArr,array('onchange'=>'listgroup(this)'));?>
+		<select id="groupinfo" name="group" onchange="listuser(this)">
+			<option value ="0">--请选择组--</option>
 		</select>
-		<?php echo $form->textField($model,'eno',array('size'=>10,'maxlength'=>10)); ?>
+
+		<select id='userinfo' name="users" onchange="enoval(this)">	
+			<option value ="0">---请选择人员---</option>
+		</select>
+		<?php echo $form->textField($model,'eno',array('id'=>'userid','size'=>10,'maxlength'=>10)); ?>
 		<?php echo $form->error($model,'eno'); ?>
 	</div> 
 
@@ -145,10 +149,34 @@
 
 </div><!-- form -->
 <script>
+	function listgroup(obj)
+    {
+      	var deptid = $(obj).val();
+      	var groupStr = '<option value ="0">--请选择组--</option>';
+      	if (deptid == 0) {
+      		$('#groupinfo').html(groupStr);
+      		$('#userinfo').html('<option value ="0">--请选择人员--</option>');
+      		$('#userid').val('');
+      	};
+      	$.post("./index.php?r=Customer/customerinfo/getGroup",{'deptid':deptid},function(data)
+	    {
+	    	
+	    	for(i in data)
+	        {
+	         	groupStr += '<option value ='+i+'>'+data[i]+'</option>';
+	        }
+	        $('#groupinfo').html(groupStr);
+	    },'json')	
+    }
+
     function listuser(obj)
     {
       	var gid = $(obj).val();
-      	var optStr = '<option value ="0">---请选择---</option>';
+    	var optStr = '<option value ="0">---请选择人员---</option>';
+    	if (gid == 0) {
+      		$('#userinfo').html(optStr);
+      		$('#userid').val('');
+      	};
       	$.post("./index.php?r=Customer/customerinfo/getUsers",{'gid':gid},function(data)
 	    {
 	    	
@@ -158,6 +186,17 @@
 	        }
 	        $('#userinfo').html(optStr);
 	    },'json')
+	    
+    }
+
+    function enoval(obj){
+    	var eno = $(obj).val();
+    	if (eno == 0) {
+    		$('#userid').val('');
+    	}
+    	else{
+    		$('#userid').val(eno);
+    	}
     }
     
 </script> 
