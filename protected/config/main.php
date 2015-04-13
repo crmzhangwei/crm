@@ -19,7 +19,7 @@ return array(
                 'zii.widgets.grid.CGridView',
                 'application.extensions.PHPExcel.*',
         ),
-        'defaultController'=>'User/users/index',
+        'defaultController'=>'User/users/admin',
 	'modules'=>array(
 		// uncomment the following to enable the Gii tool
 		'User',

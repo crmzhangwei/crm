@@ -13,10 +13,6 @@
 
         <!-- ace styles -->
         <link rel="stylesheet" href="<?php echo Yii::app()->request->baseUrl; ?>/assets/css/ace.min.css" id="main-ace-style" />
-
-        <!--[if lte IE 9]>
-                <link rel="stylesheet" href="<?php echo Yii::app()->request->baseUrl; ?>/assets/css/ace-part2.min.css" />
-        <![endif]-->
         <link rel="stylesheet" href="<?php echo Yii::app()->request->baseUrl; ?>/assets/css/ace-skins.min.css" />
 
         <!--[if lte IE 9]>
@@ -24,6 +20,13 @@
         <![endif]-->
         <!-- ace settings handler -->
         <script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/js/jquery.min.js"></script>
+         <!-- ace scripts -->
+        <script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/js/ace.min.js"></script>
+        <script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/js/ace-elements.min.js"></script>
+        <script src="<?php echo Yii::app()->request->baseUrl; ?>/static/js/DatePicker/WdatePicker.js"></script>
+        <script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/js/bootbox.min.js"></script>
+        <script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/js/jquery.validate.min.js"></script>
+        <script src="<?php echo Yii::app()->request->baseUrl; ?>/static/js/common.js"></script>
    
         <!-- HTML5shiv and Respond.js for IE8 to support HTML5 elements and media queries -->
 
@@ -114,12 +117,7 @@
             <script src="assets/js/excanvas.min.js"></script>
             <![endif]-->
 
-            <!-- ace scripts -->
-            <script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/js/ace-elements.min.js"></script>
-            <script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/js/ace.min.js"></script>
-            <script src="<?php echo Yii::app()->request->baseUrl; ?>/static/js/common.js"></script>
-            <script src="<?php echo Yii::app()->request->baseUrl; ?>/static/js/DatePicker/WdatePicker.js"></script>
-            <script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/js/bootbox.min.js"></script>
+           
 
         </body>
     </html>

@@ -56,4 +56,24 @@ class Utils {
     public static function hideQq($qq){
         return substr_replace($qq,'****',3,3); 
     }
+    
+     /**
+     * 向页面输出信息
+     * @param int $code       错误代码, 0. 失败 1.成功， 默认为1
+     * @param string $msg    信息内容， 默认为空
+     * @param array $data    是否附带额外数据
+     * @param boolean $return  是否返回信息内容，默认为true
+     * @param boolean $exit  是否停止执行，默认为true
+     */
+    public static function showMsg($code = 1, $msg = '', $data = array(), $return = false, $exit = true) {
+        $out = array('code' => $code, 'msg' => $msg);
+        if (is_array($data) && count($data))
+            $out['data'] = $data;
+        if ($return)
+            return $out;
+        else
+            echo json_encode($out);
+
+        $exit && exit();
+    }
 }
