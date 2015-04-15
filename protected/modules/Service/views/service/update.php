@@ -14,7 +14,12 @@ $this->menu=array(
 	 
 );
 Yii::app()->clientScript->registerScript('tab', " 
-  $('#tabs').tabs();
+  
+  $('#tabs').tabs({
+  activate: function( event, ui ) {
+        //alert(ui.newTab.attr('aria-controls'));
+    }
+ });  
 "); 
 ?>
 

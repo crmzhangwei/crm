@@ -529,6 +529,7 @@ CREATE TABLE `c_users` (
   `manager_id` int(11) NOT NULL COMMENT '主管id',
   `ismaster` tinyint(1) DEFAULT NULL COMMENT '是否精英',
   `status` tinyint(2) DEFAULT NULL COMMENT '状态',
+  `cust_num` int NOT NULL DEFAULT 0 COMMENT '已分配资源数',
   `create_time` int(11) NOT NULL COMMENT '创建时间',
   `login_time` int(11) NOT NULL COMMENT '最后登录时间',
   PRIMARY KEY (`id`)

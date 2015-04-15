@@ -75,3 +75,6 @@
          </table>    
 
 </div><!-- form -->
+<div class="row buttons">
+		<?php echo CHtml::submitButton('保存'); ?>
+    </div> 

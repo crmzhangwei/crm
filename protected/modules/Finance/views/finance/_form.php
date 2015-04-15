@@ -5,7 +5,7 @@
 ?>
 <script type="text/javascript">
      function changeDept(obj){
-            var vUrl = "index.php?r=/Finance/finance/DeptGroupArr&deptid="+obj.value;
+            var vUrl = "index.php?r=/Finance/finance/DeptGroupArr&isajax=true&deptid="+obj.value;
             $.getJSON(vUrl,function(jsonObj){  
                         if(jsonObj){
                             $("#Finance_group").empty();
@@ -66,7 +66,7 @@
                 <td width="10%"> <?php echo $form->labelEx($model,'sale_user'); ?></td> 
                 <td> 
                     <?php echo $form->dropDownList($model, "dept", $this->getDeptArr(),array("onchange"=>"javascript:changeDept(this);")) ?>
-                    <?php echo $form->dropDownList($model, "group", $this->getDeptGroupArr(1,false),array("onchange"=>"javascript:changeGroup()")) ?> 
+                    <?php echo $form->dropDownList($model, "group", $this->actionDeptGroupArr(1,false),array("onchange"=>"javascript:changeGroup()")) ?> 
                     <?php echo $form->dropDownList($model, "sale_user", $this->getUserArr(1,1,false)) ?>
                     <?php echo $form->error($model,'sale_user'); ?>
                 </td>

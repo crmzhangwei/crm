@@ -10,34 +10,32 @@
 	'action'=>Yii::app()->createUrl($this->route),
 	'method'=>'get',
 )); ?>
-         
-	<div class="row">
-		<?php echo $form->label($model,'cust_name'); ?>
-		<?php echo $form->textField($model,'cust_name',array('size'=>60,'maxlength'=>100)); ?>
-	</div>
-        
-        <div class="row">
-		<?php echo $form->label($model,'create_time'); ?>
-		<?php echo $form->textField($model,'createtime_start',array('size'=>20,'maxlength'=>20)); ?>
-                to 
-                <?php echo $form->textField($model,'createtime_end',array('size'=>20,'maxlength'=>20)); ?>
-	</div>
-    
-        <div class="row">
-		<?php echo $form->label($model,'total_money'); ?>
-		<?php echo $form->textField($model,'total_money'); ?>
-	</div> 
-
-	<div class="row">
-		<?php echo $form->label($model,'ww'); ?>
-		<?php echo $form->textField($model,'ww',array('size'=>20,'maxlength'=>20)); ?>
-	</div>
- 
+       <table class="table table-bordered" style="width:50%;">
+            <tr>
+                <td width="5%" nowrap="nowrap"><?php echo $form->labelEx($model,'cust_name'); ?></td>
+                <td width="5%" nowrap="nowrap">
+                   <?php echo $form->textField($model,'cust_name',array('size'=>10,'maxlength'=>20)); ?>
+                </td> 
+                <td width="5%" nowrap="nowrap"><?php echo $form->labelEx($model,'begin_end_time'); ?></td>
+                <td width="5%" nowrap="nowrap">
+                     <?php echo $form->textField($model,'createtime_start',array('class'=>"Wdate", 'onClick'=>"WdatePicker()",'style'=>'height:30px;',)); ?>
+                     to 
+                     <?php echo $form->textField($model,'createtime_end',array('class'=>"Wdate", 'onClick'=>"WdatePicker()",'style'=>'height:30px;','readonly'=>'readonly')); ?>
+                </td>
+                <td width="5%" nowrap="nowrap"><?php echo $form->labelEx($model,'total_money'); ?></td>
+                <td width="5%" nowrap="nowrap">
+                    <?php echo $form->textField($model,'total_money',array('size'=>10,'maxlength'=>20)); ?>
+                </td>
+                <td width="5%" nowrap="nowrap"><?php echo $form->labelEx($model,'ww'); ?></td>
+                <td width="5%" nowrap="nowrap">
+                   <?php echo $form->textField($model,'ww',array('size'=>10,'maxlength'=>20)); ?>
+                </td> 
+                <td width="10%" nowrap="nowrap" colspan="2" align="center"> 
+                   <?php echo CHtml::submitButton('搜索'); ?>
+                </td> 
+            </tr>  
+    </table>    
 	 
-
-	<div class="row buttons">
-		<?php echo CHtml::submitButton('Search'); ?>
-	</div>
 
 <?php $this->endWidget(); ?>
 

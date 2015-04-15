@@ -123,6 +123,9 @@ class NoteInfo extends CActiveRecord
         public function searchSharedNote($custid){
             $criteria=new CDbCriteria;
             $criteria->addCondition("cust_id=$custid");
+            $criteria->compare('cust_info',$this->cust_info,true);
+	    $criteria->compare('requirement',$this->requirement,true);
+	    $criteria->compare('service',$this->service,true);
             return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
 		));
@@ -133,6 +136,9 @@ class NoteInfo extends CActiveRecord
         public function searchHistoryNote($custid){
             $criteria=new CDbCriteria;
             $criteria->addCondition("cust_id=$custid");
+            $criteria->compare('cust_info',$this->cust_info,true);
+	    $criteria->compare('requirement',$this->requirement,true);
+	    $criteria->compare('service',$this->service,true);
             return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
 		));

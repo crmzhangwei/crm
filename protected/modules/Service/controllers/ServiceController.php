@@ -32,7 +32,9 @@ class ServiceController extends GController
 				'users'=>array('*'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('update','admin','newList','todayList','oldList','dial','message','mail'),
+				'actions'=>array('update','updateNewList','assign','admin','newList','todayList',
+                                                 'oldList','dial','message','mail','sharedNoteList','historyNoteList',
+                                                 'deptGroupArr','userArr'),
 				'users'=>array('@'),
 			),
 			array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -82,8 +84,7 @@ class ServiceController extends GController
                     $model->contract['pay_time']= date("Y-m-d",$model->contract['pay_time']);
                 }
 		// Uncomment the following line if AJAX validation is needed
-		// $this->performAjaxValidation($model);
-
+		// $this->performAjaxValidation($model); 
 		if(isset($_POST['CustomerInfo']))
 		{
 			$model->attributes=$_POST['CustomerInfo'];
@@ -101,7 +102,62 @@ class ServiceController extends GController
                         'loginuser'=>$user,
 		));
 	}
-
+        /**
+         * 售后客户分配
+         * @param type $id 客户id
+         */
+        public function actionAssign($id){
+                $model=$this->loadModel($id);
+                if(isset($_POST['CustomerInfo']))
+		{
+			$model->attributes=$_POST['CustomerInfo'];
+			if($model->save())
+				$this->redirect(array('view','id'=>$model->id));
+		}
+                
+                $this->render('assign',array('model'=>$model));
+        }
+         /**
+	 * 搜索共享小记列表数据
+	 */
+	public function actionSharedNoteList()
+	{
+		$model=new NoteInfo('search');
+		$model->unsetAttributes();  // clear any default values
+		if(isset($_GET['NoteInfo']))
+			$model->attributes=$_GET['NoteInfo'];
+		if(isset($_GET['cust_id'])){
+                    $custid=$_GET['cust_id'];
+                    $model->setAttribute("cust_id", $custid);
+                }  
+                if(isset($_GET['isajax'])){
+                    $this->renderPartial('_shared_note_list',array(
+			'model'=>$model,
+                    )); 
+                }        
+		
+	}
+         /**
+	 * 搜索历史小记列表数据
+	 */
+	public function actionHistoryNoteList()
+	{
+		$model=new NoteInfo('search');
+		$model->unsetAttributes();  // clear any default values
+		if(isset($_GET['NoteInfo']))
+			$model->attributes=$_GET['NoteInfo'];
+		
+                if(isset($_GET['cust_id'])){
+                    $custid=$_GET['cust_id'];
+                    $model->setAttribute("cust_id", $custid);
+                } 
+                if(isset($_GET['isajax'])){ 
+                    
+                    $this->renderPartial('_history_note_list',array(
+			'model'=>$model,
+                    )); 
+                } 
+	}
 	/**
 	 * Deletes a particular model.
 	 * If deletion is successful, the browser will be redirected to the 'admin' page.
@@ -134,9 +190,12 @@ class ServiceController extends GController
 	{
 		$model=new AftermarketCustInfo('search');
 		$model->unsetAttributes();  // clear any default values
-		if(isset($_GET['AftermarketCustInfo']))
+		if(isset($_GET['AftermarketCustInfo'])){
 			$model->attributes=$_GET['AftermarketCustInfo'];
-
+                        $model->cust_name=$_GET['AftermarketCustInfo']['cust_name'];
+                        $model->createtime_start=$_GET['AftermarketCustInfo']['createtime_start'];
+                        $model->createtime_end=$_GET['AftermarketCustInfo']['createtime_end'];
+                }
 		$this->render('admin',array(
 			'model'=>$model,
 		));
@@ -239,6 +298,30 @@ class ServiceController extends GController
         public function getDeptArr() {
              return CHtml::listData(DeptInfo::model()->findAll(), 'id', 'name');
         }
+        /**
+         * 获取部门下组别数组 
+         */
+        public function getDeptGroupArr($deptid,$isajax) { 
+            if($isajax){
+                $sql ="select t.group_id,g.name as group_name from {{dept_group}} t left join {{group_info}} g on t.group_id=g.id where t.dept_id=:dept_id"; 
+                echo json_encode(DeptGroup::model()->findAllBySql($sql,array(':dept_id'=>$deptid)));
+            }else{
+                $sql ="select t.group_id,g.name as group_name from {{dept_group}} t left join {{group_info}} g on t.group_id=g.id where t.dept_id=:dept_id";
+                return CHtml::listData(DeptGroup::model()->findAllBySql($sql,array(':dept_id'=>$deptid)), 'group_id', 'group_name');
+            } 
+            
+        }
+         /**
+         * 获取部门,组别下的用户数组 
+         */
+        public function getUserArr($deptid,$groupid,$isajax) {
+            if($isajax){ 
+                $sql ="select id,name from {{users}} where `dept_id`=:dept_id and `group_id`=:group_id"; 
+                echo json_encode(Users::model()->findAllBySql($sql,array(':dept_id'=>$deptid,':group_id'=>$groupid)));
+            }else{ 
+             return CHtml::listData(Users::model()->findAll("`dept_id`=:dept_id and `group_id`=:group_id",array(':dept_id'=>$deptid,':group_id'=>$groupid)), 'id', 'name');
+            }
+        }
          /**
          * 获取客户分类数组
          * @return type
@@ -252,20 +335,46 @@ class ServiceController extends GController
          * @param type $cust_id
          */
         public function actionDial($cust_id){
-            
+            echo 'Dial ok';
         }
         /**
          * 发短信
          * @param type $cust_id
          */
         public function actionMessage($cust_id){
-            
+            echo 'Send Message ok';
         }
         /**
          * 发邮件
          * @param type $cust_id
          */
         public function actionMail($cust_id){
+            echo 'Mail ok';
+        }
+        
+        /**
+         * ajax获取部门下组别数组 
+         * @param type $deptid
+         * @param type $isajax
+         * @return type
+         */
+        public function actionDeptGroupArr($deptid,$isajax) { 
+            if($isajax){
+                $sql ="select t.group_id,g.name as group_name from {{dept_group}} t left join {{group_info}} g on t.group_id=g.id where t.dept_id=:dept_id"; 
+                echo json_encode(DeptGroup::model()->findAllBySql($sql,array(':dept_id'=>$deptid)));
+            }else{
+                $sql ="select t.group_id,g.name as group_name from {{dept_group}} t left join {{group_info}} g on t.group_id=g.id where t.dept_id=:dept_id";
+                return CHtml::listData(DeptGroup::model()->findAllBySql($sql,array(':dept_id'=>$deptid)), 'group_id', 'group_name');
+            } 
             
+        }
+        /**
+         * ajax 获取部门,组别下所有用户数组 
+         * @param type $deptid
+         * @param type $groupid
+         */
+        public function actionUserArr($deptid,$groupid) {
+            $sql ="select id,name from {{users}} where `dept_id`=:dept_id and `group_id`=:group_id"; 
+            echo json_encode(Users::model()->findAllBySql($sql,array(':dept_id'=>$deptid,':group_id'=>$groupid)));
         }
 }

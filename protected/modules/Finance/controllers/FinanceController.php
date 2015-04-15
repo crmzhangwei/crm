@@ -204,9 +204,12 @@ class FinanceController extends GController
              return CHtml::listData(DeptInfo::model()->findAll(), 'id', 'name');
         }
         /**
-         * 获取部门下组别数组 
+         * ajax获取部门下组别数组 
+         * @param type $deptid
+         * @param type $isajax
+         * @return type
          */
-        public function getDeptGroupArr($deptid,$isajax) { 
+        public function actionDeptGroupArr($deptid,$isajax) { 
             if($isajax){
                 $sql ="select t.group_id,g.name as group_name from {{dept_group}} t left join {{group_info}} g on t.group_id=g.id where t.dept_id=:dept_id"; 
                 echo json_encode(DeptGroup::model()->findAllBySql($sql,array(':dept_id'=>$deptid)));
@@ -238,9 +241,11 @@ class FinanceController extends GController
         }
         /**
          * ajax 获取部门,组别下所有用户数组 
+         * @param type $deptid
+         * @param type $groupid
          */
         public function actionUserArr($deptid,$groupid) {
-            $sql ="select id,name from {{users}} where `dept`=:dept_id and `group`=:group_id"; 
+            $sql ="select id,name from {{users}} where `dept_id`=:dept_id and `group_id`=:group_id"; 
             echo json_encode(Users::model()->findAllBySql($sql,array(':dept_id'=>$deptid,':group_id'=>$groupid)));
         }
         

@@ -57,6 +57,7 @@ class ContractInfo extends CActiveRecord
 		// class name for the relations automatically generated below.
 		return array(
                     'cust'=>array(self::BELONGS_TO,'CustomerInfo','cust_id'),
+                    'user'=>array(self::BELONGS_TO,'Users','creator'),
 		);
 	}
 
@@ -67,20 +68,20 @@ class ContractInfo extends CActiveRecord
 	{
 		return array(
 			'id' => 'ID',
-			'cust_id' => 'Cust',
-			'service_limit' => 'Service Limit',
-			'total_money' => 'Total Money',
-			'pay_type' => '֧',
-			'pay_time' => '֧',
-			'promise' => 'Promise',
-			'first_pay' => 'First Pay',
-			'second_pay' => 'Second Pay',
-			'third_pay' => 'Third Pay',
-			'fourth_pay' => 'Fourth Pay',
-			'comm_royalty' => 'Ӷ',
-			'comm_pay_time' => 'Ӷ',
-			'creator' => 'Creator',
-			'create_time' => 'Create Time',
+			'cust_id' => '客户id',
+			'service_limit' => '服务期限',
+			'total_money' => '合同总金额',
+			'pay_type' => '支付方式',
+			'pay_time' => '支付时间',
+			'promise' => '合同承诺',
+			'first_pay' => '第一次支付金额',
+			'second_pay' => '第二次支付金额',
+			'third_pay' => '第三次支付金额',
+			'fourth_pay' => '第四次支付金额',
+			'comm_royalty' => '佣金提成',
+			'comm_pay_time' => '佣金支付时间',
+			'creator' => '创建人',
+			'create_time' => '创建时间',
 		);
 	}
 

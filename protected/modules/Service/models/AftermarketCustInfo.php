@@ -82,7 +82,8 @@ class AftermarketCustInfo extends CActiveRecord
 			'cust_name' => '客户', 
 			'cust_type' => '客户分类',
 			'webchat' => '微信',
-			'ww' => '旺旺',
+                        'qq' =>'QQ',
+			'ww' => '旺旺', 
                         'category' => '类目',
                         'service_limit'=>'服务期限',
 			'eno' => '工号',
@@ -104,6 +105,7 @@ class AftermarketCustInfo extends CActiveRecord
                         'cust[mail]' => '邮箱',
                         'cust[datafrom]' => '数据来源',
                         'cust[iskey]' => '是否重点',
+                        'begin_end_time'=>'起止时间'
                         
 		);
 	}
@@ -123,8 +125,9 @@ class AftermarketCustInfo extends CActiveRecord
 		$criteria->compare('webchat',$this->webchat,true);
 		$criteria->compare('ww',$this->ww,true);
 		$criteria->compare('c.qq',$this->qq,true); 
-		$criteria->compare('u.dept',$this->dept); 
-		$criteria->compare('u.group',$this->group);
+		$criteria->compare('u.dept_id',$this->dept); 
+		$criteria->compare('u.group_id',$this->group);
+		$criteria->compare('c.category',$this->category);
                 $criteria->select="c.id,c.cust_name,t.cust_type,ct.type_name as cust_type_name,c.category,d.name as category_name,c.qq,t.webchat,t.ww,ci.service_limit ";
                  
                 $criteria->join=" left join {{customer_info}} c on t.cust_id = c.id ".
@@ -165,8 +168,9 @@ class AftermarketCustInfo extends CActiveRecord
 		$criteria->compare('webchat',$this->webchat,true);
 		$criteria->compare('ww',$this->ww,true);
 		$criteria->compare('c.qq',$this->qq,true); 
-		$criteria->compare('u.dept',$this->dept); 
-		$criteria->compare('u.group',$this->group);
+		$criteria->compare('u.dept_id',$this->dept); 
+		$criteria->compare('u.group_id',$this->group);
+                $criteria->compare('c.category',$this->category);
                 $criteria->select="t.id,c.cust_name,t.cust_type,ct.type_name as cust_type_name,c.category,d.name as category_name,c.qq,t.webchat,t.ww,ci.service_limit ";
                 $criteria->join=" left join {{customer_info}} c on t.cust_id = c.id ".
                                 " left join {{users}} u on t.eno=u.eno ".
@@ -205,8 +209,9 @@ class AftermarketCustInfo extends CActiveRecord
 		$criteria->compare('webchat',$this->webchat,true);
 		$criteria->compare('ww',$this->ww,true);
 		$criteria->compare('c.qq',$this->qq,true); 
-		$criteria->compare('u.dept',$this->dept); 
-		$criteria->compare('u.group',$this->group);
+		$criteria->compare('u.dept_id',$this->dept); 
+		$criteria->compare('u.group_id',$this->group);
+                $criteria->compare('c.category',$this->category);
                 $criteria->select="t.id,c.cust_name,t.cust_type,ct.type_name as cust_type_name,c.category,d.name as category_name,c.qq,t.webchat,t.ww,ci.service_limit ";
                 $criteria->join=" left join {{customer_info}} c on t.cust_id = c.id ".
                                 " left join {{users}} u on t.eno=u.eno ".
@@ -235,13 +240,17 @@ class AftermarketCustInfo extends CActiveRecord
 		// @todo Please modify the following code to remove attributes that should not be searched.
 
 		$criteria=new CDbCriteria;  
-		$criteria->compare('c.cust_name',$this->cust_name,true);
-		$criteria->compare('ct.type_no',$this->cust_type);
-		$criteria->compare('webchat',$this->webchat,true);
-		$criteria->compare('ww',$this->ww,true);
-		$criteria->compare('c.qq',$this->qq,true); 
-		$criteria->compare('u.dept',$this->dept); 
-		$criteria->compare('u.group',$this->group);
+		$criteria->compare('c.cust_name',$this->cust_name,true); 
+		$criteria->compare('t.ww',$this->ww,true);
+		$criteria->compare('ci.total_money',$this->total_money);  
+		if($this->createtime_start){
+                    $sTime = strtotime($this->createtime_start);
+                    $criteria->addCondition(" t.create_time>=$sTime");
+                }
+                if($this->createtime_end){
+                    $eTime = strtotime($this->createtime_end);
+                    $criteria->addCondition(" t.create_time<=$eTime");
+                } 
                 $criteria->select="t.id,c.cust_name,t.cust_type,ct.type_name as cust_type_name,c.category,d.name as category_name,c.qq,t.webchat,t.ww,ci.service_limit ";
                 $criteria->join=" left join {{customer_info}} c on t.cust_id = c.id ".
                                 " left join {{users}} u on t.eno=u.eno ".

@@ -4,9 +4,7 @@
 /* @var $form CActiveForm */
 ?>
 
-<div class="form"> 
-	<p class="note">Fields with <span class="required">*</span> are required.</p>
-
+<div class="form">   
 	<?php echo $form->errorSummary($model); ?>
          <table class="table table-bordered"> 
             <tr>
@@ -77,7 +75,7 @@
                 </td>
                 <td><?php echo $form->labelEx($model,'contract[creator]'); ?></td>
                 <td>
-                    <?php echo $model->contract['creator']; ?>
+                    <?php echo $model->contract['user']['eno']; ?>
                     <?php echo $form->error($model,'contract[creator]'); ?>
                 </td>
             </tr>
