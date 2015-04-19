@@ -67,10 +67,26 @@ $('.search-form form').submit(function(){
 		'username',
 		'tel',
 		'qq',
-		'dept_id',
-		'group_id',
-		'ismaster',
-		'status',
+                array(
+                      'name'=>'dept_id',
+                      'value'=>array($this,'get_dept_text'),
+                  ),
+                array(
+                      'name'=>'group_id',
+                      'value'=>array($this,'get_group_text'),
+                  ),
+		//'dept_id'
+                array(
+                      'name'=>'ismaster',
+                      'value'=>array($this,'get_ismaster_text'),
+                  ),
+		//'group_id',
+		//'ismaster',
+		//'status',
+                array(
+                    'name'=>'status',
+                    'value'=>array($this,'get_status_text'),
+                    ),
 		array(
 			'class'=>'CButtonColumn',
                          'htmlOptions'=>array(

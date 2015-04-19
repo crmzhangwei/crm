@@ -8,42 +8,6 @@ class UsersController extends GController
 	 */
 	//public $layout='//layouts/column2';
 
-	/**
-	 * @return array action filters
-	 */
-	public function filters()
-	{
-		return array(
-			'accessControl', // perform access control for CRUD operations
-			'postOnly + delete', // we only allow deletion via POST request
-		);
-	}
-
-	/**
-	 * Specifies the access control rules.
-	 * This method is used by the 'accessControl' filter.
-	 * @return array access control rules
-	 */
-	public function accessRules()
-	{
-		return array(
-			array('allow',  // allow all users to perform 'index' and 'view' actions
-				'actions'=>array('index','view'),
-				'users'=>array('*'),
-			),
-			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('create','update'),
-				'users'=>array('@'),
-			),
-			array('allow', // allow admin user to perform 'admin' and 'delete' actions
-				'actions'=>array('admin','delete'),
-				'users'=>array('admin'),
-			),
-			array('deny',  // deny all users
-				'users'=>array('*'),
-			),
-		);
-	}
 
 	/**
 	 * Displays a particular model.
@@ -199,4 +163,37 @@ class UsersController extends GController
             return array(1=>'在职',2=>'离职');
             
         }
+        
+        public function  get_dept_text($data)
+        {
+            $val = $data->dept_id;
+            $dept = $this->getDeptArr();
+            $res = isset($dept[$val])? $dept[$val]:$val;
+            return $res;
+        }
+        
+        public function  get_group_text($data)
+        {
+            $val = $data->group_id;
+            $group =  $this->getGroupArr();
+            $res = isset($group[$val])?$group[$val]:$val;
+             return $res;
+        }
+        
+        public function  get_ismaster_text($data)
+        {
+            $val = $data->ismaster;
+            $ismaster = array(1=>'是',2=>'否');
+            $res =  isset($ismaster[$val])?$ismaster[$val]:$val;
+            return $res;
+        }
+        
+        public function  get_status_text($data)
+        {
+            $val = $data->status;
+            $status = $this->getStatusArr();
+            $res =  isset($status[$val])?$status[$val]:$val;
+            return $res;
+        }
+          
 }
