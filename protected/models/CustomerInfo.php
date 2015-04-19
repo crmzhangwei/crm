@@ -45,7 +45,8 @@ class CustomerInfo extends CActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('create_time, creator', 'required'),
+            array('cust_name,shop_name,mail,create_time, creator', 'required'),
+            array('mail', 'email'),
             array('category, cust_type, iskey, assign_time, next_time, create_time, creator', 'numerical', 'integerOnly' => true),
             array('eno, assign_eno', 'length', 'max' => 10),
             array('cust_name, shop_name, corp_name, shop_url, shop_addr, datafrom, memo', 'length', 'max' => 100),
@@ -111,7 +112,7 @@ class CustomerInfo extends CActiveRecord {
      */
     public function search() {
         // @todo Please modify the following code to remove attributes that should not be searched.
-
+        $type = intval(Yii::app()->request->getParam('type'));
         $criteria = new CDbCriteria;
         if ($this->phone) {
             $criteria->compare('phone', $this->phone, true);
@@ -125,6 +126,7 @@ class CustomerInfo extends CActiveRecord {
         if ($this->iskey) {
             $criteria->compare('iskey', $this->iskey);
         }
+        // $criteria->addCondition("eno = '".Yii::app()->user->identity->eno."'");
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
         ));

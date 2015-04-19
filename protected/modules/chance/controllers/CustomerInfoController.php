@@ -108,6 +108,34 @@ class CustomerInfoController extends GController {
     }
 
     /**
+     * 我的机会
+     */
+    public function actionMyChance() {
+    
+        $model = new CustomerInfo('search');
+        $model->unsetAttributes();  // clear any default values
+        if (isset($_GET['CustomerInfo']))
+            $model->attributes = $_GET['CustomerInfo'];
+        $this->render('admin', array(
+            'model' => $model,
+        ));
+    }
+
+     /**
+     * 未联系机会
+     */
+    public function actionMyChance1() {
+    
+        $model = new CustomerInfo('search');
+        $model->unsetAttributes();  // clear any default values
+        if (isset($_GET['CustomerInfo']))
+            $model->attributes = $_GET['CustomerInfo'];
+        $this->render('admin', array(
+            'model' => $model,
+        ));
+    }
+
+    /**
      * Returns the data model based on the primary key given in the GET variable.
      * If the data model is not found, an HTTP exception will be raised.
      * @param integer $id the ID of the model to be loaded
@@ -134,9 +162,15 @@ class CustomerInfoController extends GController {
 
     protected function genCustTypeArray() {
         $custTypeArr = Utils::mapArray(CustType::findByType(1), 'type_no', 'type_name');
-        $custTypeArr[0] = '全部';
+        $custTypeArr[0] = '--请选择--';
         ksort($custTypeArr);
         return $custTypeArr;
     }
 
+     protected function genCategoryArray() {
+        $custTypeArr = Utils::mapArray(CustType::findByType(1), 'type_no', 'type_name');
+        $custTypeArr[0] = '--请选择--';
+        ksort($custTypeArr);
+        return $custTypeArr;
+    }
 }
