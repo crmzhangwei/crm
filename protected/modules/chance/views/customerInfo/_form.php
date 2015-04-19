@@ -19,124 +19,153 @@
 
 	<?php echo $form->errorSummary($model); ?>
 
-	<div class="row">
-		<?php echo $form->labelEx($model,'cust_name'); ?>
-		<?php echo $form->textField($model,'cust_name',array('size'=>60,'maxlength'=>100)); ?>
-		<?php echo $form->error($model,'cust_name'); ?>
-	</div>
+	<table class="table table-bordered">
+        <tr>
+            <td width="10%"><?php echo $form->labelEx($model,'cust_name'); ?></td> 
+            <td>
+                <?php echo $form->textField($model,'cust_name',array('size'=>60,'maxlength'=>100)); ?>
+				<?php echo $form->error($model,'cust_name'); ?>
+            </td>
+        </tr> 
+    
 
-	<div class="row">
-		<?php echo $form->labelEx($model,'shop_name'); ?>
-		<?php echo $form->textField($model,'shop_name',array('size'=>60,'maxlength'=>100)); ?>
-		<?php echo $form->error($model,'shop_name'); ?>
-	</div>
+	<tr>
+		<td><?php echo $form->labelEx($model,'shop_name'); ?></td>
+		<td>
+			<?php echo $form->textField($model,'shop_name',array('size'=>60,'maxlength'=>100)); ?>
+			<?php echo $form->error($model,'shop_name'); ?>
+		</td>
+	</tr>
 
-	<div class="row">
-		<?php echo $form->labelEx($model,'corp_name'); ?>
-		<?php echo $form->textField($model,'corp_name',array('size'=>60,'maxlength'=>100)); ?>
-		<?php echo $form->error($model,'corp_name'); ?>
-	</div>
+	<tr>
+		<td><?php echo $form->labelEx($model,'corp_name'); ?></td>
+		<td>
+			<?php echo $form->textField($model,'corp_name',array('size'=>60,'maxlength'=>100)); ?>
+			<?php echo $form->error($model,'corp_name'); ?>
+		</td>
+	</tr>
 
-	<div class="row">
-		<?php echo $form->labelEx($model,'shop_url'); ?>
+	<tr>
+		<td><?php echo $form->labelEx($model,'shop_url'); ?></td>
+		<td>
 		<?php echo $form->textField($model,'shop_url',array('size'=>60,'maxlength'=>100)); ?>
 		<?php echo $form->error($model,'shop_url'); ?>
-	</div>
+		</td>
+	</tr>
 
-	<div class="row">
-		<?php echo $form->labelEx($model,'shop_addr'); ?>
+	<tr>
+		<td><?php echo $form->labelEx($model,'shop_addr'); ?></td>
+		<td>
 		<?php echo $form->textField($model,'shop_addr',array('size'=>60,'maxlength'=>100)); ?>
 		<?php echo $form->error($model,'shop_addr'); ?>
-	</div>
+		</td>
+	</tr>
 
-	<div class="row">
-		<?php echo $form->labelEx($model,'phone'); ?>
+	<tr>
+		<td><?php echo $form->labelEx($model,'phone'); ?></td>
+		<td>
 		<?php echo $form->textField($model,'phone',array('size'=>20,'maxlength'=>20)); ?>
 		<?php echo $form->error($model,'phone'); ?>
-	</div>
+		</td>
+	</tr>
 
-	<div class="row">
-		<?php echo $form->labelEx($model,'qq'); ?>
+	<tr>
+		<td><?php echo $form->labelEx($model,'qq'); ?></td>
+		<td>
 		<?php echo $form->textField($model,'qq',array('size'=>20,'maxlength'=>20)); ?>
 		<?php echo $form->error($model,'qq'); ?>
-	</div>
+		</td>
+	</tr>
 
-	<div class="row">
-		<?php echo $form->labelEx($model,'mail'); ?>
+	<tr>
+		<td><?php echo $form->labelEx($model,'mail'); ?></td>
+		<td>
 		<?php echo $form->textField($model,'mail',array('size'=>50,'maxlength'=>50)); ?>
 		<?php echo $form->error($model,'mail'); ?>
-	</div>
+		</td>
+	</tr>
 
-	<div class="row">
-		<?php echo $form->labelEx($model,'datafrom'); ?>
+	<tr>
+		<td><?php echo $form->labelEx($model,'datafrom'); ?></td>
+		<td>
 		<?php echo $form->textField($model,'datafrom',array('size'=>60,'maxlength'=>100)); ?>
 		<?php echo $form->error($model,'datafrom'); ?>
-	</div>
+		</td>
+	</tr>
 
-	<div class="row">
-		<?php echo $form->labelEx($model,'category'); ?>
-		<?php echo $form->textField($model,'category'); ?>
+	<tr>
+		<td><?php echo $form->labelEx($model,'category'); ?></td>
+		<td>
+		<?php echo $form->dropDownList($model, 'category',$this->genCategoryArray(), array('style' => "height:34px;")); ?>
 		<?php echo $form->error($model,'category'); ?>
-	</div>
+		</td>
+	</tr>
 
-	<div class="row">
-		<?php echo $form->labelEx($model,'cust_type'); ?>
-		<?php echo $form->textField($model,'cust_type'); ?>
+	<tr>
+		<td><?php echo $form->labelEx($model,'cust_type'); ?></td>
+		<td>
+		<?php echo $form->dropDownList($model, 'cust_type',$this->genCustTypeArray(), array('style' => "height:34px;")); ?>
 		<?php echo $form->error($model,'cust_type'); ?>
-	</div>
-
-	<div class="row">
-		<?php echo $form->labelEx($model,'eno'); ?>
-		<?php echo $form->textField($model,'eno',array('size'=>10,'maxlength'=>10)); ?>
-		<?php echo $form->error($model,'eno'); ?>
-	</div>
-
-	<div class="row">
-		<?php echo $form->labelEx($model,'iskey'); ?>
+		</td>
+	</tr>
+	<tr>
+		<td><?php echo $form->labelEx($model,'iskey'); ?></td>
+		<td>
 		<?php echo $form->textField($model,'iskey'); ?>
 		<?php echo $form->error($model,'iskey'); ?>
-	</div>
+		</td>
+	</tr>
 
-	<div class="row">
-		<?php echo $form->labelEx($model,'assign_eno'); ?>
-		<?php echo $form->textField($model,'assign_eno',array('size'=>10,'maxlength'=>10)); ?>
-		<?php echo $form->error($model,'assign_eno'); ?>
-	</div>
+	<tr>
+		<td><?php echo $form->labelEx($model,'eno'); ?></td>
+		<td>
+		<span><?=$model->eno?></span>
+		</td>
+	</tr>
 
-	<div class="row">
-		<?php echo $form->labelEx($model,'assign_time'); ?>
-		<?php echo $form->textField($model,'assign_time'); ?>
-		<?php echo $form->error($model,'assign_time'); ?>
-	</div>
+	<tr>
+		<td><?php echo $form->labelEx($model,'assign_eno'); ?></td>
+		<td><span><?=$model->assign_eno?></span></td>
+	</tr>
 
-	<div class="row">
-		<?php echo $form->labelEx($model,'next_time'); ?>
-		<?php echo $form->textField($model,'next_time'); ?>
-		<?php echo $form->error($model,'next_time'); ?>
-	</div>
+	<tr>
+		<td><?php echo $form->labelEx($model,'assign_time'); ?></td>
+		<td><span><?=date('Y-m-d H:i:s',$model->assign_time)?></span></td>
+	</tr>
 
-	<div class="row">
-		<?php echo $form->labelEx($model,'memo'); ?>
-		<?php echo $form->textField($model,'memo',array('size'=>60,'maxlength'=>100)); ?>
+	<tr>
+		<td><?php echo $form->labelEx($model,'next_time'); ?></td>
+		<td>
+		<?php echo $form->textField($model,'next_time',array('class'=>"Wdate", 'onClick'=>"WdatePicker()",'style'=>'height:30px;')); ?>
+		</td>
+	</tr>
+
+	<tr>
+		<td><?php echo $form->labelEx($model,'memo'); ?></td>
+		<td><?php echo $form->textField($model,'memo',array('size'=>60,'maxlength'=>100)); ?>
 		<?php echo $form->error($model,'memo'); ?>
-	</div>
+		</td>
+	</tr>
 
-	<div class="row">
-		<?php echo $form->labelEx($model,'create_time'); ?>
-		<?php echo $form->textField($model,'create_time'); ?>
+	<tr>
+		<td><?php echo $form->labelEx($model,'create_time'); ?></td>
+		<td><?php echo $form->textField($model,'create_time'); ?>
 		<?php echo $form->error($model,'create_time'); ?>
-	</div>
+		</td>
+	</tr>
 
-	<div class="row">
-		<?php echo $form->labelEx($model,'creator'); ?>
+	<tr>
+		<td><?php echo $form->labelEx($model,'creator'); ?></td>
+		<td>
 		<?php echo $form->textField($model,'creator'); ?>
 		<?php echo $form->error($model,'creator'); ?>
-	</div>
+		</td>
+	</tr>
 
-	<div class="row buttons">
-		<?php echo CHtml::submitButton($model->isNewRecord ? 'Create' : 'Save'); ?>
-	</div>
-
+	<tr>
+		<td colspan="2"><?php echo CHtml::submitButton('提 交',array('class'=>'btn btn-primary')); ?></td>
+	</tr>
+</table>  
 <?php $this->endWidget(); ?>
 
 </div><!-- form -->
