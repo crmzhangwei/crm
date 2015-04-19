@@ -195,7 +195,7 @@ class CustomerInfo extends CActiveRecord
         return array(
             1=>'客户名称',
             2=>'店铺名称',
-         	3=>'公司名称',
+            3=>'公司名称',
             4=>'电话',
             5=>'QQ',
         );

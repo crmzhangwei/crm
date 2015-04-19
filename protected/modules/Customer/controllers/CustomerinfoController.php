@@ -40,9 +40,7 @@ class CustomerinfoController extends GController
 		$model=new CustomerInfo;
 		$deptArr = Userinfo::getDept();
 		$deptArr = array_merge(array('0'=>'--请选择部门--'), $deptArr);
-		// Uncomment the following line if AJAX validation is needed
-		// $this->performAjaxValidation($model);
-
+		$category = Userinfo::getCategory();//类目
 		if(isset($_POST['CustomerInfo']))
 		{
 			$model->attributes=$_POST['CustomerInfo'];
@@ -51,16 +49,18 @@ class CustomerinfoController extends GController
 			$model->assign_time = time();//分配时间
 			$model->create_time = time();
 			$model->creator = Yii::app()->user->id;
-			if($model->save())
+			$model->cust_type = 0;	//客户分类默认为0
+			if($model->save()){
 				Yii::app()->db->createCommand()->update('{{Users}}',array('cust_num' =>new CDbExpression('cust_num+1')),"eno='{$model->eno}'");
 				//Users::model()->updateAll(array('cust_num'=>'cust_num+1'),'eno=:eno',array(":eno"=>$model->eno)); 
-				$this->redirect(array('view','id'=>$model->id));
+				exit("<script>alert(\"恭喜你, 成功添加一条记录。\");javascript:history.go(-1);</script>");
+			}
 		}
 
 		$this->renderPartial('create',array(
 			'model'=>$model,
-			//'groupArr'=>$groupArr,
 			'deptArr'=>$deptArr,
+			'category'=>$category
 		));
 	}
 
@@ -73,7 +73,8 @@ class CustomerinfoController extends GController
 	public function actiongetUsers()
 	{
 		$gid = Yii::app()->request->getparam('gid');
-		$userinfo = Userinfo::getUserbygid($gid);
+                $deptid = Yii::app()->request->getparam('deptid');
+		$userinfo = Userinfo::getUserbygid($gid, $deptid);
 		echo json_encode($userinfo);
 	}
 
@@ -85,19 +86,16 @@ class CustomerinfoController extends GController
 	public function actionUpdate($id)
 	{
 		$model=$this->loadModel($id);
-
-		// Uncomment the following line if AJAX validation is needed
-		// $this->performAjaxValidation($model);
-
 		if(isset($_POST['CustomerInfo']))
 		{
-			$model->attributes=$_POST['CustomerInfo'];
-			if($model->save())
-				$this->redirect(array('view','id'=>$model->id));
+                    $model->attributes=$_POST['CustomerInfo'];
+                    if($model->save())
+                        $this->redirect(array('view','id'=>$model->id));
 		}
 
 		$this->render('update',array(
-			'model'=>$model,
+                    'model'=>$model,
+                    'category'=>$category,
 		));
 	}
 
@@ -138,8 +136,7 @@ class CustomerinfoController extends GController
 			$model->attributes=$_GET['CustomerInfo'];
 
 		$this->render('admin',array(
-			'model'=>$model,
-			
+			'model'=>$model,	
 		));
 	}
     

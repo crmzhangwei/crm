@@ -3,25 +3,33 @@
 class Userinfo
 {
 	/**
-	*获取公共组别信息
-	*/
-	/*public static function getGroup()
-	{
-		$modelgroup = GroupInfo::model();
-		$groupArr =  CHtml::listData(GroupInfo::model()->findAll(), 'id', 'name');
-		return $groupArr;
-	}*/
+	 *获取所有类目
+	 *return array
+	 */
+	public static function getCategory(){
+		$category = Yii::app()->db->createCommand()
+		->select('code, name')
+		->from('{{dic}}')
+		->where('ctype=:type', array(':type'=>'cust_category'))
+		->queryAll();
+		$categoryArr = array();
+		foreach ($category as $key => $value) {
+			$categoryArr[$value['code']] = $value['name'];
+		}
+		return $categoryArr;
+	}
 
-	public static function getUserbygid($gid)
+	public static function getUserbygid($gid, $deptid)
 	{
-     	$modelgroup = Yii::app()->db->createCommand()
-	    ->select('eno, username')
-	    ->from('{{users}}')
-	    ->where('group_id=:id', array(':id'=>$gid))
-	    ->queryAll();
+            $where = $gid=='-1' ? "ismaster=1 and dept_id=$deptid" : 'group_id=:id and ismaster<>1';//-1为精英组
+            $modelgroup = Yii::app()->db->createCommand()
+                ->select('eno, username, cust_num')
+                ->from('{{users}}')
+                ->where($where, array(':id'=>$gid))
+                ->queryAll();
 	    $Users = array();
 	    foreach ($modelgroup as $key => $value) {
-	    	$Users[$value['eno']] = $value['username'];
+	    	$Users[$value['eno']] = $value['username'].' (已分配'."$value[cust_num]".')' ;
 	    }
         return $Users;
 	}
@@ -34,6 +42,9 @@ class Userinfo
 		foreach ($allData as $k => $v) {
 			$groupArr[$v['group_id']] = $v['name'];
 		}
+                if($deptid != 0){
+                    $groupArr['-1'] = '精英组';
+                }
 		return $groupArr;
 	}
 

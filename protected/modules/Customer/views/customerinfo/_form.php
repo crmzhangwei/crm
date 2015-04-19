@@ -15,7 +15,7 @@
 	'enableAjaxValidation'=>false,
 )); ?>
 
-	<p class="note">Fields with <span class="required">*</span> are required.</p>
+	<!-- <p class="note">包含 <span class="required">*</span> 为必填项.</p> -->
 
 	<?php echo $form->errorSummary($model); ?>
 
@@ -75,7 +75,7 @@
 
 	<div class="row">
 		<?php echo $form->labelEx($model,'category'); ?>
-		<?php echo $form->textField($model,'category'); ?>
+		<?php echo $form->dropDownList($model, 'category' ,$category);?>
 		<?php echo $form->error($model,'category'); ?>
 	</div>
 
@@ -83,30 +83,6 @@
 		<?php echo $form->labelEx($model,'cust_type'); ?>
 		<?php echo $form->textField($model,'cust_type'); ?>
 		<?php echo $form->error($model,'cust_type'); ?>
-	</div> -->
-
-	<!-- <div class="row">
-		<?php echo $form->labelEx($model,'eno'); ?>
-		<?php echo $form->textField($model,'eno',array('size'=>10,'maxlength'=>10)); ?>
-		<?php echo $form->error($model,'eno'); ?>
-	</div> -->
-
-	<!-- <div class="row">
-		<?php echo $form->labelEx($model,'assign_eno'); ?>
-		<?php echo $form->textField($model,'assign_eno',array('size'=>10,'maxlength'=>10)); ?>
-		<?php echo $form->error($model,'assign_eno'); ?>
-	</div> -->
-
-	<!-- <div class="row">
-		<?php echo $form->labelEx($model,'assign_time'); ?>
-		<?php echo $form->textField($model,'assign_time'); ?>
-		<?php echo $form->error($model,'assign_time'); ?>
-	</div> -->
-
-	<!-- <div class="row">
-		<?php echo $form->labelEx($model,'next_time'); ?>
-		<?php echo $form->textField($model,'next_time'); ?>
-		<?php echo $form->error($model,'next_time'); ?>
 	</div> -->
 
 	<div class="row">
@@ -142,7 +118,7 @@
 	</div> 
 
 	<div class="row buttons">
-		<?php echo CHtml::submitButton($model->isNewRecord ? 'Create' : 'Save'); ?>
+		<?php echo CHtml::submitButton($model->isNewRecord ? '创建' : '保存'); ?>
 	</div>
 
 <?php $this->endWidget(); ?>
@@ -154,10 +130,14 @@
       	var deptid = $(obj).val();
       	var groupStr = '<option value ="0">--请选择组--</option>';
       	if (deptid == 0) {
-      		$('#groupinfo').html(groupStr);
-      		$('#userinfo').html('<option value ="0">--请选择人员--</option>');
-      		$('#userid').val('');
-      	};
+            $('#groupinfo').html(groupStr);
+            $('#userinfo').html('<option value ="0">--请选择人员--</option>');
+            $('#userid').val('');
+      	}
+        else{
+            $('#userinfo').html('<option value ="0">--请选择人员--</option>');
+            $('#userid').val('');
+        }
       	$.post("./index.php?r=Customer/customerinfo/getGroup",{'deptid':deptid},function(data)
 	    {
 	    	
@@ -166,18 +146,22 @@
 	         	groupStr += '<option value ='+i+'>'+data[i]+'</option>';
 	        }
 	        $('#groupinfo').html(groupStr);
-	    },'json')	
+	    },'json')
     }
 
     function listuser(obj)
     {
       	var gid = $(obj).val();
+        var deptid = $('#dept').val();
     	var optStr = '<option value ="0">---请选择人员---</option>';
     	if (gid == 0) {
-      		$('#userinfo').html(optStr);
-      		$('#userid').val('');
-      	};
-      	$.post("./index.php?r=Customer/customerinfo/getUsers",{'gid':gid},function(data)
+            $('#userinfo').html(optStr);
+            $('#userid').val('');
+      	}
+        else{
+            $('#userid').val('');
+        }
+      	$.post("./index.php?r=Customer/customerinfo/getUsers",{'gid':gid,'deptid':deptid},function(data)
 	    {
 	    	
 	    	for(i in data)
