@@ -8,7 +8,7 @@ return array(
         'label' => '客户管理', 'icon' => 'menu-icon fa fa-group', 'url' => array('/Custom/article/checkPiv'),
         'items' => array(
               array('label' => '查询分配', 'url' => array('/Customer/customerinfo/admin')),
-              array('label' => '客户资源分配', 'url' => array('/site/page', 'view' => 'about')),
+              array('label' => '客户资源分配', 'url' => array('/Customer/customerassign')),
               array('label' => '公海资源', 'url' => array('/site/contact')),
           ),
     ),
