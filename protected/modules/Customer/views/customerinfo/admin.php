@@ -83,7 +83,8 @@ $('.search-form form').submit(function(){
 			'mail',
                         'eno',
                         'assign_eno',
-                        'assign_time',
+                        //'assign_time',
+                        array('name'=>'assign_time', 'value'=>'date("Y-m-d",$data->assign_time)',),
 		array(
 			'class'=>'CButtonColumn',
                         'deleteButtonOptions'=>array('style'=>'display:none'),
