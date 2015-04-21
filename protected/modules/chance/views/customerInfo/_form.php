@@ -23,7 +23,7 @@
         <tr>
             <td width="10%"><?php echo $form->labelEx($model,'cust_name'); ?></td> 
             <td>
-                <?php echo $form->textField($model,'cust_name',array('size'=>60,'maxlength'=>100)); ?>
+                <?php echo $form->textField($model,'cust_name',array('class'=>'col-md-6','maxlength'=>100)); ?>
 				<?php echo $form->error($model,'cust_name'); ?>
             </td>
         </tr> 
@@ -32,7 +32,7 @@
 	<tr>
 		<td><?php echo $form->labelEx($model,'shop_name'); ?></td>
 		<td>
-			<?php echo $form->textField($model,'shop_name',array('size'=>60,'maxlength'=>100)); ?>
+			<?php echo $form->textField($model,'shop_name',array('class'=>'col-md-6','maxlength'=>100)); ?>
 			<?php echo $form->error($model,'shop_name'); ?>
 		</td>
 	</tr>
@@ -40,7 +40,7 @@
 	<tr>
 		<td><?php echo $form->labelEx($model,'corp_name'); ?></td>
 		<td>
-			<?php echo $form->textField($model,'corp_name',array('size'=>60,'maxlength'=>100)); ?>
+			<?php echo $form->textField($model,'corp_name',array('class'=>'col-md-6','maxlength'=>100)); ?>
 			<?php echo $form->error($model,'corp_name'); ?>
 		</td>
 	</tr>
@@ -48,7 +48,7 @@
 	<tr>
 		<td><?php echo $form->labelEx($model,'shop_url'); ?></td>
 		<td>
-		<?php echo $form->textField($model,'shop_url',array('size'=>60,'maxlength'=>100)); ?>
+		<?php echo $form->textField($model,'shop_url',array('class'=>'col-md-6','maxlength'=>100)); ?>
 		<?php echo $form->error($model,'shop_url'); ?>
 		</td>
 	</tr>
@@ -56,7 +56,7 @@
 	<tr>
 		<td><?php echo $form->labelEx($model,'shop_addr'); ?></td>
 		<td>
-		<?php echo $form->textField($model,'shop_addr',array('size'=>60,'maxlength'=>100)); ?>
+		<?php echo $form->textField($model,'shop_addr',array('class'=>'col-md-6','maxlength'=>100)); ?>
 		<?php echo $form->error($model,'shop_addr'); ?>
 		</td>
 	</tr>
@@ -64,7 +64,7 @@
 	<tr>
 		<td><?php echo $form->labelEx($model,'phone'); ?></td>
 		<td>
-		<?php echo $form->textField($model,'phone',array('size'=>20,'maxlength'=>20)); ?>
+		<?php echo $form->textField($model,'phone',array('class'=>'col-md-6','maxlength'=>15)); ?>
 		<?php echo $form->error($model,'phone'); ?>
 		</td>
 	</tr>
@@ -72,7 +72,7 @@
 	<tr>
 		<td><?php echo $form->labelEx($model,'qq'); ?></td>
 		<td>
-		<?php echo $form->textField($model,'qq',array('size'=>20,'maxlength'=>20)); ?>
+		<?php echo $form->textField($model,'qq',array('class'=>'col-md-6','maxlength'=>15)); ?>
 		<?php echo $form->error($model,'qq'); ?>
 		</td>
 	</tr>
@@ -88,7 +88,7 @@
 	<tr>
 		<td><?php echo $form->labelEx($model,'datafrom'); ?></td>
 		<td>
-		<?php echo $form->textField($model,'datafrom',array('size'=>60,'maxlength'=>100)); ?>
+		<?php echo $form->textField($model,'datafrom',array('class'=>'col-md-6','maxlength'=>100)); ?>
 		<?php echo $form->error($model,'datafrom'); ?>
 		</td>
 	</tr>
@@ -104,10 +104,26 @@
 	<tr>
 		<td><?php echo $form->labelEx($model,'cust_type'); ?></td>
 		<td>
-		<?php echo $form->dropDownList($model, 'cust_type',$this->genCustTypeArray(), array('style' => "height:34px;")); ?>
+		<?php echo $form->dropDownList($model, 'cust_type',$this->genCustTypeArray(), array('id'=>'cust_type','style' => "height:34px;")); ?>
 		<?php echo $form->error($model,'cust_type'); ?>
 		</td>
 	</tr>
+
+	<tr <?php if($model->cust_type != 6):?>style="display:none"<?php endif;?> id="visit_date_tr">
+		<td><?php echo $form->labelEx($model,'visit_date'); ?></td>
+		<td>
+		<?php echo $form->textField($model,'visit_date',array('id'=>'visit_date','class'=>"Wdate", 'onClick'=>"WdatePicker()",'style'=>'height:30px;')); ?>
+		</td>
+	</tr>
+
+	<tr <?php if($model->cust_type != 8):?>style="display:none"<?php endif;?> id="abandon_reason_tr">
+		<td><?php echo $form->labelEx($model,'abandon_reason'); ?></td>
+		<td>
+		<?php echo $form->dropDownList($model, 'abandon_reason',array('1'=>'无意向','2'=>'已成交','3'=>'黑名单'), array('id'=>'abandon_reason','style' => "height:34px;")); ?>
+		<?php echo $form->error($model,'abandon_reason'); ?>
+		</td>
+	</tr>
+
 	<tr>
 		<td><?php echo $form->labelEx($model,'iskey'); ?></td>
 		<td>
@@ -142,24 +158,19 @@
 
 	<tr>
 		<td><?php echo $form->labelEx($model,'memo'); ?></td>
-		<td><?php echo $form->textField($model,'memo',array('size'=>60,'maxlength'=>100)); ?>
+		<td><?php echo $form->textArea($model,'memo',array('class'=>'col-md-6','maxlength'=>255)); ?>
 		<?php echo $form->error($model,'memo'); ?>
 		</td>
 	</tr>
 
 	<tr>
 		<td><?php echo $form->labelEx($model,'create_time'); ?></td>
-		<td><?php echo $form->textField($model,'create_time'); ?>
-		<?php echo $form->error($model,'create_time'); ?>
-		</td>
+		<td><?=date("Y-m-d H:i:s",$model->create_time)?></td>
 	</tr>
 
 	<tr>
 		<td><?php echo $form->labelEx($model,'creator'); ?></td>
-		<td>
-		<?php echo $form->textField($model,'creator'); ?>
-		<?php echo $form->error($model,'creator'); ?>
-		</td>
+		<td><?=$user->username?></td>
 	</tr>
 
 	<tr>
@@ -169,3 +180,24 @@
 <?php $this->endWidget(); ?>
 
 </div><!-- form -->
+
+
+<script>
+	
+	$(function(){
+		$("#cust_type").change(function(){
+			var value = $(this).val();
+			if(value == 6){
+				$("#visit_date_tr").show();
+			}else{
+				$("#visit_date_tr").hide();
+			}
+
+			if(value == 8){
+				$("#abandon_reason_tr").show();
+			}else{
+				$("#abandon_reason_tr").hide();
+			}
+		});
+	});
+</script>

@@ -55,18 +55,21 @@ class CustomerInfoController extends GController {
      */
     public function actionUpdate($id) {
         $model = $this->loadModel($id);
-
+        
         // Uncomment the following line if AJAX validation is needed
         // $this->performAjaxValidation($model);
 
         if (isset($_POST['CustomerInfo'])) {
             $model->attributes = $_POST['CustomerInfo'];
+            $model->toTimestamp();
             if ($model->save())
                 $this->redirect(array('view', 'id' => $model->id));
         }
-
+        $user = Users::model()->findByPk($model->creator);
+        $model->toDate();
         $this->render('update', array(
             'model' => $model,
+            'user'=>$user,
         ));
     }
 
