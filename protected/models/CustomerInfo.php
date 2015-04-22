@@ -45,16 +45,18 @@ class CustomerInfo extends CActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('cust_name,shop_name,mail,create_time, creator', 'required'),
+            array('cust_name,shop_name,mail', 'required'),
             array('mail', 'email'),
-            array('category, cust_type, iskey, assign_time, next_time, create_time, creator', 'numerical', 'integerOnly' => true),
-            array('eno, assign_eno', 'length', 'max' => 10),
-            array('cust_name, shop_name, corp_name, shop_url, shop_addr, datafrom, memo', 'length', 'max' => 100),
-            array('phone, qq', 'length', 'max' => 20),
-            array('mail', 'length', 'max' => 50),
+            array('category, cust_type, iskey, status, creator', 'numerical', 'integerOnly'=>true),
+            array('cust_name, shop_name, corp_name, shop_url, shop_addr, datafrom, memo', 'length', 'max'=>100),
+            array('phone, qq', 'length', 'max'=>20),
+            array('visit_date, assign_time, next_time, create_time','safe'),
+            array('mail', 'length', 'max'=>50),
+            array('eno, assign_eno', 'length', 'max'=>10),
+            array('abandon_reason', 'length', 'max'=>200),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id,contact_7_day,cust_type_from,cust_type_to, cust_name, shop_name, corp_name, shop_url, shop_addr, phone, qq, mail, datafrom, category, cust_type, eno, iskey, assign_eno, assign_time, next_time, memo, create_time, creator', 'safe', 'on' => 'search'),
+            array('id, cust_name, shop_name, corp_name, shop_url, shop_addr, phone, qq, mail, datafrom, category, cust_type, eno, iskey, visit_date, abandon_reason, assign_eno, assign_time, next_time, memo, status, create_time, creator', 'safe', 'on'=>'search'),
         );
     }
 
@@ -94,6 +96,8 @@ class CustomerInfo extends CActiveRecord {
             'memo' => '备注',
             'create_time' => '创建时间',
             'creator' => '创建人',
+            'visit_date' => '到店时间',
+            'abandon_reason' => '放弃原因',
             'contact_7_day'=>'七天内联系过',
         );
     }
@@ -159,5 +163,24 @@ class CustomerInfo extends CActiveRecord {
             'criteria' => $criteria,
         ));
     }
+
+    public function toTimestamp(){
+        if($this->next_time && !is_numeric($this->next_time)){
+            $this->next_time = strtotime($this->next_time);
+        }
+        if($this->visit_date && !is_numeric($this->visit_date)){
+            $this->visit_date = strtotime($this->visit_date);
+        }
+    }
+
+    public function toDate(){
+        if( $this->next_time > 0){
+            $this->next_time = date('Y-m-d',$this->next_time);
+        }
+        if( $this->visit_date > 0){
+            $this->visit_date = date('Y-m-d',$this->visit_date);
+        }
+    }
+
 
 }
