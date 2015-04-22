@@ -203,5 +203,38 @@ class CustomerinfoController extends GController
 		}
 	}
 
+	public function  get_eno_text($data)
+	{
+		$val = $data->eno;
+		$enoArr = $this->getEnoArr($val);
+		$res = isset($enoArr[$val])? $enoArr[$val]:$val;
+		return $res;
+	}
 
+	public function getEnoArr($eno){
+		return CHtml::listData(Users::model()->findAll('eno=:eno', array(':eno'=>$eno)), 'eno', 'name');
+	}
+	
+	public function get_assign_text($data){
+		$val = $data->assign_eno;
+		$assignArr = $this->getAssignArr($val);
+		$res = isset($assignArr[$val]) ? $assignArr[$val] : $val;
+		return $res;
+	}
+	
+	public function getAssignArr($assign){
+		return Chtml::listData(Users::model()->findAll('id=:id', array(':id'=>$assign)), 'id', 'name');
+	}
+	
+	public function get_category_text($data){
+		$val = $data->category;
+		$categoryArr = $this->getCategory();
+		$res = isset($categoryArr[$val]) ? $categoryArr[$val] : $val;
+		return $res;
+	}
+	
+	public function getCategory(){
+		return Userinfo::getCategory();
+	}
+	
 }
