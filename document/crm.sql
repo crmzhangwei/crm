@@ -45,8 +45,35 @@ CREATE TABLE `c_aftermarket_cust_info` (
 
 LOCK TABLES `c_aftermarket_cust_info` WRITE;
 /*!40000 ALTER TABLE `c_aftermarket_cust_info` DISABLE KEYS */;
-INSERT INTO `c_aftermarket_cust_info` VALUES (1,1,0,'3414','1234','U00001','1',1,1,1,1,1),(2,2,0,'31341','13412','U00002','1',1,1,1,1,1);
+INSERT INTO `c_aftermarket_cust_info` VALUES (1,3,0,'3414','1234','U00001','1',1,1,1,1,1),(2,4,0,'31341','13412','U00002','1',1,1,1,1,1);
 /*!40000 ALTER TABLE `c_aftermarket_cust_info` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `c_black_info`
+--
+
+DROP TABLE IF EXISTS `c_black_info`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `c_black_info` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `cust_id` int(11) NOT NULL COMMENT '客户id',
+  `lib_type` int(11) NOT NULL COMMENT '来源库',
+  `old_cust_type` int(11) NOT NULL COMMENT '原客户分类',
+  `create_time` int(11) NOT NULL COMMENT '创建时间',
+  `creator` int(11) NOT NULL COMMENT '创建人',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `c_black_info`
+--
+
+LOCK TABLES `c_black_info` WRITE;
+/*!40000 ALTER TABLE `c_black_info` DISABLE KEYS */;
+/*!40000 ALTER TABLE `c_black_info` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -82,7 +109,7 @@ CREATE TABLE `c_contract_info` (
 
 LOCK TABLES `c_contract_info` WRITE;
 /*!40000 ALTER TABLE `c_contract_info` DISABLE KEYS */;
-INSERT INTO `c_contract_info` VALUES (1,1,'2',12,1,1,'1','1','11','1',1,1,1,1,1),(2,2,'1',123,1,1,'1','1','1','1',1,1,1,1,1);
+INSERT INTO `c_contract_info` VALUES (1,3,'2',12,1,1,'1','1','11','1',1,1,1,1,1),(2,4,'1',123,1,1,'1','1','1','1',1,1,1,1,1);
 /*!40000 ALTER TABLE `c_contract_info` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -235,6 +262,30 @@ INSERT INTO `c_dept_info` VALUES (1,'销售部'),(2,'技术部');
 UNLOCK TABLES;
 
 --
+-- Table structure for table `c_dept_role`
+--
+
+DROP TABLE IF EXISTS `c_dept_role`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `c_dept_role` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `dept_id` int(11) NOT NULL COMMENT '部门id',
+  `role_id` int(11) NOT NULL COMMENT '角色id',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `c_dept_role`
+--
+
+LOCK TABLES `c_dept_role` WRITE;
+/*!40000 ALTER TABLE `c_dept_role` DISABLE KEYS */;
+/*!40000 ALTER TABLE `c_dept_role` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `c_dial_detail`
 --
 
@@ -369,6 +420,33 @@ LOCK TABLES `c_menu_info` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `c_message`
+--
+
+DROP TABLE IF EXISTS `c_message`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `c_message` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `cust_id` int(11) NOT NULL COMMENT '客户id',
+  `phone` varchar(20) NOT NULL COMMENT '电话号码',
+  `content` varchar(200) NOT NULL COMMENT '短信内容',
+  `create_time` int(11) NOT NULL COMMENT '创建时间',
+  `creator` int(11) NOT NULL COMMENT '创建人',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `c_message`
+--
+
+LOCK TABLES `c_message` WRITE;
+/*!40000 ALTER TABLE `c_message` DISABLE KEYS */;
+/*!40000 ALTER TABLE `c_message` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `c_note_info`
 --
 
@@ -391,7 +469,7 @@ CREATE TABLE `c_note_info` (
   `eno` int(11) NOT NULL COMMENT '工号',
   `create_time` int(11) NOT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -400,6 +478,7 @@ CREATE TABLE `c_note_info` (
 
 LOCK TABLES `c_note_info` WRITE;
 /*!40000 ALTER TABLE `c_note_info` DISABLE KEYS */;
+INSERT INTO `c_note_info` VALUES (1,3,'aa','bbb','cc','dd','dfa','ddd',1,1,123,0,1,123),(2,4,'dd','cc','adf','dfa','adsf','asdf',1,1,431,0,1,122),(3,3,'aa2','bbb','cc','dd','dfa','ddd',1,1,123,0,1,123),(4,3,'dsf','bbb','cc','dd','dfa','ddd',1,1,123,0,1,123),(5,3,'asf','cd','cc','dd','dfa','ddd',1,1,123,0,1,123),(6,3,'asdf','adf','cc','dd','dfa','ddd',1,1,123,0,1,123),(7,3,'asdfasf','adf','cc','dd','dfa','ddd',1,1,123,0,1,123),(8,3,'asdfa','af','cc','dd','dfa','ddd',1,1,123,0,1,123),(9,3,'aa','bbb','cc','dd','dfa','ddd',1,1,123,0,1,123),(10,3,'aa','bbb','cc','dd','dfa','ddd',1,1,123,0,1,123),(11,3,'12se','12sae','sdaf','fasdf','asf','asd',1,1,21,0,1,123),(12,3,'12se','12sae','sdaf','fasdf','asf','asd',1,1,21,0,1,123);
 /*!40000 ALTER TABLE `c_note_info` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -529,7 +608,6 @@ CREATE TABLE `c_users` (
   `manager_id` int(11) NOT NULL COMMENT '主管id',
   `ismaster` tinyint(1) DEFAULT NULL COMMENT '是否精英',
   `status` tinyint(2) DEFAULT NULL COMMENT '状态',
-  `cust_num` int NOT NULL DEFAULT 0 COMMENT '已分配资源数',
   `create_time` int(11) NOT NULL COMMENT '创建时间',
   `login_time` int(11) NOT NULL COMMENT '最后登录时间',
   PRIMARY KEY (`id`)
@@ -542,7 +620,7 @@ CREATE TABLE `c_users` (
 
 LOCK TABLES `c_users` WRITE;
 /*!40000 ALTER TABLE `c_users` DISABLE KEYS */;
-INSERT INTO `c_users` VALUES (1,'U00005','a722c63db8ec8625af6cf71cb8c2d939','admin','admin',0,1,'12314141234','2561582',1,1,1,1,1,123,0),(2,'U00006','a722c63db8ec8625af6cf71cb8c2d939','test2','test2',0,1,'12314141234','2561582',1,2,1,1,1,1,1),(3,'U00001','a722c63db8ec8625af6cf71cb8c2d939','test1','test1',0,1,'13536580110','123123123',0,0,0,0,0,0,0),(4,'U00011','a722c63db8ec8625af6cf71cb8c2d939','test10','test10',0,1,'12314141234','2561582',1,3,1,1,1,1,1),(5,'U00012','a722c63db8ec8625af6cf71cb8c2d939','test11','test11',0,1,'12314141234','2561582',1,1,1,1,1,1,1),(6,'U00007','a722c63db8ec8625af6cf71cb8c2d939','test3','test3',0,1,'12314141234','2561582',1,2,1,1,1,1,1),(7,'U00002','a722c63db8ec8625af6cf71cb8c2d939','test4','test4',0,2,'12314141234','2561582',1,3,1,1,1,1,1),(8,'U00003','a722c63db8ec8625af6cf71cb8c2d939','test5','test5',0,1,'12314141234','2561582',1,1,1,1,1,1,1),(9,'U00004','a722c63db8ec8625af6cf71cb8c2d939','test6','test6',0,1,'12314141234','2561582',1,2,1,1,1,1,1),(10,'U00008','a722c63db8ec8625af6cf71cb8c2d939','test7','test7',0,1,'12314141234','2561582',1,3,1,1,1,1,1),(11,'U00009','a722c63db8ec8625af6cf71cb8c2d939','test8','test8',0,1,'12314141234','2561582',1,1,1,1,1,1,1),(12,'U00010','a722c63db8ec8625af6cf71cb8c2d939','test9','test9',0,1,'12314141234','2561582',1,1,1,1,1,1,1);
+INSERT INTO `c_users` VALUES (1,'U00005','a722c63db8ec8625af6cf71cb8c2d939','admin','admin',0,1,'12314141234','2561582',1,1,1,1,1,123,0),(2,'U00006','a722c63db8ec8625af6cf71cb8c2d939','test2','test2',0,1,'12314141234','2561582',1,2,1,1,1,1,1),(3,'U00001','a722c63db8ec8625af6cf71cb8c2d939','test1','test1',0,1,'13536580110','123123123',1,1,0,0,0,0,0),(4,'U00011','a722c63db8ec8625af6cf71cb8c2d939','test10','test10',0,1,'12314141234','2561582',1,3,1,1,1,1,1),(5,'U00012','a722c63db8ec8625af6cf71cb8c2d939','test11','test11',0,1,'12314141234','2561582',1,1,1,1,1,1,1),(6,'U00007','a722c63db8ec8625af6cf71cb8c2d939','test3','test3',0,1,'12314141234','2561582',1,2,1,1,1,1,1),(7,'U00002','a722c63db8ec8625af6cf71cb8c2d939','test4','test4',0,2,'12314141234','2561582',1,3,1,1,1,1,1),(8,'U00003','a722c63db8ec8625af6cf71cb8c2d939','test5','test5',0,1,'12314141234','2561582',1,1,1,1,1,1,1),(9,'U00004','a722c63db8ec8625af6cf71cb8c2d939','test6','test6',0,1,'12314141234','2561582',1,2,1,1,1,1,1),(10,'U00008','a722c63db8ec8625af6cf71cb8c2d939','test7','test7',0,1,'12314141234','2561582',1,3,1,1,1,1,1),(11,'U00009','a722c63db8ec8625af6cf71cb8c2d939','test8','test8',0,1,'12314141234','2561582',1,1,1,1,1,1,1),(12,'U00010','a722c63db8ec8625af6cf71cb8c2d939','test9','test9',0,1,'12314141234','2561582',1,1,1,1,1,1,1);
 /*!40000 ALTER TABLE `c_users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -555,4 +633,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-04-07 17:48:12
+-- Dump completed on 2015-04-22 17:44:00

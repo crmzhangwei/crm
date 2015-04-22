@@ -34,7 +34,7 @@ class ServiceController extends GController
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
 				'actions'=>array('update','updateNewList','assign','admin','newList','todayList',
                                                  'oldList','dial','message','mail','sharedNoteList','historyNoteList',
-                                                 'deptGroupArr','userArr'),
+                                                 'deptGroupArr','userArr','assignMulti'),
 				'users'=>array('@'),
 			),
 			array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -116,6 +116,38 @@ class ServiceController extends GController
 		}
                 
                 $this->render('assign',array('model'=>$model));
+        }
+        /**
+         * 售后客户分配-多选情况
+         * @param type $id 客户id
+         */
+        public function actionAssignMulti($isave=false){ 
+            if($isave){
+                /**
+                 * 1.更新所属工号
+                 * 2.所属工号的已分配资源数+1
+                 */
+                
+                return ;
+            }
+                if(!isset($_POST['select'])){
+                     $model=new AftermarketCustInfo('search');
+                     $model->unsetAttributes();  // clear any default values 
+                     $this->render('admin',array(
+                            'model'=>$model,
+                     ));
+                     return ;
+                }
+                $ids = $_POST['select'];
+                $model = CustomerInfo::model();
+                $sql= "";
+                if(is_array($ids)){
+                    $sql = "select id,cust_name from {{customer_info}} where id in (".  implode(",", $ids).")";
+                }else{
+                    $sql="select id,cust_name from {{customer_info}} where id=".$ids;
+                } 
+                $list = $model->findAllBySql($sql);
+                $this->render('assign',array('model'=>$model,'custlist'=>$list));
         }
          /**
 	 * 搜索共享小记列表数据

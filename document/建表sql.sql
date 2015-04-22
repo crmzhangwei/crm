@@ -53,6 +53,13 @@ CREATE TABLE `c_user_role` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+CREATE TABLE `c_dept_role` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `dept_id` int NOT NULL COMMENT '部门id',
+  `role_id` int NOT NULL COMMENT '角色id',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 CREATE TABLE `c_menu_info` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键',
   `name` varchar(100) NOT NULL COMMENT '资源名称',
@@ -216,9 +223,18 @@ CREATE TABLE `c_black_info` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键', 
   `cust_id` int NOT NULL COMMENT '客户id',
   `lib_type` int NOT NULL COMMENT '来源库',
-  `cust_type` int NOT NULL COMMENT '客户分类', 
+  `old_cust_type` int NOT NULL COMMENT '原客户分类', 
   `create_time` int NOT NULL COMMENT '创建时间',
   `creator` int NOT NULL COMMENT '创建人',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+CREATE TABLE `c_message` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键', 
+  `cust_id` int NOT NULL COMMENT '客户id',
+  `phone` varchar(20) NOT NULL COMMENT '电话号码',
+  `content` varchar(200) NOT NULL COMMENT '短信内容', 
+  `create_time` int NOT NULL COMMENT '创建时间',
+  `creator` int NOT NULL COMMENT '创建人',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;

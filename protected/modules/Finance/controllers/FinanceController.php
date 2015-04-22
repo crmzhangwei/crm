@@ -32,7 +32,7 @@ class FinanceController extends GController
 				'users'=>array('*'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('create','update','create','PopCustList','DeptGroupArr','UserArr'),
+				'actions'=>array('create','update','create','PopCustList','DeptGroupArr','UserArr','test'),
 				'users'=>array('@'),
 			),
 			array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -161,8 +161,16 @@ class FinanceController extends GController
 	{
 		$model=new Finance('search');
 		$model->unsetAttributes();  // clear any default values
-		if(isset($_GET['Finance']))
-			$model->attributes=$_GET['Finance'];
+		if(isset($_POST['Finance'])){
+			$model->attributes=$_POST['Finance'];
+                        $model->cust_name=$_POST['Finance']['cust_name'];
+                        $model->createtime_start=$_POST['Finance']['createtime_start'];
+                        $model->createtime_end=$_POST['Finance']['createtime_end'];
+                        $model->dept=$_POST['Finance']['dept'];
+                        $model->group=$_POST['Finance']['group'];
+                        $model->shopname=$_POST['Finance']['shopname'];
+                        $model->phone=$_POST['Finance']['phone'];
+                }
                 $this->render('admin',array(
 			'model'=>$model,
                     ));        
@@ -250,7 +258,36 @@ class FinanceController extends GController
         }
         
         
-        public function actionTest(){
-            
+        public function actionTest() {
+           $content="上周A股市场风格出现分化，在大盘蓝筹股的带动下主板市场屡创新高。面对不断冲高的大盘，市场的恐高心理也有所增加，业内人士认为，近期，在大盘加速冲刺阶段积累了巨量短线获利盘，市场面临巨大的技术性调整压力。当然，也有券商机构喊出，“牛市将持续三年到五年”上周A股市场风格出现分化上周A股市场风格出现分化，，。上周A股市场风格出现分化上周A股市场风格出现";
+                  
+           Utils::sendMessage("13536580119", $content,"post"); 
+           //Utils::sendMessage("18589075186", $content,"post"); 
         }
+
+    function Get($phone,$msg) {
+        $sms = Yii::app()->params['SMS'];
+                $ch = curl_init();
+                $timeout = 15;
+                $postdata=array('uid'=>$sms['uid'],
+                            'auth'=>$sms['auth'],
+                            'expid'=>$sms['expid'],
+                            'encode'=>$sms['encode'],
+                            'mobile'=>$phone,
+                            'msg'=>$msg
+                    );
+                $sUrl = $sms['url']."?expid=0&uid=".$sms['uid']."&auth=".$sms['auth']."&encode=".$sms['encode']."&mobile=".$phone."&msg=".$msg;
+                curl_setopt($ch, CURLOPT_POST, true);
+                curl_setopt($ch, CURLOPT_HEADER,true);
+                curl_setopt($ch,CURLOPT_HTTPHEADER,array("chaetset=utf-8"));
+                //curl_setopt($ch, CURLOPT_POSTFIELDS, $postdata); // Post提交的数据包
+                curl_setopt($ch, CURLOPT_URL, $sUrl);
+                //curl_setopt($ch, CURLOPT_BINARYTRANSFER, 1);
+                
+                 curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
+                $result = curl_exec($ch);
+                curl_close($ch);
+                echo $result;
+        return $result;
+    }
 }

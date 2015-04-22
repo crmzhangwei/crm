@@ -251,7 +251,7 @@ class AftermarketCustInfo extends CActiveRecord
                     $eTime = strtotime($this->createtime_end);
                     $criteria->addCondition(" t.create_time<=$eTime");
                 } 
-                $criteria->select="t.id,c.cust_name,t.cust_type,ct.type_name as cust_type_name,c.category,d.name as category_name,c.qq,t.webchat,t.ww,ci.service_limit ";
+                $criteria->select="t.id,t.cust_id,c.cust_name,t.cust_type,ct.type_name as cust_type_name,c.category,d.name as category_name,c.qq,t.webchat,t.ww,ci.service_limit ";
                 $criteria->join=" left join {{customer_info}} c on t.cust_id = c.id ".
                                 " left join {{users}} u on t.eno=u.eno ".
                                 " left join {{cust_type}} ct on ct.type_no=t.cust_type and ct.lib_type=3 ".

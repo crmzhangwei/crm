@@ -14,4 +14,4 @@ $this->menu=array(
 
 <h1>售后客户分配</h1>
 
-<?php $this->renderPartial('_assign', array('model'=>$model)); ?>
+<?php $this->renderPartial('_assign', array('model'=>$model,'custlist'=>$custlist)); ?>

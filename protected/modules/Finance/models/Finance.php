@@ -22,6 +22,10 @@ class Finance extends CActiveRecord
         public $trans_user_name;
         public $dept;
         public $group;
+        public $createtime_start;
+        public $createtime_end;
+        public $shopname;
+        public $phone;
 	/**
 	 * @return string the associated database table name
 	 */
@@ -94,16 +98,28 @@ class Finance extends CActiveRecord
 	public function search()
 	{
 		// @todo Please modify the following code to remove attributes that should not be searched. 
-		$criteria=new CDbCriteria; 
-		$criteria->compare('f.id',$this->id,true);
-		$criteria->compare('f.cust_id',$this->cust_id);
-		$criteria->compare('f.sale_user',$this->sale_user);
-		$criteria->compare('f.trans_user',$this->trans_user);
-		$criteria->compare('f.acct_number',$this->acct_number);
-		$criteria->compare('f.acct_amount',$this->acct_amount);
-		$criteria->compare('f.acct_time',$this->acct_time);
-		$criteria->compare('f.creator',$this->creator);
-		$criteria->compare('f.create_time',$this->create_time);
+		$criteria=new CDbCriteria;  
+                $criteria->compare('cust.cust_name',$this->cust_name,true);  
+		if($this->createtime_start){
+                    $sTime = strtotime($this->createtime_start);
+                    $criteria->addCondition(" f.create_time>=$sTime");
+                }
+                if($this->createtime_end){
+                    $eTime = strtotime($this->createtime_end);
+                    $criteria->addCondition(" f.create_time<=$eTime");
+                } 
+                if($this->dept){
+                    $criteria->addCondition(" u1.dept_id=".$this->dept);
+                }
+                if($this->group){
+                    $criteria->addCondition(" u1.group_id=".$this->group);
+                }
+                if($this->shopname){
+                     $criteria->compare('cust.shop_name',$this->shopname,true);  
+                }
+                if($this->phone){
+                     $criteria->compare('cust.phone',$this->phone,true);  
+                }
                 $criteria->select="f.id,f.cust_id,f.sale_user,f.trans_user,f.acct_number,f.acct_amount,f.acct_time,f.creator,f.create_time,cust.cust_name,u1.username as sale_user_name,u2.username as trans_user_name";
                 $criteria->alias="f";
                 $criteria->join=" left join c_customer_info cust on f.cust_id=cust.id left join c_users u1 on f.sale_user=u1.id left join c_users u2 on f.trans_user=u2.id";

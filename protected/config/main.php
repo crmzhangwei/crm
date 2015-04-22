@@ -88,8 +88,17 @@ return array(
 	'params'=>array(
 		// this is used in contact page
 		'adminEmail'=>'webmaster@example.com',
-                'items'=>  require_once '/menu.php',
+                'items'=>  require_once '/menu.php', 
+                'SMS'=>array(
+                    'url'=>'http://210.5.158.31:9011/hy/',
+                    'uid'=>'50013',
+                    'auth'=>'b201fee180e200c342aadc639f2a0ee5',
+                    'encode'=>'UTF-8',
+                    'expid'=>0, 
+                ),
 	),
+        //短信服务商配置
+        
 );
 
 

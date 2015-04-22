@@ -20,7 +20,7 @@
                 <td width="5%" nowrap="nowrap">
                      <?php echo $form->textField($model,'createtime_start',array('class'=>"Wdate", 'onClick'=>"WdatePicker()",'style'=>'height:30px;',)); ?>
                      to 
-                     <?php echo $form->textField($model,'createtime_end',array('class'=>"Wdate", 'onClick'=>"WdatePicker()",'style'=>'height:30px;','readonly'=>'readonly')); ?>
+                     <?php echo $form->textField($model,'createtime_end',array('class'=>"Wdate", 'onClick'=>"WdatePicker()",'style'=>'height:30px;')); ?>
                 </td>
                 <td width="5%" nowrap="nowrap"><?php echo $form->labelEx($model,'total_money'); ?></td>
                 <td width="5%" nowrap="nowrap">
