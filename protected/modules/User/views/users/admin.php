@@ -12,15 +12,7 @@ $this->menu = array(
 	array('label' => '创建用户', 'url' => array('create')),
 );
 
-Yii::app()->clientScript->registerScript('search', "
 
-$('.search-form form').submit(function(){
-	$('#users-grid').yiiGridView('update', {
-		data: $(this).serialize()
-	});
-	return false;
-});
-");
 ?>
 
 <?php
@@ -57,10 +49,9 @@ $this->widget('GGridView', array(
 		array('class' => 'CCheckBoxColumn',
 			'name' => 'id',
 			'id' => 'select',
-			'selectableRows' => 2,
-			'headerTemplate' => '{item}',
+			'headerTemplate' => '<input id="select_all" class="select-on-check" type="checkbox" name="" >全选',
 			'htmlOptions' => array(
-				'width' => '20',
+				'width' => '60',
 			),
 		),
 		'id',
@@ -89,13 +80,13 @@ $this->widget('GGridView', array(
 			'name' => 'status',
 			'value' => array($this, 'get_status_text'),
 		),
-		array(
-			'class' => 'CButtonColumn',
-			'htmlOptions' => array(
-				'width' => '100',
-				'style' => 'text-align:center',
-			),
-		),
+//		array(
+//			'class' => 'CButtonColumn',
+//			'htmlOptions' => array(
+//				'width' => '100',
+//				'style' => 'text-align:center',
+//			),
+//		),
 	),
 ));
 ?>
@@ -103,7 +94,8 @@ $this->widget('GGridView', array(
 <div class="table-page"> 
     <div class="col-sm-6">
         共<span class="orange"><?= $dataProvider->totalItemCount ?></span>条记录
-        <a href="javascript:void(0);" js_type="publish" class="btn  btn-minier btn-sm btn-success publish"><i class=" icon-ok icon-large"></i>设置精英</a> <a href="javascript:void(0);" js_type="cancel_publish"  class="btn  btn-minier btn-sm btn-warning publish"> <i class="icon-lock icon-large"></i>取消精英</a> 
+        <a href="javascript:void(0);" js_type="publish"  col='0' class="btn  btn-minier btn-sm btn-success publish"><i class=" icon-ok icon-large"></i>设置精英</a> <a href="javascript:void(0);" js_type="cancel_publish" col='0' class="btn  btn-minier btn-sm btn-warning publish"> <i class="icon-lock icon-large"></i>取消精英</a>
+        <a href="javascript:void(0);" js_type="publish"  col='1' class="btn  btn-minier btn-sm btn-success publish"><i class=" icon-ok icon-large"></i>设置离职</a> <a href="javascript:void(0);" js_type="cancel_publish" col='1' class="btn  btn-minier btn-sm btn-warning publish"> <i class="icon-lock icon-large"></i>取消离职</a> 
     </div>
     <div class="col-sm-6 no-padding-right">
 		<?php
@@ -121,4 +113,46 @@ $this->widget('GGridView', array(
             public.dialog('增加用户', '<?= Yii::app()->createUrl('User/users/create') ?>', {}, 900);
         })
     })
+    //选择全部代码
+jQuery(document).on('click','#select_all',function() {
+	var checked=this.checked;
+jQuery("input[name='select\[\]']:enabled").each(function() {this.checked=checked;});
+});
+jQuery(document).on('click', "input[name='select\[\]']", function() {
+	jQuery('#select_all').prop('checked', jQuery("input[name='select\[\]']").length==jQuery("input[name='select\[\]']:checked").length);
+});
+
+ function getIds(dom){
+        var ids = '';
+        dom.each(function (index, element) {
+                ids += ',' + $(this).val();
+        });
+        return  ids.substring(1);
+    }
 </script>
+
+   <?php
+        $publishUrl = Yii::app()->createUrl("/User/users/publish/",array('ajax'=>'1'));
+        $jss = <<<EOF
+       $(function () {
+        
+        $(".publish").click(function () {
+            var ids = getIds($('input[name="select[]"]:checked'));
+            if (!ids) {
+                bootbox.alert('请选择需要操作人！');
+                return;
+            }
+          
+            $.post(' $publishUrl ', {'ids': ids, 'type': $(this).attr('js_type'),'col':$(this).attr('col')}, function (data) {
+                $("body").find(".to8to-box-overlay-2").remove();
+                bootbox.alert(data.msg, function () {
+                    if (data.code == "1") {
+                        location.reload();
+                    }
+                });
+            }, 'json');
+        });
+    });
+EOF;
+Yii::app()->clientScript->registerScript('topicjss', $jss);
+?>

@@ -34,8 +34,21 @@ class UsersController extends GController
 		if(isset($_POST['Users']))
 		{
 			$model->attributes=$_POST['Users'];
+                        $validate = json_decode(CActiveForm::validate($model)) ;
+                        if($validate)
+                        {
+                            $msg = current($validate);
+                            Utils::showMsg(0,$msg);
+                            Yii::app()->end;
+                        }
 			if($model->save())
-				$this->redirect(array('view','id'=>$model->id));
+                        {
+                            Utils::showMsg(1,'创建成功');
+                        }  else {
+
+                            Utils::showMsg(0,'创建失败'); 
+                        }
+			 Yii::app()->end;	
 		}
 
 		$this->renderPartial('create',array(
@@ -66,6 +79,34 @@ class UsersController extends GController
 			'model'=>$model,
 		));
 	}
+
+        
+       public function actionPublish()
+        {
+            $ids = Yii::app()->request->getParam('ids');
+            $type = Yii::app()->request->getParam('type');
+            $col = Yii::app()->request->getParam('col');
+            if ($type == 'publish')
+            {
+                $display = 1;
+            } elseif ($type == 'cancel_publish')
+            {
+                $display = 2;
+            } else
+            {
+                Utils::showMsg(0,'设置失败');
+            }
+            $col = $col?'status':'ismaster';
+            $sql = "UPDATE {{users}} SET {$col}={$display} WHERE id in ({$ids})";
+            $status = Yii::app()->db->createCommand($sql)->execute();
+            if (!isset($_REQUEST['ajax']))
+            {
+                $this->redirect(Yii::app()->request->urlReferrer);
+            } else
+            {
+                $status ? Utils::showMsg(1,'设置成功') : Utils::showMsg(0, '操作失败，请重试！');
+            }
+        }
 
 	/**
 	 * Deletes a particular model.
