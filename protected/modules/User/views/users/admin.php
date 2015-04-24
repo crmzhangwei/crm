@@ -41,7 +41,9 @@ $form = $this->beginWidget('CActiveForm', array(
 <?php $this->endWidget(); ?>
 
 <?php
+
 $dataProvider = $model->search();
+$dataProvider->pagination->pageVar = 'page';
 $this->widget('GGridView', array(
 	'id' => 'users-grid',
 	'dataProvider' => $dataProvider,
@@ -99,7 +101,7 @@ $this->widget('GGridView', array(
     </div>
     <div class="col-sm-6 no-padding-right">
 		<?php
-		$dataProvider->pagination->pageVar = 'page';
+		
 		$this->widget('GLinkPager', array('pages' => $dataProvider->pagination,));
 		?>
     </div>
