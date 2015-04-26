@@ -82,14 +82,16 @@ $this->widget('GGridView', array(
 			'name' => 'status',
 			'value' => array($this, 'get_status_text'),
 		),
-//		array(
-//			'class' => 'CButtonColumn',
-//			'htmlOptions' => array(
-//				'width' => '100',
-//				'style' => 'text-align:center',
-//			),
-//		),
-	),
+     
+		array(
+                'class' => 'CButtonColumn',
+                'header' => '操作', 
+                 'htmlOptions' => array(
+                'width' => '100',
+                'style' => 'text-align:center',
+            ),
+        ),
+    ),
 ));
 ?>
 
@@ -97,7 +99,7 @@ $this->widget('GGridView', array(
     <div class="col-sm-6">
         共<span class="orange"><?= $dataProvider->totalItemCount ?></span>条记录
         <a href="javascript:void(0);" js_type="publish"  col='0' class="btn  btn-minier btn-sm btn-success publish"><i class=" icon-ok icon-large"></i>设置精英</a> <a href="javascript:void(0);" js_type="cancel_publish" col='0' class="btn  btn-minier btn-sm btn-warning publish"> <i class="icon-lock icon-large"></i>取消精英</a>
-        <a href="javascript:void(0);" js_type="publish"  col='1' class="btn  btn-minier btn-sm btn-success publish"><i class=" icon-ok icon-large"></i>设置离职</a> <a href="javascript:void(0);" js_type="cancel_publish" col='1' class="btn  btn-minier btn-sm btn-warning publish"> <i class="icon-lock icon-large"></i>取消离职</a> 
+        <a href="javascript:void(0);" js_type="publish"  col='1' class="btn  btn-minier btn-sm btn-success publish"><i class=" icon-ok icon-large"></i>设置在职</a> <a href="javascript:void(0);" js_type="cancel_publish" col='1' class="btn  btn-minier btn-sm btn-warning publish"> <i class="icon-lock icon-large"></i>设置离职</a> 
     </div>
     <div class="col-sm-6 no-padding-right">
 		<?php
@@ -123,6 +125,42 @@ jQuery("input[name='select\[\]']:enabled").each(function() {this.checked=checked
 jQuery(document).on('click', "input[name='select\[\]']", function() {
 	jQuery('#select_all').prop('checked', jQuery("input[name='select\[\]']").length==jQuery("input[name='select\[\]']:checked").length);
 });
+
+
+jQuery(document).on('click','.delNode',function() {
+	if(!confirm('确定要删除这条数据吗?')) return false;
+	var th = this,
+		afterDelete = function(){};
+	
+	return false;
+});
+function update(obj)
+{
+     var trindex = $(obj).parents('tr').index();
+     var id = $('#select_'+trindex).val();
+     alert(id);
+}
+
+ function showPop(obj,type)
+     {
+         
+         var trindex = $(obj).parents('tr').index();
+         var sid = $('#select_'+trindex).val();
+         var url;
+         if(type !=2)
+         {
+              <?php $a = Yii::app()->createurl('News/specialtopic/update'); echo 'url='."'$a'"; ?> 
+         }
+         else{
+              <?php $a = Yii::app()->createurl('News/specialtopicM/index'); echo 'url='."'$a'"; ?>
+         }
+        
+         openwinx(url+'/id/'+sid);
+     }
+function del(id)
+{
+    
+}
 
  function getIds(dom){
         var ids = '';

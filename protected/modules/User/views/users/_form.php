@@ -205,14 +205,4 @@
                 });
             }
         });
-        function getIds(dom){
-        var ids = '';
-        dom.each(function (index, element) {
-                ids += ',' + $(this).val();
-        });
-        return  ids.substring(1);
-    }
-
  </script>
-   
- 
