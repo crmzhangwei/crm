@@ -54,7 +54,7 @@ class Users extends CActiveRecord
 			array('username', 'length', 'max'=>30),
 			array('qq', 'length', 'max'=>15),
 			array('birth, pass_repeat, create_time, login_time,searchtype,keyword', 'safe'),
-                        array('pass','compare'),
+                        array('pass','compare','on'=>'login'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
 			array('id, eno, pass, name, username, birth, sex, tel, qq, dept_id, group_id, ismaster, status', 'safe', 'on'=>'search'),

@@ -9,5 +9,9 @@ class GGridView extends CGridView
     public $template = '{items}';
     public $itemsCssClass= 'table table-striped table-bordered table-hover no-margin-bottom no-border-top';
     public $filte='';
+    //
+    public function registerClientScript(){
+       
+    }
 
 }

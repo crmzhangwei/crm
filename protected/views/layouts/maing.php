@@ -19,7 +19,11 @@
           <link rel="stylesheet" href="<?php echo Yii::app()->request->baseUrl; ?>/assets/css/ace-ie.min.css" />
         <![endif]-->
         <!-- ace settings handler -->
-        <script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/js/jquery.min.js"></script>
+        
+        <script type="text/javascript">
+            window.jQuery || document.write('<script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/js/jquery.min.js">'+'<'+"/script>");
+        </script>
+    
          <!-- ace scripts -->
         <script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/js/ace.min.js"></script>
         <script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/js/ace-elements.min.js"></script>
