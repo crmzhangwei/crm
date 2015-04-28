@@ -174,7 +174,10 @@
 	</tr>
 
 	<tr>
-		<td colspan="2"><?php echo CHtml::submitButton('提 交',array('class'=>'btn btn-primary')); ?></td>
+		<td colspan="2">
+			<?php echo CHtml::submitButton('提 交',array('class'=>'btn btn-primary')); ?>
+			<button class="btn btn-success" id="add_note">录入小记</button>
+		</td>
 	</tr>
 </table>  
 <?php $this->endWidget(); ?>
@@ -198,6 +201,11 @@
 			}else{
 				$("#abandon_reason_tr").hide();
 			}
+		});
+
+		$("#add_note").click(function(){
+	        public.dialog('添加小记', '<?= Yii::app()->createUrl("chance/note/create") ?>',{},800);
+			return false;
 		});
 	});
 </script>
