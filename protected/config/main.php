@@ -24,7 +24,6 @@ return array(
 		// uncomment the following to enable the Gii tool
 		'User',
 		'Customer',
-		'Deptinfo',
 		'gii'=>array(
 			'class'=>'system.gii.GiiModule',
 			'password'=>false,

@@ -58,6 +58,7 @@ $('.search-form form').submit(function(){
 
 <?php 
         $dataProvider = $model->search();
+		$dataProvider->pagination->pageVar = 'page';
         $this->widget('GGridView', array(
 			'id'=>'CustomerInfo-grid',
 			'dataProvider'=>$dataProvider,
