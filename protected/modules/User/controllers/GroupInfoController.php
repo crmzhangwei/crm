@@ -36,10 +36,14 @@ class GroupInfoController extends GController
 		{
 			$model->attributes=$_POST['GroupInfo'];
 			if($model->save())
-				$this->redirect(array('view','id'=>$model->id));
+			if($model->save())
+			 Utils::showMsg (1, '组别增加成功!');
+                         else
+                           Utils::showMsg (0, '组别增加失败!');
+                         exit;
 		}
 
-		$this->render('create',array(
+		$this->renderPartial('update',array(
 			'model'=>$model,
 		));
 	}
@@ -49,8 +53,9 @@ class GroupInfoController extends GController
 	 * If update is successful, the browser will be redirected to the 'view' page.
 	 * @param integer $id the ID of the model to be updated
 	 */
-	public function actionUpdate($id)
+	public function actionUpdate($id=0)
 	{
+                $id = $id ? $id: $_POST['GroupInfo']['id'];
 		$model=$this->loadModel($id);
 
 		// Uncomment the following line if AJAX validation is needed
@@ -60,10 +65,14 @@ class GroupInfoController extends GController
 		{
 			$model->attributes=$_POST['GroupInfo'];
 			if($model->save())
-				$this->redirect(array('view','id'=>$model->id));
+			 if($model->save())
+			   Utils::showMsg (1, '组别修改成功!');
+                         else
+                           Utils::showMsg (0, '组别修改失败!');
+                         exit; 
 		}
 
-		$this->render('update',array(
+		$this->renderPartial('update',array(
 			'model'=>$model,
 		));
 	}
