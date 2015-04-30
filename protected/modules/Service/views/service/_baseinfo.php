@@ -8,15 +8,21 @@ Yii::app()->clientScript->registerScript('baseinfo', "
 function dial_ret(data){
  alert(data);
 }
-function message_ret(data){
- alert(data);
-}
+
 function mail_ret(data){
  alert(data);
 }
-
+function listen_ret(data){
+ alert(data);
+}
 ");
 ?> 
+<script type="text/javascript">
+function sendMessage(cust_id){
+  var url = "index.php?r=Service/service/message";  
+  public.dialog('发送短信', url,{'cust_id':cust_id},700);
+}
+</script>
 <p class="note">Fields with <span class="required">*</span> are required.</p> 
 	<?php echo $form->errorSummary($model); ?> 
         <table class="table table-bordered"> 
@@ -49,8 +55,9 @@ function mail_ret(data){
                 <td nowrap="nowrap"><?php echo $form->labelEx($model,'phone'); ?></td>
                 <td><?php echo Utils::hidePhone($model->phone); ?>
                     <?php echo CHtml::ajaxButton("拔打电话", "index.php?r=Service/service/dial&cust_id=".$model->id, array('success'=>'dial_ret')) ?>
-                <?php echo CHtml::ajaxButton("发送短信", "index.php?r=Service/service/message&cust_id=".$model->id, array('success'=>'message_ret')) ?>
-		<?php echo $form->error($model,'phone'); ?>
+                    <?php echo CHtml::ajaxButton("监听电话", "index.php?r=Service/service/listen&cust_id=".$model->id, array('success'=>'listen_ret')) ?>
+                    <?php echo CHtml::button("发送短信", array('onclick'=>'javascript:sendMessage('.$model->id.')')) ?>
+                    <?php echo $form->error($model,'phone'); ?>
                 </td>
             </tr>
             <tr>
@@ -78,26 +85,26 @@ function mail_ret(data){
             <tr>
                 <td nowrap="nowrap"><?php echo $form->labelEx($model,'cust_type'); ?></td>
                 <td> 
-                    <?php echo  $form->dropDownList($model, "cust_type", $this->getCustTypeArr()) ?>
-                    <?php echo $form->error($model,'cust_type'); ?>
+                    <?php echo  $form->dropDownList($model, "service[cust_type]", $this->getCustTypeArr()) ?>
+                    <?php echo $form->error($model,'service[cust_type]'); ?>
                 </td>
                 <td nowrap="nowrap"><?php echo $form->labelEx($model,'eno'); ?></td>
-                <td><?php echo $model->eno; ?>
+                <td><?php echo $model['service']['eno']; ?>
 		<?php echo $form->error($model,'eno'); ?></td>
             </tr>
             <tr> 
                 <td nowrap="nowrap"><?php echo $form->labelEx($model,'assign_eno'); ?></td>
-                <td><?php echo $model->assign_eno; ?></td>
+                <td><?php echo $model['service']['assign_eno']; ?></td>
                 <td nowrap="nowrap"><?php echo $form->labelEx($model,'assign_time'); ?></td>
                 <td>
-                   <?php echo $model->assign_time; ?>  
+                   <?php echo $model['service']['assign_time']; ?>  
                 </td>
             </tr>
             
             <tr>
                 <td nowrap="nowrap"><?php echo $form->labelEx($model,'next_time'); ?></td>
                 <td>
-                    <?php echo $form->textField($model,'next_time',array('class'=>"Wdate", 'onClick'=>"WdatePicker()",'style'=>'height:30px;')); ?>
+                    <?php echo $form->textField($model,'service[next_time]',array('class'=>"Wdate", 'onClick'=>"WdatePicker()",'style'=>'height:30px;')); ?>
                     <?php echo $form->error($model,'next_time'); ?></td>
                 <td nowrap="nowrap"><?php echo $form->labelEx($model,'memo'); ?></td>
                 <td>
@@ -108,10 +115,10 @@ function mail_ret(data){
             <tr> 
                 <td nowrap="nowrap"><?php echo $form->labelEx($model,'creator'); ?></td>
                 <td>
-                   <?php echo $model->user['eno']; ?>  
+                   <?php echo $model->service['creator']; ?>  
                 </td> 
                 <td nowrap="nowrap"><?php echo $form->labelEx($model,'create_time'); ?></td>
-                <td><?php echo $model->create_time; ?>
+                <td><?php echo $model->service['create_time']; ?>
 		<?php echo $form->error($model,'create_time'); ?></td>
             </tr>
         </table>

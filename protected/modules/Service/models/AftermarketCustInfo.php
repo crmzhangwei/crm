@@ -47,8 +47,8 @@ class AftermarketCustInfo extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			array('cust_type,category', 'required'), 
-			array('webchat, ww', 'length', 'max'=>20),
-			array('eno, assign_eno', 'length', 'max'=>10),
+                        array('eno','required','on'=>'assign'),
+                        array('eno,dept,group','safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
 			array('id, cust_id, cust_type, webchat, ww, eno, assign_eno, assign_time, next_time, memo, dept,group,category', 'safe', 'on'=>'search'),
@@ -135,6 +135,7 @@ class AftermarketCustInfo extends CActiveRecord
                                 " left join {{cust_type}} ct on ct.type_no=t.cust_type and ct.lib_type=3 ".
                                 " left join {{dic}} d on c.category=d.code and d.ctype='cust_category' ".
                                 " left join {{contract_info}} ci on t.cust_id=ci.cust_id ";
+                $criteria->addCondition(" t.cust_type=0");
                 $sort = new CSort();
                 $sort->attributes=array(
                     'defaultOrder'=>'c.id desc',
@@ -177,6 +178,9 @@ class AftermarketCustInfo extends CActiveRecord
                                 " left join {{cust_type}} ct on ct.type_no=t.cust_type and ct.lib_type=3 ".
                                 " left join {{dic}} d on c.category=d.code and d.ctype='cust_category' ".
                                 " left join {{contract_info}} ci on t.cust_id=ci.cust_id ";
+                $curDate = date("Y-m-d",time());
+                $iDate = strtotime($curDate);
+                $criteria->addCondition("t.next_time<".$iDate);
                 $sort = new CSort();
                 $sort->attributes=array(
                     'defaultOrder'=>'id desc',
@@ -218,6 +222,9 @@ class AftermarketCustInfo extends CActiveRecord
                                 " left join {{cust_type}} ct on ct.type_no=t.cust_type and ct.lib_type=3 ".
                                 " left join {{dic}} d on c.category=d.code and d.ctype='cust_category' ".
                                 " left join {{contract_info}} ci on t.cust_id=ci.cust_id ";
+                $curDate = date("Y-m-d",time());
+                $iDate = strtotime($curDate);
+                $criteria->addCondition(" t.next_time=".$iDate);
                 $sort = new CSort();
                 $sort->attributes=array(
                     'defaultOrder'=>'id desc',
@@ -257,6 +264,7 @@ class AftermarketCustInfo extends CActiveRecord
                                 " left join {{cust_type}} ct on ct.type_no=t.cust_type and ct.lib_type=3 ".
                                 " left join {{dic}} d on c.category=d.code and d.ctype='cust_category' ".
                                 " left join {{contract_info}} ci on t.cust_id=ci.cust_id ";
+                $criteria->addCondition("t.eno is null");
                 $sort = new CSort();
                 $sort->attributes=array(
                     'defaultOrder'=>'id desc',

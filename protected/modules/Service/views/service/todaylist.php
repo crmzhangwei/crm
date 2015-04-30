@@ -30,7 +30,7 @@ $('.search-form form').submit(function(){
 </div><!-- search-form -->
 
 <?php 
-$dataProvider=$model->searchOldList();
+$dataProvider=$model->searchTodayList();
 $this->widget('GGridView', array(
 	'id'=>'service-grid',
 	'dataProvider'=>$dataProvider,

@@ -54,13 +54,13 @@ Yii::app()->clientScript->registerScript('buttonA', "
 	// There is a call to performAjaxValidation() commented in generated controller code.
 	// See class documentation of CActiveForm for details on this.
 	'enableAjaxValidation'=>false,
-        'action'=>Yii::app()->createUrl('/Service/service/admin',array('issave'=>true))
+        'action'=>Yii::app()->createUrl('/Service/service/assignMulti')
 )); ?>
 
 	<p class="note"><span class="required">*</span>字段为必填项.</p>
 
 	<?php echo $form->errorSummary($model); ?>
-        
+        <input type="hidden" name="issave" value="true"/>
         <table class="table table-bordered">
             <tr>
                 <td width="10%">待分配客户</td>

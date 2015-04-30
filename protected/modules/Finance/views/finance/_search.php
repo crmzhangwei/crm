@@ -39,10 +39,10 @@
             <tr>
                 <td colspan="10"> 
                     <div class="btn-group">
-                            <a href="index.php?r=Finance/finance/create" id ='search_finance'  class="btn btn-sm btn-primary" > 
+                            <a href="index.php?r=Finance/finance/create" id ='create_finance'  class="btn btn-sm btn-primary" > 
                                 <i class="icon-plus"></i>新建财务数据
                             </a>  
-                            <a href="javascript:void(0)" id ='create_finance'  class="btn btn-sm btn-primary" > 
+                            <a href="javascript:void(0)" id ='search_finance'  class="btn btn-sm btn-primary" > 
                                 <i class="icon-plus"></i>搜索
                             </a>
                     </div>

@@ -12,7 +12,7 @@ $this->menu=array(
 );
 
 Yii::app()->clientScript->registerScript('search', "
- $('#create_finance').click(function(){
+ $('#search_finance').click(function(){
     $('.form-group form').submit();
     return false;
 });

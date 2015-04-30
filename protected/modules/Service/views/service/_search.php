@@ -38,7 +38,7 @@
                 <td width="5%" nowrap="nowrap">
                      <?php echo $form->textField($model,'cust_name',array('size'=>10,'maxlength'=>20)); ?>
                 </td>
-                <td width="5%" nowrap="nowrap"><?php echo $form->labelEx($model,'cust_type'); ?></td>
+                <td width="5%" nowrap="nowrap">客户分类</td>
                 <td width="5%" nowrap="nowrap">
                     <?php echo $form->dropDownList($model,'cust_type',$this->getCustTypeArr()); ?>
                 </td>
@@ -56,7 +56,7 @@
                 <td width="5%" nowrap="nowrap">
                      <?php echo $form->textField($model,'ww',array('size'=>10,'maxlength'=>20)); ?>
                 </td>
-                <td width="5%" nowrap="nowrap"><?php echo $form->labelEx($model,'category'); ?></td>
+                <td width="5%" nowrap="nowrap">类目</td>
                 <td width="5%" nowrap="nowrap">
                     <?php echo $form->dropDownList($model,'category',$this->getCategoryArr()); ?>
                 </td>

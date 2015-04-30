@@ -33,7 +33,7 @@ class ServiceController extends GController
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
 				'actions'=>array('update','updateNewList','assign','admin','newList','todayList',
-                                                 'oldList','dial','message','mail','sharedNoteList','historyNoteList',
+                                                 'oldList','dial','message','mail','listen','sharedNoteList','historyNoteList',
                                                  'deptGroupArr','userArr','assignMulti'),
 				'users'=>array('@'),
 			),
@@ -67,6 +67,16 @@ class ServiceController extends GController
 	 */
 	public function actionUpdate($id)
 	{
+                if(isset($_POST['NoteInfo'])){
+                    //保存
+                    $noteinfo = NoteInfo::model();
+                    $noteinfo->unsetAttributes();
+                    $noteinfo->attributes=$_POST['NoteInfo'];
+                    if($noteinfo->save()){
+                        
+                    }
+                }
+                //客户详情页面
 		$model=$this->loadModel($id);
                 $model->setAttribute("create_time", date("Y-m-d", $model->getAttribute("create_time")));
                 $model->setAttribute("assign_time", date("Y-m-d", $model->getAttribute("assign_time")));
@@ -82,6 +92,13 @@ class ServiceController extends GController
                     $model->contract['create_time']= date("Y-m-d",$model->contract['create_time']);
                     $model->contract['comm_pay_time']= date("Y-m-d",$model->contract['comm_pay_time']);
                     $model->contract['pay_time']= date("Y-m-d",$model->contract['pay_time']);
+                }
+                if($model->service){ 
+                    $model->service['assign_time']=date("Y-m-d",$model->service['assign_time']);
+                    $model->service['next_time']=date("Y-m-d",$model->service['next_time']); 
+                    $model->service['create_time']=date("Y-m-d",$model->service['create_time']);  
+                    $user=Users::model()->findByPk($model->service['creator']);
+                    $model->service['creator']=$user->getAttribute('eno');
                 }
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model); 
@@ -121,16 +138,43 @@ class ServiceController extends GController
          * 售后客户分配-多选情况
          * @param type $id 客户id
          */
-        public function actionAssignMulti($isave=false){ 
-            if($isave){
+        public function actionAssignMulti(){ 
+            
+            if(isset($_POST['cust_id'])){
                 /**
+                 * 在分配页面点击保存按钮
                  * 1.更新所属工号
                  * 2.所属工号的已分配资源数+1
                  */
-                
-                return ;
+                $cust_ids = $_POST['cust_id'];
+                if(!empty($cust_ids)){
+                    $model = new AftermarketCustInfo();  
+                    $model->attributes=$_POST['AftermarketCustInfo'];
+                    
+                    $eno = $model->eno;  
+                    $enoNum = Yii::app()->db->createCommand("select cust_num from {{users}} where eno=:eno")->queryAll(TRUE,array(":eno"=>$eno));
+                    $enoNum = $enoNum ? (int)$enoNum[0]['cust_num'] : 0;//该用户已分配的资源数  
+                    $ids = implode(",", $cust_ids);
+                    $assCount = count($cust_ids);//待分配的资源个数
+                    if( ($assCount + $enoNum) > 300 ){//每个用户的分配资源数不能超过300个  
+                        $model->addError("eno", "对不起, 您当前已分配了".$enoNum."个资源, 每个用户最多只能分配300个资源, 本次操作失败。");
+                        $this->render("result",array(
+                                         'model'=>$model,
+                                    ));
+                    }
+                    else{
+			Yii::app()->db->createCommand()->update('{{aftermarket_cust_info}}',array('eno' =>$eno),"cust_id in({$ids})");
+			Yii::app()->db->createCommand()->update('{{Users}}',array('cust_num' =>new CDbExpression("cust_num+$assCount")),"eno='$eno'"); 
+                        $model->addError("eno", "成功分配了".$assCount."个资源。");
+                        $this->render("result",array(
+                                         'model'=>$model,
+                                    ));
+                    } 
+                }
+               return ;  
             }
                 if(!isset($_POST['select'])){
+                    //没有选择记录的情况
                      $model=new AftermarketCustInfo('search');
                      $model->unsetAttributes();  // clear any default values 
                      $this->render('admin',array(
@@ -138,8 +182,9 @@ class ServiceController extends GController
                      ));
                      return ;
                 }
+                //选择了记录，跳转到分配页面
                 $ids = $_POST['select'];
-                $model = CustomerInfo::model();
+                $model = AftermarketCustInfo::model();
                 $sql= "";
                 if(is_array($ids)){
                     $sql = "select id,cust_name from {{customer_info}} where id in (".  implode(",", $ids).")";
@@ -348,10 +393,10 @@ class ServiceController extends GController
          */
         public function getUserArr($deptid,$groupid,$isajax) {
             if($isajax){ 
-                $sql ="select id,name from {{users}} where `dept_id`=:dept_id and `group_id`=:group_id"; 
+                $sql ="select eno,name from {{users}} where `dept_id`=:dept_id and `group_id`=:group_id"; 
                 echo json_encode(Users::model()->findAllBySql($sql,array(':dept_id'=>$deptid,':group_id'=>$groupid)));
             }else{ 
-             return CHtml::listData(Users::model()->findAll("`dept_id`=:dept_id and `group_id`=:group_id",array(':dept_id'=>$deptid,':group_id'=>$groupid)), 'id', 'name');
+             return CHtml::listData(Users::model()->findAll("`dept_id`=:dept_id and `group_id`=:group_id",array(':dept_id'=>$deptid,':group_id'=>$groupid)), 'eno', 'name');
             }
         }
          /**
@@ -373,8 +418,14 @@ class ServiceController extends GController
          * 发短信
          * @param type $cust_id
          */
-        public function actionMessage($cust_id){
-            echo 'Send Message ok';
+        public function actionMessage($cust_id){  
+            if(isset($_POST['message'])){
+                exit("<script>alert(\"短信发送成功!\");javascript:history.go(-1);</script>");
+                //to do ;
+            }else{ 
+                $model = CustomerInfo::model()->findAllByPk($cust_id); 
+                $this->renderPartial("message",array('model'=>$model));
+            }
         }
         /**
          * 发邮件
@@ -383,7 +434,13 @@ class ServiceController extends GController
         public function actionMail($cust_id){
             echo 'Mail ok';
         }
-        
+        /**
+         * 监听电话
+         * @param type $cust_id
+         */
+        public function actionListen($cust_id){
+            echo 'Listen ok';
+        }
         /**
          * ajax获取部门下组别数组 
          * @param type $deptid
@@ -409,4 +466,5 @@ class ServiceController extends GController
             $sql ="select id,name from {{users}} where `dept_id`=:dept_id and `group_id`=:group_id"; 
             echo json_encode(Users::model()->findAllBySql($sql,array(':dept_id'=>$deptid,':group_id'=>$groupid)));
         }
+         
 }
