@@ -24,7 +24,7 @@ $this->widget('GGridView', array(
 	'dataProvider'=>$dataProvider,
 	'columns'=>array(
                     array('class'=>'CCheckBoxColumn',
-                    'name'=>'sid',
+                    'name'=>'id',
                    'id'=>'select',
                     'selectableRows'=>2,
                    'headerTemplate'=>'{item}',
@@ -80,6 +80,7 @@ $this->widget('GGridView', array(
      {
          
          var trindex = $(obj).parents('tr').index();
+         console.log(trindex);
          var id = $('#select_'+trindex).val();
          var url;
          <?php $a = Yii::app()->createurl('User/deptinfo/update/'); echo 'url='."'$a'"; ?> 
