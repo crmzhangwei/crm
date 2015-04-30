@@ -54,7 +54,7 @@ class Dic extends CActiveRecord
 	public function attributeLabels()
 	{
 		return array(
-			'id' => '主键',
+			'id' => 'ID',
 			'code' => '编号',
 			'name' => '名称',
 			'ctype' => '类型',

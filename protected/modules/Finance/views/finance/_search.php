@@ -8,57 +8,47 @@
 
 <?php $form=$this->beginWidget('CActiveForm', array(
 	'action'=>Yii::app()->createUrl($this->route),
-	'method'=>'get',
+	'method'=>'post',
 )); ?>
-<!--
-	<div class="row">
-		<?php echo $form->label($model,'id'); ?>
-		<?php echo $form->textField($model,'id',array('size'=>10,'maxlength'=>10)); ?>
-	</div>
--->
-	<div class="row">
-		<?php echo $form->label($model,'cust_id'); ?>
-		<?php echo $form->textField($model,'cust_id'); ?>
-	</div>
-
-	<div class="row">
-		<?php echo $form->label($model,'sale_user'); ?>
-		<?php echo $form->textField($model,'sale_user'); ?>
-	</div>
-
-	<div class="row">
-		<?php echo $form->label($model,'trans_user'); ?>
-		<?php echo $form->textField($model,'trans_user'); ?>
-	</div>
-
-	<div class="row">
-		<?php echo $form->label($model,'acct_number'); ?>
-		<?php echo $form->textField($model,'acct_number'); ?>
-	</div>
-
-	<div class="row">
-		<?php echo $form->label($model,'acct_amount'); ?>
-		<?php echo $form->textField($model,'acct_amount'); ?>
-	</div>
-
-	<div class="row">
-		<?php echo $form->label($model,'acct_time'); ?>
-		<?php echo $form->textField($model,'acct_time'); ?>
-	</div>
-
-	<div class="row">
-		<?php echo $form->label($model,'creator'); ?>
-		<?php echo $form->textField($model,'creator'); ?>
-	</div>
-
-	<div class="row">
-		<?php echo $form->label($model,'create_time'); ?>
-		<?php echo $form->textField($model,'create_time'); ?>
-	</div>
-
-	<div class="row buttons">
-		<?php echo CHtml::submitButton('搜索'); ?>
-	</div>
+    <table class="table table-bordered" style="width:50%;">
+            <tr>
+                <td width="5%" nowrap="nowrap">用户</td>
+                <td width="5%" nowrap="nowrap">
+                    <?php echo $form->dropDownList($model,'dept',$this->getDeptArr(),array("onchange"=>"javascript:changeDept(this);")); ?>
+                    <?php echo $form->dropDownList($model, "group", $this->actionDeptGroupArr(1,false)) ?> 
+                </td> 
+                <td width="5%" nowrap="nowrap"><?php echo $form->labelEx($model,'cust_name'); ?></td>
+                <td width="5%" nowrap="nowrap">
+                     <?php echo $form->textField($model,'cust_name',array('size'=>10,'maxlength'=>20)); ?>
+                </td>
+                <td width="5%" nowrap="nowrap">时间段</td>
+                <td width="5%" nowrap="nowrap">
+                     <?php echo $form->textField($model,'createtime_start',array('class'=>"Wdate", 'onClick'=>"WdatePicker()",'style'=>'height:30px;',)); ?>
+                      to 
+                     <?php echo $form->textField($model,'createtime_end',array('class'=>"Wdate", 'onClick'=>"WdatePicker()",'style'=>'height:30px;')); ?>
+                </td>
+                <td width="5%" nowrap="nowrap">店铺名称</td>
+                <td width="5%" nowrap="nowrap">
+                   <?php echo $form->textField($model,'shopname'); ?>
+                </td> 
+                <td width="5%" nowrap="nowrap">客户电话</td>
+                <td width="5%" nowrap="nowrap">
+                   <?php echo $form->textField($model,'phone'); ?>
+                </td> 
+            </tr>
+            <tr>
+                <td colspan="10"> 
+                    <div class="btn-group">
+                            <a href="index.php?r=Finance/finance/create" id ='create_finance'  class="btn btn-sm btn-primary" > 
+                                <i class="icon-plus"></i>新建财务数据
+                            </a>  
+                            <a href="javascript:void(0)" id ='search_finance'  class="btn btn-sm btn-primary" > 
+                                <i class="icon-plus"></i>搜索
+                            </a>
+                    </div>
+                </td>
+            </tr>
+    </table>
 
 <?php $this->endWidget(); ?>
 

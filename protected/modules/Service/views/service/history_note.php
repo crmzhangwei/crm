@@ -4,17 +4,13 @@
  
 
 Yii::app()->clientScript->registerScript('search2', "
-$('#history_search_btn').click(function(){
-	$('#history_search_form').toggle();
-	return false;
-});
+ 
  
 ");
 ?> 
 
-<h1>录史小记</h1>  
-<?php echo CHtml::link('高级搜索','#',array('class'=>'search-button','id'=>'history_search_btn')); ?>
-<div class="search-form" style="display:none" id="history_search_form">
+<h1>录史小记</h1>   
+<div class="search-form" style="display:" id="history_search_form">
  <?php $this->renderPartial('_search_note',array('model'=>$model)); ?>
 </div><!-- search-form -->
 <div id="search_history_list"> 

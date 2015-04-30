@@ -11,10 +11,7 @@ $this->menu=array(
 );
 
 Yii::app()->clientScript->registerScript('search', "
-$('.search-button').click(function(){
-	$('.search-form').toggle();
-	return false;
-});
+ 
 $('.search-form form').submit(function(){
   
 	$('#service-grid').yiiGridView('update', {
@@ -27,17 +24,22 @@ $('.search-form form').submit(function(){
 
 <h1>售后-查询分配</h1>
 
-<p>
-你可以在输入框的开始处输入 (<b>&lt;</b>, <b>&lt;=</b>, <b>&gt;</b>, <b>&gt;=</b>, <b>&lt;&gt;</b>
-or <b>=</b>)，用以指定查询条件.
-</p>
-
-<?php echo CHtml::link('高级搜索','#',array('class'=>'search-button')); ?>
-<div class="search-form" style="display:none">
+ 
+ 
+<div class="search-form" style="display:">
 <?php $this->renderPartial('_search_admin',array(
 	'model'=>$model,
 )); ?>
 </div><!-- search-form -->
+<?php $form=$this->beginWidget('CActiveForm', array(
+	'action'=>Yii::app()->createUrl('Service/service/assignMulti'),
+	'method'=>'post',
+)); ?>
+       <div class="form-group">
+             <div class="btn-group">
+                             <?php echo CHtml::submitButton('分配'); ?>
+             </div>  
+       </div>
 
 <?php 
 $dataProvider = $model->search();
@@ -46,7 +48,13 @@ $this->widget('GGridView', array(
 	'dataProvider'=>$dataProvider,
 	'filter'=>null,
 	'columns'=>array(
-		'id',   
+		array('class' => 'CCheckBoxColumn',
+                    'name' => 'cust_id',
+                    'id' => 'select',
+                    'selectableRows' => 2,
+                    'headerTemplate' => '{item}',
+                    'htmlOptions' => array('width' => '20'),
+                ), 
                 array('name'=>'cust_id','value'=>'$data->cust_name'),
                 array('name'=>'cust_type','value'=>'$data->cust_type_name'),
 		'qq',
@@ -54,15 +62,10 @@ $this->widget('GGridView', array(
                 'ww',
                 array('name'=>'category','value'=>'$data->category_name'),
                 'service_limit', 
-		array(
-			'class'=>'CButtonColumn',
-                        'template'=>'{update}',  
-                        'updateButtonLabel'=>'分配',
-                        'updateButtonUrl'=>'Yii::app()->controller->createUrl("assign",array("id"=>$data->primaryKey))',
-		),
+		
 	),
 )); ?>
-
+<?php $this->endWidget(); ?>
 <div class="table-page"> 
     <div class="col-sm-6">
         共<span class="orange"><?=$dataProvider->totalItemCount ?></span>条记录 

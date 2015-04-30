@@ -33,7 +33,18 @@
                 );
         }
     </script>
-
+<?php
+Yii::app()->clientScript->registerScript('buttonA', " 
+       
+        $('#btn_cancel').click(
+            function(){
+                $('#finance-form').attr('action','index.php?r=Service/service/admin');
+                $('#finance-form').submit();
+            }
+        );
+        
+        ");
+?>
 <div class="form">
 
 <?php $form=$this->beginWidget('CActiveForm', array(
@@ -43,13 +54,25 @@
 	// There is a call to performAjaxValidation() commented in generated controller code.
 	// See class documentation of CActiveForm for details on this.
 	'enableAjaxValidation'=>false,
+        'action'=>Yii::app()->createUrl('/Service/service/assignMulti')
 )); ?>
 
 	<p class="note"><span class="required">*</span>字段为必填项.</p>
 
 	<?php echo $form->errorSummary($model); ?>
-        
+        <input type="hidden" name="issave" value="true"/>
         <table class="table table-bordered">
+            <tr>
+                <td width="10%">待分配客户</td>
+                <td>
+                    <?php  
+                        foreach($custlist as $cust){ 
+                            echo '<input type="hidden" name="cust_id[]" value="'.$cust->id.'"/>';
+                            echo $cust->cust_name.",";
+                        } 
+                    ?> 
+                </td>
+            </tr>
             <tr>
                 <td width="10%"> <?php echo $form->labelEx($model,'eno'); ?></td> 
                 <td> 
@@ -63,6 +86,7 @@
         </table>
             <div class="row buttons">
 		<?php echo CHtml::submitButton('分配'); ?>
+                <?php echo CHtml::button('取消',array('id'=>'btn_cancel')); ?>
             </div>
 
 <?php $this->endWidget(); ?>

@@ -76,4 +76,44 @@ class Utils {
 
         $exit && exit();
     }
+    
+    /**
+     * 发送短信
+     * @param type $phone 电话号码
+     * @param type $msg 短信内容
+     * @param type $method get/post
+     */
+    public static function sendMessage($phone,$msg,$method='get'){
+       // $msg = mb_convert_encoding($msg,"GBK");
+        
+        $msg = urlencode($msg);
+        echo $msg;
+        $sms = Yii::app()->params['SMS'];
+        $result = ""; 
+        switch ($method){
+            case 'get':
+                $sUrl = $sms['url']."?expid=0&uid=".$sms['uid']."&auth=".$sms['auth']."&encode=".$sms['encode']."&mobile=".$phone."&msg=".$msg;
+                $result = file_get_contents($sUrl);
+                break;
+            case 'post':
+                $ch = curl_init();
+                $timeout = 5; 
+                $postdata = "expid=0&uid=".$sms['uid']."&auth=".$sms['auth']."&encode=".$sms['encode']."&mobile=".$phone."&msg=".$msg;
+                curl_setopt($ch, CURLOPT_URL, $sms['url']);
+                curl_setopt($ch, CURLOPT_POST, 1);
+                $this_header = array("content-type: application/x-www-form-urlencoded;charset=UTF-8");
+                curl_setopt($ch,CURLOPT_HTTPHEADER,$this_header);
+                curl_setopt($ch, CURLOPT_POSTFIELDS, $postdata); // Post提交的数据包,好像不起作用,need to do  
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+                curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
+                $result = curl_exec($ch);
+                curl_close($ch);
+                break;
+        }  
+        var_dump($result);
+        return explode(",",$result,2);
+    }
+    
+    
+            
 }
