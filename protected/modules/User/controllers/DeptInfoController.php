@@ -35,9 +35,9 @@ class DeptInfoController extends GController
 		{
 			$model->attributes=$_POST['DeptInfo'];
 			if($model->save())
-			 Utils::showMsg (1, '组名增加成功!');
+			 Utils::showMsg (1, '部门增加成功!');
                          else
-                           Utils::showMsg (0, '组名增加失败!');
+                           Utils::showMsg (0, '部门增加失败!');
 		}
 
 		$this->renderPartial('update',array(
@@ -63,9 +63,9 @@ class DeptInfoController extends GController
 		{
 			$model->attributes=$_POST['DeptInfo'];
 			if($model->save())
-			   Utils::showMsg (1, '组名修改成功!');
+			   Utils::showMsg (1, '部门修改成功!');
                          else
-                           Utils::showMsg (0, '组名修改失败!');
+                           Utils::showMsg (0, '部门修改失败!');
                          exit;
 		}
 

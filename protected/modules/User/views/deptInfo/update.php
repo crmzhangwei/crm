@@ -52,7 +52,7 @@
         },
         messages: {
             'DeptInfo[name]': {
-                required: "请输入组名."
+                required: "请输入部门名."
             },
         },
         submitHandler: function (form) {

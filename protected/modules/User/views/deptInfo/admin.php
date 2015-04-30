@@ -11,7 +11,7 @@ $this->breadcrumbs=array(
 <div class="form-group">
 	<div class="btn-group">
 		<a href="javascript:void(0)" id ='create_dept'  class="btn btn-sm btn-primary" > 
-			<i class="icon-plus"></i>新建组别
+			<i class="icon-plus"></i>新建部门
 		</a>
 	</div>        
 </div>
@@ -72,7 +72,7 @@ $this->widget('GGridView', array(
     {
         $('#create_dept').click(function ()
         {
-            public.dialog('增加组别', '<?= Yii::app()->createUrl('User/deptinfo/create') ?>')
+            public.dialog('增加部门', '<?= Yii::app()->createUrl('User/deptinfo/create') ?>')
         })
     })
     
@@ -83,7 +83,7 @@ $this->widget('GGridView', array(
          var id = $('#select_'+trindex).val();
          var url;
          <?php $a = Yii::app()->createurl('User/deptinfo/update/'); echo 'url='."'$a'"; ?> 
-         public.dialog('修改组名',url+'&id='+id);
+         public.dialog('修改部门',url+'&id='+id);
      }
 </script>
 
