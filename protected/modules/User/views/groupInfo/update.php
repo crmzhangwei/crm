@@ -1,21 +1,74 @@
 <?php
-/* @var $this GroupInfoController */
-/* @var $model GroupInfo */
-
-$this->breadcrumbs=array(
-	'Group Infos'=>array('index'),
-	$model->name=>array('view','id'=>$model->id),
-	'Update',
-);
-
-$this->menu=array(
-	array('label'=>'List GroupInfo', 'url'=>array('index')),
-	array('label'=>'Create GroupInfo', 'url'=>array('create')),
-	array('label'=>'View GroupInfo', 'url'=>array('view', 'id'=>$model->id)),
-	array('label'=>'Manage GroupInfo', 'url'=>array('admin')),
-);
+/* @var $this UsersController */
+/* @var $model Users */
+/* @var $form CActiveForm */
 ?>
 
-<h1>Update GroupInfo <?php echo $model->id; ?></h1>
+<div class="form">
 
-<?php $this->renderPartial('_form', array('model'=>$model)); ?>
+    <?php
+    $form = $this->beginWidget('CActiveForm', array(
+        'id' => 'groupinfo-form',
+        'htmlOptions' => array('class' => 'form-horizontal', 'role' => 'form'),
+        'enableClientValidation' => true,
+        'action' => false,
+        'enableAjaxValidation' => true,
+    ));
+    ?>
+
+    <div class="row">
+
+        <div class="col-xs-12"/>
+
+        <div class="form-group">
+            <?php echo $form->labelEx($model, 'name', array('class' => 'col-sm-2 control-label no-padding-right')); ?>
+             <?php echo $form->hiddenField($model, 'id') ?>
+            <div class="col-sm-3 col-xs-12">
+                <?php echo $form->textField($model, 'name', array('size' => 10, 'maxlength' => 10, 'id' => "form-field-1", 'placeholder' => "", 'class' => "input-large")); ?>
+
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 col-xs-12 control-label"></label>
+            <div class="col-sm-9">
+                <?php echo CHtml::submitButton($model->isNewRecord ? '创建' : '更新', array('class' => 'btn btn-sm btn-primary', 'id' => 'createUserBtn')); ?>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+<?php $this->endWidget(); ?>
+
+<script>
+
+
+    public.validate({
+        form: $('#groupinfo-form'),
+        type: 1,
+        rules: {
+            'GroupInfo[name]': {
+                required: true
+            },
+        },
+        messages: {
+            'GroupInfo[name]': {
+                required: "请输入组名."
+            },
+        },
+        submitHandler: function (form) {
+
+
+            public.AjaxSaveForm({
+                obj: $("#createUserBtn"),
+                url: '<?php echo $model->isNewRecord ?$this->createUrl("/User/groupinfo/create") :$this->createUrl("/User/groupinfo/update"); ?>',
+                data: $("#groupinfo-form").serialize(),
+                callback: function (result) {
+                    bootbox.alert(result.msg, function () {
+                        if (result.code == 1)
+                            window.location.reload();
+                    });
+                }
+            });
+        }
+    });
+</script>

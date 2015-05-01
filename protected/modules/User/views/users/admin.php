@@ -3,7 +3,7 @@
 /* @var $model Users */
 
 $this->breadcrumbs = array(
-	'权限管理' => array('index'),
+	'权限管理' => array('admin'),
 	'查看用户',
 );
 
@@ -157,10 +157,7 @@ function update(obj)
         
          openwinx(url+'/id/'+sid);
      }
-function del(id)
-{
-    
-}
+
 
  function getIds(dom){
         var ids = '';
