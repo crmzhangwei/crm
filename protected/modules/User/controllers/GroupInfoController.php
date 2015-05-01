@@ -36,7 +36,6 @@ class GroupInfoController extends GController
 		{
 			$model->attributes=$_POST['GroupInfo'];
 			if($model->save())
-			if($model->save())
 			 Utils::showMsg (1, '组别增加成功!');
                          else
                            Utils::showMsg (0, '组别增加失败!');
@@ -64,7 +63,6 @@ class GroupInfoController extends GController
 		if(isset($_POST['GroupInfo']))
 		{
 			$model->attributes=$_POST['GroupInfo'];
-			if($model->save())
 			 if($model->save())
 			   Utils::showMsg (1, '组别修改成功!');
                          else
