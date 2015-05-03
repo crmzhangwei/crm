@@ -133,6 +133,7 @@ class PrivilegeController extends GController
         private function getPriv() {
           
         $dataProvider=new CActiveDataProvider('MenuInfo');
+        $dataProvider->pagination->pageSize = 1000;
         $data = $dataProvider->getData();
         if($data)
         {
