@@ -114,6 +114,45 @@ class Utils {
         return explode(",",$result,2);
     }
     
+    /**
+     * 把yii ar findall 返回的数据对像转换成数组  
+     * @param type $obj
+     */
+    public static  function objtoarray($obj)
+    {
+        $res = array();
+        if(is_array($obj) && !empty($obj))
+        {
+            foreach ($obj as $key => $value) {
+              $res[] =   $value->attributes;
+            }
+        }
+        return $res;
+    }
     
+   /**
+    * yii 批量插入数据的方法
+    */
+  public  static function insertSeveral($table, $array_columns)
+{
+    $sql = '';
+    $params = array();
+    $i = 0;
+    foreach ($array_columns as $columns) {
+        $names = array();
+        $placeholders = array_values($columns);
+        $names = array_keys($columns);  
+        if (!$i) {
+            $sql = 'INSERT INTO ' . Yii::app()->db->tablePrefix.$table
+                . ' (' . implode(', ', $names) . ') VALUES ('
+                . implode(', ', $placeholders) . ')';
+        } else {
+            $sql .= ',(' . implode(', ', $placeholders) . ')';
+        }
+        $i++;
+    }
+    return Yii::app()->db->createCommand($sql)->execute();
+}
+
             
 }

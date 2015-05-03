@@ -200,6 +200,7 @@ class MenuInfoController extends GController
     private function getPrivelege() {
         
         $dataProvider=new CActiveDataProvider('MenuInfo');
+        $dataProvider->pagination->pageSize = 1000;
         $data = $dataProvider->getData();
         if($data)
         {
