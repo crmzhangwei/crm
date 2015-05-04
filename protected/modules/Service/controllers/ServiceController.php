@@ -420,12 +420,11 @@ class ServiceController extends GController
          */
         public function actionMessage($cust_id){  
             if(isset($_POST['message'])){
-                exit("<script>alert(\"短信发送成功!\");javascript:history.go(-1);</script>");
-                //to do ;
-            }else{ 
-                $model = CustomerInfo::model()->findAllByPk($cust_id); 
-                $this->renderPartial("message",array('model'=>$model));
-            }
+                 $cust = CustomerInfo::model()->findByPk($cust_id);
+                 $phone = $cust->getAttribute("phone");
+                 $ret = Utils::sendMessage($phone,$_POST['message'],'post');
+                 echo $ret;
+            } 
         }
         /**
          * 发邮件

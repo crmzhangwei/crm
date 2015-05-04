@@ -18,9 +18,32 @@ function listen_ret(data){
 ");
 ?> 
 <script type="text/javascript">
-function sendMessage(cust_id){
-  var url = "index.php?r=Service/service/message";  
-  public.dialog('发送短信', url,{'cust_id':cust_id},700);
+function sendMessage(cust_id){ 
+    bootbox.dialog({
+                title: "发送短信",
+                message: '<div class="row">  ' +
+                    '<div class="col-md-12"> ' +
+                    '<form class="form-horizontal" id="message_form"> ' +
+                    '<div class="form-group"> ' +
+                    '<label class="col-md-4 control-label" for="name">短信内容</label> ' +
+                    '<div class="col-md-4"> ' +
+                    '<textarea rows="3" cols="30" id="message" name="message" value=""></textarea> ' +
+                    ' </div> ' +
+                    '</div> ' + 
+                    '</form> </div>  </div>',
+                buttons: {
+                    success: {
+                        label: "发送",
+                        className: "btn-success",
+                        callback: function () { 
+                            $.post('index.php?r=Service/service/message&cust_id='+cust_id,$("#message_form").serialize(),function(data){
+                               alert(data); 
+                            });
+                        }
+                    }
+                }
+            }
+        ); 
 }
 </script>
 <p class="note">Fields with <span class="required">*</span> are required.</p> 
