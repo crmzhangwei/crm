@@ -103,7 +103,7 @@ class CustomerinfoController extends GController
 			$aOldEno = $model->oldEno;
 			if($aNewEno == $aOldEno){//没有修改所属工号
 				if($model->save()){
-					exit("<script>alert(\"恭喜你, 数据修改成功。\");javascript:history.go(-1);</script>");
+					exit("<script>alert(\"恭喜你, 数据修改成功。\");javascript:history.go(-2);</script>");
 				}
 			}
 			else{
@@ -117,11 +117,11 @@ class CustomerinfoController extends GController
 					$res2 = Yii::app()->db->createCommand($sql2)->execute();
 					$transaction->commit();
 					if($model->save()){
-						exit("<script>alert(\"恭喜你, 数据修改成功。\");javascript:history.go(-1);</script>");
+						exit("<script>alert(\"恭喜你, 数据修改成功。\");javascript:history.go(-2);</script>");
 					}
 				} catch (Exception $exc) {
 					$transaction->rollBack();//事务回滚
-					exit("<script>alert(\"对不起, 本次操作失败, 请重新操作。\");javascript:history.go(-1);</script>");
+					exit("<script>alert(\"对不起, 本次操作失败, 请重新操作。\");javascript:history.go(-2);</script>");
 				}	
 			}
 		}

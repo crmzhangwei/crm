@@ -2,10 +2,10 @@
 /* @var $this CustomerinfoController */
 /* @var $model CustomerInfo */
 
-$this->breadcrumbs=array(
+/*$this->breadcrumbs=array(
 	'客户管理'=>array('index'),
 	'查询分配',
-);
+);*/
 
 $this->menu=array(
 	array('label'=>'List CustomerInfo', 'url'=>array('index')),

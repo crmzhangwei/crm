@@ -2,10 +2,10 @@
 /* @var $this CustomerassController */
 /* @var $model CustomerAss */
 
-$this->breadcrumbs=array(
+/*$this->breadcrumbs=array(
 	'客户管理'=>array('index'),
 	'资源分配',
-);
+);*/
 
 $this->menu=array(
 	array('label'=>'List CustomerAss', 'url'=>array('index')),
