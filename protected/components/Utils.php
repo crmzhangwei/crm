@@ -82,14 +82,12 @@ class Utils {
      * @param type $phone 电话号码
      * @param type $msg 短信内容
      * @param type $method get/post
+     * @return type 发送结果描述
      */
-    public static function sendMessage($phone,$msg,$method='get'){
-       // $msg = mb_convert_encoding($msg,"GBK");
-        
-        $msg = urlencode($msg);
-        echo $msg;
+    public static function sendMessage($phone,$msg,$method='get'){  
+        $msg = urlencode($msg); 
         $sms = Yii::app()->params['SMS'];
-        $result = ""; 
+        $result = "";  
         switch ($method){
             case 'get':
                 $sUrl = $sms['url']."?expid=0&uid=".$sms['uid']."&auth=".$sms['auth']."&encode=".$sms['encode']."&mobile=".$phone."&msg=".$msg;
@@ -110,8 +108,18 @@ class Utils {
                 curl_close($ch);
                 break;
         }  
-        var_dump($result);
-        return explode(",",$result,2);
+        $arr = explode(",",$result,2);
+        $iReturnCode = abs($arr[0]);
+        if($iReturnCode==0){
+            $columns=array("cust_id"=>Yii::app()->request->getParam('cust_id'),
+                       "phone"=>$phone,
+                       "content"=>  urldecode($msg),
+                       "creator"=>Yii::app()->user->id,
+                       "create_time"=>time());
+            Yii::app()->db->createCommand()->insert("{{message}}", $columns);
+        }   
+        $ret = Yii::app()->params['SMS_RETURN_CODE'][$iReturnCode];
+        return $ret;
     }
     
     /**
