@@ -29,6 +29,7 @@ class CustomerInfo extends CActiveRecord
 
 	public $keyword;
 	public $searchtype;
+	public $oldEno;	//更新客户信息时会用到
 	/**
 	 * @return string the associated database table name
 	 */
@@ -53,7 +54,7 @@ class CustomerInfo extends CActiveRecord
 			array('mail', 'email', 'allowEmpty'=>true, 'message'=>'邮箱不正确'),
 			array('phone, qq', 'check_contact'),
 			array('mail', 'length', 'max'=>50),
-			array('keyword, shop_name, corp_name, shop_url, shop_addr, datafrom, memo,searchtype', 'safe'),
+			array('oldEno, keyword, shop_name, corp_name, shop_url, shop_addr, datafrom, memo,searchtype', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
 			array('id, cust_name, shop_name, corp_name, shop_url, shop_addr, phone, qq, mail, datafrom, category, cust_type, eno, assign_eno, assign_time, next_time, memo, create_time, creator', 'safe', 'on'=>'search'),

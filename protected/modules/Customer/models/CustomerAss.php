@@ -47,7 +47,7 @@ class CustomerAss extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			array('cust_name', 'unique', 'message'=>'客户名称已经存在'),
-			array('cust_name, eno', 'required'),
+			array('ids, cust_name,eno', 'required'),
 			array('phone, qq, category, cust_type, iskey', 'numerical', 'integerOnly'=>true),
 			//array('eno, assign_eno', 'length', 'max'=>10),
 			//array('cust_name, shop_name, corp_name, shop_url, shop_addr, datafrom, memo', 'length', 'max'=>100),

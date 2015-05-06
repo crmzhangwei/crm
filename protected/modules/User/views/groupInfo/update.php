@@ -22,7 +22,7 @@
 
         <div class="form-group">
             <?php echo $form->labelEx($model, 'name', array('class' => 'col-sm-2 control-label no-padding-right')); ?>
-             <?php echo $form->hiddenField($model, 'id') ?>
+            <?php echo $form->hiddenField($model, 'id') ?>
             <div class="col-sm-3 col-xs-12">
                 <?php echo $form->textField($model, 'name', array('size' => 10, 'maxlength' => 10, 'id' => "form-field-1", 'placeholder' => "", 'class' => "input-large")); ?>
 

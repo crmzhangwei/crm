@@ -56,7 +56,7 @@ class CustomerinfoController extends GController
 				exit("<script>alert(\"恭喜你, 成功添加一条记录。\");javascript:history.go(-1);</script>");
 			}
 		}
-
+		
 		$this->renderPartial('create',array(
 			'model'=>$model,
 			'deptArr'=>$deptArr,
@@ -86,16 +86,53 @@ class CustomerinfoController extends GController
 	public function actionUpdate($id)
 	{
 		$model=$this->loadModel($id);
+		$eno = $model->eno ?$model->eno :0;
+		$param['eno'] = $eno;
+		$userinfo = Users::model()->findByAttributes($param);
+	
+		$user_info['group_id'] = $userinfo->group_id?$userinfo->group_id:0;
+		$user_info['dept_id']  = $userinfo->dept_id?$userinfo->dept_id:0;
+	    $user_info['name']     = $userinfo->name?$userinfo->name:0;
+		$user_info['eno']     = $userinfo->eno?$userinfo->eno:0;
+		$user_info['group_arr'] = Userinfo::getGroupById($user_info['dept_id']);
+		$user_info['user_arr'] = Userinfo::getUserbygid($user_info['group_id'],$user_info['dept_id']);	
 		if(isset($_POST['CustomerInfo']))
 		{
-                    $model->attributes=$_POST['CustomerInfo'];
-                    if($model->save())
-                        $this->redirect(array('view','id'=>$model->id));
+			$model->attributes=$_POST['CustomerInfo'];
+			$aNewEno = $model->eno;
+			$aOldEno = $model->oldEno;
+			if($aNewEno == $aOldEno){//没有修改所属工号
+				if($model->save()){
+					exit("<script>alert(\"恭喜你, 数据修改成功。\");javascript:history.go(-1);</script>");
+				}
+			}
+			else{
+				$model->assign_eno = Yii::app()->user->id;//分配人
+				$model->assign_time = time();//分配时间
+				$sql = "update {{users}} set cust_num=cust_num+1 where eno='{$aNewEno}'";
+				$sql2 = "update {{users}} set cust_num=cust_num-1 where eno='{$aOldEno}'";
+				$transaction = Yii::app()->db->beginTransaction();
+				try {
+					$res = Yii::app()->db->createCommand($sql)->execute();
+					$res2 = Yii::app()->db->createCommand($sql2)->execute();
+					$transaction->commit();
+					if($model->save()){
+						exit("<script>alert(\"恭喜你, 数据修改成功。\");javascript:history.go(-1);</script>");
+					}
+				} catch (Exception $exc) {
+					$transaction->rollBack();//事务回滚
+					exit("<script>alert(\"对不起, 本次操作失败, 请重新操作。\");javascript:history.go(-1);</script>");
+				}	
+			}
 		}
-
+		$category = $this->getCategory();
+		$deptArr = Userinfo::getDept();
+		$deptArr = array_merge(array('0'=>'--请选择部门--'), $deptArr);
 		$this->render('update',array(
-                    'model'=>$model,
-                    'category'=>$category,
+			'model'=>$model,
+			'category'=>$category,
+			'deptArr'=>$deptArr,
+			'user_info'=>$user_info,
 		));
 	}
 

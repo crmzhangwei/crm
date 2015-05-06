@@ -104,17 +104,33 @@
 	</div> -->
 
 	<div class="row">
+		
 		<?php echo $form->labelEx($model,'eno'); ?>
-		<?php echo CHtml::dropDownList('dept','',$deptArr,array('onchange'=>'listgroup(this)'));?>
+		<?php if($model->isNewRecord):
+			echo CHtml::dropDownList('dept','',$deptArr,array('onchange'=>'listgroup(this)'));
+		?>
+		<?php else:
+			echo CHtml::dropDownList('dept',$user_info['dept_id'],$deptArr,array('onchange'=>'listgroup(this)'));
+		endif;?>
+		
+		<?php if($model->isNewRecord):?>
 		<select id="groupinfo" name="group" onchange="listuser(this)">
 			<option value ="0">--请选择组--</option>
 		</select>
+		<?php else: 
+		    echo   CHtml::dropDownList('group', intval($user_info['group_id']), $user_info['group_arr'], array('id'=>"groupinfo",'onchange'=>"listuser(this)"));
+		     endif;?>
 
+		<?php if($model->isNewRecord):?>
 		<select id='userinfo' name="users" onchange="enoval(this)">	
 			<option value ="0">---请选择人员---</option>
 		</select>
+		<?php else: 
+		    echo   CHtml::dropDownList('users', $user_info['eno'], $user_info['user_arr'], array('id'=>"userinfo",'onchange'=>"enoval(this)"));
+		     endif;?>
 		<?php echo $form->textField($model,'eno',array('id'=>'userid','size'=>10,'maxlength'=>10)); ?>
 		<?php echo $form->error($model,'eno'); ?>
+		<?php echo $form->textField($model,'oldEno',array('id'=>'oldEno','size'=>10,'maxlength'=>10)); ?>
 	</div> 
 
 	<div class="row buttons">
@@ -182,5 +198,8 @@
     		$('#userid').val(eno);
     	}
     }
-    
+    $(function(){
+		var gonghao = $("#userid").val();
+		$("#oldEno").val(gonghao);
+	});
 </script> 
