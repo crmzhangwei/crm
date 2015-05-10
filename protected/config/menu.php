@@ -5,7 +5,7 @@
 return array(
 
     'Custom' => array(
-        'label' => '客户管理', 'icon' => 'menu-icon fa fa-group', 'url' => array('/Custom/article/checkPiv'),
+        'label' => '客户管理', 'icon' => 'menu-icon fa fa-group', 'url' => array('/Custom/'),
         'items' => array(
 			array('label' => '查询分配', 'url' => array('/Customer/customerinfo/admin')),
 			array('label' => '客户资源分配', 'url' => array('/Customer/customerass/admin')),
@@ -16,7 +16,7 @@ return array(
     'Chance' => array(
         'label' => '机会管理', 'icon' => 'menu-icon fa fa-stack-exchange','url' => array('/Chance/'),
          'items' => array(
-			array('label' => '安排联系机会', 'url' => array('/chance/customerinfo/admin')),
+			array('label' => '安排联系机会', 'url' => array('/Chance/customerinfo/admin')),
 			array('label' => '我的机会', 'url' => array('/site/page', 'view' => 'about')),
 			array('label' => '未联系机会', 'url' => array('/site/contact')),
            ),

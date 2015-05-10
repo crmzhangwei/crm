@@ -108,7 +108,9 @@ class ServiceController extends GController
 			if($model->save())
 				$this->redirect(array('view','id'=>$model->id));
 		}
+
                 $user = Users::model()->findByPk(Yii::app()->user->id);
+
                 
                 
 		$this->render('update',array(

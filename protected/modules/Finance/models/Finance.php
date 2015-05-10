@@ -123,8 +123,7 @@ class Finance extends CActiveRecord
                 $criteria->select="f.id,f.cust_id,f.sale_user,f.trans_user,f.acct_number,f.acct_amount,f.acct_time,f.creator,f.create_time,cust.cust_name,u1.username as sale_user_name,u2.username as trans_user_name";
                 $criteria->alias="f";
                 $criteria->join=" left join c_customer_info cust on f.cust_id=cust.id left join c_users u1 on f.sale_user=u1.id left join c_users u2 on f.trans_user=u2.id";
-               
-		$dataProvider = new CActiveDataProvider($this, array(
+ 		$dataProvider = new CActiveDataProvider($this, array(
 			'criteria'=>$criteria, 
 		)); 
                 return $dataProvider;

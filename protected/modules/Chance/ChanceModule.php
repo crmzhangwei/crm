@@ -9,8 +9,8 @@ class ChanceModule extends CWebModule
 
 		// import the module-level models and components
 		$this->setImport(array(
-			'chance.models.*',
-			'chance.components.*',
+			'Chance.models.*',
+			'Chance.components.*',
 		));
 	}
 

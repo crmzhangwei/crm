@@ -83,6 +83,41 @@ class Privilege extends CActiveRecord
 			'criteria'=>$criteria,
 		));
 	}
+        
+        public function SelectRolePermission($roleid =1) {
+        if ( $roleid) {
+            $cir = new CDbCriteria;
+            $cir->addCondition("t.role_id =$roleid");
+            $res = $this->findAll($cir);
+            
+             $result = array();
+             $resmenu = array();
+            if($res)
+            {
+              foreach ( $res as $val)
+                {
+                 $result[] =  $val->menu_id;
+                 
+                }  
+               if($result)
+               {
+                   $cir = new CDbCriteria();
+                   $cir->addInCondition('id', $result);
+                   $res = MenuInfo::model()->findAll($cir);
+                   if($res)
+                   {
+                       foreach ( $res as $val)
+                        {
+                         $resmenu[] =  $val->url;
+                        }  
+                   }
+               }
+            }
+            
+            return  $resmenu?$resmenu:'';
+        }
+    }
+
 
 	/**
 	 * Returns the static model of the specified AR class.

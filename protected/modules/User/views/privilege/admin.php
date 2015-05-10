@@ -129,8 +129,8 @@ $this->breadcrumbs = array(
     jQuery(function($) {
         $('#permission_tree').jstree({'plugins': ["checkbox"], 
             "checkbox" : {
-                'tie_selection': true
-              },
+                'tie_selection': true,
+               },
             'core': {
             'data': <?php echo $permission; ?>
         }});
