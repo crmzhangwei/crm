@@ -208,15 +208,17 @@ class PrivilegeController extends GController
                $resArr[] =$v['menu_id'];
             }
         }
+        //var_dump($pids);
         $insert = array_diff($pids,  $resArr);
+       
         $noinsert = array_uintersect($pids, $resArr,"strcasecmp");  //求交集
-        if($noinsert && $noinsert != $pids)
+        if($noinsert && ($noinsert != $resArr))
         {
             $cir = new CDbCriteria;
             $cir ->addCondition( "role_id = $roleid");
             $cir->addnotInCondition('menu_id', $noinsert);
             $res1 = Privilege::model()->deleteAll($cir);
-            
+          
         }
         foreach ($insert as $v){
             $insertRows[] = array('role_id'=>$roleid,'menu_id'=>$v);

@@ -264,7 +264,7 @@ class AftermarketCustInfo extends CActiveRecord
                                 " left join {{cust_type}} ct on ct.type_no=t.cust_type and ct.lib_type=3 ".
                                 " left join {{dic}} d on c.category=d.code and d.ctype='cust_category' ".
                                 " left join {{contract_info}} ci on t.cust_id=ci.cust_id ";
-                $criteria->addCondition("t.eno is null");
+                $criteria->addCondition("t.eno =''");
                 $sort = new CSort();
                 $sort->attributes=array(
                     'defaultOrder'=>'id desc',

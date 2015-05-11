@@ -110,7 +110,9 @@ class ServiceController extends GController
                     $model->service['creator']=$user->getAttribute('eno');
                 }
 		
+
                 $user = Users::model()->findByPk(Yii::app()->user->id);
+
                 
                 
 		$this->render('update',array(

@@ -57,7 +57,7 @@ class CustomerassController extends GController
 			else{
 				if(empty($eno))
 				{
-					exit("<script>alert(\"对不起, 该用户当前已分配了".$enoNum."个资源, 每个用户最多只能分配300个资源, 本次操作失败。\");javascript:history.go(-1);</script>");
+					exit("<script>alert('请选择分配的用户');javascript:history.go(-1);</script>");
 				}
 				Yii::app()->db->createCommand()->update('{{customer_info}}',array('eno' =>$eno),"id in({$model->ids})");
 				Yii::app()->db->createCommand()->update('{{Users}}',array('cust_num' =>new CDbExpression("cust_num+$assCount")),"eno='{$model->eno}'");
