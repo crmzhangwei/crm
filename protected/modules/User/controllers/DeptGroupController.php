@@ -19,20 +19,6 @@ class DeptGroupController extends GController
 		));
 	}
 
-	public function actionAdmin2()
-	{
-                $permission = $this->getPriv();
-		$model=new Privilege('search');
-		$model->unsetAttributes();  // clear any default values
-		if(isset($_GET['Privilege']))
-			$model->attributes=$_GET['Privilege'];
-
-		$this->render('admin',array(
-			'model'=>$model,
-                        'permission'=>json_encode($permission),
-		));
-	}
-    
         private function getPriv() {
           
        //$dataProvider=new CActiveDataProvider('MenuInfo');
@@ -120,7 +106,7 @@ class DeptGroupController extends GController
             $cir = new CDbCriteria;
             $cir ->addCondition( "dept_id = $roleid");
             $cir->addnotInCondition('group_id', $noinsert);
-            $res1 = Privilege::model()->deleteAll($cir);
+            $res1 = DeptGroup::model()->deleteAll($cir);
           
         }
         if($insert)
