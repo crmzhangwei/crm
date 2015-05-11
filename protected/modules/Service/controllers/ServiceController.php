@@ -69,12 +69,21 @@ class ServiceController extends GController
 	{
                 if(isset($_POST['NoteInfo'])){
                     //保存
-                    $noteinfo = NoteInfo::model();
+                    $noteinfo = new NoteInfo();
                     $noteinfo->unsetAttributes();
                     $noteinfo->attributes=$_POST['NoteInfo'];
-                    if($noteinfo->save()){
-                        
-                    }
+                    var_dump($noteinfo);
+                    $cust = $this->loadModel($id);
+                    //$cust->unsetAttributes();
+                    $cust->attributes=$_POST['CustomerInfo']; 
+                    if($cust->service){
+                        $cust->service['cust_type']=$_POST['CustomerInfo']['service']['cust_type'];
+                    } 
+                    
+                    echo "<pre>";
+                    print_r($cust->service['cust_type']);
+                    var_dump($cust);
+                    echo "</pre>";
                 }
                 //客户详情页面
 		$model=$this->loadModel($id);
@@ -100,14 +109,7 @@ class ServiceController extends GController
                     $user=Users::model()->findByPk($model->service['creator']);
                     $model->service['creator']=$user->getAttribute('eno');
                 }
-		// Uncomment the following line if AJAX validation is needed
-		// $this->performAjaxValidation($model); 
-		if(isset($_POST['CustomerInfo']))
-		{
-			$model->attributes=$_POST['CustomerInfo'];
-			if($model->save())
-				$this->redirect(array('view','id'=>$model->id));
-		}
+		
                 $user = Users::model()->findByPk(Yii::app()->user->id);
                 
                 
@@ -419,10 +421,11 @@ class ServiceController extends GController
          * @param type $cust_id
          */
         public function actionMessage($cust_id){  
-            if(isset($_POST['message'])){
-                 $cust = CustomerInfo::model()->findByPk($cust_id);
-                 $phone = $cust->getAttribute("phone");
-                 $ret = Utils::sendMessage($phone,$_POST['message'],'post');
+            if(empty($cust_id)){
+                echo "客户id不能为空!";
+            }
+            if(isset($_POST['message'])){ 
+                 $ret = Utils::sendMessageByCust($cust_id,$_POST['message'],'post');
                  echo $ret;
             } 
         }

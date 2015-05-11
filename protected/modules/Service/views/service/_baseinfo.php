@@ -15,6 +15,11 @@ function mail_ret(data){
 function listen_ret(data){
  alert(data);
 }
+$('#btn_cancel').click(
+            function(){
+                
+            }
+        );
 ");
 ?> 
 <script type="text/javascript">
@@ -147,4 +152,5 @@ function sendMessage(cust_id){
         </table>
 <div class="row buttons">
 		<?php echo CHtml::submitButton('保存'); ?>
+                <?php echo CHtml::button('取消',array('id'=>'btn_cancel')); ?>
     </div> 

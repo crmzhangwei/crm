@@ -76,27 +76,56 @@ class Utils {
 
         $exit && exit();
     }
+    /**
+     * 
+     * @param type $cust_id 客户id
+     * @param type $msg 短信内容
+     * @param type $method get/post
+     * @return type 发送结果描述
+     */
+    public static function sendMessageByCust($cust_id,$msg,$method='get'){
+        $cust = CustomerInfo::model()->findByPk($cust_id);
+        if(empty($cust)){
+            return "客户不存在";
+        }
+        $phone = $cust->getAttribute("phone");
+        if(empty($phone)){
+            return "客户电话不存在";
+        }
+        $iret = Utils::sendMessage($phone,$msg,$method);
+        if($iret==0){
+            //发送成功，生成记录
+            $columns=array("cust_id"=>$cust_id,
+                       "phone"=>$phone,
+                       "content"=>  $msg,
+                       "creator"=>Yii::app()->user->id,
+                       "create_time"=>time());
+            Yii::app()->db->createCommand()->insert("{{message}}", $columns);
+        }   
+        $ret = Yii::app()->params['SMS_RETURN_CODE'][$iret];
+        return $ret;
+    }
     
     /**
      * 发送短信
      * @param type $phone 电话号码
      * @param type $msg 短信内容
      * @param type $method get/post
-     * @return type 发送结果描述
+     * @return type $iReturnCode 状态码
      */
-    public static function sendMessage($phone,$msg,$method='get'){  
-        $msg = urlencode($msg); 
+    private static function sendMessage($phone,$msg,$method='get'){  
+        $content = urlencode($msg); 
         $sms = Yii::app()->params['SMS'];
         $result = "";  
         switch ($method){
             case 'get':
-                $sUrl = $sms['url']."?expid=0&uid=".$sms['uid']."&auth=".$sms['auth']."&encode=".$sms['encode']."&mobile=".$phone."&msg=".$msg;
+                $sUrl = $sms['url']."?expid=0&uid=".$sms['uid']."&auth=".$sms['auth']."&encode=".$sms['encode']."&mobile=".$phone."&msg=".$content;
                 $result = file_get_contents($sUrl);
                 break;
             case 'post':
                 $ch = curl_init();
                 $timeout = 5; 
-                $postdata = "expid=0&uid=".$sms['uid']."&auth=".$sms['auth']."&encode=".$sms['encode']."&mobile=".$phone."&msg=".$msg;
+                $postdata = "expid=0&uid=".$sms['uid']."&auth=".$sms['auth']."&encode=".$sms['encode']."&mobile=".$phone."&msg=".$content;
                 curl_setopt($ch, CURLOPT_URL, $sms['url']);
                 curl_setopt($ch, CURLOPT_POST, 1);
                 $this_header = array("content-type: application/x-www-form-urlencoded;charset=UTF-8");
@@ -110,16 +139,7 @@ class Utils {
         }  
         $arr = explode(",",$result,2);
         $iReturnCode = abs($arr[0]);
-        if($iReturnCode==0){
-            $columns=array("cust_id"=>Yii::app()->request->getParam('cust_id'),
-                       "phone"=>$phone,
-                       "content"=>  urldecode($msg),
-                       "creator"=>Yii::app()->user->id,
-                       "create_time"=>time());
-            Yii::app()->db->createCommand()->insert("{{message}}", $columns);
-        }   
-        $ret = Yii::app()->params['SMS_RETURN_CODE'][$iReturnCode];
-        return $ret;
+        return $iReturnCode;
     }
     
     /**
