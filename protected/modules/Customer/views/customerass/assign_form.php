@@ -25,10 +25,11 @@
 		<select id='userinfo' name="users" onchange="enoval(this)">	
 			<option value ="0">---请选择人员---</option>
 		</select>
+		
+	</div> 
+	<div class="row" style="display:none;">
 		<?php echo $form->textField($model,'eno',array('id'=>'userid','size'=>10,'maxlength'=>10)); ?>
 		<?php echo $form->error($model,'eno'); ?>
-	</div> 
-	<div class="row">
 		<?php echo $form->labelEx($model,'ids'); ?>
 		<?php echo $form->textField($model,'ids',array('size'=>60,'maxlength'=>60)); ?>
 	</div>

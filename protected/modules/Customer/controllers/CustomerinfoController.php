@@ -43,18 +43,25 @@ class CustomerinfoController extends GController
 		$category = Userinfo::getCategory();//类目
 		if(isset($_POST['CustomerInfo']))
 		{
-			$model->attributes=$_POST['CustomerInfo'];
 
-			$model->assign_eno = Yii::app()->user->id;//分配人
+			$model->attributes=$_POST['CustomerInfo'];
+     		$model->assign_eno = Yii::app()->user->id;//分配人
 			$model->assign_time = time();//分配时间
 			$model->create_time = time();
 			$model->creator = Yii::app()->user->id;
 			$model->cust_type = 0;	//客户分类默认为0
-			if($model->save()){
+ 		   if($model->save()){
 				Yii::app()->db->createCommand()->update('{{Users}}',array('cust_num' =>new CDbExpression('cust_num+1')),"eno='{$model->eno}'");
-				//Users::model()->updateAll(array('cust_num'=>'cust_num+1'),'eno=:eno',array(":eno"=>$model->eno)); 
-				exit("<script>alert(\"恭喜你, 成功添加一条记录。\");javascript:history.go(-1);</script>");
+//				//Users::model()->updateAll(array('cust_num'=>'cust_num+1'),'eno=:eno',array(":eno"=>$model->eno)); 
+//				exit("<script>alert(\"恭喜你, 成功添加一条记录。\");javascript:history.go(-1);</script>");
+				Utils::showMsg (1, '增加成功!');
+			}else{
+				$errors = $model->getErrors();
+				$error = current($errors) ;
+					Utils::showMsg (0, $error[0]);
 			}
+			
+            Yii::app()->end();
 		}
 		
 		$this->renderPartial('create',array(
