@@ -129,12 +129,12 @@ $this->breadcrumbs = array(
     jQuery(function($) {
         $('#permission_tree').jstree({'plugins': ["checkbox"], 
             "checkbox" : {
-                'tie_selection': true
-              },
+                'tie_selection': true,
+               },
             'core': {
             'data': <?php echo $permission; ?>
         }});
-        
+        var tree = $('#permission_tree');
         $("#roles_list tbody tr").css({"cursor":"pointer"}).bind("click", function(){
             var roleid = $(this).attr( 'roleid' );
             $("#roleId").val( roleid );
@@ -143,7 +143,8 @@ $this->breadcrumbs = array(
             });
             $(this).css({"background-color":"#E5E5E5"}).addClass("red");
             $("#selRoleName").html( $(this).find("td:eq(1)").text() );
-            
+            tree.jstree(true).close_all();
+            tree.jstree(true).uncheck_all();
             $.ajax({
                 url: '<?php echo $this->createUrl('/User/privilege/selectRolePermission');?>',
                 type: 'post',
@@ -151,10 +152,8 @@ $this->breadcrumbs = array(
                 dataType: 'json',
             
                 success: function(result){
-                    $('#permission_tree').jstree(true).close_all();
-                    $('#permission_tree').jstree(true).uncheck_all();
-                    $(result).each(function(i, data){
-                        $('#permission_tree').jstree(true).select_node( data.id );
+                     $(result).each(function(i, data){
+                       tree.jstree(true).select_node( data.id );
                     });
                 },
         

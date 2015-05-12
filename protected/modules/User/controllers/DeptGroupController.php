@@ -2,132 +2,7 @@
 
 class DeptGroupController extends GController
 {
-	/**
-	 * @var string the default layout for the views. Defaults to '//layouts/column2', meaning
-	 * using two-column layout. See 'protected/views/layouts/column2.php'.
-	 */
-	//public $layout='//layouts/column2';
-
-	/**
-	 * @return array action filters
-	 */
-	public function filters()
-	{
-		return array(
-			'accessControl', // perform access control for CRUD operations
-			'postOnly + delete', // we only allow deletion via POST request
-		);
-	}
-        
-        /**
-	 * Specifies the access control rules.
-	 * This method is used by the 'accessControl' filter.
-	 * @return array access control rules
-	 */
-	public function accessRules()
-	{
-		return array(
-			array('allow',  // allow all users to perform 'index' and 'view' actions
-				'actions'=>array('index','view'),
-				'users'=>array('*'),
-			),
-			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('create','update'),
-				'users'=>array('@'),
-			),
-			array('allow', // allow admin user to perform 'admin' and 'delete' actions
-				'actions'=>array('admin','delete'),
-				'users'=>array('admin'),
-			),
-			array('deny',  // deny all users
-				'users'=>array('*'),
-			),
-		);
-	}
-
-	/**
-	 * Displays a particular model.
-	 * @param integer $id the ID of the model to be displayed
-	 */
-	public function actionView($id)
-	{
-		$this->render('view',array(
-			'model'=>$this->loadModel($id),
-		));
-	}
-
-	/**
-	 * Creates a new model.
-	 * If creation is successful, the browser will be redirected to the 'view' page.
-	 */
-	public function actionCreate()
-	{
-		$model=new DeptGroup;
-
-		// Uncomment the following line if AJAX validation is needed
-		// $this->performAjaxValidation($model);
-
-		if(isset($_POST['DeptGroup']))
-		{
-			$model->attributes=$_POST['DeptGroup'];
-			if($model->save())
-				$this->redirect(array('view','id'=>$model->id));
-		}
-
-		$this->render('create',array(
-			'model'=>$model,
-		));
-	}
-
-	/**
-	 * Updates a particular model.
-	 * If update is successful, the browser will be redirected to the 'view' page.
-	 * @param integer $id the ID of the model to be updated
-	 */
-	public function actionUpdate($id)
-	{
-		$model=$this->loadModel($id);
-
-		// Uncomment the following line if AJAX validation is needed
-		// $this->performAjaxValidation($model);
-
-		if(isset($_POST['DeptGroup']))
-		{
-			$model->attributes=$_POST['DeptGroup'];
-			if($model->save())
-				$this->redirect(array('view','id'=>$model->id));
-		}
-
-		$this->render('update',array(
-			'model'=>$model,
-		));
-	}
-
-	/**
-	 * Deletes a particular model.
-	 * If deletion is successful, the browser will be redirected to the 'admin' page.
-	 * @param integer $id the ID of the model to be deleted
-	 */
-	public function actionDelete($id)
-	{
-		$this->loadModel($id)->delete();
-
-		// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
-		if(!isset($_GET['ajax']))
-			$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
-	}
-
-	/**
-	 * Lists all models.
-	 */
-	public function actionIndex()
-	{
-		$dataProvider=new CActiveDataProvider('DeptGroup');
-		$this->render('index',array(
-			'dataProvider'=>$dataProvider,
-		));
-	}
-
+	
 	/**
 	 * Manages all models.
 	 */
@@ -137,37 +12,114 @@ class DeptGroupController extends GController
 		$model->unsetAttributes();  // clear any default values
 		if(isset($_GET['DeptGroup']))
 			$model->attributes=$_GET['DeptGroup'];
-
+                $permission = $this->getPriv();
 		$this->render('admin',array(
 			'model'=>$model,
+                        'permission'=>json_encode($permission),
 		));
 	}
 
-	/**
-	 * Returns the data model based on the primary key given in the GET variable.
-	 * If the data model is not found, an HTTP exception will be raised.
-	 * @param integer $id the ID of the model to be loaded
-	 * @return DeptGroup the loaded model
-	 * @throws CHttpException
-	 */
-	public function loadModel($id)
-	{
-		$model=DeptGroup::model()->findByPk($id);
-		if($model===null)
-			throw new CHttpException(404,'The requested page does not exist.');
-		return $model;
-	}
+        private function getPriv() {
+          
+       //$dataProvider=new CActiveDataProvider('MenuInfo');
+         $dataProvider=new CActiveDataProvider('GroupInfo');
+        $dataProvider->pagination->pageSize = 1000;
+        $data = $dataProvider->getData();
+        if($data)
+        {
+            foreach ($data as $obj)
+            {
+                $priv[] = $obj->attributes;
+            }
+            foreach ($priv as &$v)
+            {
+                 $v['text'] = $v['name'];
+                 $v['icon'] =  ' ace-icon fa fa-flag ';
+            }
+            
+                    
+        }
+      
 
-	/**
-	 * Performs the AJAX validation.
-	 * @param DeptGroup $model the model to be validated
-	 */
-	protected function performAjaxValidation($model)
-	{
-		if(isset($_POST['ajax']) && $_POST['ajax']==='dept-group-form')
-		{
-			echo CActiveForm::validate($model);
-			Yii::app()->end();
-		}
-	}
+        return $priv;
+    }
+    
+    
+      /**
+     * 点击人员查看相应的组别
+     */
+    public function actionSelectRolePermission() {
+        $roleid = intval(Yii::app()->request->getParam("roleid"));
+        if ( $roleid) {
+            $res = DeptGroup::model()->findAll("dept_id = $roleid");
+            $result = array();
+            if($res)
+            {
+              foreach ( $res as $val)
+                {
+                 $val->id = $val->group_id;
+                 $result[] =  $val->attributes;
+                }  
+            }
+            
+            echo $result?json_encode($result):'';
+        }
+    }
+
+       /**
+     * 部门组别设置
+     */
+    public function actionAssignRolePermission() {
+        $roleid = Yii::app()->request->getParam('roleid');
+        $pids = Yii::app()->request->getParam('pids');
+        $res = 0;
+        $res = $this->AssignrolePermission($roleid, $pids);
+        if (intval($res) == 1)
+            Utils::showMsg(1, '部门组别设置成功!');
+        else
+            Utils::showMsg(0, '部门组别设置失败!');
+    }
+    /**
+     * 部门组别设置的方法
+     * @param int   $roleid
+     * @param array $pids  
+     */
+    
+    public function AssignrolePermission($roleid,$pids)
+    {
+        $res = $res1 = $res2 = 0;
+        $res =  DeptGroup::model()->findAll("dept_id = $roleid");
+        $resArr = $insertRows = array();
+        $res = Utils::objtoarray($res);
+        if($res)
+        {
+            foreach ($res as $v){
+               $resArr[] =$v['group_id'];
+            }
+        }
+        //var_dump($pids);
+        $insert = array_diff($pids,  $resArr);
+       
+        $noinsert = array_uintersect($pids, $resArr,"strcasecmp");  //求交集
+        if($noinsert != $resArr)
+        {
+            $cir = new CDbCriteria;
+            $cir ->addCondition( "dept_id = $roleid");
+            $cir->addnotInCondition('group_id', $noinsert);
+            $res1 = DeptGroup::model()->deleteAll($cir);
+          
+        }
+        if($insert)
+        {
+            foreach ($insert as $v){
+                $insertRows[] = array('dept_id'=>$roleid,'group_id'=>$v);
+            }
+        }
+        
+        if($insertRows)
+           $res2 = Utils::insertSeveral('dept_group', $insertRows);
+        return $res1||$res2 ?true:false;
+    }
+
 }
+
