@@ -8,96 +8,6 @@ class PrivilegeController extends GController
 	 */
 	//public $layout='//layouts/column2';
 
-	
-
-	/**
-	 * Displays a particular model.
-	 * @param integer $id the ID of the model to be displayed
-	 */
-	public function actionView($id)
-	{
-		$this->render('view',array(
-			'model'=>$this->loadModel($id),
-		));
-	}
-
-	/**
-	 * Creates a new model.
-	 * If creation is successful, the browser will be redirected to the 'view' page.
-	 */
-	public function actionCreate()
-	{
-		$model=new Privilege;
-
-		// Uncomment the following line if AJAX validation is needed
-		// $this->performAjaxValidation($model);
-
-		if(isset($_POST['Privilege']))
-		{
-			$model->attributes=$_POST['Privilege'];
-			if($model->save())
-				$this->redirect(array('view','id'=>$model->id));
-		}
-
-		$this->render('create',array(
-			'model'=>$model,
-		));
-	}
-
-	/**
-	 * Updates a particular model.
-	 * If update is successful, the browser will be redirected to the 'view' page.
-	 * @param integer $id the ID of the model to be updated
-	 */
-	public function actionUpdate($id)
-	{
-		$model=$this->loadModel($id);
-
-		// Uncomment the following line if AJAX validation is needed
-		// $this->performAjaxValidation($model);
-
-		if(isset($_POST['Privilege']))
-		{
-			$model->attributes=$_POST['Privilege'];
-			if($model->save())
-				$this->redirect(array('view','id'=>$model->id));
-		}
-
-		$this->render('update',array(
-			'model'=>$model,
-		));
-	}
-
-	/**
-	 * Deletes a particular model.
-	 * If deletion is successful, the browser will be redirected to the 'admin' page.
-	 * @param integer $id the ID of the model to be deleted
-	 */
-	public function actionDelete($id)
-	{
-		$this->loadModel($id)->delete();
-
-		// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
-		if(!isset($_GET['ajax']))
-			$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
-	}
-
-	/**
-	 * Lists all models.
-	 */
-	public function actionIndex()
-	{
-            
-                
-		$dataProvider=new CActiveDataProvider('Privilege');
-		$this->render('index',array(
-			'dataProvider'=>$dataProvider,
-		));
-
-        $this->render("index",array('priv' => $priv));
-       }
-
-
 	/**
 	 * Manages all models.
 	 */
@@ -114,22 +24,7 @@ class PrivilegeController extends GController
                         'permission'=>json_encode($permission),
 		));
 	}
-
-	/**
-	 * Returns the data model based on the primary key given in the GET variable.
-	 * If the data model is not found, an HTTP exception will be raised.
-	 * @param integer $id the ID of the model to be loaded
-	 * @return Privilege the loaded model
-	 * @throws CHttpException
-	 */
-	public function loadModel($id)
-	{
-		$model=Privilege::model()->findByPk($id);
-		if($model===null)
-			throw new CHttpException(404,'The requested page does not exist.');
-		return $model;
-	}
-        
+    
         private function getPriv() {
           
         $dataProvider=new CActiveDataProvider('MenuInfo');
@@ -209,10 +104,11 @@ class PrivilegeController extends GController
             }
         }
         //var_dump($pids);
+        $pids = $pids ?$pids :array();
         $insert = array_diff($pids,  $resArr);
-       
+
         $noinsert = array_uintersect($pids, $resArr,"strcasecmp");  //求交集
-        if($noinsert && ($noinsert != $resArr))
+        if($noinsert != $resArr)
         {
             $cir = new CDbCriteria;
             $cir ->addCondition( "role_id = $roleid");
@@ -220,10 +116,13 @@ class PrivilegeController extends GController
             $res1 = Privilege::model()->deleteAll($cir);
           
         }
-        foreach ($insert as $v){
-            $insertRows[] = array('role_id'=>$roleid,'menu_id'=>$v);
+        if($insert)
+        {
+             foreach ($insert as $v){
+                $insertRows[] = array('role_id'=>$roleid,'menu_id'=>$v);
+              }
         }
-        
+
         if($insertRows)
            $res2 = Utils::insertSeveral('privilege', $insertRows);
         return $res1||$res2 ?true:false;

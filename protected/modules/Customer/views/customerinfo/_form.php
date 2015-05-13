@@ -12,100 +12,72 @@
 	// controller action is handling ajax validation correctly.
 	// There is a call to performAjaxValidation() commented in generated controller code.
 	// See class documentation of CActiveForm for details on this.
+     'action' => false,
 	'enableAjaxValidation'=>false,
 )); ?>
 
 	<!-- <p class="note">包含 <span class="required">*</span> 为必填项.</p> -->
 
 	<?php echo $form->errorSummary($model); ?>
-
-	<div class="row">
-		<?php echo $form->labelEx($model,'cust_name'); ?>
-		<?php echo $form->textField($model,'cust_name',array('size'=>60,'maxlength'=>100)); ?>
-		<?php echo $form->error($model,'cust_name'); ?>
-	</div>
-
-	<div class="row">
-		<?php echo $form->labelEx($model,'shop_name'); ?>
-		<?php echo $form->textField($model,'shop_name',array('size'=>60,'maxlength'=>100)); ?>
-		<?php echo $form->error($model,'shop_name'); ?>
-	</div>
-
-	<div class="row">
-		<?php echo $form->labelEx($model,'corp_name'); ?>
-		<?php echo $form->textField($model,'corp_name',array('size'=>60,'maxlength'=>100)); ?>
-		<?php echo $form->error($model,'corp_name'); ?>
-	</div>
-
-	<div class="row">
-		<?php echo $form->labelEx($model,'shop_url'); ?>
-		<?php echo $form->textField($model,'shop_url',array('size'=>60,'maxlength'=>100)); ?>
-		<?php echo $form->error($model,'shop_url'); ?>
-	</div>
-
-	<div class="row">
-		<?php echo $form->labelEx($model,'shop_addr'); ?>
-		<?php echo $form->textField($model,'shop_addr',array('size'=>60,'maxlength'=>100)); ?>
-		<?php echo $form->error($model,'shop_addr'); ?>
-	</div>
-
-	<div class="row">
-		<?php echo $form->labelEx($model,'phone'); ?>
-		<?php echo $form->textField($model,'phone',array('size'=>20,'maxlength'=>20)); ?>
-		<?php echo $form->error($model,'phone'); ?>
-	</div>
-
-	<div class="row">
-		<?php echo $form->labelEx($model,'qq'); ?>
-		<?php echo $form->textField($model,'qq',array('size'=>20,'maxlength'=>20)); ?>
-		<?php echo $form->error($model,'qq'); ?>
-	</div>
-
-	<div class="row">
-		<?php echo $form->labelEx($model,'mail'); ?>
-		<?php echo $form->textField($model,'mail',array('size'=>50,'maxlength'=>50)); ?>
-		<?php echo $form->error($model,'mail'); ?>
-	</div>
-
-	<div class="row">
-		<?php echo $form->labelEx($model,'datafrom'); ?>
-		<?php echo $form->textField($model,'datafrom',array('size'=>60,'maxlength'=>100)); ?>
-		<?php echo $form->error($model,'datafrom'); ?>
-	</div>
-
-	<div class="row">
-		<?php echo $form->labelEx($model,'category'); ?>
-		<?php echo $form->dropDownList($model, 'category' ,$category);?>
-		<?php echo $form->error($model,'category'); ?>
-	</div>
-
-	<!-- <div class="row">
-		<?php echo $form->labelEx($model,'cust_type'); ?>
-		<?php echo $form->textField($model,'cust_type'); ?>
-		<?php echo $form->error($model,'cust_type'); ?>
-	</div> -->
-
-	<div class="row">
-		<?php echo $form->labelEx($model,'memo'); ?>
-		<?php echo $form->textField($model,'memo',array('size'=>60,'maxlength'=>100)); ?>
-		<?php echo $form->error($model,'memo'); ?>
-	</div>
-
-	<!-- <div class="row">
-		<?php echo $form->labelEx($model,'create_time'); ?>
-		<?php echo $form->textField($model,'create_time',array('class'=>"Wdate", 'onClick'=>"WdatePicker()",'style'=>'height:30px;')); ?>
-		<?php echo $form->error($model,'create_time'); ?>
-	</div> -->
-
-	<!-- <div class="row">
-		<?php echo $form->labelEx($model,'creator'); ?>
-		<?php echo $form->textField($model,'creator',array('size'=>16,'maxlength'=>16)); ?>
-		<?php echo $form->error($model,'creator'); ?>
-	</div> -->
-
-	<div class="row">
-		
-		<?php echo $form->labelEx($model,'eno'); ?>
+	<table>
+	<tr>
+		<td width="95"><?php echo $form->labelEx($model,'cust_name'); ?></td>
+		<td><?php echo $form->textField($model,'cust_name',array('size'=>55,'maxlength'=>100)); ?>
+		<?php echo $form->error($model,'cust_name'); ?></td>
+	</tr>
+	<tr>
+		<td><?php echo $form->labelEx($model,'shop_name'); ?></td>
+		<td><?php echo $form->textField($model,'shop_name',array('size'=>55,'maxlength'=>100)); ?>
+		<?php echo $form->error($model,'shop_name'); ?></td>
+	</tr>
+	<tr>
+		<td><?php echo $form->labelEx($model,'corp_name'); ?></td>
+		<td><?php echo $form->textField($model,'corp_name',array('size'=>55,'maxlength'=>100)); ?>
+		<?php echo $form->error($model,'corp_name'); ?></td>
+	</tr>
+	<tr>
+		<td><?php echo $form->labelEx($model,'shop_url'); ?></td>
+		<td><?php echo $form->textField($model,'shop_url',array('size'=>55,'maxlength'=>100)); ?>
+		<?php echo $form->error($model,'shop_url'); ?></td>
+	</tr>
+	<tr>
+		<td><?php echo $form->labelEx($model,'shop_addr'); ?></td>
+		<td><?php echo $form->textField($model,'shop_addr',array('size'=>55,'maxlength'=>100)); ?>
+		<?php echo $form->error($model,'shop_addr'); ?></td>
+	</tr>
+	<tr>
+		<td><?php echo $form->labelEx($model,'phone'); ?></td>
+		<td><?php echo $form->textField($model,'phone',array('size'=>30,'maxlength'=>20)); ?>
+		<?php echo $form->error($model,'phone'); ?></td>
+	</tr>
+	<tr>
+		<td><?php echo $form->labelEx($model,'qq'); ?></td>
+		<td><?php echo $form->textField($model,'qq',array('size'=>30,'maxlength'=>20)); ?>
+		<?php echo $form->error($model,'qq'); ?></td>
+	</tr>
+	<tr>
+		<td><?php echo $form->labelEx($model,'mail'); ?></td>
+		<td><?php echo $form->textField($model,'mail',array('size'=>55,'maxlength'=>50)); ?>
+		<?php echo $form->error($model,'mail'); ?></td>
+	</tr>
+	<tr>
+		<td><?php echo $form->labelEx($model,'datafrom'); ?></td>
+		<td><?php echo $form->textField($model,'datafrom',array('size'=>55,'maxlength'=>100)); ?>
+		<?php echo $form->error($model,'datafrom'); ?></td>
+	</tr>
+	<tr>
+		<td><?php echo $form->labelEx($model,'category'); ?></td>
+		<td><?php echo $form->dropDownList($model, 'category' ,$category);?>
+		<?php echo $form->error($model,'category'); ?></td>
+	</tr>
+	<tr>
+		<td><?php echo $form->labelEx($model,'memo'); ?></td>
+		<td><?php echo $form->textField($model,'memo',array('size'=>55,'maxlength'=>100)); ?>
+		<?php echo $form->error($model,'memo'); ?></td>
+	</tr>
+	<tr>
+		<td><?php echo $form->labelEx($model,'eno'); ?></td>
+		<td>
 		<?php if($model->isNewRecord):
 			echo CHtml::dropDownList('dept','',$deptArr,array('onchange'=>'listgroup(this)'));
 		?>
@@ -127,15 +99,20 @@
 		</select>
 		<?php else: 
 		    echo   CHtml::dropDownList('users', $user_info['eno'], $user_info['user_arr'], array('id'=>"userinfo",'onchange'=>"enoval(this)"));
-		     endif;?>
-		<?php echo $form->textField($model,'eno',array('id'=>'userid','size'=>10,'maxlength'=>10)); ?>
-		<?php echo $form->error($model,'eno'); ?>
-		<?php echo $form->textField($model,'oldEno',array('id'=>'oldEno','size'=>10,'maxlength'=>10)); ?>
-	</div> 
-
-	<div class="row buttons">
-		<?php echo CHtml::submitButton($model->isNewRecord ? '创建' : '保存'); ?>
-	</div>
+		endif;?>
+		</td>
+	</tr> 
+	<tr style="display: none">
+		<td><?php echo $form->textField($model,'eno',array('id'=>'userid','size'=>10,'maxlength'=>10)); ?></td>
+		<td><?php echo $form->error($model,'eno'); ?>
+		<?php echo $form->textField($model,'oldEno',array('id'=>'oldEno','size'=>10,'maxlength'=>10)); ?></td>
+	</tr>
+	<tr>
+		<td>
+		<?php echo CHtml::submitButton($model->isNewRecord ? '创建' : '更新', array('class' => 'btn btn-sm btn-primary', 'id' => 'createUserBtn')); ?>
+		</td>	
+	</tr>
+	</table>
 
 <?php $this->endWidget(); ?>
 
@@ -202,4 +179,19 @@
 		var gonghao = $("#userid").val();
 		$("#oldEno").val(gonghao);
 	});
+	$('#createUserBtn').on('click',function(){
+		public.AjaxSaveForm({
+		obj: $("#createUserBtn"),
+		url: '<?php echo $model->isNewRecord ?$this->createUrl("/Customer/customerinfo/create") :$this->createUrl("/Customer/customerinfo/update"); ?>',
+		data: $("#customer-info-form").serialize(),
+		callback: function (result) {
+			bootbox.alert(result.msg, function () {
+				if (result.code == 1)
+					window.location.reload();
+			});
+		}
+		});
+		
+	})
+	
 </script> 

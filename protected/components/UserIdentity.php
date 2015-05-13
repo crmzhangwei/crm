@@ -68,6 +68,7 @@ class UserIdentity extends CUserIdentity
                  $this->_id = 'admin';
             }
             $priv = Privilege::model()->SelectRolePermission();
+            Yii::app()->session["user"] = $user->attributes;
             Yii::app()->session["tmpuser"] = $priv;
             return!$this->errorCode;
     }
