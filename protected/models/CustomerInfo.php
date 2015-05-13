@@ -29,7 +29,9 @@ class CustomerInfo extends CActiveRecord {
 
     public $cust_type_from;
     public $cust_type_to;
-    public $contact_7_day;
+    public $contact_7_day; 
+    public $searchtype;
+    public $keyword;
 
     /**
      * @return string the associated database table name
@@ -56,7 +58,7 @@ class CustomerInfo extends CActiveRecord {
             array('abandon_reason', 'length', 'max'=>200),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, cust_name, shop_name, corp_name, shop_url, shop_addr, phone, qq, mail, datafrom, category, cust_type, eno, iskey, visit_date, abandon_reason, assign_eno, assign_time, next_time, memo, status, create_time, creator', 'safe', 'on'=>'search'),
+            array('id, cust_name, shop_name, corp_name, shop_url, shop_addr, phone, qq, mail, datafrom, category, cust_type, eno, iskey, visit_date, abandon_reason, assign_eno, assign_time, next_time, memo, status, create_time, creator,searchtype,keyword', 'safe', 'on'=>'search'),
         );
     }
 
@@ -150,15 +152,13 @@ class CustomerInfo extends CActiveRecord {
         // @todo Please modify the following code to remove attributes that should not be searched.
 
         $criteria = new CDbCriteria;
-        if ($this->phone) {
-            $criteria->compare('phone', $this->phone, true);
+        switch($this->searchtype){
+            case 1:$criteria->compare('cust_name', $this->keyword, true);break;
+            case 2:$criteria->compare('qq', $this->keyword, true);break;
+            case 3:$criteria->compare('phone', $this->keyword, true);break;
+            default:break;
         }
-        if ($this->qq) {
-            $criteria->compare('qq', $this->qq,true);
-        }
-        if ($this->cust_name) {
-            $criteria->compare('cust_name', $this->cust_name,true);
-        }
+            
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
         ));

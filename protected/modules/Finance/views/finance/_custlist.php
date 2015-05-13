@@ -7,15 +7,16 @@ $this->widget('GGridView', array(
 	'columns'=>array(
             array('class' => 'CCheckBoxColumn',
                     'name' => 'id',
+                    'value'=>'$data->id.",".$data->cust_name',
                     'id' => 'select',
                     'selectableRows' => 1,
                     'headerTemplate' => '{item}',
                     'htmlOptions' => array(
-                        'width' => '20',
-                    ),
+                        'width' => '20', 
+                    ), 
                 ),
 		'id',
-		'cust_name',
+		'cust_name', 
 		'phone',
 		'qq',  
 		 

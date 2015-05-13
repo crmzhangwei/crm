@@ -25,8 +25,7 @@ Yii::app()->clientScript->registerScript('search1', "
      url=url+"&isajax=1"; 
       $.ajax(url,{   
         data:$(this).serialize(),
-        success:function(html){  
-            $('#share_search_form').toggle();
+        success:function(html){   
             $('#search_shared_list').html(html);  
             }  
         });

@@ -16,6 +16,8 @@
                 <td width="10%" nowrap="nowrap"><?php echo $form->labelEx($model,'eno'); ?></td>
                 <td width="20%" nowrap="nowrap">
                    <?php  echo $loginuser->eno;  ?> 
+                    <?php echo $form->hiddenField($model, 'dial_id'); ?>
+                    <?php echo $form->hiddenField($model, 'cust_id'); ?>
                     <?php echo $form->error($model,'eno'); ?>
                 </td>
                 <td width="10%" nowrap="nowrap"><?php echo $form->labelEx($model,'next_contact'); ?></td>

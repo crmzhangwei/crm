@@ -3,12 +3,12 @@
             var vUrl = "index.php?r=/Service/service/DeptGroupArr&isajax=true&deptid="+obj.value;
             $.getJSON(vUrl,function(jsonObj){  
                         if(jsonObj){
-                            $("#CustomerInfo_group").empty();
+                            $("#AftermarketCustInfo_group").empty();
                             $.each(jsonObj, function(i, item) { 
                             $("<option></option>")
                             .val(item.group_id)
                             .text(item.group_name)
-                            .appendTo($("#CustomerInfo_group"));
+                            .appendTo($("#AftermarketCustInfo_group"));
                         });
                         changeGroup();
                         } 
@@ -16,17 +16,17 @@
                 );
         }
      function changeGroup(){
-            var dept = $("#CustomerInfo_dept").val();
-            var group = $("#CustomerInfo_group").val();
+            var dept = $("#AftermarketCustInfo_dept").val();
+            var group = $("#AftermarketCustInfo_group").val();
             var vUrl = "index.php?r=/Service/service/UserArr&deptid="+dept+"&groupid="+group;
             $.getJSON(vUrl,function(jsonObj){  
                         if(jsonObj){
-                            $("#CustomerInfo_eno").empty();
+                            $("#AftermarketCustInfo_eno").empty();
                             $.each(jsonObj, function(i, item) {  
                             $("<option></option>")
                             .val(item.id)
                             .text(item.name)
-                            .appendTo($("#CustomerInfo_eno"));
+                            .appendTo($("#AftermarketCustInfo_eno"));
                         });
                         } 
                     }   
@@ -77,8 +77,8 @@ Yii::app()->clientScript->registerScript('buttonA', "
                 <td width="10%"> <?php echo $form->labelEx($model,'eno'); ?></td> 
                 <td> 
                     <?php echo $form->dropDownList($model, "dept", $this->getDeptArr(),array("onchange"=>"javascript:changeDept(this);")) ?>
-                    <?php echo $form->dropDownList($model, "group", $this->getDeptGroupArr(1,false),array("onchange"=>"javascript:changeGroup()")) ?> 
-                    <?php echo $form->dropDownList($model, "eno", $this->getUserArr(1,1,false)) ?>
+                    <?php echo $form->dropDownList($model, "group", $this->getDeptGroupArr(0,false),array("onchange"=>"javascript:changeGroup()")) ?> 
+                    <?php echo $form->dropDownList($model, "eno", $this->getUserArr(0,0,false)) ?>
                     <?php echo $form->error($model,'eno'); ?>
                 </td>
                 

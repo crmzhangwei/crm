@@ -22,10 +22,12 @@ class Finance extends CActiveRecord
         public $trans_user_name;
         public $dept;
         public $group;
-        public $createtime_start;
-        public $createtime_end;
+        public $acct_time_start;
+        public $acct_time_end;
         public $shopname;
         public $phone;
+        public $keyword;
+        public $searchtype;
 	/**
 	 * @return string the associated database table name
 	 */
@@ -43,11 +45,11 @@ class Finance extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			array('cust_id, sale_user, trans_user, acct_number, acct_amount, acct_time, creator, create_time', 'required'),
-			array('cust_id, sale_user, trans_user, acct_number, acct_time, creator, create_time', 'numerical', 'integerOnly'=>true),
+			array('cust_id, sale_user, trans_user, acct_number, acct_time, creator,', 'numerical', 'integerOnly'=>true),
 			array('acct_amount', 'numerical'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, cust_id, sale_user, trans_user, acct_number, acct_amount, acct_time, creator, create_time', 'safe', 'on'=>'search'),
+			array('sale_user, trans_user, acct_number, acct_amount, acct_time_start,acct_time_end, keyword, searchtype', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -99,14 +101,14 @@ class Finance extends CActiveRecord
 	{
 		// @todo Please modify the following code to remove attributes that should not be searched. 
 		$criteria=new CDbCriteria;  
-                $criteria->compare('cust.cust_name',$this->cust_name,true);  
-		if($this->createtime_start){
-                    $sTime = strtotime($this->createtime_start);
-                    $criteria->addCondition(" f.create_time>=$sTime");
+               
+		if($this->acct_time_start){
+                    $sTime = strtotime($this->acct_time_start);
+                    $criteria->addCondition(" f.acct_time>=$sTime");
                 }
-                if($this->createtime_end){
-                    $eTime = strtotime($this->createtime_end);
-                    $criteria->addCondition(" f.create_time<=$eTime");
+                if($this->acct_time_end){
+                    $eTime = strtotime($this->acct_time_end);
+                    $criteria->addCondition(" f.acct_time<=$eTime");
                 } 
                 if($this->dept){
                     $criteria->addCondition(" u1.dept_id=".$this->dept);
@@ -114,18 +116,23 @@ class Finance extends CActiveRecord
                 if($this->group){
                     $criteria->addCondition(" u1.group_id=".$this->group);
                 }
-                if($this->shopname){
-                     $criteria->compare('cust.shop_name',$this->shopname,true);  
+                if($this->sale_user){
+                    $criteria->addCondition(" f.sale_user=".$this->sale_user);
                 }
-                if($this->phone){
-                     $criteria->compare('cust.phone',$this->phone,true);  
+                switch($this->searchtype){
+                    case 1:$criteria->compare('cust.cust_name',$this->keyword,true);  break;
+                    case 2:$criteria->compare('cust.shop_name',$this->keyword,true);  break;
+                    case 3:$criteria->compare('cust.phone',$this->keyword,true);  break;
+                    default:break;
                 }
+                    
                 $criteria->select="f.id,f.cust_id,f.sale_user,f.trans_user,f.acct_number,f.acct_amount,f.acct_time,f.creator,f.create_time,cust.cust_name,u1.username as sale_user_name,u2.username as trans_user_name";
                 $criteria->alias="f";
                 $criteria->join=" left join c_customer_info cust on f.cust_id=cust.id left join c_users u1 on f.sale_user=u1.id left join c_users u2 on f.trans_user=u2.id";
  		$dataProvider = new CActiveDataProvider($this, array(
 			'criteria'=>$criteria, 
 		)); 
+                
                 return $dataProvider;
                 
 	}

@@ -16,6 +16,6 @@ $this->menu=array(
 );
 ?>
 
-<h1>Update Finance <?php echo $model->id; ?></h1>
+<h1>修改财务数据 <?php echo $model->id; ?></h1>
 
 <?php $this->renderPartial('_form', array('model'=>$model)); ?>

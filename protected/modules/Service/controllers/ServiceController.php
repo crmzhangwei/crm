@@ -67,26 +67,43 @@ class ServiceController extends GController
 	 */
 	public function actionUpdate($id)
 	{
+                $noteinfo = null;
+                $model = $this->loadModel($id);
                 if(isset($_POST['NoteInfo'])){
                     //保存
                     $noteinfo = new NoteInfo();
                     $noteinfo->unsetAttributes();
-                    $noteinfo->attributes=$_POST['NoteInfo'];
-                    var_dump($noteinfo);
-                    $cust = $this->loadModel($id);
-                    //$cust->unsetAttributes();
-                    $cust->attributes=$_POST['CustomerInfo']; 
-                    if($cust->service){
-                        $cust->service['cust_type']=$_POST['CustomerInfo']['service']['cust_type'];
+                    $noteinfo->attributes=$_POST['NoteInfo']; 
+                    $noteinfo->next_contact=strtotime($noteinfo->next_contact);
+                    $noteinfo->setAttribute("eno", Yii::app()->user->id); 
+                    $noteinfo->setAttribute("create_time", time());  
+                    $model->attributes=$_POST['CustomerInfo']; 
+                    if($model->service){
+                        $model->service['cust_type']=$_POST['CustomerInfo']['service']['cust_type'];
                     } 
+                    $model->next_time=$noteinfo->next_contact;
+                    if($noteinfo->dial_id<1){
+                        $noteinfo->addError("dial_id", "请先拔打电话");
+                    }
                     
-                    echo "<pre>";
-                    print_r($cust->service['cust_type']);
-                    var_dump($cust);
-                    echo "</pre>";
-                }
-                //客户详情页面
-		$model=$this->loadModel($id);
+                    if($noteinfo->dial_id>0&&$noteinfo->save()){
+                        $sql = "select * from {{aftermarket_cust_info}} where cust_id=:cust_id";
+                        $aftermodel = AftermarketCustInfo::model()->findBySql($sql,array(':cust_id'=>$id));
+                        $aftermodel->next_time=$noteinfo->next_contact;
+                        $aftermodel->cust_type=$model->service['cust_type'];
+                        if($aftermodel->save()){
+                            $model->service['next_time']=$aftermodel->next_time;
+                        }
+                        $noteinfo->next_contact=date('Y-m-d',$noteinfo->next_contact);
+                    }else{
+                        $noteinfo->addError("memo","请录入小记信息");
+                    }  
+                }else{
+                    $noteinfo = new NoteInfo(); 
+                    $noteinfo->setAttribute("iskey", 0);
+                    $noteinfo->setAttribute("isvalid", 0);
+                    $noteinfo->cust_id=$id;
+                } 
                 $model->setAttribute("create_time", date("Y-m-d", $model->getAttribute("create_time")));
                 $model->setAttribute("assign_time", date("Y-m-d", $model->getAttribute("assign_time")));
                 $model->setAttribute("next_time", date("Y-m-d", $model->getAttribute("next_time")));
@@ -94,9 +111,7 @@ class ServiceController extends GController
                 $sharedNote->setAttribute("cust_id", $model->id); 
                 $historyNote = NoteInfo::model();
                 $historyNote->setAttribute("cust_id", $model->id);
-                $noteinfo = new NoteInfo(); 
-                $noteinfo->setAttribute("iskey", 0);
-                $noteinfo->setAttribute("isvalid", 0);
+               
                 if($model->contract){
                     $model->contract['create_time']= date("Y-m-d",$model->contract['create_time']);
                     $model->contract['comm_pay_time']= date("Y-m-d",$model->contract['comm_pay_time']);
@@ -108,13 +123,8 @@ class ServiceController extends GController
                     $model->service['create_time']=date("Y-m-d",$model->service['create_time']);  
                     $user=Users::model()->findByPk($model->service['creator']);
                     $model->service['creator']=$user->getAttribute('eno');
-                }
-		
-
-                $user = Users::model()->findByPk(Yii::app()->user->id);
-
-                
-                
+                }  
+                $user = Users::model()->findByPk(Yii::app()->user->id); 
 		$this->render('update',array(
 			'model'=>$model,
                         'sharedNote'=>$sharedNote,
@@ -377,7 +387,12 @@ class ServiceController extends GController
          * 获取部门数组 
          */
         public function getDeptArr() {
-             return CHtml::listData(DeptInfo::model()->findAll(), 'id', 'name');
+             $deptarr = DeptInfo::model()->findAll();
+             $dept_empty = new DeptInfo();
+             $dept_empty->id=0;
+             $dept_empty->name='--请选择部门--';
+             $deptarr=array_merge(array($dept_empty), $deptarr);
+             return CHtml::listData($deptarr, "id","name");
         }
         /**
          * 获取部门下组别数组 
@@ -385,10 +400,20 @@ class ServiceController extends GController
         public function getDeptGroupArr($deptid,$isajax) { 
             if($isajax){
                 $sql ="select t.group_id,g.name as group_name from {{dept_group}} t left join {{group_info}} g on t.group_id=g.id where t.dept_id=:dept_id"; 
-                echo json_encode(DeptGroup::model()->findAllBySql($sql,array(':dept_id'=>$deptid)));
+                $grouparr = DeptGroup::model()->findAllBySql($sql,array(':dept_id'=>$deptid));
+                $group_empty = new DeptGroup();
+                $group_empty->group_id=0;
+                $group_empty->group_name='--请选择组别--';
+                $grouparr=array_merge(array($group_empty), $grouparr); 
+                echo json_encode($grouparr); 
             }else{
                 $sql ="select t.group_id,g.name as group_name from {{dept_group}} t left join {{group_info}} g on t.group_id=g.id where t.dept_id=:dept_id";
-                return CHtml::listData(DeptGroup::model()->findAllBySql($sql,array(':dept_id'=>$deptid)), 'group_id', 'group_name');
+                $grouparr = DeptGroup::model()->findAllBySql($sql,array(':dept_id'=>$deptid));
+                $group_empty = new DeptGroup();
+                $group_empty->group_id=0;
+                $group_empty->group_name='--请选择组别--';
+                $grouparr=array_merge(array($group_empty), $grouparr);  
+                return CHtml::listData($grouparr, 'group_id', 'group_name'); 
             } 
             
         }
@@ -397,10 +422,18 @@ class ServiceController extends GController
          */
         public function getUserArr($deptid,$groupid,$isajax) {
             if($isajax){ 
-                $sql ="select eno,name from {{users}} where `dept_id`=:dept_id and `group_id`=:group_id"; 
-                echo json_encode(Users::model()->findAllBySql($sql,array(':dept_id'=>$deptid,':group_id'=>$groupid)));
+                $sql ="select id,name from {{users}} where `dept_id`=:dept_id and `group_id`=:group_id"; 
+                $userarr = Users::model()->findAllBySql($sql,array(':dept_id'=>$deptid,':group_id'=>$groupid));
+                $userarr=array_merge(array('0'=>'--请选择用户--'), $userarr);
+                echo json_encode($userarr);
             }else{ 
-             return CHtml::listData(Users::model()->findAll("`dept_id`=:dept_id and `group_id`=:group_id",array(':dept_id'=>$deptid,':group_id'=>$groupid)), 'eno', 'name');
+                $sql = "select id ,name  from {{users}}  where dept_id=:dept_id and group_id=:group_id";
+                $userarr = Users::model()->findAllBySql($sql,array(':dept_id'=>$deptid,':group_id'=>$groupid));
+                $user_empty = new Users();
+                $user_empty->id='0';
+                $user_empty->name='--请选择用户--';
+                $userarr=array_merge(array($user_empty), $userarr);
+                return CHtml::listData($userarr, 'id','name');
             }
         }
          /**
@@ -416,20 +449,28 @@ class ServiceController extends GController
          * @param type $cust_id
          */
         public function actionDial($cust_id){
-            echo 'Dial ok';
+            $result = array('status'=>0,'dial_id'=>123,'message'=>'dial ok');
+            echo json_encode($result);
         }
+        
         /**
          * 发短信
          * @param type $cust_id
          */
         public function actionMessage($cust_id){  
-            if(empty($cust_id)){
-                echo "客户id不能为空!";
-            }
-            if(isset($_POST['message'])){ 
-                 $ret = Utils::sendMessageByCust($cust_id,$_POST['message'],'post');
-                 echo $ret;
-            } 
+            $model =  new AftermarketCustInfo();
+            $model->cust_id=$cust_id; 
+            if(isset($_POST['AftermarketCustInfo'])){  
+                 $model->attributes=$_POST['AftermarketCustInfo'];
+                 $model->message=$_POST['AftermarketCustInfo']['message']; 
+                 $ret = Utils::sendMessageByCust($model->cust_id,$model->message,'post');
+                 Utils::showMsg(1,$ret); 
+                 Yii::app()->end;
+                 exit();
+            }  
+            $this->renderPartial('message',array(
+			'model'=>$model,
+		));
         }
         /**
          * 发邮件
@@ -454,10 +495,20 @@ class ServiceController extends GController
         public function actionDeptGroupArr($deptid,$isajax) { 
             if($isajax){
                 $sql ="select t.group_id,g.name as group_name from {{dept_group}} t left join {{group_info}} g on t.group_id=g.id where t.dept_id=:dept_id"; 
-                echo json_encode(DeptGroup::model()->findAllBySql($sql,array(':dept_id'=>$deptid)));
+                $grouparr = DeptGroup::model()->findAllBySql($sql,array(':dept_id'=>$deptid));
+                $group_empty = new DeptGroup();
+                $group_empty->group_id=0;
+                $group_empty->group_name='--请选择组别--';
+                $grouparr=array_merge(array($group_empty), $grouparr); 
+                echo json_encode($grouparr);
             }else{
                 $sql ="select t.group_id,g.name as group_name from {{dept_group}} t left join {{group_info}} g on t.group_id=g.id where t.dept_id=:dept_id";
-                return CHtml::listData(DeptGroup::model()->findAllBySql($sql,array(':dept_id'=>$deptid)), 'group_id', 'group_name');
+                $grouparr = DeptGroup::model()->findAllBySql($sql,array(':dept_id'=>$deptid));
+                $group_empty = new DeptGroup();
+                $group_empty->group_id=0;
+                $group_empty->group_name='--请选择组别--';
+                $grouparr=array_merge(array($group_empty), $grouparr);  
+                return CHtml::listData($grouparr, 'group_id', 'group_name'); 
             } 
             
         }
@@ -467,8 +518,13 @@ class ServiceController extends GController
          * @param type $groupid
          */
         public function actionUserArr($deptid,$groupid) {
-            $sql ="select id,name from {{users}} where `dept_id`=:dept_id and `group_id`=:group_id"; 
-            echo json_encode(Users::model()->findAllBySql($sql,array(':dept_id'=>$deptid,':group_id'=>$groupid)));
+            $sql ="select id,name from {{users}} where `dept_id`=:dept_id and `group_id`=:group_id";
+            $userarr=Users::model()->findAllBySql($sql,array(':dept_id'=>$deptid,':group_id'=>$groupid));
+            $user_empty = new Users();
+            $user_empty->id='0';
+            $user_empty->name='--请选择用户--';
+            $userarr=array_merge(array($user_empty), $userarr);
+            echo json_encode($userarr);
         }
          
 }

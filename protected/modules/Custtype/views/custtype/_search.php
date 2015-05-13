@@ -27,7 +27,7 @@
         </tr>
         <tr>
             <td colspan="6">
-                <a href="/index.php?r=Custtype/custtype/create" id ='create_cust_type'  class="btn btn-sm btn-primary" > 
+                <a href="<?php echo Yii::app()->createUrl('Custtype/custtype/create')?>" id ='create_cust_type'  class="btn btn-sm btn-primary" > 
                                 <i class="icon-plus"></i>新建客户分类
                             </a>  
                             <a href="javascript:void(0)" id ='search_cust_type'  class="btn btn-sm btn-primary" > 

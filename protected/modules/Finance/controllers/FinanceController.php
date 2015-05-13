@@ -71,13 +71,19 @@ class FinanceController extends GController
 		{
 			$model->attributes=$_POST['Finance'];
                         //增加创建人，增加时间 
+                        $model->dept=$_POST['Finance']['dept'];
+                        $model->group=$_POST['Finance']['group'];
                         $acct_time = $model->getAttribute("acct_time");
                         $iAcctTime=  strtotime($acct_time);
                         $model->setAttribute("acct_time", $iAcctTime);
                         $model->setAttribute("creator", Yii::app()->user->id);
                         $model->setAttribute("create_time", time());
-			if($model->save())
+			if($model->save()){
 				$this->redirect(array('admin'));
+                        }else{
+                            
+                            $model->acct_time=date("Y-m-d",time());
+                        }
 		}
 
 		$this->render('create',array(
@@ -93,15 +99,26 @@ class FinanceController extends GController
 	public function actionUpdate($id)
 	{
 		$model=$this->loadModel($id);
-
+                if($model){
+                    $model->create_time=date('Y-m-d',$model->create_time);
+                    $model->acct_time=date('Y-m-d',$model->acct_time);
+                    $user = Users::model()->findByPk($model->sale_user);
+                    $model->dept=$user->dept_id;
+                    $model->group=$user->group_id;
+                    $cust = CustomerInfo::model()->findByPk($model->cust_id);
+                    $model->cust_name=$cust->cust_name;
+                }
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
 
 		if(isset($_POST['Finance']))
 		{
 			$model->attributes=$_POST['Finance'];
+                        $acct_time = $model->getAttribute("acct_time");
+                        $iAcctTime=  strtotime($acct_time);
+                        $model->setAttribute("acct_time", $iAcctTime);
 			if($model->save())
-				$this->redirect(array('view','id'=>$model->id));
+				$this->redirect(array('admin'));
 		}
 
 		$this->render('update',array(
@@ -163,14 +180,14 @@ class FinanceController extends GController
 		$model->unsetAttributes();  // clear any default values
 		if(isset($_POST['Finance'])){
 			$model->attributes=$_POST['Finance'];
-                        $model->cust_name=$_POST['Finance']['cust_name'];
-                        $model->createtime_start=$_POST['Finance']['createtime_start'];
-                        $model->createtime_end=$_POST['Finance']['createtime_end'];
+                        $model->searchtype=$_POST['Finance']['searchtype'];
+                        $model->keyword=$_POST['Finance']['keyword'];
+                        $model->acct_time_start=$_POST['Finance']['acct_time_start'];
+                        $model->acct_time_end=$_POST['Finance']['acct_time_end'];
                         $model->dept=$_POST['Finance']['dept'];
-                        $model->group=$_POST['Finance']['group'];
-                        $model->shopname=$_POST['Finance']['shopname'];
-                        $model->phone=$_POST['Finance']['phone'];
+                        $model->group=$_POST['Finance']['group'];  
                 }
+                
                 $this->render('admin',array(
 			'model'=>$model,
                     ));        
@@ -209,7 +226,12 @@ class FinanceController extends GController
          * 获取部门数组 
          */
         public function getDeptArr() {
-             return CHtml::listData(DeptInfo::model()->findAll(), 'id', 'name');
+             $deptarr = DeptInfo::model()->findAll();
+             $dept_empty = new DeptInfo();
+             $dept_empty->id=0;
+             $dept_empty->name='--请选择部门--';
+             $deptarr=array_merge(array($dept_empty), $deptarr);
+             return CHtml::listData($deptarr, "id","name");
         }
         /**
          * ajax获取部门下组别数组 
@@ -220,10 +242,20 @@ class FinanceController extends GController
         public function actionDeptGroupArr($deptid,$isajax) { 
             if($isajax){
                 $sql ="select t.group_id,g.name as group_name from {{dept_group}} t left join {{group_info}} g on t.group_id=g.id where t.dept_id=:dept_id"; 
-                echo json_encode(DeptGroup::model()->findAllBySql($sql,array(':dept_id'=>$deptid)));
+                $grouparr = DeptGroup::model()->findAllBySql($sql,array(':dept_id'=>$deptid));
+                $group_empty = new DeptGroup();
+                $group_empty->group_id=0;
+                $group_empty->group_name='--请选择组别--';
+                $grouparr=array_merge(array($group_empty), $grouparr); 
+                echo json_encode($grouparr);
             }else{
                 $sql ="select t.group_id,g.name as group_name from {{dept_group}} t left join {{group_info}} g on t.group_id=g.id where t.dept_id=:dept_id";
-                return CHtml::listData(DeptGroup::model()->findAllBySql($sql,array(':dept_id'=>$deptid)), 'group_id', 'group_name');
+                $grouparr = DeptGroup::model()->findAllBySql($sql,array(':dept_id'=>$deptid));
+                $group_empty = new DeptGroup();
+                $group_empty->group_id=0;
+                $group_empty->group_name='--请选择组别--';
+                $grouparr=array_merge(array($group_empty), $grouparr);  
+                return CHtml::listData($grouparr, 'group_id', 'group_name'); 
             } 
             
         }
@@ -233,11 +265,20 @@ class FinanceController extends GController
         public function getUserArr($deptid,$groupid,$isajax) {
             if($isajax){ 
                 $sql ="select id,name from {{users}} where `dept_id`=:dept_id and `group_id`=:group_id"; 
-                echo json_encode(Users::model()->findAllBySql($sql,array(':dept_id'=>$deptid,':group_id'=>$groupid)));
+                $userarr = Users::model()->findAllBySql($sql,array(':dept_id'=>$deptid,':group_id'=>$groupid));
+                $userarr=array_merge(array('0'=>'--请选择用户--'), $userarr);
+                echo json_encode($userarr);
             }else{ 
-             return CHtml::listData(Users::model()->findAll("`dept_id`=:dept_id and `group_id`=:group_id",array(':dept_id'=>$deptid,':group_id'=>$groupid)), 'id', 'name');
+                $sql = "select id ,name  from {{users}}  where dept_id=:dept_id and group_id=:group_id";
+                $userarr = Users::model()->findAllBySql($sql,array(':dept_id'=>$deptid,':group_id'=>$groupid));
+                $user_empty = new Users();
+                $user_empty->id='0';
+                $user_empty->name='--请选择用户--';
+                $userarr=array_merge(array($user_empty), $userarr);
+                return CHtml::listData($userarr, 'id','name');
             }
         }
+        
          
         /**
          * 获取所有谈单师用户数组 
@@ -253,17 +294,25 @@ class FinanceController extends GController
          * @param type $groupid
          */
         public function actionUserArr($deptid,$groupid) {
-            $sql ="select id,name from {{users}} where `dept_id`=:dept_id and `group_id`=:group_id"; 
-            echo json_encode(Users::model()->findAllBySql($sql,array(':dept_id'=>$deptid,':group_id'=>$groupid)));
+            $sql ="select id,name from {{users}} where `dept_id`=:dept_id and `group_id`=:group_id";
+            $userarr=Users::model()->findAllBySql($sql,array(':dept_id'=>$deptid,':group_id'=>$groupid));
+            $user_empty = new Users();
+            $user_empty->id='0';
+            $user_empty->name='--请选择用户--';
+            $userarr=array_merge(array($user_empty), $userarr);
+            echo json_encode($userarr);
         }
         
         
         public function actionTest() {
-           $content="上周A股市场风格出现分化，在大盘蓝筹股的带动下主板市场屡创新高。面对不断冲高的大盘，市场的恐高心理也有所增加，业内人士认为，近期，在大盘加速冲刺阶段积累了巨量短线获利盘，市场面临巨大的技术性调整压力。当然，也有券商机构喊出，“牛市将持续三年到五年”上周A股市场风格出现分化上周A股市场风格出现分化，，。上周A股市场风格出现分化上周A股市场风格出现";
+          // $content="上周A股市场风格出现分化，在大盘蓝筹股的带动下主板市场屡创新高。面对不断冲高的大盘，市场的恐高心理也有所增加，业内人士认为，近期，在大盘加速冲刺阶段积累了巨量短线获利盘，市场面临巨大的技术性调整压力。当然，也有券商机构喊出，“牛市将持续三年到五年”上周A股市场风格出现分化上周A股市场风格出现分化，，。上周A股市场风格出现分化上周A股市场风格出现";
                   
            //Utils::sendMessage("13536580119", $content,"post"); 
            //Utils::sendMessage("18589075186", $content,"post"); 
-            
+            $deptarr =  CHtml::listData(DeptInfo::model()->findAll(), 'id', 'name');
+             
+            var_dump($deptarr);
+             
         }
 
     function Get($phone,$msg) {

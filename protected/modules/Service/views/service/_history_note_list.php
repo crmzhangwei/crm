@@ -11,7 +11,7 @@ $this->widget('GGridView', array(
 		'cust_info',
 		'requirement',
                 'service', 
-                'next_contact', 
+                array('name'=>'next_contact','value'=>'date("Y-m-d",$data->next_contact)'), 
 		array(
 			'class'=>'CButtonColumn',
                         'template'=>'',  

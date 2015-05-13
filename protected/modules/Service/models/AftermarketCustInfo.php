@@ -30,6 +30,7 @@ class AftermarketCustInfo extends CActiveRecord
         public $createtime_start;
         public $createtime_end;
         public $total_money;  
+        public $message;
         
 	/**
 	 * @return string the associated database table name
@@ -46,7 +47,7 @@ class AftermarketCustInfo extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('cust_type,category', 'required'), 
+			array('cust_type', 'required'), 
                         array('eno','required','on'=>'assign'),
                         array('eno,dept,group','safe'),
 			// The following rule is used by search().

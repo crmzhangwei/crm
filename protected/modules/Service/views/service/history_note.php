@@ -38,8 +38,7 @@ Yii::app()->clientScript->registerScript('search2', "
      url=url+"&isajax=1"; 
       $.ajax(url,{   
         data:$(this).serialize(),
-        success:function(html){  
-            $('#history_search_form').toggle();
+        success:function(html){   
             $('#search_history_list').html(html);  
             }  
         });

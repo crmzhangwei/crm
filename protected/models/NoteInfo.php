@@ -37,9 +37,9 @@ class NoteInfo extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('cust_id, eno, create_time', 'required'),
+			array('cust_id, eno, create_time,next_contact,dial_id', 'required'),
 			array('cust_id, isvalid, iskey, next_contact, dial_id, eno, create_time', 'numerical', 'integerOnly'=>true),
-			array('cust_info, requirement, service, dissent, next_followup, memo', 'length', 'max'=>200),
+			array('cust_info, requirement, service, dissent, next_followup, memo', 'length', 'max'=>200), 
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
 			array('id, cust_id, cust_info, requirement, service, dissent, next_followup, memo, isvalid, iskey, next_contact, dial_id, eno, create_time', 'safe', 'on'=>'search'),

@@ -28,7 +28,7 @@
         </tr>
         <tr>
             <td colspan="6">
-                <a href="/index.php?r=Dictionary/dic/create" id ='create_dictionary'  class="btn btn-sm btn-primary" > 
+                <a href="<?php echo Yii::app()->createUrl('Dictionary/dic/create')?>" id ='create_dictionary'  class="btn btn-sm btn-primary" > 
                                 <i class="icon-plus"></i>新建字典数据
                             </a>  
                             <a href="javascript:void(0)" id ='search_dictionary'  class="btn btn-sm btn-primary" > 

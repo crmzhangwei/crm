@@ -17,8 +17,9 @@
 )); ?>
 	<?php echo $form->errorSummary($model); ?> 
 	<div class="row">
-            短信内容:  
-                <textarea rows="3" cols="30" name="message" value=""></textarea>
+            <?php echo $form->hiddenField($model,'cust_id'); ?>
+            短信内容:   
+                <?php echo $form->textArea($model,'message',array('rows'=>3,'cols'=>30)); ?>
 	</div>
 
 	<div class="row buttons" style="margin-top:40px">
@@ -29,9 +30,32 @@
 
 </div><!-- form -->
 
-<script type="text/javascript">
- $('#message-form form').submit(function(){
-        alert(1); 
-	return false;
- });  
+<script type="text/javascript"> 
+ 
+ public.validate({
+            form: $('#message-form'),
+            type: 2,
+            rules: {
+                'AftermarketCustInfo[message]': {
+                    required: true
+                }, 
+            },
+            messages: {
+                'AftermarketCustInfo[message]': {
+                    required: "请输入短信内容."
+                }, 
+            },
+            submitHandler: function (form) {  
+                public.AjaxSaveForm({
+                    obj: $("#createUserBtn"),
+                    url: '<?php echo $this->createUrl("/Service/service/message",array('cust_id'=>$model->cust_id)); ?>',
+                    data: $("#message-form").serialize(),
+                    callback: function(result) {
+                        bootbox.alert(result.msg, function(){
+                            $('.modal-backdrop').hide(); 
+                        });
+                    }
+                });
+            }
+        });
 </script>

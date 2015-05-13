@@ -34,7 +34,7 @@
 	'enableAjaxValidation'=>false,
 )); ?>
     <div id="tabs-1" aria-labelledby="ui-id-29" class="ui-tabs-panel ui-widget-content ui-corner-bottom" role="tabpanel" aria-hidden="false" style="display: block;">
-	<?php $this->renderPartial('_baseinfo', array('model'=>$model,'form'=>$form)); ?> 
+	<?php $this->renderPartial('_baseinfo', array('model'=>$model,'form'=>$form,'note'=>$noteinfo)); ?> 
     </div>
     <div id="tabs-2" aria-labelledby="ui-id-30" class="ui-tabs-panel ui-widget-content ui-corner-bottom" role="tabpanel" aria-hidden="true" style="display: none;">
         <?php $this->renderPartial('_contractinfo_form', array('model'=>$model,'form'=>$form)); ?> 

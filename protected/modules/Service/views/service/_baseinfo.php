@@ -6,7 +6,9 @@
 
 Yii::app()->clientScript->registerScript('baseinfo', "
 function dial_ret(data){
- alert(data);
+  var obj = $.parseJSON(data);
+  $('#NoteInfo_dial_id').val(obj.dial_id);
+  bootbox.alert(obj.message);
 }
 
 function mail_ret(data){
@@ -24,35 +26,13 @@ $('#btn_cancel').click(
 ?> 
 <script type="text/javascript">
 function sendMessage(cust_id){ 
-    bootbox.dialog({
-                title: "发送短信",
-                message: '<div class="row">  ' +
-                    '<div class="col-md-12"> ' +
-                    '<form class="form-horizontal" id="message_form"> ' +
-                    '<div class="form-group"> ' +
-                    '<label class="col-md-4 control-label" for="name">短信内容</label> ' +
-                    '<div class="col-md-4"> ' +
-                    '<textarea rows="3" cols="30" id="message" name="message" value=""></textarea> ' +
-                    ' </div> ' +
-                    '</div> ' + 
-                    '</form> </div>  </div>',
-                buttons: {
-                    success: {
-                        label: "发送",
-                        className: "btn-success",
-                        callback: function () { 
-                            $.post('index.php?r=Service/service/message&cust_id='+cust_id,$("#message_form").serialize(),function(data){
-                               alert(data); 
-                            });
-                        }
-                    }
-                }
-            }
-        ); 
+    public.dialog('发送短信', '<?= Yii::app()->createUrl('Service/service/message') ?>', {'cust_id':cust_id}, 900);
+    
 }
 </script>
 <p class="note">Fields with <span class="required">*</span> are required.</p> 
-	<?php echo $form->errorSummary($model); ?> 
+	<?php echo $form->errorSummary($model); ?>
+        <?php echo $form->errorSummary($note); ?>
         <table class="table table-bordered"> 
             <tr>
                 <td width="10%" nowrap="nowrap"><?php echo $form->labelEx($model,'cust_name'); ?></td>
@@ -82,8 +62,8 @@ function sendMessage(cust_id){
                 </td>
                 <td nowrap="nowrap"><?php echo $form->labelEx($model,'phone'); ?></td>
                 <td><?php echo Utils::hidePhone($model->phone); ?>
-                    <?php echo CHtml::ajaxButton("拔打电话", "index.php?r=Service/service/dial&cust_id=".$model->id, array('success'=>'dial_ret')) ?>
-                    <?php echo CHtml::ajaxButton("监听电话", "index.php?r=Service/service/listen&cust_id=".$model->id, array('success'=>'listen_ret')) ?>
+                    <?php echo CHtml::ajaxButton("拔打电话", Yii::app()->createUrl('Service/service/dial',array('cust_id'=>$model->id)), array('success'=>'dial_ret')) ?>
+                    <?php echo CHtml::ajaxButton("监听电话", Yii::app()->createUrl('Service/service/listen',array('cust_id'=>$model->id)), array('success'=>'listen_ret')) ?>
                     <?php echo CHtml::button("发送短信", array('onclick'=>'javascript:sendMessage('.$model->id.')')) ?>
                     <?php echo $form->error($model,'phone'); ?>
                 </td>
@@ -96,8 +76,8 @@ function sendMessage(cust_id){
                 </td>
                 <td nowrap="nowrap"><?php echo $form->labelEx($model,'mail'); ?></td>
                 <td><?php  echo Utils::hideEmail($model->mail);  ?>
-                    <?php echo CHtml::ajaxButton("发邮件", "index.php?r=Service/service/mail&cust_id=".$model->id, array('success'=>'mail_ret')) ?>
-		<?php echo $form->error($model,'mail'); ?></td>
+                    <?php echo CHtml::ajaxButton("发邮件", Yii::app()->createUrl('Service/service/mail',array('cust_id'=>$model->id)), array('success'=>'mail_ret')) ?>
+		    <?php echo $form->error($model,'mail'); ?></td>
             </tr>
             <tr>
                 <td nowrap="nowrap"><?php echo $form->labelEx($model,'datafrom'); ?></td>
@@ -129,14 +109,14 @@ function sendMessage(cust_id){
                 </td>
             </tr>
             
-            <tr>
+            <tr> 
                 <td nowrap="nowrap"><?php echo $form->labelEx($model,'next_time'); ?></td>
                 <td>
-                    <?php echo $form->textField($model,'service[next_time]',array('class'=>"Wdate", 'onClick'=>"WdatePicker()",'style'=>'height:30px;')); ?>
+                    <?php echo $model['service']['next_time'];?>
                     <?php echo $form->error($model,'next_time'); ?></td>
                 <td nowrap="nowrap"><?php echo $form->labelEx($model,'memo'); ?></td>
                 <td>
-                <?php echo $form->textArea($model,'memo',array('rows'=>3,'cols'=>30)); ?>
+                <?php echo $form->textArea($model,'memo',array('rows'=>3,'cols'=>50)); ?>
 		<?php echo $form->error($model,'memo'); ?>
                 </td> 
             </tr>
@@ -151,6 +131,5 @@ function sendMessage(cust_id){
             </tr>
         </table>
 <div class="row buttons">
-		<?php echo CHtml::submitButton('保存'); ?>
-                <?php echo CHtml::button('取消',array('id'=>'btn_cancel')); ?>
+		<?php echo CHtml::submitButton('保存'); ?> 
     </div> 

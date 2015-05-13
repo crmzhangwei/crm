@@ -10,30 +10,13 @@
 	'action'=>Yii::app()->createUrl($this->route),
 	'method'=>'get',
 )); ?>
-<!--
+ 
 	<div class="row">
-		<?php echo $form->label($model,'id'); ?>
-		<?php echo $form->textField($model,'id',array('size'=>10,'maxlength'=>10)); ?>
-	</div>
--->
-	<div class="row">
-		<?php echo $form->label($model,'cust_name'); ?>
-		<?php echo $form->textField($model,'cust_name'); ?>
-	</div>
-
-	<div class="row">
-		<?php echo $form->label($model,'phone'); ?>
-		<?php echo $form->textField($model,'phone'); ?>
-	</div>
-
-	<div class="row">
-		<?php echo $form->label($model,'qq'); ?>
-		<?php echo $form->textField($model,'qq'); ?>
+		<?php echo $form->dropDownList($model, "searchtype", array('1'=>'客户名称','2'=>'QQ','3'=>'电话')) ?>
+		<?php echo $form->textField($model,'keyword',array('size'=>30,'maxlength'=>20)); ?>
+                <?php echo CHtml::submitButton('搜索'); ?>
 	</div> 
-
-	<div class="row buttons">
-		<?php echo CHtml::submitButton('搜索'); ?>
-	</div>
+ 
 
 <?php $this->endWidget(); ?>
 

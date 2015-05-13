@@ -57,7 +57,8 @@
             <tr>
                 <td width="10%"> <?php echo $form->labelEx($model,'cust_id'); ?></td> 
                 <td>
-                    <?php echo $form->textField($model,'cust_id'); ?>
+                    <?php echo $form->hiddenField($model,'cust_id'); ?>
+                    <?php echo $form->textField($model,'cust_name'); ?>
                     <?php  echo CHtml::button("...",array('name'=>'btn_cust_pop','id'=>'id_btn_cust_pop'));?>
                     <?php echo $form->error($model,'cust_id'); ?> 
                 </td>
@@ -66,8 +67,8 @@
                 <td width="10%"> <?php echo $form->labelEx($model,'sale_user'); ?></td> 
                 <td> 
                     <?php echo $form->dropDownList($model, "dept", $this->getDeptArr(),array("onchange"=>"javascript:changeDept(this);")) ?>
-                    <?php echo $form->dropDownList($model, "group", $this->actionDeptGroupArr(1,false),array("onchange"=>"javascript:changeGroup()")) ?> 
-                    <?php echo $form->dropDownList($model, "sale_user", $this->getUserArr(1,1,false)) ?>
+                    <?php echo $form->dropDownList($model, "group", $this->actionDeptGroupArr($model->dept,false),array("onchange"=>"javascript:changeGroup()")) ?> 
+                    <?php echo $form->dropDownList($model, "sale_user", $this->getUserArr($model->dept,$model->group,false)) ?>
                     <?php echo $form->error($model,'sale_user'); ?>
                 </td>
             </tr> 
@@ -114,7 +115,9 @@
         $("#id_btn_cust_pop").click(function(){  
             if (window.showModalDialog) {
                 var result = window.showModalDialog('index.php?r=/Finance/finance/PopCustList',self,'dialogHeight: 550px; dialogWidth: 960px; dialogTop: 200px; dialogLeft: 300px;');
-                $("#Finance_cust_id").val(result);
+                var values = result.split(",");
+                $("#Finance_cust_id").val(values[0]);
+                $("#Finance_cust_name").val(values[1]);
             }else{
                window.open('index.php?r=/Finance/finance/PopCustList','self','modal=yes,width=960,height=560,resizable=no,scrollbars=no'); 
             }

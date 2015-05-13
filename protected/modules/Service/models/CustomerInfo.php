@@ -4,8 +4,7 @@
  * This is the model class for table "{{customer_info}}".
  *
  * The followings are the available columns in table '{{customer_info}}':
- * @property string $id
- * @property string $cust_no
+ * @property string $id 
  * @property string $cust_name
  * @property string $shop_name
  * @property string $corp_name
@@ -37,6 +36,8 @@ class CustomerInfo extends CActiveRecord
         public $createtime_end;
         public $total_money;
         public $cust_type_name; //客户分类名称
+        public $searchtype;
+        public $keyword;
 	/**
 	 * @return string the associated database table name
 	 */
@@ -55,13 +56,13 @@ class CustomerInfo extends CActiveRecord
 		return array(
 			array('cust_type,category', 'required'),
 			array('category, cust_type, iskey, assign_time, next_time, create_time, creator', 'numerical', 'integerOnly'=>true),
-			array('cust_no, eno, assign_eno', 'length', 'max'=>10),
+			array('eno, assign_eno', 'length', 'max'=>10),
 			array('cust_name, shop_name, corp_name, shop_url, shop_addr, datafrom, memo', 'length', 'max'=>100),
 			array('phone, qq', 'length', 'max'=>20),
 			array('mail', 'length', 'max'=>50),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, cust_no, cust_name, shop_name, corp_name, shop_url, shop_addr, phone, qq, mail, datafrom, category, cust_type, eno, iskey, assign_eno, assign_time, next_time, memo, create_time, creator', 'safe', 'on'=>'search'),
+			array('id, cust_name, shop_name, corp_name, shop_url, shop_addr, phone, qq, mail, datafrom, category, cust_type, eno, iskey, assign_eno, assign_time, next_time, memo, create_time, creator,searchtype,keyword', 'safe', 'on'=>'search'),
 		);
 	}
 

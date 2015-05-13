@@ -56,13 +56,9 @@
     
     
 </script>
-<p>
-你可以在输入框的开始处输入 (<b>&lt;</b>, <b>&lt;=</b>, <b>&gt;</b>, <b>&gt;=</b>, <b>&lt;&gt;</b>
-or <b>=</b>)，用以指定查询条件.
-</p>
-
-<?php echo CHtml::link('高级搜索','#',array('class'=>'search-button')); ?>
-<div class="search-form" style="display:none">
+ 
+ 
+<div class="search-form" style="display:">
 <?php $this->renderPartial('_search_cust',array(
 	'model'=>$model,
 )); ?>
@@ -76,17 +72,13 @@ or <b>=</b>)，用以指定查询条件.
 </div> <!-- search_list-->  
  
 <script type="text/javascript">
-$('.search-button').click(function(){
-	$('.search-form').toggle();
-	return false;
-});
+ 
 $('.search-form form').submit(function(){
       var url = $(this).attr('action');
       url=url+"&isajax=1"; 
       $.ajax(url,{   
         data:$(this).serialize(),
-        success:function(html){  
-            $('.search-form').toggle();
+        success:function(html){   
             $('#search_list').html(html);  
             }  
         });
@@ -108,7 +100,10 @@ $('.search-form form').submit(function(){
              window.returnValue = selval; 
              window.close(); 
         }else{
-            window.opener.document.getElementById("Finance_cust_id").value=selval;
+            var values = selval.split(",");
+            window.opener.document.getElementById("Finance_cust_id").value=values[0];
+            window.opener.document.getElementById("Finance_cust_name").value=values[1];
+            
             window.close(); 
         } 
     }
