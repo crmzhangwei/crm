@@ -107,7 +107,7 @@ class Gcontroller extends Controller
         $router = str_replace('//', '/', $router);
         $userPer = Yii::app()->session["tmpuser"]; 
         if(empty($userPer)){
-            Yii::app()->user->logout();
+           // Yii::app()->user->logout();
            // $this->redirect(Yii::app()->user->loginUrl);
         }
         //取出所有的用户权限
