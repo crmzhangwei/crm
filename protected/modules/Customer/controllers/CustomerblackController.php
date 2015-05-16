@@ -180,8 +180,9 @@ class CustomerblackController extends GController
 	 */
 	public function actionGetResource(){
 		$model=new CustomerBlack;
+		$eno = Yii::app()->session['user']['eno'];
 		$ids = Yii::app()->request->getParam('ids');
-		$sql = "update {{customer_info}} set `status`=0,cust_type=0 where id in ($ids)";
+		$sql = "update {{customer_info}} set `status`=3,cust_type=0,eno='$eno' where id in ($ids)";
 		$sql2 = "delete from {{black_info}} where cust_id in ($ids)";
 		$transaction = Yii::app()->db->beginTransaction();
 		try {
@@ -193,9 +194,5 @@ class CustomerblackController extends GController
 			$transaction->rollBack();//事务回滚
 			echo json_encode(false);
 		}
-
-	
 	}
-	
-	
 }
