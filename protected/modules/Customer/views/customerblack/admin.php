@@ -2,8 +2,8 @@
 /* @var $this CustomerblackController */
 /* @var $model Customerblack */
 
-$this->breadcrumbs=array(
-	//'客户管理'=>array('index'),
+$this->breadcrumbs = array(
+	'客户管理' => array('admin'),
 	'公海资源',
 );
 

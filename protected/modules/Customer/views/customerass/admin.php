@@ -2,9 +2,9 @@
 /* @var $this CustomerassController */
 /* @var $model CustomerAss */
 
-$this->breadcrumbs=array(
-	//'客户管理'=>array('index'),
-	'资源分配',
+$this->breadcrumbs = array(
+	'客户管理' => array('admin'),
+	'客户资源分配',
 );
 
 $this->menu=array(

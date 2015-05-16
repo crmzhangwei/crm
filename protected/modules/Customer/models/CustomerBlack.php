@@ -99,7 +99,7 @@ class CustomerBlack extends CActiveRecord
 			'mail' => '邮箱',
 			'datafrom' => '数据来源',
 			'category' => '所属类目',
-			'cust_type' => '客户分类',
+			'cust_type' => '原客户分类',
 			'eno' => '所属工号',
 			'iskey' => '是否重点',
 			'assign_eno' => '分配人',
