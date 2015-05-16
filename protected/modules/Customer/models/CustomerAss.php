@@ -150,7 +150,7 @@ class CustomerAss extends CActiveRecord
 		$criteria->compare('memo',$this->memo,true);
 		$criteria->compare('create_time',$this->create_time);
 		$criteria->compare('creator',$this->creator);
-		$criteria->addCondition("eno is NULL"); //查询条件，即where id = 1    
+		$criteria->addCondition("`status` in(0,3) and eno="); //查询条件，即where id = 1    
 
 		if($this->keyword)
         {
