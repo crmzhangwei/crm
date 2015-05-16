@@ -22,27 +22,6 @@ class UserIdentity extends CUserIdentity
 		$this->pass=$password;
                 parent::__construct($username, $password);
 	}
-    /**
-	public function authenticate()
-	{
-		$users=array(
-			// username => password
-			'demo'=>'demo',
-			'admin'=>'admin',
-		);
-                $user = User::model()->findByAttributes(array('username' => $this->username));
-		if($user === null)
-                    
-                    
-                    
-			$this->errorCode=self::ERROR_USERNAME_INVALID;
-		elseif($users[$this->username]!==$this->password)
-			$this->errorCode=self::ERROR_PASSWORD_INVALID;
-		else
-			$this->errorCode=self::ERROR_NONE;
-		return !$this->errorCode;
-	}
-        */
           public function authenticate() {
 
                 $user = Users::model()->findByAttributes(array('username' => $this->username));
@@ -83,6 +62,7 @@ class UserIdentity extends CUserIdentity
                 $dataProvider=new CActiveDataProvider('MenuInfo');
                 $dataProvider->pagination->pageSize = 1000;
                 $data = $dataProvider->getData();
+                $privs = array();
                 if($data)
                 {
                     foreach ($data as $obj)
