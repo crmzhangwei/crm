@@ -28,7 +28,7 @@ class UserIdentity extends CUserIdentity
                 if ($user === null) {
                     $this->errorCode = self::ERROR_USERNAME_INVALID;
                 } else {
-                    if ($user->pass !== $user->encrypt($this->pass)) {
+                     if ($user->pass !== $user->encrypt($this->pass)) {
                         $this->errorCode = self::ERROR_PASSWORD_INVALID;
                     } else {
                         $this->_id = $user->id;
@@ -50,9 +50,9 @@ class UserIdentity extends CUserIdentity
             {
                 $param['user_id'] =  $this->_id;
                 $roles =  UserRole::model()->findAllByAttributes($param);
+                $rolearr = array();
                 if($roles)
                 {
-                    $rolearr = array();
                     foreach ($roles as $role)
                     {
                        $rolearr[] = $role->role_id;

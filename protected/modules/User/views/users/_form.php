@@ -20,126 +20,11 @@
     ));
     ?>
   
-    <p class="note">包括 <span class="required">*</span>为必填项.</p>
-    <div class="row">
-        <div class="col-xs-12 col-sm-6">
+    
            
             <?php echo $form->hiddenField($model, 'id') ?>
 
-     
 
-
-            <div class="form-group">
-                <?php echo $form->labelEx($model, 'name', array('class' => 'col-sm-2 control-label no-padding-right')); ?>
-                <div class="col-sm-9">
-                    <?php echo $form->textField($model, 'name', array('size' => 20, 'maxlength' => 20, 'id' => "form-field-1", 'placeholder' => "", 'class' => "input-large")); ?>
-       
-                </div>
-            </div>
-
-           <?php if($model->isNewRecord):?>
-            <div class="form-group">
-                <?php echo $form->labelEx($model, 'pass', array('class' => 'col-sm-2 control-label no-padding-right')); ?>
-                <div class="col-sm-9">
-                    <?php echo $form->textField($model, 'pass', array('size' => 50, 'maxlength' => 50, 'id' => "form-field-1", 'placeholder' => "", 'class' => "input-large")); ?>
-            
-                </div>
-            </div>
-
-            <div class="form-group">
-                <?php echo $form->labelEx($model, 'pass_repeat', array('class' => 'col-sm-2 control-label no-padding-right')); ?>
-                <div class="col-sm-9">
-                    <?php echo $form->textField($model, 'pass_repeat', array('size' => 50, 'maxlength' => 50, 'id' => "form-field-1", 'placeholder' => "", 'class' => "input-large")); ?>
-                   
-                </div>
-            </div>
-           <?php endif;?>
-          
-
-     
-
-            <div class="form-group">
-                <?php echo $form->labelEx($model, 'birth', array('class' => 'col-sm-2 control-label no-padding-right')); ?>
-                <div class="col-sm-9">
-                    <?php echo $form->textField($model, 'birth', array('onClick' => "WdatePicker()", 'style' => 'height:30px;', 'id' => "form-field-1", 'placeholder' => "", 'class' => " Wdate input-large")); ?>
-                </div>
-            </div>
-            <div class="row buttons">
-                <?php echo CHtml::submitButton($model->isNewRecord ? '创建' : '更新',array('class'=>'btn btn-sm btn-primary','id'=>'createUserBtn')); ?>
-            </div>
-
-        </div>
-        <div class="col-xs-12 col-sm-6">
-            <div class="form-group">
-                <?php echo $form->labelEx($model, 'tel', array('class' => 'col-sm-2 control-label no-padding-right')); ?>
-                <div class="col-sm-9">
-                    <?php echo $form->textField($model, 'tel', array('size' => 20, 'maxlength' => 20, 'placeholder' => "", 'class' => "input-large")); ?>
-                   
-                </div>
-            </div>
-          
-
-
-            <div class="form-group">
-                <?php echo $form->labelEx($model, 'qq', array('class' => 'col-sm-2 control-label no-padding-right')); ?>
-                <div class="col-sm-9">
-                    <?php echo $form->textField($model, 'qq', array('size' => 15, 'maxlength' => 15, 'placeholder' => "", 'class' => "input-large")); ?>
-                    <?php echo $form->error($model, 'qq'); ?>
-                </div>
-            </div>
-
-            <div class="form-group">
-                <?php echo $form->labelEx($model, 'dept_id', array('class' => 'col-sm-2 control-label no-padding-right')); ?>
-                <div class="col-sm-9">
-                    <?php echo $form->dropDownList($model, 'dept_id', $this->getDeptArr()); ?>
-                    <?php echo $form->error($model, 'dept_id'); ?>
-                </div>
-            </div>
-
-            <div class="form-group">
-                <?php echo $form->labelEx($model, 'group_id', array('class' => 'col-sm-2 control-label no-padding-right')); ?>
-                <div class="col-sm-9">
-                    <?php echo $form->dropDownList($model, 'group_id', $this->getGroupArr()); ?>
-                    <?php echo $form->error($model, 'group_id'); ?>
-                </div>
-            </div>
-
-            <div class="form-group">
-                <?php echo $form->labelEx($model, 'status', array('class' => 'col-sm-2 control-label no-padding-right')); ?>
-                <div class="col-sm-9">
-                    <?php echo $form->dropDownList($model, 'status', $this->getStatusArr()); ?>
-                    <?php echo $form->error($model, 'status'); ?>
-                </div>
-            </div>
-
-
-            <div class="form-group">
-                <?php echo $form->labelEx($model, 'ismaster', array('class' => 'col-sm-2 control-label no-padding-right')); ?>
-                 <div class="col-sm-9">
-                <?php echo $form->radioButtonList($model, 'ismaster', array('否', '是'), array('separator' => ' ','class'=>'col-sm-2')); ?>
-                <?php echo $form->error($model, 'ismaster'); ?>
-                 </div> 
-            </div>
-       
-
-             <div class="form-group">
-                <?php echo $form->labelEx($model, 'sex', array('class' => 'col-sm-2 control-label no-padding-right')); ?>
-                 <div class="col-sm-9">
-                <?php echo $form->radioButtonList($model, 'sex', array('女', '男'), array('separator' => ' ','class'=>'col-sm-2')); ?>
-                <?php echo $form->error($model, 'sex'); ?>
-                 </div>
-            <?php $this->endWidget(); ?>
-        </div>
-    </div>
-
-</div><!-- form -->
-       <div class="form-group">
-                <?php echo $form->labelEx($model, 'username', array('class' => 'col-sm-2 control-label no-padding-right')); ?>
-                <div class="col-sm-9">
-                    <?php echo $form->textField($model, 'username', array('size' => 20, 'maxlength' => 20, 'id' => "form-field-1", 'placeholder' => "", 'class' => "input-large")); ?>
-                  
-                </div>
-            </div>
 
 <div class="row">
     <form class="form-horizontal" id="createUserForm" role="form" method="post" action="">
@@ -148,45 +33,46 @@
             <div class="col-sm-3">
                 <?php echo $form->textField($model, 'username', array( 'maxlength' => 20, 'id' => "form-field-1", 'placeholder' => "", 'class' => "form-control")); ?>
             </div>
-            <label class="col-sm-2 control-label no-padding-right">英文名/昵称：</label>
+            <label class="col-sm-2 control-label no-padding-right"><?php echo $model->getAttributeLabel('name'); ?>:</label>
             <div class="col-sm-3">
-                <input type="text" class="form-control" name="userinfo[nick]">
-            </div>
-        </div><div class="form-group">
-            <label class="col-sm-2 control-label no-padding-right">手机号码：</label>
-            <div class="col-sm-3">
-                <input name="userinfo[mobile]" class="form-control" type="text">
-            </div>
-            <label class="col-sm-2 control-label no-padding-right">QQ：</label>
-            <div class="col-sm-3">
-                <input type="text" class="form-control" name="userinfo[qq]">
+                <?php echo $form->textField($model, 'name', array( 'maxlength' =>12, 'id' => "form-field-1", 'placeholder' => "", 'class' => "form-control")); ?>
             </div>
         </div>
+        
+
         <div class="form-group">
-            <label class="col-sm-2 control-label no-padding-right">Email：</label>
+            <label class="col-sm-2 control-label no-padding-right"><?php echo $model->getAttributeLabel('birth'); ?>：</label>
             <div class="col-sm-3">
-                <input type="text" class="form-control" name="userinfo[email]">
+                <?php echo $form->textField($model, 'birth', array( 'onClick' => "WdatePicker()", 'style' => 'height:30px;', 'id' => "form-field-1", 'placeholder' => "", 'class' => " Wdate form-control")); ?>
             </div>
-            <label class="col-sm-2 control-label no-padding-right">工号：</label>
+            <label class="col-sm-2 control-label no-padding-right"><?php echo $model->getAttributeLabel('qq'); ?>：</label>
             <div class="col-sm-3">
-                <input name="userinfo[gonghao]" class="form-control" type="text">
+                <?php echo $form->textField($model, 'qq', array( 'maxlength' =>14, 'id' => "form-field-1", 'placeholder' => "", 'class' => "form-control")); ?>
             </div>
         </div>
+  
         <div class="form-group">
+            <?php if($model->isNewRecord):?>
             <label class="col-sm-2 control-label no-padding-right">初始密码：</label>
             <div class="col-sm-3">
-                <input name="" id="userinfo_pwd" class="form-control" type="text" value="to8to123">
-                <input name="userinfo[pwd]" id="userinfo_pwd_" type="hidden" value="">
+               <?php echo $form->textField($model, 'pass', array( 'maxlength' =>14, 'id' => "form-field-1", 'placeholder' => "", 'class' => "form-control")); ?>
+            </div>
+            <?php endif;?>
+            <label class="col-sm-2 control-label no-padding-right"><?php echo $model->getAttributeLabel('tel'); ?>：</label>
+            <div class="col-sm-3">
+                <?php echo $form->textField($model, 'tel', array( 'maxlength' =>14, 'id' => "form-field-1", 'placeholder' => "", 'class' => "form-control")); ?>
             </div>
         </div>
         <div class="form-group">
             <label class="col-sm-2 control-label no-padding-right">部门：</label>
-            <div class="col-sm-4">
-                <input name="groupname" id="userinfo_groupname" class="form-control" type="text" readonly>
-                <input type="hidden" id="userinfo_groupid" name="userinfo[groupid]">
+            <div class="col-sm-3">
+                   <?php echo $form->dropDownList($model, 'dept_id', $this->getDeptArr(),array('onchange'=>'getgroup(this)')); ?>
             </div>
-            <div class="col-sm-1">
-                <button type="button" id="selectGroups" class="btn btn-primary btn-sm"><i class="icon-plus"></i> 选择部门</button>
+        </div>
+         <div class="form-group">
+            <label class="col-sm-2 control-label no-padding-right">组别：</label>
+            <div class="col-sm-3">
+                   <?php echo $form->dropDownList($model, 'group_id',  DeptGroup::model()->getByDeptId($model->dept_id),array('id'=>'groupinfo')); ?>
             </div>
         </div>
         <div class="form-group">
@@ -208,22 +94,37 @@
             </div>
         </div>
         <div class="form-group">
-            <label class="col-sm-2 control-label no-padding-right">固定角色：</label>
+            <label class="col-sm-2 control-label no-padding-right"><?php echo $model->getAttributeLabel('ismaster'); ?>：</label>
             <div class="col-sm-4">
-                <?php
-               // echo CHtml::dropDownList('userinfo[roleid]', '', CHtml::listData($role_list, '_id', 'name'), array('class' => 'form-control', 'empty' => '请选择角色'));
-                ?>
-            </div>
+                <?php echo $form->radioButtonList($model, 'ismaster', array('否', '是'), array('separator' => '<br/> ', 'class' => 'col-sm-2')); ?>
+            </div> 
         </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label no-padding-right"><?php echo $model->getAttributeLabel('sex'); ?>：</label>
+            <div class="col-sm-4">
+                <?php echo $form->radioButtonList($model, 'sex', array('女', '男'), array('separator' => '<br/>', 'class' => 'col-sm-2')); ?>
+            </div>
+            </div>
         <div class="form-actions text-right">
-            <button type="submit" id="createUserBtn" class="btn btn-sm btn-primary"><i class="icon-save"></i> 保存</button>
+            <button type="submit" id="createUserBtn" class="btn btn-sm btn-primary"><i class="icon-save"></i> <?php echo$model->isNewRecord ? '创建' : '更新';?></button>
             <button type="button" data-dismiss="modal" class="btn btn-sm"><i class="icon-remove"></i> 取消</button>
         </div>
-    </form>
+   <?php $this->endWidget();?>
 </div>
 <script>
     
-   
+    function getgroup(obj)
+    {
+        var deptid = $(obj).val(),groupStr;
+        $.post("<?php echo $this->createUrl("/User/users/getGroup")?>",{'deptid':deptid},function(data)
+	    {
+	    	for(i in data)
+	        {
+	         	groupStr += '<option value ='+i+'>'+data[i]+'</option>';
+	        }
+	        $('#groupinfo').html(groupStr);
+	    },'json')
+    }
     public.validate({
             form: $('#users-form'),
             type: 2,

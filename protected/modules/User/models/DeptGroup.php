@@ -86,6 +86,30 @@ class DeptGroup extends CActiveRecord
 			'criteria'=>$criteria,
 		));
 	}
+        
+        public function getByDeptId($dept_id)
+        {
+            $deptid = intval($dept_id);
+            $cir = new CDbCriteria();
+            $cir->select = 'group_id';
+            $cir->compare('dept_id', $dept_id);
+            $groupobj = $this->findAll($cir);
+            if($groupobj)
+            {
+                $groupArr = array();
+                foreach ($groupobj as $obj)
+                {
+                    $groupArr[]=$obj->group_id;
+                }
+                if($groupArr)
+                {
+                    $cir2 = new CDbCriteria;
+                    $cir2->addInCondition('id', $groupArr);
+                    $res = CHtml::listData(GroupInfo::model()->findAll($cir2), 'id', 'name');
+                }
+            }
+           return $dept_id&&$res?$res:array(0=>'请选择');
+        }
 
 	/**
 	 * Returns the static model of the specified AR class.
