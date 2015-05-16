@@ -27,8 +27,8 @@
 class CustomerBlack extends CActiveRecord
 {
 
-	public $keyword;
-	public $searchtype;
+	//public $keyword;
+	//public $searchtype;
 	public $old_custtype;//原客户类别
 	/**
 	 * @return string the associated database table name
@@ -88,27 +88,27 @@ class CustomerBlack extends CActiveRecord
 	public function attributeLabels()
 	{
 		return array(
-			'id' => 'ID：',
-			'cust_name' => '客户名称：',
-			'shop_name' => '店铺名称：',
-			'corp_name' => '公司名称：',
-			'shop_url' => '店铺网址：',
-			'shop_addr' => '店铺地址：',
-			'phone' => '电话：',
-			'qq' => 'QQ：',
-			'mail' => '邮箱：',
-			'datafrom' => '数据来源：',
-			'category' => '所属类目：',
-			'cust_type' => '客户分类：',
-			'eno' => '所属工号：',
-			'iskey' => '是否重点：',
-			'assign_eno' => '分配人：',
-			'assign_time' => '分配时间：',
-			'next_time' => '下次联系时间：',
-			'memo' => '备注：',
-			'create_time' => '创建时间：',
-			'creator' => '创建人：',
-			'old_custtype' => '原客户类别:',
+			'id' => 'ID',
+			'cust_name' => '客户名称',
+			'shop_name' => '店铺名称',
+			'corp_name' => '公司名称',
+			'shop_url' => '店铺网址',
+			'shop_addr' => '店铺地址',
+			'phone' => '电话',
+			'qq' => 'QQ',
+			'mail' => '邮箱',
+			'datafrom' => '数据来源',
+			'category' => '所属类目',
+			'cust_type' => '客户分类',
+			'eno' => '所属工号',
+			'iskey' => '是否重点',
+			'assign_eno' => '分配人',
+			'assign_time' => '分配时间',
+			'next_time' => '下次联系时间',
+			'memo' => '备注',
+			'create_time' => '创建时间',
+			'creator' => '创建人',
+			'old_custtype' => '原客户类别',
 		);
 	}
 
@@ -141,7 +141,11 @@ class CustomerBlack extends CActiveRecord
 		$criteria->compare('mail',$this->mail,true);
 		$criteria->compare('datafrom',$this->datafrom,true);
 		$criteria->compare('category',$this->category);
-		$criteria->compare('cust_type',$this->cust_type);
+		if($this->cust_type != -1){
+			$criteria->join = 'left join {{black_info}} as b on b.cust_id =t.id';
+			//$criteria->addCondition(b.cust_type = ')
+			$criteria->compare('b.cust_type',$this->cust_type);
+		}
 		$criteria->compare('eno',$this->eno,true);
 		$criteria->compare('iskey',$this->iskey,true);
 		$criteria->compare('assign_eno',$this->assign_eno,true);
@@ -152,7 +156,7 @@ class CustomerBlack extends CActiveRecord
 		$criteria->compare('creator',$this->creator);
 		$criteria->addCondition("status=1"); //查询条件 
 
-		if(isset($this->keyword))
+		/*if(isset($this->keyword))
         {
             switch ($this->searchtype)
            {
@@ -162,7 +166,7 @@ class CustomerBlack extends CActiveRecord
                    $criteria->compare('b.cust_type', $this->keyword);
                    break;
            }
-        }
+        }*/
 
 
 		return new CActiveDataProvider($this, array(

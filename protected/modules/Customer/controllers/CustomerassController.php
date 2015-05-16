@@ -59,11 +59,20 @@ class CustomerassController extends GController
 				{
 					exit("<script>alert(\"对不起, 您没有选择被分配人, 本次操作失败。\");javascript:history.go(-1);</script>");
 				}
-				$times = time();
-				var_dump(Yii::app()->user->eno);die;
-				Yii::app()->db->createCommand()->update('{{customer_info}}',array('eno' =>$eno, 'assign_time'=>$times),"id in({$model->ids})");
-				Yii::app()->db->createCommand()->update('{{Users}}',array('cust_num' =>new CDbExpression("cust_num+$assCount")),"eno='{$model->eno}'");
-				exit("<script>alert(\"恭喜你, 成功分配了".$assCount."个资源。\");javascript:history.go(-1);</script>");
+				$assign_eno = Yii::app()->session['user']['eno'];
+				$assign_time = time();
+				$sql = "update {{customer_info}} set eno='$eno',assign_time=$assign_time,assign_eno='$assign_eno' where id in({$model->ids})";
+				$sql2 = "update {{users}} set cust_num=cust_num+$assCount where eno='{$model->eno}'";
+				$transaction = Yii::app()->db->beginTransaction();
+				try {
+					$res = Yii::app()->db->createCommand($sql)->execute();
+					$res2 = Yii::app()->db->createCommand($sql2)->execute();
+					$transaction->commit();
+					exit("<script>alert(\"恭喜你, 成功分配了".$assCount."个资源。\");javascript:history.go(-1);</script>");	
+				} catch (Exception $exc) {
+					$transaction->rollBack();//事务回滚
+					exit("<script>alert(\"对不起, 由于未知的错误, 本次操作失败, 请重新操作。\");javascript:history.go(-1);</script>");
+				}
 			}
 		}
 		$this->renderPartial('assign_form',array(
@@ -119,11 +128,13 @@ class CustomerassController extends GController
 	{
 		$model=new CustomerAss('search');
 		$model->unsetAttributes();  // clear any default values
+		$custtype = Userinfo::genCustTypeArray();
 		if(isset($_GET['CustomerAss']))
 			$model->attributes=$_GET['CustomerAss'];
 
 		$this->render('admin',array(
-			'model'=>$model,	
+			'model'=>$model,
+			'custtype'=>$custtype
 		));
 	}
     

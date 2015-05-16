@@ -45,7 +45,7 @@ class CustomerinfoController extends GController
 		{
 
 			$model->attributes=$_POST['CustomerInfo'];
-     		$model->assign_eno = Yii::app()->user->id;//分配人
+     		$model->assign_eno = Yii::app()->session['user']['eno'];//分配人
 			$model->assign_time = time();//分配时间
 			$model->create_time = time();
 			$model->creator = Yii::app()->user->id;
@@ -90,8 +90,9 @@ class CustomerinfoController extends GController
 	 * If update is successful, the browser will be redirected to the 'view' page.
 	 * @param integer $id the ID of the model to be updated
 	 */
-	public function actionUpdate($id)
+	public function actionUpdate($id=0)
 	{
+		$id = $id ? $id: $_POST['CustomerInfo']['id'];
 		$model=$this->loadModel($id);
 		$eno = $model->eno ?$model->eno :0;
 		$param['eno'] = $eno;
@@ -99,7 +100,7 @@ class CustomerinfoController extends GController
 	
 		$user_info['group_id'] = $userinfo->group_id?$userinfo->group_id:0;
 		$user_info['dept_id']  = $userinfo->dept_id?$userinfo->dept_id:0;
-	        $user_info['name']     = $userinfo->name?$userinfo->name:0;
+	    $user_info['name']     = $userinfo->name?$userinfo->name:0;
 		$user_info['eno']     = $userinfo->eno?$userinfo->eno:0;
 		$user_info['group_arr'] = Userinfo::getGroupById($user_info['dept_id']);
 		$user_info['user_arr'] = Userinfo::getUserbygid($user_info['group_id'],$user_info['dept_id']);	
@@ -110,32 +111,48 @@ class CustomerinfoController extends GController
 			$aOldEno = $model->oldEno;
 			if($aNewEno == $aOldEno){//没有修改所属工号
 				if($model->save()){
-					exit("<script>alert(\"恭喜你, 数据修改成功。\");javascript:history.go(-2);</script>");
+					//exit("<script>alert(\"恭喜你, 数据修改成功。\");javascript:history.go(-2);</script>");
+					Utils::showMsg (1, '恭喜你, 修改成功!');
+				}
+				else
+				{
+					$errors = $model->getErrors();
+					$error = current($errors) ;
+					Utils::showMsg (0, $error[0]);
 				}
 			}
 			else{
-				$model->assign_eno = Yii::app()->user->id;//分配人
+				$model->assign_eno = Yii::app()->session['user']['eno'];//分配人
 				$model->assign_time = time();//分配时间
 				$sql = "update {{users}} set cust_num=cust_num+1 where eno='{$aNewEno}'";
 				$sql2 = "update {{users}} set cust_num=cust_num-1 where eno='{$aOldEno}'";
 				$transaction = Yii::app()->db->beginTransaction();
 				try {
-					$res = Yii::app()->db->createCommand($sql)->execute();
-					$res2 = Yii::app()->db->createCommand($sql2)->execute();
-					$transaction->commit();
 					if($model->save()){
-						exit("<script>alert(\"恭喜你, 数据修改成功。\");javascript:history.go(-2);</script>");
+						$res = Yii::app()->db->createCommand($sql)->execute();
+						$res2 = Yii::app()->db->createCommand($sql2)->execute();
+						$transaction->commit();
+						//exit("<script>alert(\"恭喜你, 数据修改成功。\");javascript:history.go(-2);</script>");
+						Utils::showMsg (1, '恭喜你, 修改成功!');
+					}
+					else
+					{
+						throw new CHttpException(400,Yii::t('yii','Your request is invalid.'));
 					}
 				} catch (Exception $exc) {
 					$transaction->rollBack();//事务回滚
-					exit("<script>alert(\"对不起, 本次操作失败, 请重新操作。\");javascript:history.go(-2);</script>");
+					$errors = $model->getErrors();
+					$error = current($errors) ;
+					Utils::showMsg (0, $error[0]);
+					//exit("<script>alert(\"对不起, 本次操作失败, 请重新操作1。\");javascript:history.go(-2);</script>");	
 				}	
 			}
+			Yii::app()->end();
 		}
 		$category = $this->getCategory();
 		$deptArr = Userinfo::getDept();
 		$deptArr = array_merge(array('0'=>'--请选择部门--'), $deptArr);
-		$this->render('update',array(
+		$this->renderPartial('update',array(
 			'model'=>$model,
 			'category'=>$category,
 			'deptArr'=>$deptArr,
@@ -173,7 +190,6 @@ class CustomerinfoController extends GController
 	 */
 	public function actionAdmin()
 	{
-		//echo Yii::app()->user->id.'<br>'.Yii::app()->user->name;
 		$model=new CustomerInfo('search');
 		$model->unsetAttributes();  // clear any default values
 		if(isset($_GET['CustomerInfo']))

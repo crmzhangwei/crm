@@ -38,7 +38,7 @@ class CustomerblackController extends GController
 		{
 			$model->attributes=$_POST['CustomerBlack'];
 
-			$model->assign_eno = Yii::app()->user->id;//分配人
+			$model->assign_eno = Yii::app()->session['user']['eno'];//分配人
 			$model->assign_time = time();//分配时间
 			$model->create_time = time();
 			$model->creator = Yii::app()->user->id;
@@ -81,9 +81,9 @@ class CustomerblackController extends GController
 		$model=$this->loadModel($id);
 		if(isset($_POST['CustomerBlack']))
 		{
-                    $model->attributes=$_POST['CustomerBlack'];
-                    if($model->save())
-                        $this->redirect(array('view','id'=>$model->id));
+			$model->attributes=$_POST['CustomerBlack'];
+			if($model->save())
+				$this->redirect(array('view','id'=>$model->id));
 		}
 
 		$this->render('update',array(
@@ -122,14 +122,15 @@ class CustomerblackController extends GController
 	 */
 	public function actionAdmin()
 	{
-		//echo Yii::app()->user->id.'<br>'.Yii::app()->user->name;
 		$model=new CustomerBlack('search');
 		$model->unsetAttributes();  // clear any default values
+		$custtype = Userinfo::genCustTypeArray();
 		if(isset($_GET['CustomerBlack']))
 			$model->attributes=$_GET['CustomerBlack'];
 
 		$this->render('admin',array(
-			'model'=>$model,	
+			'model'=>$model,
+			'custtype'=>$custtype
 		));
 	}
     
@@ -180,7 +181,7 @@ class CustomerblackController extends GController
 	public function actionGetResource(){
 		$model=new CustomerBlack;
 		$ids = Yii::app()->request->getParam('ids');
-		$sql = "update {{customer_info}} set `status`=0 where id in ($ids)";
+		$sql = "update {{customer_info}} set `status`=0,cust_type=0 where id in ($ids)";
 		$sql2 = "delete from {{black_info}} where cust_id in ($ids)";
 		$transaction = Yii::app()->db->beginTransaction();
 		try {

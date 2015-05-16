@@ -2,12 +2,12 @@
 /* @var $this CustomerblackController */
 /* @var $model Customerblack */
 
-/*$this->breadcrumbs=array(
-	'客户管理'=>array('index'),
-	'查询分配',
+$this->breadcrumbs=array(
+	//'客户管理'=>array('index'),
+	'公海资源',
 );
 
-$this->menu=array(
+/*$this->menu=array(
 	array('label'=>'List CustomerBlack', 'url'=>array('index')),
 	array('label'=>'Create CustomerBlack', 'url'=>array('create')),
 );*/
@@ -33,9 +33,8 @@ $('.search-form form').submit(function(){
 	'method'=>'get',
 )); ?>
        <div class="form-group">
-             <?php echo $form->dropDownList($model,'searchtype',CustomerBlack::getsearchArr(),array('style'=>"height:34px;"));?>
-             <?php echo $form->textField($model,'keyword',array('size'=>30,'maxlength'=>30));?>
-            
+            <?php echo $form->labelEx($model,'cust_type').': ';?>
+            <?php echo $form->dropDownList($model,'cust_type',$custtype);?>
              <button class="btn btn-sm btn-primary" type="submit">
             <i class="icon-search"></i>
             搜 索

@@ -87,26 +87,26 @@ class CustomerAss extends CActiveRecord
 	public function attributeLabels()
 	{
 		return array(
-			'id' => 'ID：',
-			'cust_name' => '客户名称：',
-			'shop_name' => '店铺名称：',
-			'corp_name' => '公司名称：',
-			'shop_url' => '店铺网址：',
-			'shop_addr' => '店铺地址：',
-			'phone' => '电话：',
-			'qq' => 'QQ：',
-			'mail' => '邮箱：',
-			'datafrom' => '数据来源：',
-			'category' => '所属类目：',
-			'cust_type' => '客户分类：',
-			'eno' => '分配给：',
-			'iskey' => '是否重点：',
-			'assign_eno' => '分配人：',
-			'assign_time' => '分配时间：',
-			'next_time' => '下次联系时间：',
-			'memo' => '备注：',
-			'create_time' => '创建时间：',
-			'creator' => '创建人：',
+			'id' => 'ID',
+			'cust_name' => '客户名称',
+			'shop_name' => '店铺名称',
+			'corp_name' => '公司名称',
+			'shop_url' => '店铺网址',
+			'shop_addr' => '店铺地址',
+			'phone' => '电话',
+			'qq' => 'QQ',
+			'mail' => '邮箱',
+			'datafrom' => '数据来源',
+			'category' => '所属类目',
+			'cust_type' => '客户分类',
+			'eno' => '分配给',
+			'iskey' => '是否重点',
+			'assign_eno' => '分配人',
+			'assign_time' => '分配时间',
+			'next_time' => '下次联系时间',
+			'memo' => '备注',
+			'create_time' => '创建时间',
+			'creator' => '创建人',
 		);
 	}
 
@@ -139,7 +139,9 @@ class CustomerAss extends CActiveRecord
 		$criteria->compare('mail',$this->mail,true);
 		$criteria->compare('datafrom',$this->datafrom,true);
 		$criteria->compare('category',$this->category);
-		$criteria->compare('cust_type',$this->cust_type);
+		if($this->cust_type != -1){
+			$criteria->compare('cust_type',$this->cust_type);
+		}
 		$criteria->compare('eno',$this->eno,true);
 		$criteria->compare('iskey',$this->iskey,true);
 		$criteria->compare('assign_eno',$this->assign_eno,true);
@@ -180,9 +182,6 @@ class CustomerAss extends CActiveRecord
                    $criteria->addCondition("shop_addr like :keyword");
                    $criteria->params[':keyword'] = "%{$this->keyword}%";
                    break;
-			   case 8:
-                   $criteria->compare('cust_type', $this->keyword, true);
-                   break;
            }
         }
 
@@ -213,7 +212,7 @@ class CustomerAss extends CActiveRecord
             5=>'QQ',
 			6=>'邮箱',
 			7=>'店铺地址',
-			8=>'客户类别'
+			//8=>'客户类别'
         );
     }
 	
