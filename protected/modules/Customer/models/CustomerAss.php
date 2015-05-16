@@ -26,10 +26,10 @@
  */
 class CustomerAss extends CActiveRecord
 {
-
 	public $keyword;
 	public $searchtype;
 	public $ids;
+	public $sess_eno;
 	/**
 	 * @return string the associated database table name
 	 */
@@ -37,7 +37,10 @@ class CustomerAss extends CActiveRecord
 	{
 		return '{{customer_info}}';
 	}
-
+	
+	public function __construct() {
+		$this->sess_eno = Yii::app()->session['user']['eno'];
+	}
 	/**
 	 * @return array validation rules for model attributes.
 	 */
@@ -150,7 +153,7 @@ class CustomerAss extends CActiveRecord
 		$criteria->compare('memo',$this->memo,true);
 		$criteria->compare('create_time',$this->create_time);
 		$criteria->compare('creator',$this->creator);
-		$criteria->addCondition("`status` in(0,3) and eno="); //查询条件，即where id = 1    
+		$criteria->addCondition("`status` in(0,3) and eno='{$this->$sess_eno}'"); //查询条件，即where id = 1    
 
 		if($this->keyword)
         {

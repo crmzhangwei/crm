@@ -83,6 +83,7 @@ class UserIdentity extends CUserIdentity
                 $dataProvider=new CActiveDataProvider('MenuInfo');
                 $dataProvider->pagination->pageSize = 1000;
                 $data = $dataProvider->getData();
+				$privs = array();
                 if($data)
                 {
                     foreach ($data as $obj)
