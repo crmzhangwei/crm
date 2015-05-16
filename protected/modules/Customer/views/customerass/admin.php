@@ -2,10 +2,10 @@
 /* @var $this CustomerassController */
 /* @var $model CustomerAss */
 
-/*$this->breadcrumbs=array(
-	'客户管理'=>array('index'),
+$this->breadcrumbs=array(
+	//'客户管理'=>array('index'),
 	'资源分配',
-);*/
+);
 
 $this->menu=array(
 	array('label'=>'List CustomerAss', 'url'=>array('index')),
@@ -33,10 +33,11 @@ $('.search-form form').submit(function(){
 	'method'=>'get',
 )); ?>
        <div class="form-group">  
-             <?php echo $form->dropDownList($model,'searchtype',CustomerAss::getsearchArr(),array('style'=>"height:34px;"));?>
-             <?php echo $form->textField($model,'keyword',array('size'=>30,'maxlength'=>30));?>
-            
-             <button class="btn btn-sm btn-primary" type="submit">
+            <?php echo $form->dropDownList($model,'searchtype',CustomerAss::getsearchArr(),array('style'=>"height:34px;"));?>
+            <?php echo $form->textField($model,'keyword',array('size'=>30,'maxlength'=>30));?>
+			<?php echo $form->label($model, 'cust_type');echo ':'; ?>
+			<?php echo $form->dropDownList($model,'cust_type',$custtype,array('style'=>"height:34px;"));?>
+            <button class="btn btn-sm btn-primary" type="submit">
             <i class="icon-search"></i>
             搜 索
             </button>
@@ -51,7 +52,8 @@ $('.search-form form').submit(function(){
 			'id'=>'CustomerAss-grid',
 			'dataProvider'=>$dataProvider,
 			'columns'=>array(
-			array('class' => 'CCheckBoxColumn',
+			array(
+				'class' => 'CCheckBoxColumn',
 				'name' => 'id',
 				'id' => 'select',
 				'selectableRows' => 2,
@@ -74,14 +76,15 @@ $('.search-form form').submit(function(){
 			'eno',
 			'assign_eno',
 			'assign_time',
-			array(
+			/*array(
 				'class'=>'CButtonColumn',
 							'deleteButtonOptions'=>array('style'=>'display:none'),
+							'viewButtonOptions'=>array('style'=>'display:none'),
 							'htmlOptions'=>array(
-							'width'=>'100',
+							'width'=>'50',
 							'style'=>'text-align:center',
 					),
-			),
+			),*/
 	),
 )); ?>
 

@@ -49,14 +49,10 @@ class CustomerInfo extends CActiveRecord
 			array('cust_name', 'unique', 'message'=>'客户名称已经存在'),
 			array('cust_name, eno', 'required'),
 			array('phone, qq, category, cust_type, iskey', 'numerical', 'integerOnly'=>true),
-			//array('eno, assign_eno', 'length', 'max'=>10),
-			//array('cust_name, shop_name, corp_name, shop_url, shop_addr, datafrom, memo', 'length', 'max'=>100),
 			array('mail', 'email', 'allowEmpty'=>true, 'message'=>'邮箱不正确'),
 			array('phone, qq', 'check_contact'),
 			array('mail', 'length', 'max'=>50),
 			array('oldEno, keyword, shop_name, corp_name, shop_url, shop_addr, datafrom, memo,searchtype', 'safe'),
-			// The following rule is used by search().
-			// @todo Please remove those attributes that should not be searched.
 			array('id, cust_name, shop_name, corp_name, shop_url, shop_addr, phone, qq, mail, datafrom, category, cust_type, eno, assign_eno, assign_time, next_time, memo, create_time, creator', 'safe', 'on'=>'search'),
 		);
 	}
@@ -87,26 +83,26 @@ class CustomerInfo extends CActiveRecord
 	public function attributeLabels()
 	{
 		return array(
-			'id' => 'ID：',
-			'cust_name' => '客户名称：',
-			'shop_name' => '店铺名称：',
-			'corp_name' => '公司名称：',
-			'shop_url' => '店铺网址：',
-			'shop_addr' => '店铺地址：',
-			'phone' => '电话：',
-			'qq' => 'QQ：',
-			'mail' => '邮箱：',
-			'datafrom' => '数据来源：',
-			'category' => '所属类目：',
-			'cust_type' => '客户分类：',
-			'eno' => '所属工号：',
-			'iskey' => '是否重点：',
-			'assign_eno' => '分配人：',
-			'assign_time' => '分配时间：',
-			'next_time' => '下次联系时间：',
-			'memo' => '备注：',
-			'create_time' => '创建时间：',
-			'creator' => '创建人：',
+			'id' => 'ID',
+			'cust_name' => '客户名称',
+			'shop_name' => '店铺名称',
+			'corp_name' => '公司名称',
+			'shop_url' => '店铺网址',
+			'shop_addr' => '店铺地址',
+			'phone' => '电话',
+			'qq' => 'QQ',
+			'mail' => '邮箱',
+			'datafrom' => '数据来源',
+			'category' => '所属类目',
+			'cust_type' => '客户分类',
+			'eno' => '所属工号',
+			'iskey' => '是否重点',
+			'assign_eno' => '分配人',
+			'assign_time' => '分配时间',
+			'next_time' => '下次联系时间',
+			'memo' => '备注',
+			'create_time' => '创建时间',
+			'creator' => '创建人',
 		);
 	}
 

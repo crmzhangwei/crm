@@ -40,9 +40,7 @@ class PrivilegeController extends GController
             {
                  $v['text'] = $v['name'];
                  $v['icon'] =  ' ace-icon fa fa-flag ';
-            }
-            
-                    
+            }     
         }
              $tree = new Tree($priv, array('id', 'parent_id'));
              $priv = $tree->leaf(0);

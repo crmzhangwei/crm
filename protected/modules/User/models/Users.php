@@ -48,9 +48,10 @@ class Users extends CActiveRecord
 		return array(
 			array('pass, username, tel, dept_id', 'required'),
 			array('sex, dept_id, group_id, ismaster, status', 'numerical', 'integerOnly'=>true),
-			array('eno', 'length', 'max'=>10),
+			//array('eno', 'length', 'max'=>10),
 			array('pass', 'length', 'max'=>50),
-			array('name, tel', 'length', 'max'=>20),
+			array('name', 'length', 'max'=>12),
+                        array('tel','length','is'=>11),
 			array('username', 'length', 'max'=>30),
 			array('qq', 'length', 'max'=>15),
 			array('birth, pass_repeat, create_time, login_time,searchtype,keyword', 'safe'),
@@ -95,10 +96,11 @@ class Users extends CActiveRecord
 			'username' => '用户名',
 			'birth' => '生日',
 			'sex' => '性别',
-			'tel' => '电话',
+			'tel' => '手机',
 			'qq' => 'QQ',
 			'dept_id' => '部门',
 			'group_id' => '组别',
+                        'extend_no'=>'分机号',
 			'ismaster' => '是否精英',
 			'status' => '状态',
                         'pass_repeat'=>'重复密码',
@@ -173,6 +175,20 @@ class Users extends CActiveRecord
 		return parent::model($className);
 	}
         
+        public function afterSave() {
+            parent::afterSave();
+            if ($this->isNewRecord) {
+                   $eno = 'U'.$this->createEno($this->getprimaryKey());
+                   $param['eno'] = $eno;
+                   $this->updateByPk($this->getprimaryKey(), $param);
+            } 
+            
+        }
+        public function createEno($id)
+        {
+            $newNumber = substr(strval($id+10000),1,4);    
+            return    $newNumber;
+        }
         protected function afterValidate() {
             parent::afterValidate();
             $this->pass = $this->encrypt($this->pass);

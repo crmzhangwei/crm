@@ -19,25 +19,14 @@
         'enableAjaxValidation' => true,
     ));
     ?>
-
+  
     <p class="note">包括 <span class="required">*</span>为必填项.</p>
     <div class="row">
         <div class="col-xs-12 col-sm-6">
-            <?php echo $form->errorSummary($model); ?>
-<!--            <div class="form-group">
-                <?php echo $form->labelEx($model, 'eno', array('class' => 'col-sm-2 control-label no-padding-right')); ?>
-                <div class="col-sm-9">
-                    <?php echo $form->textField($model, 'eno', array('size' => 10, 'maxlength' => 10, 'id' => "form-field-1", 'placeholder' => "Username", 'class' => "input-large")); ?>
-              
-                </div>
-            </div>-->
-            <div class="form-group">
-                <?php echo $form->labelEx($model, 'username', array('class' => 'col-sm-2 control-label no-padding-right')); ?>
-                <div class="col-sm-9">
-                    <?php echo $form->textField($model, 'username', array('size' => 20, 'maxlength' => 20, 'id' => "form-field-1", 'placeholder' => "", 'class' => "input-large")); ?>
-                  
-                </div>
-            </div>
+           
+            <?php echo $form->hiddenField($model, 'id') ?>
+
+     
 
 
             <div class="form-group">
@@ -48,7 +37,7 @@
                 </div>
             </div>
 
-
+           <?php if($model->isNewRecord):?>
             <div class="form-group">
                 <?php echo $form->labelEx($model, 'pass', array('class' => 'col-sm-2 control-label no-padding-right')); ?>
                 <div class="col-sm-9">
@@ -64,7 +53,7 @@
                    
                 </div>
             </div>
-
+           <?php endif;?>
           
 
      
@@ -144,7 +133,94 @@
     </div>
 
 </div><!-- form -->
+       <div class="form-group">
+                <?php echo $form->labelEx($model, 'username', array('class' => 'col-sm-2 control-label no-padding-right')); ?>
+                <div class="col-sm-9">
+                    <?php echo $form->textField($model, 'username', array('size' => 20, 'maxlength' => 20, 'id' => "form-field-1", 'placeholder' => "", 'class' => "input-large")); ?>
+                  
+                </div>
+            </div>
 
+<div class="row">
+    <form class="form-horizontal" id="createUserForm" role="form" method="post" action="">
+        <div class="form-group">
+            <label class="col-sm-2 control-label no-padding-right"><?php echo $model->getAttributeLabel('username'); ?>:</label>
+            <div class="col-sm-3">
+                <?php echo $form->textField($model, 'username', array( 'maxlength' => 20, 'id' => "form-field-1", 'placeholder' => "", 'class' => "form-control")); ?>
+            </div>
+            <label class="col-sm-2 control-label no-padding-right">英文名/昵称：</label>
+            <div class="col-sm-3">
+                <input type="text" class="form-control" name="userinfo[nick]">
+            </div>
+        </div><div class="form-group">
+            <label class="col-sm-2 control-label no-padding-right">手机号码：</label>
+            <div class="col-sm-3">
+                <input name="userinfo[mobile]" class="form-control" type="text">
+            </div>
+            <label class="col-sm-2 control-label no-padding-right">QQ：</label>
+            <div class="col-sm-3">
+                <input type="text" class="form-control" name="userinfo[qq]">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label no-padding-right">Email：</label>
+            <div class="col-sm-3">
+                <input type="text" class="form-control" name="userinfo[email]">
+            </div>
+            <label class="col-sm-2 control-label no-padding-right">工号：</label>
+            <div class="col-sm-3">
+                <input name="userinfo[gonghao]" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label no-padding-right">初始密码：</label>
+            <div class="col-sm-3">
+                <input name="" id="userinfo_pwd" class="form-control" type="text" value="to8to123">
+                <input name="userinfo[pwd]" id="userinfo_pwd_" type="hidden" value="">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label no-padding-right">部门：</label>
+            <div class="col-sm-4">
+                <input name="groupname" id="userinfo_groupname" class="form-control" type="text" readonly>
+                <input type="hidden" id="userinfo_groupid" name="userinfo[groupid]">
+            </div>
+            <div class="col-sm-1">
+                <button type="button" id="selectGroups" class="btn btn-primary btn-sm"><i class="icon-plus"></i> 选择部门</button>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label no-padding-right">上级：</label>
+            <div class="col-sm-4">
+                <input name="bossname" id="userinfo_bossname" class="form-control" type="text" readonly>
+                <input type="hidden" id="userinfo_bossid" name="userinfo[bossid]">
+            </div>
+            <div class="col-sm-1">
+                <button type="button" id="selectBoss" class="btn btn-primary btn-sm"><i class="icon-plus"></i> 选择上级</button>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label no-padding-right">职务：</label>
+            <div class="col-sm-4">
+                <?php
+                //echo CHtml::dropDownList('userinfo[position]', '', $jobs, array('class' => 'form-control', 'empty' => '请选择职务'));
+                ?>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label no-padding-right">固定角色：</label>
+            <div class="col-sm-4">
+                <?php
+               // echo CHtml::dropDownList('userinfo[roleid]', '', CHtml::listData($role_list, '_id', 'name'), array('class' => 'form-control', 'empty' => '请选择角色'));
+                ?>
+            </div>
+        </div>
+        <div class="form-actions text-right">
+            <button type="submit" id="createUserBtn" class="btn btn-sm btn-primary"><i class="icon-save"></i> 保存</button>
+            <button type="button" data-dismiss="modal" class="btn btn-sm"><i class="icon-remove"></i> 取消</button>
+        </div>
+    </form>
+</div>
 <script>
     
    
@@ -195,7 +271,7 @@
               
                 public.AjaxSaveForm({
                     obj: $("#createUserBtn"),
-                    url: '<?php echo $this->createUrl("/User/users/create"); ?>',
+                    url: '<?php  echo  $model->isNewRecord ? $this->createUrl("/User/users/create"):$this->createUrl("/User/users/update"); ?>',
                     data: $("#users-form").serialize(),
                     callback: function(result) {
                         bootbox.alert(result.msg, function(){

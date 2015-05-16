@@ -81,7 +81,6 @@ $this->widget('GGridView', array(
      {
          
          var trindex = $(obj).parents('tr').index();
-         console.log(trindex);
          var id = $('#select_'+trindex).val();
          var url;
          <?php $a = Yii::app()->createurl('User/groupinfo/update/'); echo 'url='."'$a'"; ?> 
