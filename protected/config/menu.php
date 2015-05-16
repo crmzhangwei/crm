@@ -47,11 +47,11 @@ return array(
 			array('label' => '用户管理', 'url' => array('/User/users/admin')),
 			array('label' => '部门管理', 'url' => array('/User/deptinfo/admin' )),
 			array('label' => '组别管理', 'url' => array('/User/groupinfo/admin')),
+                        array('label' => '角色管理', 'url' => array('/User/roleinfo/admin')),
 			array('label' => '部门组别管理', 'url' => array('/User/deptgroup/admin')),
 			array('label' => '人员角色管理', 'url' => array('/User/userrole/admin')),
-			array('label' => '角色管理', 'url' => array('/User/roleinfo/admin')),
                         array('label' => '菜单资源管理', 'url' => array('/User/menuinfo/admin')),
-			array('label' => '权限配置', 'url' => array('/User/privilege/admin')),
+			array('label' => '角色权限分配', 'url' => array('/User/privilege/admin')),
 		),
     ),
     

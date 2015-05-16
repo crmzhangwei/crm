@@ -181,6 +181,18 @@ class Utils {
     }
     return Yii::app()->db->createCommand($sql)->execute();
 }
-
+/**
+ * 跳转url的方法
+ * @param type $url
+ * @param type $js
+ */
+public static function redirect($url, $js = true) {
+        if ($js === true) {
+            echo '<script type="text/javascript">window.location.href="' . $url . '";</script>';
+            exit;
+        } else {
+            header("location:" . $url);
+        }
+    }
             
 }

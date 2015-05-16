@@ -68,8 +68,19 @@ class UserIdentity extends CUserIdentity
                  $this->_id = 'admin';
             }
             $priv = Privilege::model()->SelectRolePermission();
+            $dataProvider=new CActiveDataProvider('MenuInfo');
+            $dataProvider->pagination->pageSize = 1000;
+            $data = $dataProvider->getData();
+             if($data)
+            {
+                foreach ($data as $obj)
+                {
+                    $privs[] = $obj->url;
+                }
+            }
             Yii::app()->session["user"] = $user->attributes;
             Yii::app()->session["tmpuser"] = $priv;
+            Yii::app()->session["tmpmenu"] = $privs;
             return!$this->errorCode;
     }
  

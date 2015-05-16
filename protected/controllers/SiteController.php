@@ -1,6 +1,6 @@
 <?php
 
-class SiteController extends Controller
+class SiteController extends GController
 {
 	/**
 	 * Declares class-based actions.
@@ -106,4 +106,23 @@ class SiteController extends Controller
 		Yii::app()->user->logout();
 		$this->redirect(Yii::app()->homeUrl);
 	}
+        
+         /**
+     * 403处理页面
+     */
+    public function actionForbidden() {
+        header("http/1.1 403 Forbidden");
+        
+        $boss = '';
+       // $boss = $this->userInfo['bossname'];
+        $bossname = $boss == '' ? '管理员' : '您的上级（'. $boss .'）';
+        $error = array(
+            'code' => '403',
+            'message' => '您未被授权访问此页面，请联系'.$bossname.'申请权限.'
+        );
+        if (Yii::app()->request->isAjaxRequest)
+            echo $error['message'];
+        else
+            $this->render('forbidden', $error);
+    }
 }
