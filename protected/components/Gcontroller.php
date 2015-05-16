@@ -36,7 +36,7 @@ class Gcontroller extends Controller
            * @var type 
            */
         protected $controllerName = '';
-        protected $permission = array();
+       // protected $permission = array();
 
       
         /**
@@ -53,38 +53,32 @@ class Gcontroller extends Controller
             $this->allMenu = Yii::app()->params['items'];
             //$permission =  Yii::app()->session["tmpuser"];
             $meauinfo = Yii::app()->params['items'];
-
-            $permission = Privilege::model()->SelectRolePermission();
-            $this->permission = $permission;
+            $permission = Yii::app()->session["tmpuser"];
             $meauinfonew = array();
-            foreach ( $meauinfo as $key=> &$v1) {
-                $have = false;
-                $items = array();
-                foreach ($v1['items'] as &$item)
-                {
-                    //var_dump($item['url'][0]);
-                    if(!in_array($item['url'][0],$permission))
-                    {
-                        unset($item);
-                    }else
-                    {
-                        $items[] = $item;
-                        $have = true;
+            if ($meauinfo && $permission) {
+                foreach ($meauinfo as $key => &$v1) {
+                    $have = false;
+                    $items = array();
+                    foreach ($v1['items'] as &$item) {
+                        if (!in_array($item['url'][0], $permission)) {
+                            unset($item);
+                        } else {
+                            $items[] = $item;
+                            $have = true;
+                        }
+                    }
+                    $v1['items'] = $items;
+                    if ($items) {
+                        $meauinfonew[$key] = $v1;
+                    }
+                    if (!$have) {
+                        unset($v1);
                     }
                 }
-                $v1['items'] =  $items;
-                if($items)
-                {
-                    $meauinfonew[$key] = $v1;
-                }
-                 if(!$have)
-                {
-                    unset($v1);
-                }
             }
-      
+
+            $this->allMenu  = $meauinfonew;
             $this->allMenu  = Yii::app()->params['items'];
-           // $this->allMenu  = $meauinfonew;
             parent::__construct($id, $module);
                
        
@@ -111,16 +105,13 @@ class Gcontroller extends Controller
             $router = '/' . $this->moduelid . '/' . $router;
         }
         $router = str_replace('//', '/', $router);
-       // var_dump($router);
-        $userPer = $this->permission;
-        
+        $userPer = Yii::app()->session["tmpuser"]; 
         if(empty($userPer)){
             Yii::app()->user->logout();
            // $this->redirect(Yii::app()->user->loginUrl);
         }
         //取出所有的用户权限
         $permission = Yii::app()->session["tmpmenu"];
-        //var_dump($permission);
         $hasPriv = false;
         if(!empty($userPer) &&!empty($permission)) {
             foreach ($permission as $v) {   //遍历全部权限

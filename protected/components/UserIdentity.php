@@ -67,20 +67,35 @@ class UserIdentity extends CUserIdentity
                  $this->errorCode = self::ERROR_NONE;
                  $this->_id = 'admin';
             }
-            $priv = Privilege::model()->SelectRolePermission();
-            $dataProvider=new CActiveDataProvider('MenuInfo');
-            $dataProvider->pagination->pageSize = 1000;
-            $data = $dataProvider->getData();
-             if($data)
+            if($this->errorCode == self::ERROR_NONE)
             {
-                foreach ($data as $obj)
+                $param['user_id'] =  $this->_id;
+                $roles =  UserRole::model()->findAllByAttributes($param);
+                if($roles)
                 {
-                    $privs[] = $obj->url;
+                    $rolearr = array();
+                    foreach ($roles as $role)
+                    {
+                       $rolearr[] = $role->role_id;
+                    }
                 }
+                $priv = Privilege::model()->SelectRolePermission($rolearr);
+                $dataProvider=new CActiveDataProvider('MenuInfo');
+                $dataProvider->pagination->pageSize = 1000;
+                $data = $dataProvider->getData();
+                if($data)
+                {
+                    foreach ($data as $obj)
+                    {
+                        $privs[] = $obj->url;
+                    }
+                }
+                Yii::app()->session["user"] = $user->attributes;
+                Yii::app()->session["role"] = $rolearr;
+                Yii::app()->session["tmpuser"] = $priv;
+                Yii::app()->session["tmpmenu"] = $privs;
             }
-            Yii::app()->session["user"] = $user->attributes;
-            Yii::app()->session["tmpuser"] = $priv;
-            Yii::app()->session["tmpmenu"] = $privs;
+           
             return!$this->errorCode;
     }
  
