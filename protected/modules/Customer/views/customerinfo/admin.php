@@ -2,10 +2,10 @@
 /* @var $this CustomerinfoController */
 /* @var $model CustomerInfo */
 
-/*$this->breadcrumbs=array(
-	'客户管理'=>array('index'),
+$this->breadcrumbs=array(
+	//'客户管理'=>array('index'),
 	'查询分配',
-);*/
+);
 
 $this->menu=array(
 	array('label'=>'List CustomerInfo', 'url'=>array('index')),
@@ -63,16 +63,16 @@ $('.search-form form').submit(function(){
 			'id'=>'CustomerInfo-grid',
 			'dataProvider'=>$dataProvider,
 			'columns'=>array(
-			//                array('class' => 'CCheckBoxColumn',
-			//                    'name' => 'id',
-			//                    'id' => 'select',
-			//                    'selectableRows' => 2,
-			//                    'headerTemplate' => '{item}',
-			//                    'htmlOptions' => array(
-			//                        'width' => '20',
-			//                    ),
-			//                ),
-                 //'id',
+				array('class' => 'CCheckBoxColumn',
+					'name' => 'id',
+					'id' => 'select',
+					'selectableRows' => 2,
+					'headerTemplate' => '{item}',
+					'htmlOptions' => array(
+						'width' => '20',
+					),
+				),
+            //'id',
 			'cust_name',
 			'corp_name',
             'shop_name',
@@ -87,13 +87,31 @@ $('.search-form form').submit(function(){
 			array('name'=>'assign_eno', 'value'=>array($this, 'get_assign_text')),
 			//'assign_time',
 			array('name'=>'assign_time', 'value'=>'date("Y-m-d",$data->assign_time)',),
+			/*array(
+				'class'=>'CButtonColumn',
+					//'deleteButtonOptions'=>array('style'=>'display:none'),
+					'viewButtonOptions'=>array('style'=>'display:none'),
+					'htmlOptions'=>array(
+					'width'=>'50',
+					'style'=>'text-align:center',
+					),
+			),*/
 			array(
 				'class'=>'CButtonColumn',
-							'deleteButtonOptions'=>array('style'=>'display:none'),
-							'htmlOptions'=>array(
-							'width'=>'100',
-							'style'=>'text-align:center',
+				'header' => '操作', 
+				'template'=>'{upda} {delete}',
+				'htmlOptions' => array(
+					'width' => '80',
+				    'style' => 'text-align:center',
+				),
+				'buttons'=>array(
+					'upda'=>array(
+						'label'=>'修改',
+						'url'=>'',
+						'imageUrl'=>'',
+						'options'=>array('class'=>'editNode btn btn-info btn-minier tooltip-info','data-placement'=>"bottom",'onclick'=>"updatarow(this)"),
 					),
+				)          
 			),
 	),
 )); ?>
@@ -123,5 +141,15 @@ $('.search-form form').submit(function(){
            public.dialog('EXCEL批量导入', '<?= Yii::app()->createUrl("Customer/customerinfo/batchCustomer") ?>',{},700);
         });
         
-    })
+    });
+	
+	function updatarow(obj)
+	{
+		var trindex = $(obj).parents('tr').index();
+		console.log(trindex);
+		var id = $('#select_'+trindex).val();
+		var url;
+		<?php $a = Yii::app()->createurl('Customer/customerinfo/update'); echo 'url='."'$a'"; ?> 
+		public.dialog('修改客户信息',url+'&id='+id);
+	}
 </script>  		

@@ -8,17 +8,16 @@
 
 <?php $form=$this->beginWidget('CActiveForm', array(
 	'id'=>'customer-info-form',
-	// Please note: When you enable ajax validation, make sure the corresponding
-	// controller action is handling ajax validation correctly.
-	// There is a call to performAjaxValidation() commented in generated controller code.
-	// See class documentation of CActiveForm for details on this.
-     'action' => false,
-	'enableAjaxValidation'=>false,
+	'htmlOptions' => array('class' => 'form-horizontal', 'role' => 'form'),
+    'enableClientValidation' => true,
+    'action' => false,
+	'enableAjaxValidation' => false,
 )); ?>
 
 	<!-- <p class="note">包含 <span class="required">*</span> 为必填项.</p> -->
 
 	<?php echo $form->errorSummary($model); ?>
+	<?php echo $form->hiddenField($model, 'id') ?>
 	<table>
 	<tr>
 		<td width="95"><?php echo $form->labelEx($model,'cust_name'); ?></td>
@@ -102,14 +101,14 @@
 		endif;?>
 		</td>
 	</tr> 
-	<tr style="display: none">
+	<tr>
 		<td><?php echo $form->textField($model,'eno',array('id'=>'userid','size'=>10,'maxlength'=>10)); ?></td>
 		<td><?php echo $form->error($model,'eno'); ?>
 		<?php echo $form->textField($model,'oldEno',array('id'=>'oldEno','size'=>10,'maxlength'=>10)); ?></td>
 	</tr>
 	<tr>
 		<td>
-		<?php echo CHtml::submitButton($model->isNewRecord ? '创建' : '更新', array('class' => 'btn btn-sm btn-primary', 'id' => 'createUserBtn')); ?>
+		<?php echo CHtml::Button($model->isNewRecord ? '创建' : '更新', array('class' => 'btn btn-sm btn-primary', 'id' => 'createUserBtn')); ?>
 		</td>	
 	</tr>
 	</table>

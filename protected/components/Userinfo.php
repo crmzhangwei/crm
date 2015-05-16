@@ -54,4 +54,10 @@ class Userinfo
 		return $deptArr;
 	}
 
+	public static function genCustTypeArray() {
+        $custTypeArr = Utils::mapArray(CustType::findByType(1), 'type_no', 'type_name');
+        $custTypeArr[-1] = '--请选择客户分类--';
+        ksort($custTypeArr);
+        return $custTypeArr;
+    }
 }
