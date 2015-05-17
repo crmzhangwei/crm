@@ -150,7 +150,7 @@ class CustomerAss extends CActiveRecord
 		$criteria->compare('memo',$this->memo,true);
 		$criteria->compare('create_time',$this->create_time);
 		$criteria->compare('creator',$this->creator);
-		$criteria->addCondition("`status` in(0,3) and eno="); //查询条件，即where id = 1    
+		$criteria->addCondition("`status` in(0,3) and eno=''"); //查询条件，即where id = 1    
 
 		if($this->keyword)
         {
@@ -210,8 +210,8 @@ class CustomerAss extends CActiveRecord
             3=>'公司名称',
             4=>'电话',
             5=>'QQ',
-			6=>'邮箱',
-			7=>'店铺地址',
+            6=>'邮箱',
+            7=>'店铺地址',
 			//8=>'客户类别'
         );
     }

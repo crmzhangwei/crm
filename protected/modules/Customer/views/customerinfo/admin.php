@@ -7,10 +7,7 @@ $this->breadcrumbs=array(
 	'查询分配',
 );
 
-$this->menu=array(
-	array('label'=>'List CustomerInfo', 'url'=>array('index')),
-	array('label'=>'Create CustomerInfo', 'url'=>array('create')),
-);
+
 
 Yii::app()->clientScript->registerScript('search', "
 $('.search-button').click(function(){
@@ -58,7 +55,7 @@ $('.search-form form').submit(function(){
 
 <?php 
         $dataProvider = $model->search();
-		$dataProvider->pagination->pageVar = 'page';
+	$dataProvider->pagination->pageVar = 'page';
         $this->widget('GGridView', array(
 			'id'=>'CustomerInfo-grid',
 			'dataProvider'=>$dataProvider,
@@ -74,8 +71,7 @@ $('.search-form form').submit(function(){
 				),
             //'id',
 			'cust_name',
-			'corp_name',
-            'shop_name',
+                         'shop_name',
 			'shop_url',
 			'shop_addr',
 			'phone',
@@ -122,7 +118,6 @@ $('.search-form form').submit(function(){
     </div>
     <div class="col-sm-6 no-padding-right">
         <?php
-        $dataProvider->pagination->pageVar = 'page';
         $this->widget('GLinkPager', array('pages' => $dataProvider->pagination,));
         ?>
     </div>
