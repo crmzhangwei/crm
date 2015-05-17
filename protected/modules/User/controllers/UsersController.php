@@ -252,7 +252,7 @@ class UsersController extends GController
         public function  get_ismaster_text($data)
         {
             $val = $data->ismaster;
-            $ismaster = array(1=>'是',0=>'否');
+            $ismaster = array(1=>'是',2=>'否');
             $res =  isset($ismaster[$val])?$ismaster[$val]:$val;
             return $res;
         }

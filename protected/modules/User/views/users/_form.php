@@ -75,7 +75,7 @@
                    <?php echo $form->dropDownList($model, 'group_id',  DeptGroup::model()->getByDeptId($model->dept_id),array('id'=>'groupinfo')); ?>
             </div>
         </div>
-        <div class="form-group">
+<!--        <div class="form-group">
             <label class="col-sm-2 control-label no-padding-right">上级：</label>
             <div class="col-sm-4">
                 <input name="bossname" id="userinfo_bossname" class="form-control" type="text" readonly>
@@ -92,17 +92,17 @@
                 //echo CHtml::dropDownList('userinfo[position]', '', $jobs, array('class' => 'form-control', 'empty' => '请选择职务'));
                 ?>
             </div>
-        </div>
+        </div>-->
         <div class="form-group">
             <label class="col-sm-2 control-label no-padding-right"><?php echo $model->getAttributeLabel('ismaster'); ?>：</label>
             <div class="col-sm-4">
-                <?php echo $form->radioButtonList($model, 'ismaster', array('否', '是'), array('separator' => '<br/> ', 'class' => 'col-sm-2')); ?>
+                <?php $model->isNewRecord ? $model->ismaster = 2: '';echo $form->radioButtonList($model, 'ismaster', array(2=>'否',1=> '是',), array('separator' => '<br/> ', 'class' => 'col-sm-2')); ?>
             </div> 
         </div>
         <div class="form-group">
             <label class="col-sm-2 control-label no-padding-right"><?php echo $model->getAttributeLabel('sex'); ?>：</label>
             <div class="col-sm-4">
-                <?php echo $form->radioButtonList($model, 'sex', array('女', '男'), array('separator' => '<br/>', 'class' => 'col-sm-2')); ?>
+                <?php echo $form->radioButtonList($model, 'sex', array(1=>'男',2=>'女', ), array('separator' => '<br/>', 'class' => 'col-sm-2')); ?>
             </div>
             </div>
         <div class="form-actions text-right">
