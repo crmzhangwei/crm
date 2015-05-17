@@ -5,15 +5,7 @@ $this->breadcrumbs = array(
 	'客户管理' => array('admin'),
 	'查询分配',
 );
-<<<<<<< HEAD
-$this->menu=array(
-	array('label'=>'List CustomerInfo', 'url'=>array('index')),
-	array('label'=>'Create CustomerInfo', 'url'=>array('create')),
-);
-=======
 
-
->>>>>>> 736d668824dac6c22622ab113c9b3a7160096d11
 
 Yii::app()->clientScript->registerScript('search', "
 $('.search-button').click(function(){

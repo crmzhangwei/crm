@@ -147,12 +147,8 @@ class CustomerAss extends CActiveRecord
 		$criteria->compare('memo',$this->memo,true);
 		$criteria->compare('create_time',$this->create_time);
 		$criteria->compare('creator',$this->creator);
-<<<<<<< HEAD
 		$sess_eno = Yii::app()->session['user']['eno'];
-		$criteria->addCondition("`status` in(0,3) and eno='$sess_eno'");  
-=======
-		$criteria->addCondition("`status` in(0,3) and eno=''"); //查询条件，即where id = 1    
->>>>>>> 736d668824dac6c22622ab113c9b3a7160096d11
+		$criteria->addCondition("`status` ='0' or (`status`='3' and eno='$sess_eno')");  
 
 		if($this->keyword)
         {
