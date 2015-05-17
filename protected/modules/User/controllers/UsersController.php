@@ -61,21 +61,28 @@ class UsersController extends GController
 	 * If update is successful, the browser will be redirected to the 'view' page.
 	 * @param integer $id the ID of the model to be updated
 	 */
-	public function actionUpdate($id)
+	public function actionUpdate($id=0)
 	{
+                $id = $id ? $id: $_POST['Users']['id'];
 		$model=$this->loadModel($id);
-
-		// Uncomment the following line if AJAX validation is needed
-		// $this->performAjaxValidation($model);
-
 		if(isset($_POST['Users']))
 		{
 			$model->attributes=$_POST['Users'];
 			if($model->save())
-				$this->redirect(array('view','id'=>$model->id));
+                        {
+                             Utils::showMsg (1, '用户信息修改成功!');
+                        } 
+                        else
+                        {
+                            $error = $model->getErrors();
+                            $error = current($error);
+                            Utils::showMsg (0, "$error[0]");
+                        }
+                         
+                         exit; 
 		}
 
-		$this->render('update',array(
+		$this->renderPartial('update',array(
 			'model'=>$model,
 		));
 	}
