@@ -62,19 +62,21 @@
             <div class="col-sm-3">
                 <?php echo $form->textField($model, 'tel', array( 'maxlength' =>14, 'id' => "form-field-1", 'placeholder' => "", 'class' => "form-control")); ?>
             </div>
+            
         </div>
+        
+     
         <div class="form-group">
             <label class="col-sm-2 control-label no-padding-right">部门：</label>
             <div class="col-sm-3">
                    <?php echo $form->dropDownList($model, 'dept_id', $this->getDeptArr(),array('onchange'=>'getgroup(this)')); ?>
             </div>
-        </div>
-         <div class="form-group">
-            <label class="col-sm-2 control-label no-padding-right">组别：</label>
+             <label class="col-sm-2 control-label no-padding-right">组别：</label>
             <div class="col-sm-3">
                    <?php echo $form->dropDownList($model, 'group_id',  DeptGroup::model()->getByDeptId($model->dept_id),array('id'=>'groupinfo')); ?>
             </div>
         </div>
+
 <!--        <div class="form-group">
             <label class="col-sm-2 control-label no-padding-right">上级：</label>
             <div class="col-sm-4">
@@ -98,13 +100,17 @@
             <div class="col-sm-4">
                 <?php $model->isNewRecord ? $model->ismaster = 2: '';echo $form->radioButtonList($model, 'ismaster', array(2=>'否',1=> '是',), array('separator' => '<br/> ', 'class' => 'col-sm-2')); ?>
             </div> 
-        </div>
-        <div class="form-group">
             <label class="col-sm-2 control-label no-padding-right"><?php echo $model->getAttributeLabel('sex'); ?>：</label>
             <div class="col-sm-4">
                 <?php echo $form->radioButtonList($model, 'sex', array(1=>'男',2=>'女', ), array('separator' => '<br/>', 'class' => 'col-sm-2')); ?>
             </div>
+        </div>
+          <div class="form-group">
+            <label class="col-sm-2 control-label no-padding-right"><?php echo $model->getAttributeLabel('extend_no'); ?>：</label>
+            <div class="col-sm-3">
+                <?php echo $form->textField($model, 'extend_no', array('maxlength' => 10, 'id' => "form-field-1", 'placeholder' => "", 'class' => "form-control")); ?>
             </div>
+        </div>
         <div class="form-actions text-right">
             <button type="submit" id="createUserBtn" class="btn btn-sm btn-primary"><i class="icon-save"></i> <?php echo$model->isNewRecord ? '创建' : '更新';?></button>
             <button type="button" data-dismiss="modal" class="btn btn-sm"><i class="icon-remove"></i> 取消</button>
