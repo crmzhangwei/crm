@@ -147,8 +147,12 @@ class CustomerAss extends CActiveRecord
 		$criteria->compare('memo',$this->memo,true);
 		$criteria->compare('create_time',$this->create_time);
 		$criteria->compare('creator',$this->creator);
+<<<<<<< HEAD
 		$sess_eno = Yii::app()->session['user']['eno'];
 		$criteria->addCondition("`status` in(0,3) and eno='$sess_eno'");  
+=======
+		$criteria->addCondition("`status` in(0,3) and eno=''"); //查询条件，即where id = 1    
+>>>>>>> 736d668824dac6c22622ab113c9b3a7160096d11
 
 		if($this->keyword)
         {
@@ -208,8 +212,8 @@ class CustomerAss extends CActiveRecord
             3=>'公司名称',
             4=>'电话',
             5=>'QQ',
-			6=>'邮箱',
-			7=>'店铺地址',
+            6=>'邮箱',
+            7=>'店铺地址',
 			//8=>'客户类别'
         );
     }

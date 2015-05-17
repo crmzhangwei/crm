@@ -3,8 +3,8 @@
 /* @var $model CustomerInfo */
 
 $this->breadcrumbs = array(
-    'Customer Infos' => array('index'),
-    'Manage',
+    '机会管理' => array('admin'),
+    '我的联系机会',
 );
 
 Yii::app()->clientScript->registerScript('search', "
@@ -73,12 +73,12 @@ $this->widget('GGridView', array(
         array(
           'header'=>'分配时间',
           'type'=>'raw',
-          'value'=>'date("Y-m-d :H:i:s",$data->assign_time)',
+          'value'=>'date("Y-m-d  H:i:s",$data->assign_time)',
         ),
         array(
           'header'=>'安排联系时间',
           'type'=>'raw',
-          'value'=>'date("Y-m-d :H:i:s",$data->next_time)',
+          'value'=>'date("Y-m-d  H:i:s",$data->next_time)',
         ),
 
         'shop_addr',

@@ -7,10 +7,7 @@ $this->breadcrumbs = array(
 	'客户资源分配',
 );
 
-$this->menu=array(
-	array('label'=>'List CustomerAss', 'url'=>array('index')),
-	array('label'=>'Create CustomerAss', 'url'=>array('create')),
-);
+
 
 Yii::app()->clientScript->registerScript('search', "
 $('.search-button').click(function(){
@@ -65,7 +62,7 @@ $('.search-form form').submit(function(){
             //'id',
 			'cust_name',
 			'corp_name',
-            'shop_name',
+                        'shop_name',
 			'shop_url',
 			'shop_addr',
 			'phone',

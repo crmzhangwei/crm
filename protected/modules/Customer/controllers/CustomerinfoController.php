@@ -45,7 +45,7 @@ class CustomerinfoController extends GController
 		{
 
 			$model->attributes=$_POST['CustomerInfo'];
-     		$model->assign_eno = Yii::app()->session['user']['eno'];//分配人
+     		        $model->assign_eno = Yii::app()->session['user']['eno'];//分配人
 			$model->assign_time = time();//分配时间
 			$model->create_time = time();
 			$model->creator = Yii::app()->user->id;
@@ -100,7 +100,7 @@ class CustomerinfoController extends GController
 	
 		$user_info['group_id'] = $userinfo->group_id?$userinfo->group_id:0;
 		$user_info['dept_id']  = $userinfo->dept_id?$userinfo->dept_id:0;
-	    $user_info['name']     = $userinfo->name?$userinfo->name:0;
+	        $user_info['name']     = $userinfo->name?$userinfo->name:0;
 		$user_info['eno']     = $userinfo->eno?$userinfo->eno:0;
 		$user_info['group_arr'] = Userinfo::getGroupById($user_info['dept_id']);
 		$user_info['user_arr'] = Userinfo::getUserbygid($user_info['group_id'],$user_info['dept_id']);	

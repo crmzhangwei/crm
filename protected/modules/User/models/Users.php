@@ -47,31 +47,23 @@ class Users extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			array('pass, username, tel, dept_id', 'required'),
-			array('sex, dept_id, group_id, ismaster, status', 'numerical', 'integerOnly'=>true),
+			array('sex, dept_id, group_id, ismaster, status,extend_no,tel', 'numerical', 'integerOnly'=>true),
 			//array('eno', 'length', 'max'=>10),
-			array('pass', 'length', 'max'=>50),
+			array('pass', 'length', 'max'=>32,'min'=>6),
 			array('name', 'length', 'max'=>12),
                         array('tel','length','is'=>11),
 			array('username', 'length', 'max'=>30),
 			array('qq', 'length', 'max'=>15),
+                        array('extend_no','length','max'=>10),
 			array('birth, pass_repeat, create_time, login_time,searchtype,keyword', 'safe'),
                         array('pass','compare','on'=>'login'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, eno, pass, name, username, birth, sex, tel, qq, dept_id, group_id, ismaster, status', 'safe', 'on'=>'search'),
+			array('extend_no,id, eno, pass, name, username, birth, sex, tel, qq, dept_id, group_id, ismaster, status', 'safe', 'on'=>'search'),
 		);
 	}
 
-          protected function beforeValidate() {
-            if ($this->isNewRecord) {
-                // set the create date,
-              //  $this->create_time =$this->login_time =  new CDbExpression('NOW()');
-
-
-            } 
-            return parent::beforeValidate();
-       }
-
+   
     /**
      * @return array relational rules.
      */
@@ -174,28 +166,21 @@ class Users extends CActiveRecord
 	{
 		return parent::model($className);
 	}
-        
-        public function afterSave() {
-            parent::afterSave();
-            if ($this->isNewRecord) {
-                   $eno = 'U'.$this->createEno($this->getprimaryKey());
-                   $param['eno'] = $eno;
-                   $this->updateByPk($this->getprimaryKey(), $param);
-            } 
-            
-        }
-        public function createEno($id)
-        {
-            $newNumber = substr(strval($id+10000),1,4);    
-            return    $newNumber;
-        }
-        protected function afterValidate() {
-            parent::afterValidate();
-            $this->pass = $this->encrypt($this->pass);
-         }
-         
-        public function encrypt($value) {
-            return md5($value);
+   
+        public function beforeSave() {
+            if(parent::beforeSave())
+            {
+                if ($this->isNewRecord) {
+                    $this->pass = $this->encrypt($this->pass);
+                }
+                 return true;
+            } else {
+                return false;
+            }
+       }
+
+    public function encrypt($value) {
+            return md5(trim($value));
         }
         
         static function getSearchArr()

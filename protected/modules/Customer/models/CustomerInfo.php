@@ -145,33 +145,31 @@ class CustomerInfo extends CActiveRecord
 		$criteria->compare('create_time',$this->create_time);
 		$criteria->compare('creator',$this->creator);
 
-		if($this->keyword)
-        {
-            switch ($this->searchtype)
-           {
-               case 1:
-                   $criteria->addCondition("cust_name like :keyword");
-                   $criteria->params[':keyword'] = "%{$this->keyword}%";
-                   break;
-               case 2:
-                   $criteria->addCondition("shop_name like :keyword");
-                   $criteria->params[':keyword'] = "%{$this->keyword}%";
-                   break;
-               case 3:
-                   $criteria->addCondition("corp_name like :keyword");
-                   $criteria->params[':keyword'] = "%{$this->keyword}%";
-                   break;
-               case 4:
-                   $criteria->compare('phone', $this->keyword, true);
-                   break;
-               case 5:
-                   $criteria->compare('qq', $this->keyword, true);
-                   break;
-           }
-        }
+		if ($this->keyword) {
+                    switch ($this->searchtype) {
+                        case 1:
+                            $criteria->addCondition("cust_name like :keyword");
+                            $criteria->params[':keyword'] = "%{$this->keyword}%";
+                            break;
+                        case 2:
+                            $criteria->addCondition("shop_name like :keyword");
+                            $criteria->params[':keyword'] = "%{$this->keyword}%";
+                            break;
+                        case 3:
+                            $criteria->addCondition("corp_name like :keyword");
+                            $criteria->params[':keyword'] = "%{$this->keyword}%";
+                            break;
+                        case 4:
+                            $criteria->compare('phone', $this->keyword, true);
+                            break;
+                        case 5:
+                            $criteria->compare('qq', $this->keyword, true);
+                            break;
+                    }
+                 }
 
 
-		return new CActiveDataProvider($this, array(
+        return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
 		));
 	}

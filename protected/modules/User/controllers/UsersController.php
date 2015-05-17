@@ -43,10 +43,13 @@ class UsersController extends GController
                         }
 			if($model->save())
                         {
+                            $id = Yii::app()->db->getLastInsertID();
+                            $this->beforeSave($id);
                             Utils::showMsg(1,'创建成功');
                         }  else {
-
-                            Utils::showMsg(0,'创建失败'); 
+                            $errors = $model->getErrors();
+                            $error = current($errors);
+                            Utils::showMsg(0,$error[0]); 
                         }
 			 Yii::app()->end;	
 		}
@@ -56,6 +59,16 @@ class UsersController extends GController
 		));
 	}
 
+       public function beforeSave($id) {
+                   $eno = 'U'.$this->createEno($id);
+                   $param['eno']=$eno;
+                   Users::model()->updateByPk($id, $param);
+       } 
+        public function createEno($id)
+        {
+            $newNumber = substr(strval($id+10000),1,4);    
+            return    $newNumber;
+        }
 	/**
 	 * Updates a particular model.
 	 * If update is successful, the browser will be redirected to the 'view' page.
@@ -128,6 +141,12 @@ class UsersController extends GController
 		if(!isset($_GET['ajax']))
 			$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
 	}
+        
+        public function actionGetGroup(){
+            $deptid = yii::app()->request->getparam('deptid');
+            $deptinfo = Userinfo::getGroupById($deptid);
+            echo json_encode($deptinfo);
+	}
 
 	/**
 	 * Lists all models.
@@ -193,8 +212,10 @@ class UsersController extends GController
         /**
          * 获取用户所属组别数组 
          */
-        public function getGroupArr() {
-             return CHtml::listData(GroupInfo::model()->findAll(), 'id', 'name');
+        public function getGroupArr($dept_id= 0) {
+            
+            $data = empty($dept_id)?GroupInfo::model()->findAll() :'';
+             return CHtml::listData($data, 'id', 'name');
         }
         
         /**
@@ -243,5 +264,7 @@ class UsersController extends GController
             $res =  isset($status[$val])?$status[$val]:$val;
             return $res;
         }
+        
+       
           
 }
