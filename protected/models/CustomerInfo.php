@@ -32,6 +32,8 @@ class CustomerInfo extends CActiveRecord {
     public $contact_7_day; 
     public $searchtype;
     public $keyword;
+    public $begintime;
+    public $endtime;
 
     /**
      * @return string the associated database table name
@@ -58,7 +60,7 @@ class CustomerInfo extends CActiveRecord {
             array('abandon_reason', 'length', 'max'=>200),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, cust_name, shop_name, corp_name, shop_url, shop_addr, phone, qq, mail, datafrom, category, cust_type, eno, iskey, visit_date, abandon_reason, assign_eno, assign_time, next_time, memo, status, create_time, creator,searchtype,keyword', 'safe', 'on'=>'search'),
+            array('id, cust_name, shop_name, corp_name, shop_url, shop_addr, phone, qq, mail, datafrom, category, cust_type, eno, iskey, visit_date, abandon_reason, assign_eno, assign_time, next_time, memo, status, create_time, creator,searchtype,keyword,begintime,endtime', 'safe', 'on'=>'search'),
         );
     }
 
@@ -131,6 +133,10 @@ class CustomerInfo extends CActiveRecord {
         }
         if ($this->iskey) {
             $criteria->compare('iskey', $this->iskey);
+        }
+        if($this->begintime &&$this->endtime)
+        {
+            $criteria->addBetweenCondition('next_time', $this->begintime, $this->endtime);
         }
         // $criteria->addCondition("eno = '".Yii::app()->user->identity->eno."'");
         return new CActiveDataProvider($this, array(

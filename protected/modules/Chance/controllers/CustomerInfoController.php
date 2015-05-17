@@ -113,10 +113,14 @@ class CustomerInfoController extends GController {
     /**
      * 我的机会
      */
-    public function actionMyChance() {
+    public function actionTodayList() {
     
         $model = new CustomerInfo('search');
         $model->unsetAttributes();  // clear any default values
+        $begintime = strtotime( date('Y-m-d',time()));
+        $endtime = $begintime+86400;
+        $model->begintime=$begintime;
+        $model->endtime = $endtime;
         if (isset($_GET['CustomerInfo']))
             $model->attributes = $_GET['CustomerInfo'];
         $this->render('admin', array(
@@ -127,7 +131,7 @@ class CustomerInfoController extends GController {
      /**
      * 未联系机会
      */
-    public function actionMyChance1() {
+    public function actionOldList() {
     
         $model = new CustomerInfo('search');
         $model->unsetAttributes();  // clear any default values
