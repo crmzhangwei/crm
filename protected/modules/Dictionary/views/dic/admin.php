@@ -3,12 +3,11 @@
 /* @var $model Dic */
 
 $this->breadcrumbs=array(
-	'字典数据'=>array('index'),
+	'字典数据'=>array('admin'),
 	'管理',
 );
 
-$this->menu=array( 
-	array('label'=>'增加字典数据', 'url'=>array('create')),
+$this->menu=array(  
 );
 
 Yii::app()->clientScript->registerScript('search', " 
@@ -18,12 +17,7 @@ $('#search_dictionary').click(function(){
     return false;
  });
 ");
-?>
-
-<h1>字典数据</h1>
- 
-
-<?php echo CHtml::link('高级搜索','#',array('class'=>'search-button')); ?>
+?>  
 <div class="search-form" style="display:">
 <?php $this->renderPartial('_search',array(
 	'model'=>$model,

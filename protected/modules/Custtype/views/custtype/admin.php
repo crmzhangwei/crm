@@ -3,12 +3,12 @@
 /* @var $model CustType */
 
 $this->breadcrumbs=array(
-	'客户分类'=>array('index'),
+	'客户分类'=>array('admin'),
 	'管理',
 );
 
 $this->menu=array( 
-	array('label'=>'增加客户分类', 'url'=>array('create')),
+	 
 );
 
 Yii::app()->clientScript->registerScript('search', "
@@ -18,11 +18,7 @@ Yii::app()->clientScript->registerScript('search', "
     return false;
  });
 ");
-?>
-
-<h1>客户分类信息</h1>
- 
- 
+?> 
 <div class="search-form" style="display:">
 <?php $this->renderPartial('_search',array(
 	'model'=>$model,

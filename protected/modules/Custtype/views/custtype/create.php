@@ -8,11 +8,8 @@ $this->breadcrumbs=array(
 );
 
 $this->menu=array(
-	array('label'=>'List CustType', 'url'=>array('index')),
-	array('label'=>'Manage CustType', 'url'=>array('admin')),
+ 
 );
 ?>
-
-<h1>创建客户分类</h1>
-
+ 
 <?php $this->renderPartial('_form', array('model'=>$model)); ?>

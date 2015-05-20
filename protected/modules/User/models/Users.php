@@ -17,6 +17,8 @@
  * @property integer $group
  * @property integer $ismaster
  * @property integer $status
+ * @property integer $cust_num
+ * @property integer $extend_no
  */
 class Users extends CActiveRecord
 {

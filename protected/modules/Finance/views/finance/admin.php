@@ -7,8 +7,7 @@ $this->breadcrumbs=array(
 	'管理',
 );
 
-$this->menu=array( 
-	array('label'=>'创建财务数据', 'url'=>array('create')),
+$this->menu=array(  
 );
 
 Yii::app()->clientScript->registerScript('search', "
@@ -19,9 +18,7 @@ Yii::app()->clientScript->registerScript('search', "
  
 
 ");
-?>
-
-<h1>财务数据</h1> 
+?> 
 
 <div class="form-group">  
               <?php $this->renderPartial('_search',array('model'=>$model, )); ?>
@@ -53,6 +50,7 @@ $this->widget('GGridView', array(
 		*/
 		array(
 			'class'=>'CButtonColumn',
+                        
 		),
 	),
 )); ?>

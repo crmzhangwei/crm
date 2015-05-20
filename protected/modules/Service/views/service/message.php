@@ -23,7 +23,7 @@
 	</div>
 
 	<div class="row buttons" style="margin-top:40px">
-		<?php echo CHtml::submitButton('发送'); ?>
+		<?php echo CHtml::submitButton('发送',array('class' => 'btn btn-sm btn-primary')); ?>
 	</div>
 
 <?php $this->endWidget(); ?>
@@ -51,8 +51,10 @@
                     url: '<?php echo $this->createUrl("/Service/service/message",array('cust_id'=>$model->cust_id)); ?>',
                     data: $("#message-form").serialize(),
                     callback: function(result) {
-                        bootbox.alert(result.msg, function(){
-                            $('.modal-backdrop').hide(); 
+                        bootbox.alert(result.data.memo, function(){
+                            $('.modal-backdrop').hide();
+                            $('.bootbox').hide();
+                            $('#NoteInfo_message_id').val(result.data.id);
                         });
                     }
                 });

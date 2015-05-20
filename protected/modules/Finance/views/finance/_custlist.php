@@ -28,7 +28,7 @@ $this->widget('GGridView', array(
         共<span class="orange"><?=$dataProvider->totalItemCount ?></span>条记录 
     </div>
     <div>
-        <?php echo CHtml::button("选择", array('onclick'=>'selectone();')) ?> 
+        <?php echo CHtml::button("选择", array('onclick'=>'selectone();','class'=>'btn btn-sm btn-primary')) ?> 
     </div>
     <div class="col-sm-6 no-padding-right">
         <?php 

@@ -14,7 +14,7 @@
 	<div class="row">
 		<?php echo $form->dropDownList($model, "searchtype", array('1'=>'客户名称','2'=>'QQ','3'=>'电话')) ?>
 		<?php echo $form->textField($model,'keyword',array('size'=>30,'maxlength'=>20)); ?>
-                <?php echo CHtml::submitButton('搜索'); ?>
+                <?php echo CHtml::submitButton('搜索',array('class' => 'btn btn-sm btn-primary')); ?>
 	</div> 
  
 

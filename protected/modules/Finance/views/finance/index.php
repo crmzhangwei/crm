@@ -7,12 +7,10 @@ $this->breadcrumbs=array(
 );
 
 $this->menu=array(
-	array('label'=>'Create Finance', 'url'=>array('create')),
-	array('label'=>'Manage Finance', 'url'=>array('admin')),
+	 
 );
 ?>
-
-<h1>财务数据查询</h1>
+ 
 <?php
 $this->widget('zii.widgets.CMenu', array('items'=> $this->menu));
 ?>

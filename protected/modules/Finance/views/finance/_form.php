@@ -59,7 +59,7 @@
                 <td>
                     <?php echo $form->hiddenField($model,'cust_id'); ?>
                     <?php echo $form->textField($model,'cust_name'); ?>
-                    <?php  echo CHtml::button("...",array('name'=>'btn_cust_pop','id'=>'id_btn_cust_pop'));?>
+                    <?php  echo CHtml::button("...",array('name'=>'btn_cust_pop','id'=>'id_btn_cust_pop','class' => 'editNode btn btn-info btn-minier tooltip-info'));?>
                     <?php echo $form->error($model,'cust_id'); ?> 
                 </td>
             </tr> 
@@ -103,7 +103,7 @@
         </table>  
 
 	<div class="row buttons">
-		<?php echo CHtml::submitButton($model->isNewRecord ? '创建' : 'Save'); ?>
+		<?php echo CHtml::submitButton($model->isNewRecord ? '创建' : '保存',array('class' => 'btn btn-sm btn-primary')); ?>
 	</div>
 
 <?php $this->endWidget(); ?>

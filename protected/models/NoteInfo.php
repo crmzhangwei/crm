@@ -16,6 +16,7 @@
  * @property integer $iskey
  * @property integer $next_contact
  * @property integer $dial_id
+ * @property integer $message_id
  * @property integer $eno
  * @property integer $create_time
  */
@@ -37,7 +38,7 @@ class NoteInfo extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('cust_id, eno, create_time,next_contact,dial_id', 'required'),
+			array('cust_id, eno, create_time,next_contact', 'required'),
 			array('cust_id, isvalid, iskey, next_contact, dial_id, eno, create_time', 'numerical', 'integerOnly'=>true),
 			array('cust_info, requirement, service, dissent, next_followup, memo', 'length', 'max'=>200), 
 			// The following rule is used by search().
@@ -54,6 +55,8 @@ class NoteInfo extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
+                    'dial'=>array(self::BELONGS_TO,'DialDetail','dial_id'), 
+                    'eno'=>array(self::BELONGS_TO,'Users','eno'),
 		);
 	}
 
@@ -75,6 +78,7 @@ class NoteInfo extends CActiveRecord
 			'iskey' => '是否重点',
 			'next_contact' => '下次联系时间',
 			'dial_id' => '电话拔打记录',
+			'message_id' => '短信发送记录',
 			'eno' => '工号',
 			'create_time' => '创建时间',
 		);
@@ -122,10 +126,12 @@ class NoteInfo extends CActiveRecord
          */
         public function searchSharedNote($custid){
             $criteria=new CDbCriteria;
-            $criteria->addCondition("cust_id=$custid");
-            $criteria->compare('cust_info',$this->cust_info,true);
-	    $criteria->compare('requirement',$this->requirement,true);
-	    $criteria->compare('service',$this->service,true);
+            $criteria->addCondition("t.cust_id=$custid");
+            $criteria->compare('t.cust_info',$this->cust_info,true);
+	    $criteria->compare('t.requirement',$this->requirement,true);
+	    $criteria->compare('t.service',$this->service,true);
+            $criteria->select="t.id,t.cust_info,t.requirement,t.service,t.next_contact,t.create_time,u.eno";
+            $criteria->join=" left join {{users}} u on t.eno=u.id ";
             return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
 		));

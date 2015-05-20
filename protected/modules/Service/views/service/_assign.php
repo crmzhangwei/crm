@@ -85,8 +85,8 @@ Yii::app()->clientScript->registerScript('buttonA', "
             </tr> 
         </table>
             <div class="row buttons">
-		<?php echo CHtml::submitButton('分配'); ?>
-                <?php echo CHtml::button('取消',array('id'=>'btn_cancel')); ?>
+		<?php echo CHtml::submitButton('分配',array('class' => 'btn btn-sm btn-primary')); ?>
+                <?php echo CHtml::button('取消',array('id'=>'btn_cancel','class' => 'btn btn-sm btn-primary')); ?>
             </div>
 
 <?php $this->endWidget(); ?>

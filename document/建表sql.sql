@@ -164,6 +164,7 @@ CREATE TABLE `c_note_info` (
   `iskey` tinyint(1) DEFAULT 0 COMMENT '是否重点',
   `next_contact` int(11) DEFAULT 0 COMMENT '下次联系时间',
   `dial_id` int(11) DEFAULT '0' COMMENT '电话拔打记录',
+  `message_id` int(11) default '0' COMMENT '短信发送记录',
   `eno` int(11) NOT NULL default 0 COMMENT '工号',
   `create_time` int(11) NOT NULL default 0 COMMENT '创建时间',
   PRIMARY KEY (`id`)
@@ -273,6 +274,8 @@ CREATE TABLE `c_message` (
   `cust_id` int(11) NOT NULL default 0 COMMENT '客户id',
   `phone` varchar(20) NOT NULL default '' COMMENT '电话号码',
   `content` varchar(200) NOT NULL default '' COMMENT '短信内容',
+  `status` int not null default 0 COMMENT '发送状态',
+  `memo` varchar(200) not null default '' COMMENT '结果描述',
   `create_time` int(11) NOT NULL default 0 COMMENT '创建时间',
   `creator` int(11) NOT NULL default 0 COMMENT '创建人',
   PRIMARY KEY (`id`)

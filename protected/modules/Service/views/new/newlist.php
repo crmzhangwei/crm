@@ -1,0 +1,77 @@
+
+<?php
+/* @var $this ServiceController */
+/* @var $model CustomerInfo */
+
+$this->breadcrumbs = array(
+    '售后管理' => array('list'),
+    '新分客户',
+);
+
+$this->menu = array(
+);
+
+Yii::app()->clientScript->registerScript('search', "
+ 
+$('.search-form form').submit(function(){
+	$('#service-grid').yiiGridView('update', {
+		data: $(this).serialize()
+	});
+	return false;
+});
+");
+?>  
+<div class="search-form" style="display:">
+    <?php
+    $this->renderPartial('_search', array(
+        'model' => $model,
+    ));
+    ?>
+</div><!-- search-form -->
+
+<?php
+$dataProvider = $model->searchNewList();
+$this->widget('GGridView', array(
+    'id' => 'service-grid',
+    'dataProvider' => $dataProvider,
+    'filter' => null,
+    'columns' => array(
+        'id',
+        array('name' => 'cust_id', 'value' => '$data->cust_name'),
+        array('name' => 'cust_type', 'value' => '$data->cust_type_name'),
+        'qq',
+        'webchat',
+        'ww',
+        array('name' => 'category', 'value' => '$data->category_name'),
+        'service_limit',
+        'eno',
+        'assign_eno',
+        array('name'=>'assign_time',  
+                    'value'=>'date("Y-m-d",$data->assign_time)',//格式化日期  
+                ),  
+        array(
+            'class' => 'CButtonColumn',
+            'template' => '{upda}', 
+            'buttons' => array(
+                'upda' => array(
+                    'label' => '查看客户详情',
+                    'url' => 'Yii::app()->controller->createUrl("update",array("id"=>$data->primaryKey))',
+                    'imageUrl' => '',
+                    'options' => array('class' => 'editNode btn btn-info btn-minier tooltip-info', 'data-placement' => "bottom"),
+                ),
+            ),
+        ),
+    ),
+));
+?>
+
+<div class="table-page"> 
+    <div class="col-sm-6">
+        共<span class="orange"><?= $dataProvider->totalItemCount ?></span>条记录 
+    </div>
+    <div class="col-sm-6 no-padding-right">
+        <?php
+        $this->widget('GLinkPager', array('pages' => $dataProvider->getPagination(),));
+        ?>
+    </div>
+</div>

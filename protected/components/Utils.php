@@ -30,34 +30,37 @@ class Utils {
      */
     public static function mapArray($array, $from, $to) {
         $result = array();
-        foreach ($array AS $k=>$element) {
-            $result[$element[$from]] = '【'.$k.'类】'.$element[$to];
+        foreach ($array AS $k => $element) {
+            $result[$element[$from]] = '【' . $k . '类】' . $element[$to];
         }
         return $result;
     }
+
     /**
      * 隐藏电话号码中间4位
      * @param type $phone
      */
-    public static function hidePhone($phone){
-        return substr_replace($phone,'****',3,4); 
+    public static function hidePhone($phone) {
+        return substr_replace($phone, '****', 3, 4);
     }
+
     /**
      * 隐藏邮件地址中间3位
      * @param type $email
      */
-    public static function hideEmail($email){
-        return substr_replace($email,'****',3,3); 
+    public static function hideEmail($email) {
+        return substr_replace($email, '****', 3, 3);
     }
+
     /**
      * 隐藏QQ中间3位
      * @param type $qq 
      */
-    public static function hideQq($qq){
-        return substr_replace($qq,'****',3,3); 
+    public static function hideQq($qq) {
+        return substr_replace($qq, '****', 3, 3);
     }
-    
-     /**
+
+    /**
      * 向页面输出信息
      * @param int $code       错误代码, 0. 失败 1.成功， 默认为1
      * @param string $msg    信息内容， 默认为空
@@ -76,36 +79,37 @@ class Utils {
 
         $exit && exit();
     }
+
     /**
      * 
      * @param type $cust_id 客户id
      * @param type $msg 短信内容
      * @param type $method get/post
-     * @return type 发送结果描述
+     * @return type 发送短信记录
      */
-    public static function sendMessageByCust($cust_id,$msg,$method='get'){
+    public static function sendMessageByCust($cust_id, $msg, $method = 'get') {
         $cust = CustomerInfo::model()->findByPk($cust_id);
-        if(empty($cust)){
+        if (empty($cust)) {
             return "客户不存在";
         }
         $phone = $cust->getAttribute("phone");
-        if(empty($phone)){
+        if (empty($phone)) {
             return "客户电话不存在";
         }
-        $iret = Utils::sendMessage($phone,$msg,$method);
-        if($iret==0){
-            //发送成功，生成记录
-            $columns=array("cust_id"=>$cust_id,
-                       "phone"=>$phone,
-                       "content"=>  $msg,
-                       "creator"=>Yii::app()->user->id,
-                       "create_time"=>time());
-            Yii::app()->db->createCommand()->insert("{{message}}", $columns);
-        }   
-        $ret = Yii::app()->params['SMS_RETURN_CODE'][$iret];
-        return $ret;
+        $iret = Utils::sendMessage($phone, $msg, $method);
+
+        $message = new Message();
+        $message->setAttribute('cust_id', $cust_id);
+        $message->setAttribute('phone', $phone);
+        $message->setAttribute('content', $msg);
+        $message->setAttribute('creator', Yii::app()->user->id);
+        $message->setAttribute('create_time', time());
+        $message->setAttribute('status', $iret);
+        $message->setAttribute('memo',  Yii::app()->params['SMS_RETURN_CODE'][$iret]);
+        $message->save(); 
+        return $message;
     }
-    
+
     /**
      * 发送短信
      * @param type $phone 电话号码
@@ -113,80 +117,78 @@ class Utils {
      * @param type $method get/post
      * @return type $iReturnCode 状态码
      */
-    private static function sendMessage($phone,$msg,$method='get'){  
-        $content = urlencode($msg); 
+    private static function sendMessage($phone, $msg, $method = 'get') {
+        $content = urlencode($msg);
         $sms = Yii::app()->params['SMS'];
-        $result = "";  
-        switch ($method){
+        $result = "";
+        switch ($method) {
             case 'get':
-                $sUrl = $sms['url']."?expid=0&uid=".$sms['uid']."&auth=".$sms['auth']."&encode=".$sms['encode']."&mobile=".$phone."&msg=".$content;
+                $sUrl = $sms['url'] . "?expid=0&uid=" . $sms['uid'] . "&auth=" . $sms['auth'] . "&encode=" . $sms['encode'] . "&mobile=" . $phone . "&msg=" . $content;
                 $result = file_get_contents($sUrl);
                 break;
             case 'post':
                 $ch = curl_init();
-                $timeout = 5; 
-                $postdata = "expid=0&uid=".$sms['uid']."&auth=".$sms['auth']."&encode=".$sms['encode']."&mobile=".$phone."&msg=".$content;
+                $timeout = 5;
+                $postdata = "expid=0&uid=" . $sms['uid'] . "&auth=" . $sms['auth'] . "&encode=" . $sms['encode'] . "&mobile=" . $phone . "&msg=" . $content;
                 curl_setopt($ch, CURLOPT_URL, $sms['url']);
                 curl_setopt($ch, CURLOPT_POST, 1);
                 $this_header = array("content-type: application/x-www-form-urlencoded;charset=UTF-8");
-                curl_setopt($ch,CURLOPT_HTTPHEADER,$this_header);
+                curl_setopt($ch, CURLOPT_HTTPHEADER, $this_header);
                 curl_setopt($ch, CURLOPT_POSTFIELDS, $postdata); // Post提交的数据包,好像不起作用,need to do  
                 curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
                 curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
                 $result = curl_exec($ch);
                 curl_close($ch);
                 break;
-        }  
-        $arr = explode(",",$result,2);
+        }
+        $arr = explode(",", $result, 2);
         $iReturnCode = abs($arr[0]);
         return $iReturnCode;
     }
-    
+
     /**
      * 把yii ar findall 返回的数据对像转换成数组  
      * @param type $obj
      */
-    public static  function objtoarray($obj)
-    {
+    public static function objtoarray($obj) {
         $res = array();
-        if(is_array($obj) && !empty($obj))
-        {
+        if (is_array($obj) && !empty($obj)) {
             foreach ($obj as $key => $value) {
-              $res[] =   $value->attributes;
+                $res[] = $value->attributes;
             }
         }
         return $res;
     }
-    
-   /**
-    * yii 批量插入数据的方法
-    */
-  public  static function insertSeveral($table, $array_columns)
-{
-    $sql = '';
-    $params = array();
-    $i = 0;
-    foreach ($array_columns as $columns) {
-        $names = array();
-        $placeholders = array_values($columns);
-        $names = array_keys($columns);  
-        if (!$i) {
-            $sql = 'INSERT INTO ' . Yii::app()->db->tablePrefix.$table
-                . ' (' . implode(', ', $names) . ') VALUES ('
-                . implode(', ', $placeholders) . ')';
-        } else {
-            $sql .= ',(' . implode(', ', $placeholders) . ')';
+
+    /**
+     * yii 批量插入数据的方法
+     */
+    public static function insertSeveral($table, $array_columns) {
+        $sql = '';
+        $params = array();
+        $i = 0;
+        foreach ($array_columns as $columns) {
+            $names = array();
+            $placeholders = array_values($columns);
+            $names = array_keys($columns);
+            if (!$i) {
+                $sql = 'INSERT INTO ' . Yii::app()->db->tablePrefix . $table
+                        . ' (' . implode(', ', $names) . ') VALUES ('
+                        . implode(', ', $placeholders) . ')';
+            } else {
+                $sql .= ',(' . implode(', ', $placeholders) . ')';
+            }
+            $i++;
         }
-        $i++;
+        return Yii::app()->db->createCommand($sql)->execute();
     }
-    return Yii::app()->db->createCommand($sql)->execute();
-}
-/**
- * 跳转url的方法
- * @param type $url
- * @param type $js
- */
-public static function redirect($url, $js = true) {
+
+    /**
+     * 跳转url的方法
+     * @param type $url
+     * @param type $js
+     */
+    public static function redirect($url, $js = true) {
         if ($js === true) {
             echo '<script type="text/javascript">window.location.href="' . $url . '";</script>';
             exit;
@@ -194,5 +196,5 @@ public static function redirect($url, $js = true) {
             header("location:" . $url);
         }
     }
-            
+
 }

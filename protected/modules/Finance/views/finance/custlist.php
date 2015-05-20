@@ -41,8 +41,7 @@
             <script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/js/jquery/jquery-1.11.1.min.js"></script>
             <![endif]--> 
             <base target="_self">
-    </head>
-<h1>选择客户</h1>
+    </head> 
 <script type="text/javascript">
     function getList(url){  
         $.ajax({  

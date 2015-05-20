@@ -25,18 +25,18 @@ DROP TABLE IF EXISTS `c_aftermarket_cust_info`;
 CREATE TABLE `c_aftermarket_cust_info` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键',
   `cust_id` int(11) NOT NULL COMMENT '客户id',
-  `cust_type` int(11) NOT NULL default 0 COMMENT '客户分类',
-  `webchat` varchar(20) NOT NULL default '' COMMENT '微信',
-  `ww` varchar(20) NOT NULL default '' COMMENT '旺旺',
-  `eno` varchar(10) NOT NULL default '' COMMENT '所属工号',
-  `assign_eno` varchar(10) NOT NULL default '' COMMENT '分配人',
-  `assign_time` int(11) NOT NULL default 0 COMMENT '分配时间',
-  `next_time` int(11) NOT NULL default 0 COMMENT '下次联系时间',
-  `memo` int(11) NOT NULL default '' COMMENT '备注',
-  `creator` int(11) NOT NULL default 0 COMMENT '创建人',
-  `create_time` int(11) NOT NULL default 0 COMMENT '创建时间',
+  `cust_type` int(11) NOT NULL DEFAULT '0' COMMENT '客户分类',
+  `webchat` varchar(20) DEFAULT '' COMMENT '微信',
+  `ww` varchar(20) DEFAULT '' COMMENT '旺旺',
+  `eno` varchar(10) DEFAULT '' COMMENT '所属工号',
+  `assign_eno` varchar(10) NOT NULL DEFAULT '' COMMENT '分配人',
+  `assign_time` int(11) NOT NULL DEFAULT '0' COMMENT '分配时间',
+  `next_time` int(11) NOT NULL DEFAULT '0' COMMENT '下次联系时间',
+  `memo` varchar(200) DEFAULT '' COMMENT '备注',
+  `creator` int(11) NOT NULL DEFAULT '0' COMMENT '创建人',
+  `create_time` int(11) NOT NULL DEFAULT '0' COMMENT '创建时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -45,7 +45,7 @@ CREATE TABLE `c_aftermarket_cust_info` (
 
 LOCK TABLES `c_aftermarket_cust_info` WRITE;
 /*!40000 ALTER TABLE `c_aftermarket_cust_info` DISABLE KEYS */;
-INSERT INTO `c_aftermarket_cust_info` VALUES (1,3,0,'3414','1234','U00001','1',1,1,1,1,1),(2,4,0,'31341','13412','U00002','1',1,1,1,1,1);
+INSERT INTO `c_aftermarket_cust_info` VALUES (1,3,0,'3414','1234','U00001','1',1,1,'1',1,1),(2,4,4,'31341','13412','U00006','U00005',1431943954,1432224000,'kasdfaf',1,1),(3,5,0,'12312','2223','U00004','U00005',1432025003,1,'1',1,1);
 /*!40000 ALTER TABLE `c_aftermarket_cust_info` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -59,10 +59,10 @@ DROP TABLE IF EXISTS `c_black_info`;
 CREATE TABLE `c_black_info` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键',
   `cust_id` int(11) NOT NULL COMMENT '客户id',
-  `lib_type` int(11) NOT NULL default 0 COMMENT '来源库',
-  `old_cust_type` int(11) NOT NULL default 0 COMMENT '原客户分类',
-  `create_time` int(11) NOT NULL default 0 COMMENT '创建时间',
-  `creator` int(11) NOT NULL default 0 COMMENT '创建人',
+  `lib_type` int(11) NOT NULL DEFAULT '0' COMMENT '来源库',
+  `old_cust_type` int(11) NOT NULL DEFAULT '0' COMMENT '原客户分类',
+  `create_time` int(11) NOT NULL DEFAULT '0' COMMENT '创建时间',
+  `creator` int(11) NOT NULL DEFAULT '0' COMMENT '创建人',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -86,21 +86,21 @@ DROP TABLE IF EXISTS `c_contract_info`;
 CREATE TABLE `c_contract_info` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键',
   `cust_id` int(11) NOT NULL COMMENT '客户id',
-  `service_limit` varchar(10) NOT NULL default '' COMMENT '服务期限',
-  `total_money` int(11) NOT NULL default 0 COMMENT '合同总金额',
-  `pay_type` int(11) NOT NULL default 0 COMMENT '支付方式',
-  `pay_time` int(11) NOT NULL default 0 COMMENT '支付时间',
-  `promise` varchar(200) NOT NULL default '' COMMENT '合同承诺',
-  `first_pay` varchar(10) NOT NULL default '' COMMENT '第一次支付金额',
-  `second_pay` varchar(10) NOT NULL default '' COMMENT '第二次支付金额',
-  `third_pay` varchar(10) NOT NULL default '' COMMENT '第三次支付金额',
-  `fourth_pay` int(11) NOT NULL default 0 COMMENT '第四次支付金额',
-  `comm_royalty` int(11) NOT NULL default 0 COMMENT '佣金提成',
-  `comm_pay_time` int(11) NOT NULL default 0 COMMENT '佣金支付时间',
-  `creator` int(11) NOT NULL default 0 COMMENT '创建人',
-  `create_time` int(11) NOT NULL default 0 COMMENT '创建时间',
+  `service_limit` varchar(10) NOT NULL DEFAULT '' COMMENT '服务期限',
+  `total_money` int(11) NOT NULL DEFAULT '0' COMMENT '合同总金额',
+  `pay_type` int(11) NOT NULL DEFAULT '0' COMMENT '支付方式',
+  `pay_time` int(11) NOT NULL DEFAULT '0' COMMENT '支付时间',
+  `promise` varchar(200) NOT NULL DEFAULT '' COMMENT '合同承诺',
+  `first_pay` varchar(10) NOT NULL DEFAULT '' COMMENT '第一次支付金额',
+  `second_pay` varchar(10) NOT NULL DEFAULT '' COMMENT '第二次支付金额',
+  `third_pay` varchar(10) NOT NULL DEFAULT '' COMMENT '第三次支付金额',
+  `fourth_pay` int(11) NOT NULL DEFAULT '0' COMMENT '第四次支付金额',
+  `comm_royalty` int(11) NOT NULL DEFAULT '0' COMMENT '佣金提成',
+  `comm_pay_time` int(11) NOT NULL DEFAULT '0' COMMENT '佣金支付时间',
+  `creator` int(11) NOT NULL DEFAULT '0' COMMENT '创建人',
+  `create_time` int(11) NOT NULL DEFAULT '0' COMMENT '创建时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -109,7 +109,7 @@ CREATE TABLE `c_contract_info` (
 
 LOCK TABLES `c_contract_info` WRITE;
 /*!40000 ALTER TABLE `c_contract_info` DISABLE KEYS */;
-INSERT INTO `c_contract_info` VALUES (1,3,'2',12,1,1,'1','1','11','1',1,1,1,1,1),(2,4,'1',123,1,1,'1','1','1','1',1,1,1,1,1);
+INSERT INTO `c_contract_info` VALUES (1,3,'2',12,1,1,'1','1','11','1',1,1,1,1,1),(2,4,'1',123,1,1,'1','1','1','1',1,1,1,1,1),(3,5,'12',22556,1,1,'1','1','1','1',1,1,1,1,1);
 /*!40000 ALTER TABLE `c_contract_info` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -122,14 +122,14 @@ DROP TABLE IF EXISTS `c_cust_convt_detail`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `c_cust_convt_detail` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键',
-  `lib_type` int(11) NOT NULL default 0 COMMENT '库类型',
-  `cust_id` int(11) NOT NULL default 0 COMMENT '客户id',
-  `cust_type_1` int(11) NOT NULL default 0 COMMENT '原始类别',
-  `cust_type_2` int(11) NOT NULL default 0 COMMENT '转换类别',
-  `convt_time` int(11) NOT NULL default 0 COMMENT '转换时间',
-  `user_id` int(11) NOT NULL default 0 COMMENT '操作人',
+  `lib_type` int(11) NOT NULL DEFAULT '0' COMMENT '库类型',
+  `cust_id` int(11) NOT NULL DEFAULT '0' COMMENT '客户id',
+  `cust_type_1` int(11) NOT NULL DEFAULT '0' COMMENT '原始类别',
+  `cust_type_2` int(11) NOT NULL DEFAULT '0' COMMENT '转换类别',
+  `convt_time` int(11) NOT NULL DEFAULT '0' COMMENT '转换时间',
+  `user_id` int(11) NOT NULL DEFAULT '0' COMMENT '操作人',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -138,6 +138,7 @@ CREATE TABLE `c_cust_convt_detail` (
 
 LOCK TABLES `c_cust_convt_detail` WRITE;
 /*!40000 ALTER TABLE `c_cust_convt_detail` DISABLE KEYS */;
+INSERT INTO `c_cust_convt_detail` VALUES (1,3,4,0,4,1432112851,2);
 /*!40000 ALTER TABLE `c_cust_convt_detail` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -150,9 +151,9 @@ DROP TABLE IF EXISTS `c_cust_type`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `c_cust_type` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键',
-  `lib_type` int(11) NOT NULL default 0 COMMENT '库类型',
-  `type_no` varchar(5) NOT NULL default '' COMMENT '类型编号',
-  `type_name` varchar(100) NOT NULL default '' COMMENT '类型名称',
+  `lib_type` int(11) NOT NULL DEFAULT '0' COMMENT '库类型',
+  `type_no` varchar(5) NOT NULL DEFAULT '' COMMENT '类型编号',
+  `type_name` varchar(100) NOT NULL DEFAULT '' COMMENT '类型名称',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -185,19 +186,19 @@ CREATE TABLE `c_customer_info` (
   `qq` varchar(20) DEFAULT '' COMMENT 'QQ',
   `mail` varchar(50) DEFAULT '' COMMENT '邮箱',
   `datafrom` varchar(100) DEFAULT '' COMMENT '数据来源',
-  `category` int(11) DEFAULT '' COMMENT '所属类目',
-  `cust_type` int(11) DEFAULT '' COMMENT '客户分类',
+  `category` int(11) DEFAULT '0' COMMENT '所属类目',
+  `cust_type` int(11) DEFAULT '0' COMMENT '客户分类',
   `eno` varchar(10) DEFAULT '' COMMENT '所属工号',
-  `iskey` int(11) DEFAULT 0 COMMENT '是否重点',
+  `iskey` int(11) DEFAULT '0' COMMENT '是否重点',
   `visit_date` int(11) DEFAULT '0' COMMENT '到访时间',
   `abandon_reason` varchar(200) DEFAULT '' COMMENT '放弃原因',
   `assign_eno` varchar(10) DEFAULT '' COMMENT '分配人',
-  `assign_time` int(11) DEFAULT '' COMMENT '分配时间',
-  `next_time` int(11) DEFAULT '' COMMENT '下次联系时间',
+  `assign_time` int(11) DEFAULT '0' COMMENT '分配时间',
+  `next_time` int(11) DEFAULT '0' COMMENT '下次联系时间',
   `memo` varchar(100) DEFAULT '' COMMENT '备注',
   `status` int(11) DEFAULT '0' COMMENT '状态',
-  `create_time` int(11) NOT NULL default 0 COMMENT '创建时间',
-  `creator` int(11) NOT NULL default 0 COMMENT '创建人',
+  `create_time` int(11) NOT NULL DEFAULT '0' COMMENT '创建时间',
+  `creator` int(11) NOT NULL DEFAULT '0' COMMENT '创建人',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -208,7 +209,7 @@ CREATE TABLE `c_customer_info` (
 
 LOCK TABLES `c_customer_info` WRITE;
 /*!40000 ALTER TABLE `c_customer_info` DISABLE KEYS */;
-INSERT INTO `c_customer_info` VALUES (1,'测试客户1','测试商店1','测试1','test1','test','2222222222','666','test@123.com','百度',100,1,'U0001',1,0,'','U00001',1,1,'k',0,1,1),(2,'aaa','测试商店','测试','test','test','121212','111','test@123.com','百度',101,1,'U0001',1,0,'','U00001',1,1,'k',0,1,1),(3,'测试客户3','测试商店','测试','test','test','3333333','222','test@123.com','百度',102,1,'U0001',1,0,'','U00001',1,1,'k',0,1,1),(4,'测试客户4','测试商店','测试','test','test','5555','333','test@123.com','百度',100,1,'U0001',1,0,'','U00001',1,1,'k',0,1,1),(5,'测试客户5','测试商店','测试','test','test','6666666','5555','test@123.com','百度',105,1,'U0001',1,0,'','U00001',1,1,'k',0,1,1),(6,'测试客户6','测试商店','测试','test','test','23','1235','test@123.com','百度',104,1,'U0001',1,0,'','U00001',1,1,'k',0,1,1),(7,'测试客户7','测试商店','测试','test','test','1235','123','test@123.com','百度',110,1,'U0001',1,0,'','U00001',1,1,'k',0,1,1),(8,'测试客户8','测试商店','测试','test','test','1235','123','test@123.com','百度',110,1,'U0001',1,0,'','U00001',1,1,'k',0,1,1),(9,'测试客户9','测试商店','测试','test','test','123','45135','test@123.com','百度',112,1,'U0001',1,0,'','U00001',1,1,'k',0,1,1),(10,'测试客户10','测试商店','测试','test','test','1235','213613','test@123.com','百度',100,1,'U0001',1,0,'','U00001',1,1,'k',0,1,1),(11,'测试客户11','测试商店','测试','test','test','1235','1235','test@123.com','百度',101,1,'U0001',1,0,'','U00001',1,1,'k',0,1,1),(12,'测试客户12','测试商店','测试','test','test','13546246','1235','test@123.com','百度',101,1,'U0001',1,0,'','U00001',1,1,'k',0,1,1);
+INSERT INTO `c_customer_info` VALUES (1,'测试客户1','测试商店1','测试1','test1','test','2222222222','666','test@123.com','百度',100,1,'U00001',1,0,'','U00003',1,1,'k',0,1,1),(2,'aaa','测试商店','测试','test','test','121212','111','test@123.com','百度',101,1,'U00001',1,0,'','U00003',1,1,'k',0,1,1),(3,'测试客户3','测试商店','测试','test','test','13536580119','222','test@123.com','百度',102,1,'U00001',1,0,'','U00003',1,1,'k',0,1,1),(4,'测试客户4','测试商店','测试','test','test','13536580119','333','test@123.com','百度',103,1,'U00001',1,0,'','U00003',1,1,'k',0,1,1),(5,'测试客户5','测试商店','测试','test','test','6666666','5555','test@123.com','百度',105,1,'U00001',1,0,'','U00003',1,1,'k',0,1,1),(6,'测试客户6','测试商店','测试','test','test','23','1235','test@123.com','百度',104,1,'U00001',1,0,'','U00003',1,1,'k',0,1,1),(7,'测试客户7','测试商店','测试','test','test','1235','123','test@123.com','百度',110,1,'U00001',1,0,'','U00003',1,1,'k',0,1,1),(8,'测试客户8','测试商店','测试','test','test','1235','123','test@123.com','百度',110,1,'U00001',1,0,'','U00003',1,1,'k',0,1,1),(9,'测试客户9','测试商店','测试','test','test','123','45135','test@123.com','百度',112,1,'U00001',1,0,'','U00003',1,1,'k',0,1,1),(10,'测试客户10','测试商店','测试','test','test','1235','213613','test@123.com','百度',100,1,'U00001',1,0,'','U00003',1,1,'k',0,1,1),(11,'测试客户11','测试商店','测试','test','test','1235','1235','test@123.com','百度',101,1,'U00001',1,0,'','U00003',1,1,'k',0,1,1),(12,'测试客户12','测试商店','测试','test','test','13546246','1235','test@123.com','百度',101,1,'U00001',1,0,'','U00003',1,1,'k',0,1,1);
 /*!40000 ALTER TABLE `c_customer_info` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -221,10 +222,10 @@ DROP TABLE IF EXISTS `c_dept_group`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `c_dept_group` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键',
-  `dept_id` int(11) DEFAULT NULL default 0 COMMENT '部门id',
-  `group_id` int(11) DEFAULT NULL default 0 COMMENT '组别id',
+  `dept_id` int(11) DEFAULT '0' COMMENT '部门id',
+  `group_id` int(11) DEFAULT '0' COMMENT '组别id',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -233,7 +234,7 @@ CREATE TABLE `c_dept_group` (
 
 LOCK TABLES `c_dept_group` WRITE;
 /*!40000 ALTER TABLE `c_dept_group` DISABLE KEYS */;
-INSERT INTO `c_dept_group` VALUES (1,1,1),(2,1,2),(3,1,3),(4,2,2),(5,2,3);
+INSERT INTO `c_dept_group` VALUES (1,1,2),(2,1,4),(3,2,1),(4,2,2),(5,2,4),(6,4,1),(7,5,6),(8,5,7),(9,6,7),(10,6,8);
 /*!40000 ALTER TABLE `c_dept_group` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -248,7 +249,7 @@ CREATE TABLE `c_dept_info` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键',
   `name` varchar(100) NOT NULL DEFAULT '' COMMENT '部门名称',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -257,8 +258,32 @@ CREATE TABLE `c_dept_info` (
 
 LOCK TABLES `c_dept_info` WRITE;
 /*!40000 ALTER TABLE `c_dept_info` DISABLE KEYS */;
-INSERT INTO `c_dept_info` VALUES (1,'销售部'),(2,'技术部');
+INSERT INTO `c_dept_info` VALUES (1,'销售一部'),(2,'销售二部'),(4,'销售三部'),(5,'售后一部'),(6,'售后二部');
 /*!40000 ALTER TABLE `c_dept_info` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `c_dept_role`
+--
+
+DROP TABLE IF EXISTS `c_dept_role`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `c_dept_role` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `dept_id` int(11) NOT NULL COMMENT '部门id',
+  `role_id` int(11) NOT NULL COMMENT '角色id',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `c_dept_role`
+--
+
+LOCK TABLES `c_dept_role` WRITE;
+/*!40000 ALTER TABLE `c_dept_role` DISABLE KEYS */;
+/*!40000 ALTER TABLE `c_dept_role` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -270,14 +295,14 @@ DROP TABLE IF EXISTS `c_dial_detail`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `c_dial_detail` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键',
-  `eno` varchar(10) NOT NULL default '' COMMENT '工号',
-  `dial_time` int(11) NOT NULL default 0 COMMENT '拔打时间',
-  `dial_long` float NOT NULL default 0 COMMENT '拔打时长',
+  `eno` varchar(10) NOT NULL DEFAULT '' COMMENT '工号',
+  `dial_time` int(11) NOT NULL DEFAULT '0' COMMENT '拔打时间',
+  `dial_long` float NOT NULL DEFAULT '0' COMMENT '拔打时长',
   `dial_num` int(11) NOT NULL DEFAULT '1' COMMENT '拔打次数',
   `record_path` varchar(200) DEFAULT '' COMMENT '录音路径',
   `isok` int(11) DEFAULT '0' COMMENT '是否成功',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -286,6 +311,7 @@ CREATE TABLE `c_dial_detail` (
 
 LOCK TABLES `c_dial_detail` WRITE;
 /*!40000 ALTER TABLE `c_dial_detail` DISABLE KEYS */;
+INSERT INTO `c_dial_detail` VALUES (1,'U00001',1222,12,1,'/mp3/20150519/1.mp3',1);
 /*!40000 ALTER TABLE `c_dial_detail` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -298,9 +324,9 @@ DROP TABLE IF EXISTS `c_dic`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `c_dic` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键',
-  `code` varchar(10) NOT NULL default '' COMMENT '编号',
-  `name` varchar(100) NOT NULL default '' COMMENT '名称',
-  `ctype` varchar(20) NOT NULL default '' COMMENT '类型',
+  `code` varchar(10) NOT NULL DEFAULT '' COMMENT '编号',
+  `name` varchar(100) NOT NULL DEFAULT '' COMMENT '名称',
+  `ctype` varchar(20) NOT NULL DEFAULT '' COMMENT '类型',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -324,14 +350,14 @@ DROP TABLE IF EXISTS `c_finance`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `c_finance` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键',
-  `cust_id` int(11) NOT NULL default 0 COMMENT '客户id',
-  `sale_user` int(11) NOT NULL default 0 COMMENT '销售人员',
-  `trans_user` int(11) NOT NULL default 0 COMMENT '谈单师',
-  `acct_number` int(11) NOT NULL default 0 COMMENT '到账单数',
-  `acct_amount` float NOT NULL default 0.0 COMMENT '到账金额',
-  `acct_time` int(11) NOT NULL default 0 COMMENT '到账时间',
-  `creator` int(11) NOT NULL default 0 COMMENT '创建人',
-  `create_time` int(11) NOT NULL default 0 COMMENT '创建时间',
+  `cust_id` int(11) NOT NULL DEFAULT '0' COMMENT '客户id',
+  `sale_user` int(11) NOT NULL DEFAULT '0' COMMENT '销售人员',
+  `trans_user` int(11) NOT NULL DEFAULT '0' COMMENT '谈单师',
+  `acct_number` int(11) NOT NULL DEFAULT '0' COMMENT '到账单数',
+  `acct_amount` float NOT NULL DEFAULT '0' COMMENT '到账金额',
+  `acct_time` int(11) NOT NULL DEFAULT '0' COMMENT '到账时间',
+  `creator` int(11) NOT NULL DEFAULT '0' COMMENT '创建人',
+  `create_time` int(11) NOT NULL DEFAULT '0' COMMENT '创建时间',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -357,7 +383,7 @@ CREATE TABLE `c_group_info` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键',
   `name` varchar(100) NOT NULL DEFAULT '' COMMENT '组名',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -366,7 +392,7 @@ CREATE TABLE `c_group_info` (
 
 LOCK TABLES `c_group_info` WRITE;
 /*!40000 ALTER TABLE `c_group_info` DISABLE KEYS */;
-INSERT INTO `c_group_info` VALUES (1,'A组'),(2,'B组'),(3,'C组'),(4,'D组');
+INSERT INTO `c_group_info` VALUES (1,'飞虎组'),(2,'大地组'),(3,'大海组'),(4,'野狼组'),(5,'红梅组'),(6,'黄菊组'),(7,'青兰组'),(8,'绿竹组');
 /*!40000 ALTER TABLE `c_group_info` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -379,11 +405,11 @@ DROP TABLE IF EXISTS `c_menu_info`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `c_menu_info` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键',
-  `name` varchar(100) NOT NULL default '' COMMENT '资源名称',
-  `url` varchar(100) NOT NULL default '' COMMENT '资源url',
+  `name` varchar(100) NOT NULL DEFAULT '' COMMENT '资源名称',
+  `url` varchar(100) NOT NULL DEFAULT '' COMMENT '资源url',
   `parent_id` int(11) DEFAULT NULL COMMENT '上级资源id',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=30 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -392,6 +418,7 @@ CREATE TABLE `c_menu_info` (
 
 LOCK TABLES `c_menu_info` WRITE;
 /*!40000 ALTER TABLE `c_menu_info` DISABLE KEYS */;
+INSERT INTO `c_menu_info` VALUES (1,'权限管理','/User/',0),(2,'用户管理','/User/users/admin',1),(3,'部门管理','/User/deptinfo/admin',1),(5,'组别管理','/User/groupinfo/admin',1),(6,'部门组别管理','/User/deptgroup/admin',1),(7,'菜单资源管理','/User/menuinfo/admin',1),(8,'角色管理','/User/roleinfo/admin',1),(9,'权限配置','/User/privilege/admin',1),(10,'财务数据','/Finance/',0),(11,'财务数据录入','/Finance/finance/create',10),(12,'财务数据查询','/Finance/finance/admin',10),(13,'售后管理','/Service/',0),(14,'新分客户','/Service/new/list',13),(15,'今日联系','/Service/today/todayList',13),(16,'遗留数据','/Service/old/oldList',13),(17,'查询分配','/Service/service/admin',13),(18,'客户管理','/Custom/',0),(19,'查询分配','/Customer/customerinfo/admin',18),(20,'客户资源分配','/Customer/customerass/admin',18),(21,'公海资源','/Customer/customerblack/admin',18),(22,'机会管理','/Chance/',0),(23,'安排联系机会','/Chance/customerinfo/admin',22),(24,'我的机会','/Chance/customerinfo/todaylist',22),(25,'未联系机会','/Chance/customerinfo/oldList',22),(26,'基础数据管理','/Custtype/',0),(27,'客户分类','/Custtype/custtype/admin',26),(28,'字典数据','/Dictionary/dic/admin',26),(29,'人员角色管理','/User/userrole/admin',1);
 /*!40000 ALTER TABLE `c_menu_info` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -404,13 +431,15 @@ DROP TABLE IF EXISTS `c_message`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `c_message` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键',
-  `cust_id` int(11) NOT NULL default 0 COMMENT '客户id',
-  `phone` varchar(20) NOT NULL default '' COMMENT '电话号码',
-  `content` varchar(200) NOT NULL default '' COMMENT '短信内容',
-  `create_time` int(11) NOT NULL default 0 COMMENT '创建时间',
-  `creator` int(11) NOT NULL default 0 COMMENT '创建人',
+  `cust_id` int(11) NOT NULL DEFAULT '0' COMMENT '客户id',
+  `phone` varchar(20) NOT NULL DEFAULT '' COMMENT '电话号码',
+  `content` varchar(200) NOT NULL DEFAULT '' COMMENT '短信内容',
+  `status` int(11) NOT NULL DEFAULT '0' COMMENT '发送状态',
+  `memo` varchar(200) NOT NULL DEFAULT '' COMMENT '结果描述',
+  `create_time` int(11) NOT NULL DEFAULT '0' COMMENT '创建时间',
+  `creator` int(11) NOT NULL DEFAULT '0' COMMENT '创建人',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -419,6 +448,7 @@ CREATE TABLE `c_message` (
 
 LOCK TABLES `c_message` WRITE;
 /*!40000 ALTER TABLE `c_message` DISABLE KEYS */;
+INSERT INTO `c_message` VALUES (1,3,'13536580119','dafdasf',0,'',1431930059,1),(2,3,'13536580119','aasdfsdf',0,'',1431930210,1),(3,3,'13536580119','test sss',0,'',1431930239,1),(4,3,'13536580119','dafdadf',0,'',1431930305,1),(5,4,'5555','dafasd',2,'未检索到被叫号码',1432111821,2),(6,4,'5555','daf',2,'未检索到被叫号码',1432111865,2),(7,4,'5555','daffasdfasdf',2,'未检索到被叫号码',1432111959,2),(8,4,'5555','fasdfasdf',2,'未检索到被叫号码',1432112104,2),(9,4,'5555','fasdfasdf',2,'未检索到被叫号码',1432112345,2),(10,4,'5555','daffasdfasdf',2,'未检索到被叫号码',1432112350,2),(11,4,'5555','daffasdfasdf',2,'未检索到被叫号码',1432112394,2),(12,4,'5555','daffasdfasdf',2,'未检索到被叫号码',1432112436,2),(13,4,'5555','fasdfasdf',2,'未检索到被叫号码',1432112455,2),(14,4,'13536580119','adsfadfadf',1,'签权失败',1432112509,2),(15,4,'13536580119','test aassdd',1,'签权失败',1432112922,2),(16,4,'13536580119','你好，帅哥，这是。。',1,'签权失败',1432112970,2),(17,4,'13536580119','dfasdfasdf',1,'签权失败',1432113119,2),(18,3,'13536580119','test aaa',1,'签权失败',1432114218,2),(19,3,'13536580119','test aaa',1,'签权失败',1432114241,2);
 /*!40000 ALTER TABLE `c_message` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -438,14 +468,15 @@ CREATE TABLE `c_note_info` (
   `dissent` varchar(200) DEFAULT '' COMMENT '异议处理',
   `next_followup` varchar(200) DEFAULT '' COMMENT '下次跟进处理',
   `memo` varchar(200) DEFAULT '' COMMENT '备注',
-  `isvalid` tinyint(1) DEFAULT '' COMMENT '是否有效',
-  `iskey` tinyint(1) DEFAULT '' COMMENT '是否重点',
-  `next_contact` int(11) DEFAULT '' COMMENT '下次联系时间',
+  `isvalid` tinyint(1) DEFAULT '0' COMMENT '是否有效',
+  `iskey` tinyint(1) DEFAULT '0' COMMENT '是否重点',
+  `next_contact` int(11) DEFAULT '0' COMMENT '下次联系时间',
   `dial_id` int(11) DEFAULT '0' COMMENT '电话拔打记录',
-  `eno` int(11) NOT NULL default 0 COMMENT '工号',
-  `create_time` int(11) NOT NULL default 0 COMMENT '创建时间',
+  `message_id` int(11) NOT NULL DEFAULT '0' COMMENT '短信发送记录',
+  `eno` int(11) NOT NULL DEFAULT '0' COMMENT '工号',
+  `create_time` int(11) NOT NULL DEFAULT '0' COMMENT '创建时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -454,7 +485,7 @@ CREATE TABLE `c_note_info` (
 
 LOCK TABLES `c_note_info` WRITE;
 /*!40000 ALTER TABLE `c_note_info` DISABLE KEYS */;
-INSERT INTO `c_note_info` VALUES (1,3,'aa','bbb','cc','dd','dfa','ddd',1,1,123,0,1,123),(2,4,'dd','cc','adf','dfa','adsf','asdf',1,1,431,0,1,122),(3,3,'aa2','bbb','cc','dd','dfa','ddd',1,1,123,0,1,123),(4,3,'dsf','bbb','cc','dd','dfa','ddd',1,1,123,0,1,123),(5,3,'asf','cd','cc','dd','dfa','ddd',1,1,123,0,1,123),(6,3,'asdf','adf','cc','dd','dfa','ddd',1,1,123,0,1,123),(7,3,'asdfasf','adf','cc','dd','dfa','ddd',1,1,123,0,1,123),(8,3,'asdfa','af','cc','dd','dfa','ddd',1,1,123,0,1,123),(9,3,'aa','bbb','cc','dd','dfa','ddd',1,1,123,0,1,123),(10,3,'aa','bbb','cc','dd','dfa','ddd',1,1,123,0,1,123),(11,3,'12se','12sae','sdaf','fasdf','asf','asd',1,1,21,0,1,123),(12,3,'12se','12sae','sdaf','fasdf','asf','asd',1,1,21,0,1,123);
+INSERT INTO `c_note_info` VALUES (1,3,'aa','bbb','cc','dd','dfa','ddd',1,1,123,0,0,1,123),(2,4,'dd','cc','adf','dfa','adsf','asdf',1,1,431,1,0,1,122),(3,3,'aa2','bbb','cc','dd','dfa','ddd',1,1,123,0,0,1,123),(4,3,'dsf','bbb','cc','dd','dfa','ddd',1,1,123,0,0,1,123),(5,3,'asf','cd','cc','dd','dfa','ddd',1,1,123,0,0,1,123),(6,3,'asdf','adf','cc','dd','dfa','ddd',1,1,123,0,0,1,123),(7,3,'asdfasf','adf','cc','dd','dfa','ddd',1,1,123,0,0,1,123),(8,3,'asdfa','af','cc','dd','dfa','ddd',1,1,123,0,0,1,123),(9,3,'aa','bbb','cc','dd','dfa','ddd',1,1,123,0,0,1,123),(10,3,'aa','bbb','cc','dd','dfa','ddd',1,1,123,0,0,1,123),(11,3,'12se','12sae','sdaf','fasdf','asf','asd',1,1,21,0,0,1,123),(12,3,'12se','12sae','sdaf','fasdf','asf','asd',1,1,21,0,0,1,123),(13,4,'adsf','asdf','asdf','asdfasdf','asdfasdf','adfs',1,1,1432224000,NULL,0,2,1432113639),(14,4,'adsf','asdf','asdf','asdfasdf','asdfasdf','adfs',1,1,1432224000,NULL,0,2,1432113847);
 /*!40000 ALTER TABLE `c_note_info` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -467,10 +498,10 @@ DROP TABLE IF EXISTS `c_privilege`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `c_privilege` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键',
-  `menu_id` int(11) NOT NULL default 0 COMMENT '资源id',
-  `role_id` int(11) NOT NULL default 0 COMMENT '角色id',
+  `menu_id` int(11) NOT NULL DEFAULT '0' COMMENT '资源id',
+  `role_id` int(11) NOT NULL DEFAULT '0' COMMENT '角色id',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=89 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -479,6 +510,7 @@ CREATE TABLE `c_privilege` (
 
 LOCK TABLES `c_privilege` WRITE;
 /*!40000 ALTER TABLE `c_privilege` DISABLE KEYS */;
+INSERT INTO `c_privilege` VALUES (3,2,1),(15,7,1),(16,8,1),(17,9,1),(18,10,1),(19,11,1),(20,12,1),(21,13,1),(22,14,1),(23,15,1),(24,16,1),(25,17,1),(30,3,1),(31,5,1),(34,2,2),(35,7,2),(36,8,2),(37,9,2),(38,10,2),(39,11,2),(40,12,2),(41,13,2),(42,14,2),(43,15,2),(44,16,2),(45,17,2),(46,3,2),(47,5,2),(48,6,2),(49,1,2),(50,18,2),(51,19,2),(52,20,2),(53,21,2),(54,22,2),(55,23,2),(56,24,2),(57,25,2),(58,10,4),(59,11,4),(60,12,4),(61,1,5),(62,2,5),(63,3,5),(64,5,5),(65,6,5),(66,7,5),(67,8,5),(68,9,5),(69,10,5),(70,11,5),(71,12,5),(72,13,5),(73,14,5),(74,15,5),(75,16,5),(76,17,5),(77,18,5),(78,19,5),(79,20,5),(80,21,5),(81,22,5),(82,23,5),(83,24,5),(84,25,5),(85,26,5),(86,27,5),(87,28,5),(88,29,5);
 /*!40000 ALTER TABLE `c_privilege` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -493,7 +525,7 @@ CREATE TABLE `c_role_info` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键',
   `name` varchar(100) DEFAULT '' COMMENT '角色名称',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -502,7 +534,7 @@ CREATE TABLE `c_role_info` (
 
 LOCK TABLES `c_role_info` WRITE;
 /*!40000 ALTER TABLE `c_role_info` DISABLE KEYS */;
-INSERT INTO `c_role_info` VALUES (1,'谈单师'),(2,'业务人员');
+INSERT INTO `c_role_info` VALUES (1,'客服人员'),(2,'业务员'),(4,'财务人员'),(5,'部门主管');
 /*!40000 ALTER TABLE `c_role_info` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -516,14 +548,14 @@ DROP TABLE IF EXISTS `c_trans_cust_info`;
 CREATE TABLE `c_trans_cust_info` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键',
   `cust_id` int(11) NOT NULL COMMENT '客户id',
-  `cust_type` int(11) NOT NULL default 0 COMMENT '客户分类',
-  `eno` varchar(10) NOT NULL default '' COMMENT '所属工号',
-  `assign_eno` varchar(10) NOT NULL default '' COMMENT '分配人',
-  `assign_time` int(11) NOT NULL default 0 COMMENT '分配时间',
-  `next_time` int(11) NOT NULL default 0 COMMENT '下次联系时间',
-  `memo` int(11) NOT NULL default 0 COMMENT '备注',
-  `creator` int(11) NOT NULL default 0 COMMENT '创建人',
-  `create_time` int(11) NOT NULL default 0 COMMENT '创建时间',
+  `cust_type` int(11) NOT NULL DEFAULT '0' COMMENT '客户分类',
+  `eno` varchar(10) NOT NULL DEFAULT '' COMMENT '所属工号',
+  `assign_eno` varchar(10) NOT NULL DEFAULT '' COMMENT '分配人',
+  `assign_time` int(11) NOT NULL DEFAULT '0' COMMENT '分配时间',
+  `next_time` int(11) NOT NULL DEFAULT '0' COMMENT '下次联系时间',
+  `memo` varchar(200) DEFAULT '' COMMENT '备注',
+  `creator` int(11) NOT NULL DEFAULT '0' COMMENT '创建人',
+  `create_time` int(11) NOT NULL DEFAULT '0' COMMENT '创建时间',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -546,10 +578,10 @@ DROP TABLE IF EXISTS `c_user_role`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `c_user_role` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键',
-  `user_id` int(11) NOT NULL default 0 COMMENT '用户id',
-  `role_id` int(11) NOT NULL default 0 COMMENT '角色id',
+  `user_id` int(11) NOT NULL DEFAULT '0' COMMENT '用户id',
+  `role_id` int(11) NOT NULL DEFAULT '0' COMMENT '角色id',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -558,7 +590,7 @@ CREATE TABLE `c_user_role` (
 
 LOCK TABLES `c_user_role` WRITE;
 /*!40000 ALTER TABLE `c_user_role` DISABLE KEYS */;
-INSERT INTO `c_user_role` VALUES (1,1,1),(2,2,1),(3,3,1);
+INSERT INTO `c_user_role` VALUES (1,1,1),(2,3,1),(3,3,2),(4,4,1),(6,4,4),(7,5,1),(8,5,2),(9,5,4),(10,1,5),(12,2,2),(13,6,2);
 /*!40000 ALTER TABLE `c_user_role` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -578,18 +610,18 @@ CREATE TABLE `c_users` (
   `birth` date DEFAULT NULL COMMENT '生日',
   `sex` tinyint(2) NOT NULL DEFAULT '1' COMMENT '性别',
   `tel` varchar(20) NOT NULL DEFAULT '' COMMENT '电话号码',
-  `qq` varchar(15) DEFAULT 0 COMMENT 'qq',
-  `dept_id` mediumint(4) NOT NULL  DEFAULT 0 COMMENT '部门',
-  `group_id` mediumint(5) DEFAULT 0 COMMENT '组别',
-  `manager_id` int not nullDEFAULT 0  COMMENT '主管id',
-  `ismaster` tinyint(1) DEFAULT 2 COMMENT '是否精英',
-  `status` tinyint(2) DEFAULT 1 COMMENT '状态',
-  `cust_num` int NOT NULL DEFAULT 0 COMMENT '已分配资源数',
-  `extend_no` int NOT NULL DEFAULT 0 COMMENT '分机号',
-  `create_time` int NOT NULL DEFAULT 0 COMMENT '创建时间',
-  `login_time` int NOT NULL DEFAULT 0 COMMENT '最后登录时间',
+  `qq` varchar(15) DEFAULT '0' COMMENT 'qq',
+  `dept_id` mediumint(4) NOT NULL DEFAULT '0' COMMENT '部门',
+  `group_id` mediumint(5) DEFAULT '0' COMMENT '组别',
+  `manager_id` int(11) NOT NULL DEFAULT '0' COMMENT '主管id',
+  `ismaster` tinyint(1) DEFAULT '2' COMMENT '是否精英',
+  `status` tinyint(2) DEFAULT '1' COMMENT '状态',
+  `cust_num` int(11) NOT NULL DEFAULT '0' COMMENT '已分配资源数',
+  `extend_no` int(11) NOT NULL DEFAULT '0' COMMENT '分机号',
+  `create_time` int(11) NOT NULL DEFAULT '0' COMMENT '创建时间',
+  `login_time` int(11) NOT NULL DEFAULT '0' COMMENT '最后登录时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -598,7 +630,7 @@ CREATE TABLE `c_users` (
 
 LOCK TABLES `c_users` WRITE;
 /*!40000 ALTER TABLE `c_users` DISABLE KEYS */;
-INSERT INTO `c_users` VALUES (1,'U00005','a722c63db8ec8625af6cf71cb8c2d939','admin','admin',0,1,'12314141234','2561582',1,1,1,1,1,123,0),(2,'U00006','a722c63db8ec8625af6cf71cb8c2d939','test2','test2',0,1,'12314141234','2561582',1,2,1,1,1,1,1),(3,'U00001','a722c63db8ec8625af6cf71cb8c2d939','test1','test1',0,1,'13536580110','123123123',1,1,0,0,0,0,0),(4,'U00011','a722c63db8ec8625af6cf71cb8c2d939','test10','test10',0,1,'12314141234','2561582',1,3,1,1,1,1,1),(5,'U00012','a722c63db8ec8625af6cf71cb8c2d939','test11','test11',0,1,'12314141234','2561582',1,1,1,1,1,1,1),(6,'U00007','a722c63db8ec8625af6cf71cb8c2d939','test3','test3',0,1,'12314141234','2561582',1,2,1,1,1,1,1),(7,'U00002','a722c63db8ec8625af6cf71cb8c2d939','test4','test4',0,2,'12314141234','2561582',1,3,1,1,1,1,1),(8,'U00003','a722c63db8ec8625af6cf71cb8c2d939','test5','test5',0,1,'12314141234','2561582',1,1,1,1,1,1,1),(9,'U00004','a722c63db8ec8625af6cf71cb8c2d939','test6','test6',0,1,'12314141234','2561582',1,2,1,1,1,1,1),(10,'U00008','a722c63db8ec8625af6cf71cb8c2d939','test7','test7',0,1,'12314141234','2561582',1,3,1,1,1,1,1),(11,'U00009','a722c63db8ec8625af6cf71cb8c2d939','test8','test8',0,1,'12314141234','2561582',1,1,1,1,1,1,1),(12,'U00010','a722c63db8ec8625af6cf71cb8c2d939','test9','test9',0,1,'12314141234','2561582',1,1,1,1,1,1,1);
+INSERT INTO `c_users` VALUES (1,'U00005','a722c63db8ec8625af6cf71cb8c2d939','admin','admin','0000-00-00',1,'12314141234','2561582',1,1,1,1,1,0,0,123,0),(2,'U00006','a722c63db8ec8625af6cf71cb8c2d939','test2','test2','0000-00-00',1,'12314141234','2561582',1,2,1,1,1,1,0,1,1),(3,'U00001','a722c63db8ec8625af6cf71cb8c2d939','test1','test1','0000-00-00',1,'13536580110','123123123',1,1,0,2,1,12,0,0,0),(4,'U00011','a722c63db8ec8625af6cf71cb8c2d939','test10','test10','0000-00-00',1,'12314141234','2561582',1,3,1,1,1,0,0,1,1),(5,'U00012','a722c63db8ec8625af6cf71cb8c2d939','test11','test11','0000-00-00',1,'12314141234','2561582',1,1,1,2,1,0,0,1,1),(6,'U00007','a722c63db8ec8625af6cf71cb8c2d939','test3','test3','0000-00-00',1,'12314141234','2561582',1,2,1,1,1,0,0,1,1),(7,'U00002','a722c63db8ec8625af6cf71cb8c2d939','test4','test4','0000-00-00',2,'12314141234','2561582',1,3,1,1,1,0,0,1,1),(8,'U00003','a722c63db8ec8625af6cf71cb8c2d939','test5','test5','0000-00-00',1,'12314141234','2561582',1,1,1,2,1,0,0,1,1),(9,'U00004','a722c63db8ec8625af6cf71cb8c2d939','test6','test6','0000-00-00',1,'12314141234','2561582',1,2,1,1,1,1,0,1,1),(10,'U00008','a722c63db8ec8625af6cf71cb8c2d939','test7','test7','0000-00-00',1,'12314141234','2561582',1,3,1,2,1,0,0,1,1),(11,'U00009','a722c63db8ec8625af6cf71cb8c2d939','test8','test8','0000-00-00',1,'12314141234','2561582',1,1,1,2,1,0,0,1,1),(12,'U00010','a722c63db8ec8625af6cf71cb8c2d939','test9','test9','0000-00-00',1,'12314141234','2561582',1,1,1,1,1,0,0,1,1);
 /*!40000 ALTER TABLE `c_users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -611,4 +643,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-04-22 17:44:00
+-- Dump completed on 2015-05-20 17:50:57
