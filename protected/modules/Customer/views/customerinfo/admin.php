@@ -46,6 +46,7 @@ $('.search-form form').submit(function(){
                 <a href="javascript:void(0)" id="batch_input" class="btn btn-sm btn-primary" > 
                     <i class="icon-plus"></i>EXCEL批量导入
                 </a>
+				<a href="<?= Yii::app()->createUrl("Customer/customerinfo/getTemplate") ?>">下载<br>模板</a>
             </div> 
         </div>
 
@@ -69,18 +70,17 @@ $('.search-form form').submit(function(){
 				),
             //'id',
 			'cust_name',
-                         'shop_name',
+            'shop_name',
 			'shop_url',
 			'shop_addr',
 			'phone',
 			'qq',
 			array('name'=>'category', 'value'=>array($this, 'get_category_text')),
 			'mail',
-			array('name'=>'eno', 'value'=>array($this, 'get_eno_text')),
-			//'assign_eno',
+			'eno',
+			//array('name'=>'eno', 'value'=>array($this, 'get_eno_text')),
 			array('name'=>'assign_eno', 'value'=>array($this, 'get_assign_text')),
-			//'assign_time',
-			array('name'=>'assign_time', 'value'=>'date("Y-m-d",$data->assign_time)',),
+			array('name'=>'assign_time', 'value'=>array($this, 'get_assign_time'),),
 			/*array(
 				'class'=>'CButtonColumn',
 					//'deleteButtonOptions'=>array('style'=>'display:none'),
