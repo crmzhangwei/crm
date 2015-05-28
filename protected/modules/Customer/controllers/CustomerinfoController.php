@@ -52,8 +52,8 @@ class CustomerinfoController extends GController
 			$model->cust_type = 0;	//客户分类默认为0
  		   if($model->save()){
 				Yii::app()->db->createCommand()->update('{{Users}}',array('cust_num' =>new CDbExpression('cust_num+1')),"eno='{$model->eno}'");
-//				//Users::model()->updateAll(array('cust_num'=>'cust_num+1'),'eno=:eno',array(":eno"=>$model->eno)); 
-//				exit("<script>alert(\"恭喜你, 成功添加一条记录。\");javascript:history.go(-1);</script>");
+				//Users::model()->updateAll(array('cust_num'=>'cust_num+1'),'eno=:eno',array(":eno"=>$model->eno)); 
+				//exit("<script>alert(\"恭喜你, 成功添加一条记录。\");javascript:history.go(-1);</script>");
 				Utils::showMsg (1, '增加成功!');
 			}else{
 				$errors = $model->getErrors();
@@ -92,16 +92,17 @@ class CustomerinfoController extends GController
 	 */
 	public function actionUpdate($id=0)
 	{
+		
 		$id = $id ? $id: $_POST['CustomerInfo']['id'];
 		$model=$this->loadModel($id);
 		$eno = $model->eno ?$model->eno :0;
-		$param['eno'] = $eno;
+		$param['eno'] = (string)$eno;
+		
 		$userinfo = Users::model()->findByAttributes($param);
-	
-		$user_info['group_id'] = $userinfo->group_id?$userinfo->group_id:0;
-		$user_info['dept_id']  = $userinfo->dept_id?$userinfo->dept_id:0;
-	        $user_info['name']     = $userinfo->name?$userinfo->name:0;
-		$user_info['eno']     = $userinfo->eno?$userinfo->eno:0;
+		$user_info['group_id'] = $userinfo?$userinfo->group_id:0;
+		$user_info['dept_id']  = $userinfo?$userinfo->dept_id:0;
+	    $user_info['name']     = $userinfo?$userinfo->name:0;
+		$user_info['eno']     = $userinfo?$userinfo->eno:0;
 		$user_info['group_arr'] = Userinfo::getGroupById($user_info['dept_id']);
 		$user_info['user_arr'] = Userinfo::getUserbygid($user_info['group_id'],$user_info['dept_id']);	
 		if(isset($_POST['CustomerInfo']))
@@ -283,7 +284,7 @@ class CustomerinfoController extends GController
 	}
 	
 	public function getAssignArr($assign){
-		return Chtml::listData(Users::model()->findAll('id=:id', array(':id'=>$assign)), 'id', 'name');
+		return Chtml::listData(Users::model()->findAll('eno=:eno', array(':eno'=>$assign)), 'eno', 'name');
 	}
 	
 	public function get_category_text($data){

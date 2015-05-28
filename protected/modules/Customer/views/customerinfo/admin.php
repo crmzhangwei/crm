@@ -92,6 +92,7 @@ $('.search-form form').submit(function(){
 			),*/
 			array(
 				'class'=>'CButtonColumn',
+				'deleteButtonOptions'=>array('style'=>'display:none'),
 				'header' => '操作', 
 				'template'=>'{upda} {delete}',
 				'htmlOptions' => array(
