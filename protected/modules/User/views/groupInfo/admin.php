@@ -2,7 +2,7 @@
 <?php
 /* @var $this DeptInfoController */
 /* @var $model DeptInfo */
-
+$this->pageTitle='组别管理';
 $this->breadcrumbs=array(
 	'组别管理'=>array('admin'),
 	'管理',

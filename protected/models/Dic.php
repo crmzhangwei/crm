@@ -99,4 +99,13 @@ class Dic extends CActiveRecord
 	{
 		return parent::model($className);
 	}
+        /**
+         * 获取用户的分类
+         */
+        public function getCustCart($ctype = 'cust_category')
+        {
+            $data = $this->findAll("ctype = '$ctype'");
+            $res = CHtml::listData($data, 'code', 'name');
+            return $res?$res:array();
+        }
 }

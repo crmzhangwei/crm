@@ -1,7 +1,7 @@
 <?php
 /* @var $this UsersController */
 /* @var $model Users */
-
+$this->pageTitle = '查看用户页面';
 $this->breadcrumbs = array(
     '权限管理' => array('admin'),
     '查看用户',

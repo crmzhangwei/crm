@@ -122,6 +122,7 @@ class CustomerInfo extends CActiveRecord {
         // @todo Please modify the following code to remove attributes that should not be searched.
         $type = intval(Yii::app()->request->getParam('type'));
         $criteria = new CDbCriteria;
+        $criteria->compare('assign_eno',Yii::app()->session["user"]['eno']);  //只看到自己的客户
         if ($this->phone) {
             $criteria->compare('phone', $this->phone, true);
         }

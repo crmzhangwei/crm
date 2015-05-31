@@ -1,7 +1,7 @@
 <?php
 /* @var $this DeptInfoController */
 /* @var $model DeptInfo */
-
+$this->pageTitle = '部门管理页面';
 $this->breadcrumbs=array(
 	'部门管理'=>array('admin'),
 	'部门管理',
