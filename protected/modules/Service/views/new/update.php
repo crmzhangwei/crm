@@ -1,5 +1,4 @@
-<link rel="stylesheet" href="<?php echo Yii::app()->request->baseUrl; ?>/assets/css/jquery-ui.min.css" /> 
-<script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/js/jquery-ui.min.js"></script>
+
 <?php
 /* @var $this ServiceController */
 /* @var $model CustomerInfo */

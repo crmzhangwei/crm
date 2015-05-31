@@ -14,7 +14,7 @@
         <!-- ace styles -->
         <link rel="stylesheet" href="<?php echo Yii::app()->request->baseUrl; ?>/assets/css/ace.min.css" id="main-ace-style" />
         <link rel="stylesheet" href="<?php echo Yii::app()->request->baseUrl; ?>/assets/css/ace-skins.min.css" />
-
+        <link rel="stylesheet" href="<?php echo Yii::app()->request->baseUrl; ?>/assets/css/jquery-ui.min.css" /> 
         <!--[if lte IE 9]>
           <link rel="stylesheet" href="<?php echo Yii::app()->request->baseUrl; ?>/assets/css/ace-ie.min.css" />
         <![endif]-->
@@ -23,21 +23,6 @@
         <script type="text/javascript">
             window.jQuery || document.write('<script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/js/jquery.min.js">'+'<'+"/script>");
         </script>
-    
-         <!-- ace scripts -->
-        <script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/js/ace.min.js"></script>
-        <script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/js/ace-elements.min.js"></script>
-        <script src="<?php echo Yii::app()->request->baseUrl; ?>/static/js/DatePicker/WdatePicker.js"></script>
-        <script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/js/bootbox.min.js"></script>
-        <script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/js/jquery.validate.min.js"></script>
-        <script src="<?php echo Yii::app()->request->baseUrl; ?>/static/js/common.js"></script>
-   
-        <!-- HTML5shiv and Respond.js for IE8 to support HTML5 elements and media queries -->
-
-        <!--[if lte IE 8]>
-        <script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/js/html5shiv.min.js"></script>
-        <script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/js/respond.min.js"></script>
-        <![endif]-->
     </head>
 
         <body class="no-skin">
@@ -118,10 +103,24 @@
             <!-- page specific plugin scripts -->
 
             <!--[if lte IE 8]>
-            <script src="assets/js/excanvas.min.js"></script>
+            <script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/js/excanvas.min.js"></script>
             <![endif]-->
 
-           
+                 <!-- ace scripts -->
+        <script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/js/ace.min.js"></script>
+        <script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/js/ace-elements.min.js"></script>
+        <script src="<?php echo Yii::app()->request->baseUrl; ?>/static/js/DatePicker/WdatePicker.js"></script>
+        <script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/js/bootbox.min.js"></script>
+        <script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/js/jquery.validate.min.js"></script>
+        <script src="<?php echo Yii::app()->request->baseUrl; ?>/static/js/common.js"></script>
+   
+        <!-- HTML5shiv and Respond.js for IE8 to support HTML5 elements and media queries -->
 
+        <!--[if lte IE 8]>
+        <script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/js/html5shiv.min.js"></script>
+        <script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/js/respond.min.js"></script>
+        <![endif]--> 
+
+        <script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/js/jquery-ui.min.js"></script>
         </body>
     </html>
