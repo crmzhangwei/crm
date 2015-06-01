@@ -83,6 +83,9 @@ class CustomerInfoController extends GController {
             //$aftermodel = AftermarketCustInfo::model()->findBySql($sql, array(':cust_id' => $id));  
             $newCustType = $_POST['CustomerInfo']['cust_type'];
             $newCategory = $_POST['CustomerInfo']['category'];
+             $_POST['CustomerInfo']['next_time'] = strtotime($_POST['CustomerInfo']['next_time']);
+             $model->attributes = $_POST['CustomerInfo'];
+             $model->save();
 //            if ($aftermodel->cust_type != $newCustType) {
 //                //客户分类调整，生成转换明细数据
 //                $convt = new CustConvtDetail();
@@ -152,14 +155,14 @@ class CustomerInfoController extends GController {
 //            $noteinfo->setAttribute("next_contact", date('Y-m-d',$noteinfo->next_contact));
 //        } 
        
-        $model->setAttribute("create_time", date("Y-m-d", $model->getAttribute("create_time")));
-        $model->setAttribute("assign_time", date("Y-m-d", $model->getAttribute("assign_time")));
-        $model->setAttribute("next_time", date("Y-m-d", $model->getAttribute("next_time")));
+        $model->setAttribute("create_time", date("Y-m-d", intval($model->getAttribute("create_time"))));
+        $model->setAttribute("assign_time", date("Y-m-d", intval($model->getAttribute("assign_time"))));
+        $model->setAttribute("next_time", date("Y-m-d",intval( $model->getAttribute("next_time"))));
         $sharedNote = NoteInfo::model();
         $sharedNote->setAttribute("cust_id", $model->id);
         $historyNote = NoteInfo::model();
         $historyNote->setAttribute("cust_id", $model->id);
-        $user = Users::model()->findByPk(Yii::app()->user->id);
+        $user = Users::model()->findByPk($model->creator);
         $this->render('update', array(
             'model' => $model,
            // 'sharedNote' => $sharedNote,

@@ -69,7 +69,6 @@ $this->widget('GGridView', array(
         'cust_name',
         'shop_name',
         'corp_name',
-        'category',
         array(
             'name'=>'category',
             'value'=>array($this,'getCartTxt'),

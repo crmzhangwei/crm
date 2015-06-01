@@ -38,31 +38,31 @@ function sendMail(cust_id){
             <tr>
                 <td width="10%" nowrap="nowrap"><?php echo $form->labelEx($model,'cust_name'); ?></td>
                 <td width="20%" nowrap="nowrap">
-                    <?php echo $model->cust_name; ?>
+                    <?php echo $form->textField($model,'cust_name',array('class'=>'col-md-6','maxlength'=>100))?>
                     <?php echo $form->error($model,'cust_name'); ?>
                 </td>
                 <td width="10%" nowrap="nowrap"><?php echo $form->labelEx($model,'shop_name'); ?></td>
-                <td><?php echo $model->shop_name; ?>
+                <td><?php echo $form->textField($model,'shop_name',array('class'=>'col-md-3','maxlength'=>100)); ?>
 		<?php echo $form->error($model,'shop_name'); ?></td>
             </tr>
             <tr>
                 <td nowrap="nowrap"><?php echo $form->labelEx($model,'corp_name'); ?></td>
                 <td>
-                    <?php echo $model->corp_name ?>
+                    <?php echo $form->textField($model,'corp_name',array('class'=>'col-md-3','maxlength'=>100)); ?>
                     <?php echo $form->error($model,'corp_name'); ?>
                 </td>
                 <td nowrap="nowrap"><?php echo $form->labelEx($model,'shop_url'); ?></td>
-                <td><?php echo $model->shop_url; ?>
+                <td><?php echo $form->textField($model,'shop_url',array('class'=>'col-md-3','maxlength'=>100)); ?>
 		<?php echo $form->error($model,'shop_url'); ?></td>
             </tr>
             <tr>
                 <td nowrap="nowrap"><?php echo $form->labelEx($model,'shop_addr'); ?></td>
                 <td>
-                    <?php echo $model->shop_addr; ?>
+                   <?php echo $form->textField($model,'shop_addr',array('class'=>'col-md-3','maxlength'=>100)); ?>
                     <?php echo $form->error($model,'shop_addr'); ?>
                 </td>
                 <td nowrap="nowrap"><?php echo $form->labelEx($model,'phone'); ?></td>
-                <td><?php echo Utils::hidePhone($model->phone); ?>
+                <td><?php  echo $form->textField($model,'phone',array('class'=>'col-md-3','maxlength'=>15)); // echo Utils::hidePhone($model->phone); ?>
                     <?php echo CHtml::ajaxButton("拔打电话", Yii::app()->createUrl('Service/service/dial',array('cust_id'=>$model->id)), array('success'=>'dial_ret'),array('class' => 'editNode btn btn-info btn-minier tooltip-info', 'data-placement' => "bottom")) ?>
                     <?php echo CHtml::ajaxButton("监听电话", Yii::app()->createUrl('Service/service/listen',array('cust_id'=>$model->id)), array('success'=>'listen_ret'),array('class' => 'editNode btn btn-info btn-minier tooltip-info', 'data-placement' => "bottom")) ?>
                     <?php echo CHtml::button("发送短信", array('onclick'=>'javascript:sendMessage('.$model->id.')','class' => 'editNode btn btn-info btn-minier tooltip-info', 'data-placement' => "bottom")) ?>
@@ -72,18 +72,18 @@ function sendMail(cust_id){
             <tr>
                 <td nowrap="nowrap"><?php echo $form->labelEx($model,'qq'); ?></td>
                 <td>
-                   <?php  echo Utils::hideQq($model->qq);  ?>
+                  <?php echo $form->textField($model,'qq',array('class'=>'col-md-6','maxlength'=>15)); ?>
 		   <?php echo $form->error($model,'qq'); ?>
                 </td>
                 <td nowrap="nowrap"><?php echo $form->labelEx($model,'mail'); ?></td>
-                <td><?php  echo Utils::hideEmail($model->mail);  ?>
+                <td><?php echo $form->textField($model,'mail',array('class'=>'col-md-3','size'=>50,'maxlength'=>50)); ?>
                     <?php echo CHtml::button("发邮件",array('onclick'=>'javascript:sendMail('.$model->id.')','class' => 'editNode btn btn-info btn-minier tooltip-info', 'data-placement' => "bottom")) ?>
 		    <?php echo $form->error($model,'mail'); ?></td>
             </tr>
             <tr>
                 <td nowrap="nowrap"><?php echo $form->labelEx($model,'datafrom'); ?></td>
                 <td>
-                   <?php echo $model->datafrom; ?>
+                  <?php echo $form->textField($model,'datafrom',array('class'=>'col-md-6','maxlength'=>100)); ?>
 		<?php echo $form->error($model,'datafrom'); ?>
                 </td>
                 <td nowrap="nowrap"><?php echo $form->labelEx($model,'category'); ?></td>
@@ -94,7 +94,7 @@ function sendMail(cust_id){
             <tr>
                 <td nowrap="nowrap"><?php echo $form->labelEx($model,'cust_type'); ?></td>
                 <td> 
-                    <?php echo  $form->dropDownList($model, "cust_type", $this->getCustTypeArr()) ?>
+                    <?php echo $form->dropDownList($model, 'cust_type',$this->genCustTypeArray(), array('id'=>'cust_type','style' => "height:34px;")); ?>
                     <?php echo $form->error($model,'cust_type'); ?>
                 </td>
                 <td nowrap="nowrap"><?php echo $form->labelEx($model,'eno'); ?></td>
@@ -113,7 +113,7 @@ function sendMail(cust_id){
             <tr> 
                 <td nowrap="nowrap"><?php echo $form->labelEx($model,'next_time'); ?></td>
                 <td>
-                    <?php echo $model->next_time;?>
+                   <?php echo $form->textField($model,'next_time',array('class'=>"Wdate", 'onClick'=>"WdatePicker()",'style'=>'height:30px;')); ?>
                     <?php echo $form->error($model,'next_time'); ?></td>
                 <td nowrap="nowrap"><?php echo $form->labelEx($model,'memo'); ?></td>
                 <td>
@@ -124,7 +124,7 @@ function sendMail(cust_id){
             <tr> 
                 <td nowrap="nowrap"><?php echo $form->labelEx($model,'creator'); ?></td>
                 <td>
-                   <?php echo $model->creator; ?>  
+		<?=$user->username?>
                 </td> 
                 <td nowrap="nowrap"><?php echo $form->labelEx($model,'create_time'); ?></td>
                 <td><?php echo $model->create_time; ?>
