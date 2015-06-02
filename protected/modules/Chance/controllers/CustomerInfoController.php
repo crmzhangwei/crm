@@ -113,33 +113,7 @@ class CustomerInfoController extends GController {
                 Yii::app()->db->createCommand()->update('{{customer_info}}',array('category' =>$newCategory),"id=$id"); 
             }
      
-            if (isset($_POST['NoteInfo'])) { 
-                //保存小记
-                $noteinfo->unsetAttributes();  
-                $noteinfo->attributes = $_POST['NoteInfo'];
-                if ($model->iskey != $noteinfo->iskey) {
-                    $model->iskey=$noteinfo->iskey;
-                    Yii::app()->db->createCommand()->update('{{customer_info}}',array('iskey' =>$noteinfo->iskey),"id=$id"); 
-                }
-                $noteinfo->next_contact = strtotime($noteinfo->next_contact);
-                $noteinfo->setAttribute("eno", Yii::app()->user->id);
-                $noteinfo->setAttribute("create_time", time());
-                if ($noteinfo->save()) {
-                    //保存售后库
-                    $aftermodel->next_time = $noteinfo->next_contact;
-                    $aftermodel->cust_type = $newCustType;
-                    $aftermodel->memo = $_POST['CustomerInfo']['memo'];
-                    $aftermodel->save();
-                } else {
-                    $noteinfo->addError("memo", "请录入小记信息");
-                }
-                //更新电话拔打记录
-                if($noteinfo->dial_id>0){
-                    $dialdetail =  DialDetail::model()->findByPk($noteinfo->dial_id);
-                    //获取通知录音路径，通知时长 
-                } 
-                $model->memo=$_POST['CustomerInfo']['memo'];
-            }
+        
         }
 //        //加载页面数据
 //        if(!$noteinfo->hasErrors()){
@@ -158,16 +132,55 @@ class CustomerInfoController extends GController {
         $model->setAttribute("create_time", date("Y-m-d", intval($model->getAttribute("create_time"))));
         $model->setAttribute("assign_time", date("Y-m-d", intval($model->getAttribute("assign_time"))));
         $model->setAttribute("next_time", date("Y-m-d",intval( $model->getAttribute("next_time"))));
-        $sharedNote = NoteInfo::model();
-        $sharedNote->setAttribute("cust_id", $model->id);
-        $historyNote = NoteInfo::model();
-        $historyNote->setAttribute("cust_id", $model->id);
+      
         $user = Users::model()->findByPk($model->creator);
         $this->render('update', array(
             'model' => $model,
            // 'sharedNote' => $sharedNote,
            // 'historyNote' => $historyNote,
            // 'noteinfo' => $noteinfo,
+            'user' => $user,
+        ));
+    }
+    
+    
+    public function actionNoteInfo($id)
+    {
+           $model = $this->loadModel($id);
+           $noteinfo = new NoteInfo(); 
+           $user = Users::model()->findByPk($model->creator);
+            if (isset($_POST['NoteInfo'])) { 
+                //保存小记
+                $noteinfo->unsetAttributes();  
+                $noteinfo->attributes = $_POST['NoteInfo'];
+                $noteinfo->next_contact = strtotime($noteinfo->next_contact);
+                $noteinfo->setAttribute("eno", Yii::app()->user->id);
+                $noteinfo->setAttribute("create_time", time());
+                if ($noteinfo->save()) {
+                    //保存售后库
+                   $model->next_time = $noteinfo->next_contact;
+                   $model->iskey = $noteinfo->iskey;
+                   $model->memo= $noteinfo->memo;
+                   $model->save();
+                } else {
+                    $noteinfo->addError("memo", "请录入小记信息");
+                }
+                //更新电话拔打记录
+                if($noteinfo->dial_id>0){
+                    $dialdetail =  DialDetail::model()->findByPk($noteinfo->dial_id);
+                    //获取通知录音路径，通知时长 
+                } 
+                
+            }
+            $sharedNote = NoteInfo::model();
+            $sharedNote->setAttribute("cust_id", $model->id);
+            // $historyNote = NoteInfo::model();
+            //$historyNote->setAttribute("cust_id", $model->id);
+            $this->render('update', array(
+            'model' => $model,
+            'sharedNote' => $sharedNote,
+           // 'historyNote' => $historyNote,
+            'noteinfo' => $noteinfo,
             'user' => $user,
         ));
     }

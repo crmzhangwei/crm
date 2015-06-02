@@ -8,4 +8,4 @@ $this->breadcrumbs=array(
 );
 
 ?>
-<?php $this->renderPartial('_form', array('model'=>$model,'user'=>$user)); ?>
+<?php $this->renderPartial('_form', array('model'=>$model,'user'=>$user,'noteinfo'=>!empty($noteinfo)?$noteinfo:'')); ?>
