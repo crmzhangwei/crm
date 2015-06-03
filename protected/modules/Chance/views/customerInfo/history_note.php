@@ -9,11 +9,11 @@ Yii::app()->clientScript->registerScript('search2', "
 ");
 ?>  
 <div class="search-form" style="display:" id="history_search_form">
- <?php $this->renderPartial('_search_note',array('model'=>$model)); ?>
+ <?php $this->renderPartial('_search_note',array('model'=>$model,'custmodel'=>$custmodel)); ?>
 </div><!-- search-form -->
 <div id="search_history_list"> 
     <?php $this->renderPartial('_history_note_list',array(
-	'custmodel'=>$custmodel,
+	'model'=>$model,'custmodel'=>$custmodel,
 )); 
 ?>  
 </div>

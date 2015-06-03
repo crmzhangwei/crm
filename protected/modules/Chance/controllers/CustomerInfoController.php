@@ -184,6 +184,41 @@ class CustomerInfoController extends GController {
             'user' => $user,
         ));
     }
+    
+    public function actionHistoryNote($id){
+          $historyNote = NoteInfo::model();
+          $model = $this->loadModel($id);
+         // var_dump($model);die;
+          $user = Users::model()->findByPk($model->creator);
+          $this->render('update', array(
+            'model' => $model,
+            //'sharedNote' => $sharedNote,
+            'historyNote' => $historyNote,
+            //'noteinfo' => $noteinfo,
+            'user' => $user,
+        ));
+    }
+    
+        /**
+     * 搜索历史小记列表数据
+     */
+    public function actionHistoryNoteList() {
+        $model = new NoteInfo('search');
+        $model->unsetAttributes();  // clear any default values
+        if (isset($_GET['NoteInfo']))
+            $model->attributes = $_GET['NoteInfo'];
+
+        if (isset($_GET['cust_id'])) {
+            $custid = $_GET['cust_id'];
+            $model->setAttribute("cust_id", $custid);
+        }
+        if (isset($_GET['isajax'])) {
+
+            $this->renderPartial('_history_note_list', array(
+                'model' => $model,
+            ));
+        }
+    }
     /**
      * Deletes a particular model.
      * If deletion is successful, the browser will be redirected to the 'admin' page.
@@ -297,7 +332,7 @@ class CustomerInfoController extends GController {
      */
     public function getCategoryArr() {
         $category = Dic::model()->getCustCart();
-        return array_merge(array('请选择'), $category);
+        return $category ;
     }
     protected  function getCartTxt($data)
     {
