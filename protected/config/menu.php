@@ -24,10 +24,10 @@ return array(
   
 
     
-     'Report' => array(
-        'label' => '报表分析','icon' => 'menu-icon fa fa-table', 'url' => array('/Report/'),
+     'Statistic' => array(
+        'label' => '报表分析','icon' => 'menu-icon fa fa-table', 'url' => array('/Statistic/'),
         'items' => array(
-			array('label' => '业绩报表', 'url' => array('/site/index')),
+			array('label' => '业绩报表', 'url' => array('/Statistic/finance/yeji')),
 			array('label' => '联系量统计', 'url' => array('/site/page', 'view' => 'about')),
 			array('label' => '话务员工作统计', 'url' => array('/site/contact')),
 			array('label' => '安排时间分布', 'url' => array('/site/contact')),
