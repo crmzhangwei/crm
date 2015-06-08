@@ -101,7 +101,7 @@ class CustomerinfoController extends GController
 		$userinfo = Users::model()->findByAttributes($param);
 		$user_info['group_id'] = $userinfo?$userinfo->group_id:0;
 		$user_info['dept_id']  = $userinfo?$userinfo->dept_id:0;
-	    $user_info['name']     = $userinfo?$userinfo->name:0;
+	        $user_info['name']     = $userinfo?$userinfo->name:0;
 		$user_info['eno']     = $userinfo?$userinfo->eno:0;
 		$user_info['group_arr'] = Userinfo::getGroupById($user_info['dept_id']);
 		$user_info['user_arr'] = Userinfo::getUserbygid($user_info['group_id'],$user_info['dept_id']);	

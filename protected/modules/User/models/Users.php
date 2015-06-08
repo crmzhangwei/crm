@@ -49,7 +49,7 @@ class Users extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			array('pass, username, tel, dept_id', 'required'),
-			array('sex, dept_id, group_id, ismaster, status,extend_no,tel', 'numerical', 'integerOnly'=>true),
+			array('sex, dept_id, group_id, ismaster, status,extend_no,tel,manager_id', 'numerical', 'integerOnly'=>true),
 			//array('eno', 'length', 'max'=>10),
 			array('pass', 'length', 'max'=>32,'min'=>6),
 			array('name', 'length', 'max'=>12),
@@ -61,7 +61,7 @@ class Users extends CActiveRecord
                         array('pass','compare','on'=>'login'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('extend_no,id, eno, pass, name, username, birth, sex, tel, qq, dept_id, group_id, ismaster, status', 'safe', 'on'=>'search'),
+			array('extend_no,id, eno, pass, name, username, birth, sex, tel, qq, dept_id, group_id, ismaster, status,manager_id', 'safe', 'on'=>'search'),
 		);
 	}
 

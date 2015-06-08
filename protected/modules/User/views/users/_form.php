@@ -77,24 +77,50 @@
             </div>
         </div>
 
-<!--        <div class="form-group">
+     <div class="form-group">
             <label class="col-sm-2 control-label no-padding-right">上级：</label>
             <div class="col-sm-4">
-                <input name="bossname" id="userinfo_bossname" class="form-control" type="text" readonly>
-                <input type="hidden" id="userinfo_bossid" name="userinfo[bossid]">
+                <input name="bossname" id="userinfo_bossname" class="form-control" type="text"  value="<?php echo $user_info['name']?$user_info['name']:'';?>" readonly>
+                <?php echo $form->hiddenField($model, 'manager_id') ;?>
             </div>
             <div class="col-sm-1">
                 <button type="button" id="selectBoss" class="btn btn-primary btn-sm"><i class="icon-plus"></i> 选择上级</button>
             </div>
         </div>
-        <div class="form-group">
-            <label class="col-sm-2 control-label no-padding-right">职务：</label>
-            <div class="col-sm-4">
-                <?php
-                //echo CHtml::dropDownList('userinfo[position]', '', $jobs, array('class' => 'form-control', 'empty' => '请选择职务'));
-                ?>
-            </div>
-        </div>-->
+        <script>
+           $('#selectBoss').click(function(){
+               $("#sle").show();
+           })
+        </script>
+         <div class="form-group" id='sle' style="display:none;">
+             <label class="col-sm-2 control-label no-padding-right"></label>
+            <div class="col-sm-10">
+                 <?php if($model->isNewRecord):
+			echo CHtml::dropDownList('dept','',$deptArr,array('onchange'=>'listgroup(this)'));
+		?>
+		<?php else:
+			echo CHtml::dropDownList('dept',$user_info['dept_id'],$deptArr,array('onchange'=>'listgroup(this)'));
+		endif;?>
+		
+		<?php if($model->isNewRecord):?>
+		<select id="groupinfo2" name="group" onchange="listuser(this)">
+			<option value ="0">--请选择组--</option>
+		</select>
+		<?php else: 
+		    echo   CHtml::dropDownList('group', intval($user_info['group_id']), $user_info['group_arr'], array('id'=>"groupinfo2",'onchange'=>"listuser(this)"));
+		     endif;?>
+
+		<?php if($model->isNewRecord):?>
+		<select id='userinfo' name="users" onchange="enoval(this)">	
+			<option value ="0">---请选择人员---</option>
+		</select>
+		<?php else: 
+		    echo   CHtml::dropDownList('users', $user_info['id'], $user_info['user_arr'], array('id'=>"userinfo",'onchange'=>"enoval(this)"));
+		endif;?>
+            </div> 
+           
+        </div>
+  
         <div class="form-group">
             <label class="col-sm-2 control-label no-padding-right"><?php echo $model->getAttributeLabel('ismaster'); ?>：</label>
             <div class="col-sm-4">
@@ -105,7 +131,7 @@
                 <?php echo $form->radioButtonList($model, 'sex', array(1=>'男',2=>'女', ), array('separator' => '<br/>', 'class' => 'col-sm-2')); ?>
             </div>
         </div>
-          <div class="form-group">
+         <div class="form-group">
             <label class="col-sm-2 control-label no-padding-right"><?php echo $model->getAttributeLabel('extend_no'); ?>：</label>
             <div class="col-sm-3">
                 <?php echo $form->textField($model, 'extend_no', array('maxlength' => 10, 'id' => "form-field-1", 'placeholder' => "", 'class' => "form-control")); ?>
@@ -187,5 +213,67 @@
                     }
                 });
             }
-        });
+        });  
+        
+        var getGroupurl = '<?php echo Yii::app()->createUrl('/Customer/customerinfo/GetGroup');?>';
+        var getUserurl = '<?php echo $this->createUrl('getUsers');?>';
+     function listgroup(obj)
+    {
+      	var deptid = $(obj).val();
+      	var groupStr = '<option value ="0">--请选择组--</option>';
+      	if (deptid == 0) {
+            $('#groupinfo2').html(groupStr);
+            $('#userinfo').html('<option value ="0">--请选择人员--</option>');
+            $('#userid').val('');
+      	}
+        else{
+            $('#userinfo').html('<option value ="0">--请选择人员--</option>');
+            $('#userid').val('');
+        }
+      	$.post(getGroupurl,{'deptid':deptid},function(data)
+	    {
+	    	
+	    	for(i in data)
+	        {
+	         	groupStr += '<option value ='+i+'>'+data[i]+'</option>';
+	        }
+	        $('#groupinfo2').html(groupStr);
+	    },'json')
+    };
+
+    function listuser(obj)
+    {
+      	var gid = $(obj).val();
+        var deptid = $('#dept').val();
+    	var optStr = '<option value ="0">---请选择人员---</option>';
+    	if (gid == 0) {
+            $('#userinfo').html(optStr);
+            $('#userid').val('');
+      	}
+        else{
+            $('#userid').val('');
+        }
+      	$.post(getUserurl,{'gid':gid,'deptid':deptid},function(data)
+	    {
+	    	
+	    	for(i in data)
+	        {
+	         	optStr += '<option value ='+i+'>'+data[i]+'</option>';
+	        }
+	        $('#userinfo').html(optStr);
+	    },'json')
+	    
+    }
+
+    function enoval(obj){
+    	var id = $(obj).val();
+        var name =$('#userinfo :selected').html()
+        console.log(name);
+        if(id)
+        {
+            $('#Users_manager_id').val(id);
+            $('#userinfo_bossname').val(name);
+        }
+    	
+    }
  </script>

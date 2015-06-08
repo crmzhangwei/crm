@@ -33,6 +33,21 @@ class Userinfo
 	    }
         return $Users;
 	}
+        
+        public static function getUserbygidanddid($gid, $deptid)
+	{
+            $where = $gid=='-1' ? "ismaster=1 and dept_id=$deptid and username<>'admin'" : "group_id=:id and ismaster<>1 and username<>'admin'";//-1为精英组
+            $modelgroup = Yii::app()->db->createCommand()
+                ->select('id, username, cust_num')
+                ->from('{{users}}')
+                ->where($where, array(':id'=>$gid))
+                ->queryAll();
+	    $Users = array();
+	    foreach ($modelgroup as $key => $value) {
+	    	$Users[$value['id']] = $value['username'] ;
+	    }
+        return $Users;
+	}
 
 	public static function getGroupById($deptid){
 		
