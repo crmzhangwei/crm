@@ -170,7 +170,7 @@ class CustomerassController extends GController
 	 * 	将时间戳格式化成日期格式
 	 */ 	
 	public function formatDate($data){
-		return $data->assign_time ? date("Y-m-d",$data->assign_time) : '未分配';
+		return $data->assign_eno ? date("Y-m-d",$data->assign_time) : '未分配';
 	}
 	/**
 	 * 	根据工号查用户名 
@@ -191,5 +191,16 @@ class CustomerassController extends GController
 	
 	public function getAssignArr($assign){
 		return Chtml::listData(Users::model()->findAll('eno=:eno', array(':eno'=>$assign)), 'eno', 'name');
+	}
+	
+	public function get_category_text($data){
+		$val = $data->category;
+		$categoryArr = $this->getCategory();
+		$res = isset($categoryArr[$val]) ? $categoryArr[$val] : $val;
+		return $res;
+	}
+	
+	public function getCategory(){
+		return Userinfo::getCategory();
 	}
 }

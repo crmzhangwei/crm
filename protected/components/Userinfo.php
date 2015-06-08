@@ -60,4 +60,11 @@ class Userinfo
         ksort($custTypeArr);
         return $custTypeArr;
     }
+	
+	/**
+	 *根据name查工号(eno)
+	 */
+	public static function getEnoByName($name){
+		return Users::model()->find('name=:name', array(':name'=>$name));
+	}
 }
