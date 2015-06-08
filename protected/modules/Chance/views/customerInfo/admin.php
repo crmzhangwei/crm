@@ -53,7 +53,10 @@ $form = $this->beginWidget('CActiveForm', array(
 $this->widget('GGridView', array(
     'id' => 'customer-info-grid',
     'dataProvider' => $model->search(),
-//  'filter'=>$model,
+    'rowCssClassExpression' => '
+        ( $row%2 ? $this->rowCssClass[1] : $this->rowCssClass[0] ) .
+        ( $data->iskey ?  " red":null  )
+    ',
     'columns' => array(
         array('class' => 'CCheckBoxColumn',
             'name' => 'id',
