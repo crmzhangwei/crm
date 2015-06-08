@@ -166,9 +166,30 @@ class CustomerassController extends GController
 		}
 	}
 
-
-
+	/**
+	 * 	将时间戳格式化成日期格式
+	 */ 	
+	public function formatDate($data){
+		return $data->assign_time ? date("Y-m-d",$data->assign_time) : '未分配';
+	}
+	/**
+	 * 	根据工号查用户名 
+	 */
+	public function get_assign_text($data){
+		$val = $data->assign_eno;
+		$assignArr = $this->getAssignArr($val);
+		$res = isset($assignArr[$val]) ? $assignArr[$val] : $val;
+		return $res;
+	}
 	
+	public function get_eno_text($data){
+		$val = $data->eno;
+		$assignArr = $this->getAssignArr($val);
+		$res = isset($assignArr[$val]) ? $assignArr[$val] : $val;
+		return $res;
+	}
 	
-	
+	public function getAssignArr($assign){
+		return Chtml::listData(Users::model()->findAll('eno=:eno', array(':eno'=>$assign)), 'eno', 'name');
+	}
 }

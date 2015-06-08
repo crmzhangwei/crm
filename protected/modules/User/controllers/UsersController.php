@@ -78,6 +78,15 @@ class UsersController extends GController
 	{
                 $id = $id ? $id: $_POST['Users']['id'];
 		$model=$this->loadModel($id);
+                $mid = $model->manager_id ?$model->manager_id :0;
+                $userinfo = Users::model()->findByPk($mid);
+		$user_info['group_id'] = $userinfo?$userinfo->group_id:0;
+		$user_info['dept_id']  = $userinfo?$userinfo->dept_id:0;
+	        $user_info['name']     = $userinfo?$userinfo->username:0;
+		$user_info['id']     = $userinfo?$userinfo->id:0;
+		$user_info['group_arr'] = Userinfo::getGroupById($user_info['dept_id']);
+		$user_info['user_arr'] = Userinfo::getUserbygidanddid($user_info['group_id'],$user_info['dept_id']);	
+       
 		if(isset($_POST['Users']))
 		{
 			$model->attributes=$_POST['Users'];
@@ -94,9 +103,12 @@ class UsersController extends GController
                          
                          exit; 
 		}
-
+                $deptArr = Userinfo::getDept();
+		$deptArr = array_merge(array('0'=>'--请选择部门--'), $deptArr);
 		$this->renderPartial('update',array(
 			'model'=>$model,
+                        'deptArr'=>$deptArr,
+                        'user_info'=>$user_info,
 		));
 	}
 
@@ -173,6 +185,16 @@ class UsersController extends GController
 			'model'=>$model,
 		));
 	}
+        
+        
+	public function actiongetUsers()
+	{
+		$gid = Yii::app()->request->getparam('gid');
+                $deptid = Yii::app()->request->getparam('deptid');
+		$userinfo = Userinfo::getUserbygidanddid($gid, $deptid);
+		echo json_encode($userinfo);
+	}
+
 
 	/**
 	 * Returns the data model based on the primary key given in the GET variable.

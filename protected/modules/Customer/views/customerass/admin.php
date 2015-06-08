@@ -70,9 +70,10 @@ $('.search-form form').submit(function(){
 			'category',
 			'mail',
 			'cust_type',
-			'eno',
-			'assign_eno',
-			'assign_time',
+			//'eno',
+			array('name'=>'eno', 'value'=>array($this, 'get_eno_text')),
+			array('name'=>'assign_eno', 'value'=>array($this, 'get_assign_text')),
+			array('name'=>'assign_time', 'value'=>array($this, 'formatDate'),),
 			/*array(
 				'class'=>'CButtonColumn',
 							'deleteButtonOptions'=>array('style'=>'display:none'),

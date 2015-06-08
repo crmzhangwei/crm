@@ -198,7 +198,24 @@ class CustomerInfoController extends GController {
             'user' => $user,
         ));
     }
-    
+      /**
+     * 搜索共享小记列表数据
+     */
+    public function actionSharedNoteList() {
+        $model = new NoteInfo('search');
+        $model->unsetAttributes();  // clear any default values
+        if (isset($_GET['NoteInfo']))
+            $model->attributes = $_GET['NoteInfo'];
+        if (isset($_GET['cust_id'])) {
+            $custid = $_GET['cust_id'];
+            $model->setAttribute("cust_id", $custid);
+        }
+        if (isset($_GET['isajax'])) {
+            $this->renderPartial('_shared_note_list', array(
+                'model' => $model,
+            ));
+        }
+    }
         /**
      * 搜索历史小记列表数据
      */
