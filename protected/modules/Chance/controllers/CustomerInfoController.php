@@ -198,6 +198,16 @@ class CustomerInfoController extends GController {
             'user' => $user,
         ));
     }
+     public function actionSharedNote($id){ 
+          $sharedNote = NoteInfo::model();
+          $model = $this->loadModel($id); 
+          $user = Users::model()->findByPk($model->creator);
+          $this->render('update', array(
+            'model' => $model, 
+            'sharedNote' => $sharedNote, 
+            'user' => $user,
+        ));
+    }
       /**
      * 搜索共享小记列表数据
      */

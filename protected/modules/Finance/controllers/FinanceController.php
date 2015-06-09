@@ -309,10 +309,13 @@ class FinanceController extends GController
                   
            //Utils::sendMessage("13536580119", $content,"post"); 
            //Utils::sendMessage("18589075186", $content,"post"); 
-            $deptarr =  CHtml::listData(DeptInfo::model()->findAll(), 'id', 'name');
-             
-            var_dump($deptarr);
-             
+            
+            $users = Userinfo::getAllChildUsersId(1) ;
+            echo "<pre>" ;
+            var_dump($users);
+             echo "</pre>" ;
+             ksort($users);
+             echo implode(",", $users);
         }
 
     function Get($phone,$msg) {
