@@ -34,10 +34,11 @@ $form = $this->beginWidget('CActiveForm', array(
 <?php $this->endWidget(); ?>
 
 <?php
+$dataProvider = $model->search();
 $dataProvider->pagination->pageVar = 'page';
 $this->widget('GGridView', array(
     'id' => 'users-grid',
-    'dataProvider' =>$model->search(),
+    'dataProvider' =>$dataProvider,
     'columns' => array(
         array('class' => 'CCheckBoxColumn',
             'name' => 'id',
