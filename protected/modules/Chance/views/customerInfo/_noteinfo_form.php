@@ -9,7 +9,7 @@
 	// controller action is handling ajax validation correctly.
 	// There is a call to performAjaxValidation() commented in generated controller code.
 	// See class documentation of CActiveForm for details on this.
-        'action'=>Yii::app()->controller->createUrl($this->actionName, array('id'=>$model->id)),
+        'action'=>Yii::app()->controller->createUrl($this->actionName, array('id'=>$custmodel->id)),
 	'enableAjaxValidation'=>false,
 )); ?>
 <div class="form"> 
@@ -81,7 +81,8 @@
          </table>    
 
 </div><!-- form -->
-<?php $this->endWidget();?>
+
 <div class="row buttons">
 		<?php echo CHtml::submitButton('保存',array('class' => 'btn btn-sm btn-primary')); ?>
     </div> 
+<?php $this->endWidget();?>

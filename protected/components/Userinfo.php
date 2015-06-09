@@ -70,10 +70,10 @@ class Userinfo
 	}
 
 	public static function genCustTypeArray() {
-            $custTypeArr = Utils::mapArray(CustType::findByType(1), 'type_no', 'type_name');
-            $custTypeArr[-1] = '--请选择客户分类--';
-            ksort($custTypeArr);
-            return $custTypeArr;
+			$custTypeArr = Utils::mapArray(CustType::findByType(1), 'type_no', 'type_name');
+			$custTypeArr[-1] = '--请选择客户分类--';
+			ksort($custTypeArr);
+			return $custTypeArr;
         }
         /**
          * 取出manager id 为$managerid 的所有用户及其下属用户列表
@@ -115,7 +115,15 @@ class Userinfo
                         if($temps!=null&&!empty($temps)){
                             $ret = array_merge($ret,$temps);
                         }
-	    }
+	         }
             return $ret;
-        }
+        } 
+	
+	/**
+	 *根据name查工号(eno)
+	 */
+	public static function getEnoByName($name){
+		return Users::model()->find('name=:name', array(':name'=>$name));
+	}
+ 
 }

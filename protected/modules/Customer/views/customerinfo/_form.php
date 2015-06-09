@@ -117,7 +117,7 @@
 
 </div><!-- form -->
 <script>
-	function listgroup(obj)
+    function listgroup(obj)
     {
       	var deptid = $(obj).val();
       	var groupStr = '<option value ="0">--请选择组--</option>';

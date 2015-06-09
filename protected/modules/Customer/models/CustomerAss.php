@@ -180,6 +180,11 @@ class CustomerAss extends CActiveRecord
                    $criteria->addCondition("shop_addr like :keyword");
                    $criteria->params[':keyword'] = "%{$this->keyword}%";
                    break;
+			   case 8:
+				   $userinfo = Userinfo::getEnoByName($this->keyword);
+				   $eno = $userinfo->eno;
+                   $criteria->compare('eno', $eno, true);
+                   break;
            }
         }
 
@@ -210,7 +215,7 @@ class CustomerAss extends CActiveRecord
             5=>'QQ',
             6=>'邮箱',
             7=>'店铺地址',
-			//8=>'客户类别'
+			8=>'分配给'
         );
     }
 	
