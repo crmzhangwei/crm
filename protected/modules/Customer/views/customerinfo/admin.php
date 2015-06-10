@@ -77,10 +77,10 @@ $('.search-form form').submit(function(){
 		'shop_name',
 		'shop_url',
 		'shop_addr',
-		'phone',
-		'qq',
+		array('name' => 'phone', 'value' => 'substr_replace($data->phone,"****",3,4)'),
+		array('name' => 'qq', 'value' => 'substr_replace($data->qq,"****",3,4)'),
 		array('name'=>'category', 'value'=>array($this, 'get_category_text')),
-		'mail',
+		array('name' => 'mail', 'value' => 'substr_replace($data->mail,"****",0,4)'),
 		'eno',
 		//array('name'=>'eno', 'value'=>array($this, 'get_eno_text')),
 		array('name'=>'assign_eno', 'value'=>array($this, 'get_assign_text')),
@@ -96,7 +96,7 @@ $('.search-form form').submit(function(){
 		),*/
 		array(
 			'class'=>'CButtonColumn',
-			'deleteButtonOptions'=>array('style'=>'display:none'),
+			'deleteButtonOptions'=>array(),
 			'viewButtonOptions'=>array('style'=>'background-color:red'),
 			'header' => '操作', 
 			'template'=>'{upda} {delete}',

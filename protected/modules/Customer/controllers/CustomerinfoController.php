@@ -168,11 +168,24 @@ class CustomerinfoController extends GController
 	 */
 	public function actionDelete($id)
 	{
-		$this->loadModel($id)->delete();
-
+		$model = $this->loadModel($id);
+		$sql = "delete from {{customer_info}} where id=$id";
+		$sql2 = "update {{users}} set cust_num=cust_num-1 where eno='{$model->eno}'";//删除一条记录后对应的所属工号人员已分配减1
+		$transaction = Yii::app()->db->beginTransaction();
+		try {
+			$res = Yii::app()->db->createCommand($sql)->execute();
+			$res2 = Yii::app()->db->createCommand($sql2)->execute();
+			$transaction->commit();
+			exit("<script>alert(\"恭喜你, 删除成功。\");javascript:history.go(-1);</script>");
+		} catch (Exception $exc) {
+			$transaction->rollBack();//事务回滚
+			$errors = $model->getErrors();
+			$error = current($errors) ;
+			exit("<script>alert(\"对不起, 本次操作失败, 请重新操作1。\");javascript:history.go(-2);</script>");	
+		}
 		// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
-		if(!isset($_GET['ajax']))
-			$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
+		//if(!isset($_GET['ajax']))
+			//$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
 	}
 
 	/**
