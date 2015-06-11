@@ -1,10 +1,8 @@
  
-
 <?php
-
-$dataProvider = $model->searchHistoryNote($custmodel->id);
+$dataProvider = $model->searchSharedNote($custmodel->id);
 $this->widget('GGridView', array(
-    'id' => 'historynote-grid',
+    'id' => 'sharenote-grid',
     'dataProvider' => $dataProvider,
     'filter' => null,
     'columns' => array(
@@ -20,6 +18,7 @@ $this->widget('GGridView', array(
         'service',
         array('name' => 'next_contact', 'value' => 'date("Y-m-d",$data->next_contact)'),
         array('name' => 'create_time', 'value' => 'date("Y-m-d",$data->create_time)'),
+        array('name' => 'eno', 'value' => '$data->eno'),
         array(
             'class' => 'CButtonColumn',
             'template' => '{play} {download} {view}',
@@ -59,8 +58,8 @@ $this->widget('GGridView', array(
     <div class="col-sm-6 no-padding-right">
         <?php
         $pg = $dataProvider->getPagination();
-        $pg->route = 'customerinfo/historyNoteList';
-        $pg->params = array('cust_id' => $custmodel->id);
+        $pg->route = "service/sharedNoteList";
+        $pg->params = array('cust_id' => $model->cust_id);
         $this->widget('GLinkPager', array('pages' => $pg, 'isajax' => 1));
         ?>
     </div>
@@ -87,5 +86,3 @@ $this->widget('GGridView', array(
         public.dialog('查看小记', url + '&id=' + note_id,{},900);
     }
 </script>
-
-

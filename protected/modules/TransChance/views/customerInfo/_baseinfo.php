@@ -58,27 +58,27 @@ function changeCustType(obj){
             <tr>
                 <td width="10%" nowrap="nowrap"><?php echo $form->labelEx($model,'cust_name'); ?></td>
                 <td width="20%" nowrap="nowrap">
-                    <?php echo $form->textField($model,'cust_name',array('maxlength'=>100,'size'=>30))?>
+                    <?php echo $form->textField($model,'cust_name',array('class'=>'col-md-6','maxlength'=>100))?>
                     <?php echo $form->error($model,'cust_name'); ?>
                 </td>
                 <td width="10%" nowrap="nowrap"><?php echo $form->labelEx($model,'shop_name'); ?></td>
-                <td><?php echo $form->textField($model,'shop_name',array('maxlength'=>100,'size'=>30)); ?>
+                <td><?php echo $form->textField($model,'shop_name',array('class'=>'col-md-3','maxlength'=>100)); ?>
 		<?php echo $form->error($model,'shop_name'); ?></td>
             </tr>
             <tr>
                 <td nowrap="nowrap"><?php echo $form->labelEx($model,'corp_name'); ?></td>
                 <td>
-                    <?php echo $form->textField($model,'corp_name',array('maxlength'=>100,'size'=>30)); ?>
+                    <?php echo $form->textField($model,'corp_name',array('class'=>'col-md-3','maxlength'=>100)); ?>
                     <?php echo $form->error($model,'corp_name'); ?>
                 </td>
                 <td nowrap="nowrap"><?php echo $form->labelEx($model,'shop_url'); ?></td>
-                <td><?php echo $form->textField($model,'shop_url',array( 'maxlength'=>100,'size'=>30,)); ?>
+                <td><?php echo $form->textField($model,'shop_url',array('class'=>'col-md-3','maxlength'=>100)); ?>
 		<?php echo $form->error($model,'shop_url'); ?></td>
             </tr>
             <tr>
                 <td nowrap="nowrap"><?php echo $form->labelEx($model,'shop_addr'); ?></td>
                 <td>
-                   <?php echo $form->textField($model,'shop_addr',array('size'=>30,'maxlength'=>100)); ?>
+                   <?php echo $form->textField($model,'shop_addr',array('class'=>'col-md-3','maxlength'=>100)); ?>
                     <?php echo $form->error($model,'shop_addr'); ?>
                 </td>
                 <td nowrap="nowrap"><?php echo $form->labelEx($model,'phone'); ?></td>
@@ -90,20 +90,19 @@ function changeCustType(obj){
             </tr>
             <tr>
                 <td nowrap="nowrap"><?php echo $form->labelEx($model,'qq'); ?></td>
-                <td> 
-                    <?php echo Utils::hideQq($model->qq); ?>
+                <td>
+                  <?php echo Utils::hideQq($model->qq); ?>
 		   <?php echo $form->error($model,'qq'); ?>
                 </td>
                 <td nowrap="nowrap"><?php echo $form->labelEx($model,'mail'); ?></td>
-                <td> 
-                    <?php echo Utils::hideEmail($model->mail); ?>
+                <td><?php echo Utils::hideEmail($model->mail); ?>
                     <?php echo CHtml::button("发邮件",array('onclick'=>'javascript:sendMail('.$model->id.')','class' => 'editNode btn btn-info btn-minier tooltip-info', 'data-placement' => "bottom")) ?>
 		    <?php echo $form->error($model,'mail'); ?></td>
             </tr>
             <tr>
                 <td nowrap="nowrap"><?php echo $form->labelEx($model,'datafrom'); ?></td>
                 <td>
-                  <?php echo $form->textField($model,'datafrom',array('size'=>30,'maxlength'=>100)); ?>
+                  <?php echo $form->textField($model,'datafrom',array('class'=>'col-md-6','maxlength'=>100)); ?>
 		<?php echo $form->error($model,'datafrom'); ?>
                 </td>
                 <td nowrap="nowrap"><?php echo $form->labelEx($model,'category'); ?></td>
@@ -145,10 +144,9 @@ function changeCustType(obj){
                 </td>
             </tr> 
             <tr> 
-                <td nowrap="nowrap"><?php echo $form->labelEx($model,'next_time'); ?><br/><br/>最后联系时间</td>
+                <td nowrap="nowrap"><?php echo $form->labelEx($model,'next_time'); ?></td>
                 <td>
-                    <?php echo $model->next_time; ?><br/><br/>
-                    <?php echo $model->next_time; ?>
+                   <?php echo $form->textField($model,'next_time',array('class'=>"Wdate", 'onClick'=>"WdatePicker()",'style'=>'height:30px;')); ?>
                     <?php echo $form->error($model,'next_time'); ?></td>
                 <td nowrap="nowrap"><?php echo $form->labelEx($model,'memo'); ?></td>
                 <td>
@@ -167,7 +165,7 @@ function changeCustType(obj){
             </tr>
         </table>
 <hr>
-<table class="table table-bordered" id="tb_contract" style="display:none;">
+    <table class="table table-bordered" id="tb_contract" style="display:none;">
             <tr>
                 <td width="10%"  nowrap="nowrap"><?php echo $form->labelEx($model,'contract[service_limit]'); ?></td>
                 <td width="20%" nowrap="nowrap"> 

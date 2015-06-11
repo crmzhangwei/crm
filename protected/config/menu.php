@@ -21,7 +21,14 @@ return array(
 			array('label' => '未联系机会', 'url' => array('/Chance/customerinfo/oldList')),
            ),
     ),
-  
+    'TransChance' => array(
+        'label' => '成交师-机会管理', 'icon' => 'menu-icon fa fa-stack-exchange','url' => array('/TransChance/'),
+         'items' => array(
+			array('label' => '安排联系机会', 'url' => array('/TransChance/customerinfo/admin')),
+			array('label' => '我的机会', 'url' => array('/TransChance/customerinfo/todaylist')),
+			array('label' => '未联系机会', 'url' => array('/TransChance/customerinfo/oldList')),
+           ),
+    ),
 
     
      'Statistic' => array(

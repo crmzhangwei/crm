@@ -83,32 +83,37 @@ class CustomerInfoController extends GController {
             //$aftermodel = AftermarketCustInfo::model()->findBySql($sql, array(':cust_id' => $id));  
             $newCustType = $_POST['CustomerInfo']['cust_type'];
             $newCategory = $_POST['CustomerInfo']['category'];
-            $oldCustType = $model->getAttribute("cust_type");
              $_POST['CustomerInfo']['next_time'] = strtotime($_POST['CustomerInfo']['next_time']);
              $model->attributes = $_POST['CustomerInfo'];
              $model->save();
-            if ($oldCustType != $newCustType) {
-                //客户分类调整，生成转换明细数据
-                $convt = new CustConvtDetail();
-                $convt->setAttribute('lib_type', 1);
-                $convt->setAttribute('cust_id', $id);
-                $convt->setAttribute('cust_type_1', $oldCustType);
-                $convt->setAttribute('cust_type_2', $newCustType);
-                $convt->setAttribute('convt_time', time());
-                $convt->setAttribute('user_id', Yii::app()->user->id);
-                $convt->save();
-            }
+//            if ($aftermodel->cust_type != $newCustType) {
+//                //客户分类调整，生成转换明细数据
+//                $convt = new CustConvtDetail();
+//                $convt->setAttribute('lib_type', 3);
+//                $convt->setAttribute('cust_id', $id);
+//                $convt->setAttribute('cust_type_1', $aftermodel->cust_type);
+//                $convt->setAttribute('cust_type_2', $newCustType);
+//                $convt->setAttribute('convt_time', time());
+//                $convt->setAttribute('user_id', Yii::app()->user->id);
+//                $convt->save();
+//            }
             if ($newCustType == 7) {
                 //客户分类转成7（放弃），生成公海资源数据
                 $blackinfo = new BlackInfo();
                 $blackinfo->setAttribute("cust_id", $id);
-                $blackinfo->setAttribute('lib_type', 1);
-                $blackinfo->setAttribute('old_cust_type', $oldCustType);
+                $blackinfo->setAttribute('lib_type', 3);
+                $blackinfo->setAttribute('old_cust_type', $aftermodel->cust_type);
                 $blackinfo->setAttribute('create_time', time());
                 $blackinfo->setAttribute('creator', Yii::app()->user->id);
                 $blackinfo->save();
-            }  
-           
+            } 
+            //更新类目
+            if($model->category!=$newCategory){
+                $model->category=$newCategory;
+                Yii::app()->db->createCommand()->update('{{customer_info}}',array('category' =>$newCategory),"id=$id"); 
+            }
+     
+        
         }
 //        //加载页面数据
 //        if(!$noteinfo->hasErrors()){
@@ -167,7 +172,6 @@ class CustomerInfoController extends GController {
                 } 
                 
             }
-            $noteinfo->next_contact=date('Y-m-d',time());
             $sharedNote = NoteInfo::model();
             $sharedNote->setAttribute("cust_id", $model->id);
             // $historyNote = NoteInfo::model();
@@ -216,11 +220,9 @@ class CustomerInfoController extends GController {
             $custid = $_GET['cust_id'];
             $model->setAttribute("cust_id", $custid);
         }
-        $custmodel = $this->loadModel($model->getAttribute("cust_id"));
         if (isset($_GET['isajax'])) {
             $this->renderPartial('_shared_note_list', array(
                 'model' => $model,
-                'custmodel'=>$custmodel
             ));
         }
     }
@@ -237,11 +239,10 @@ class CustomerInfoController extends GController {
             $custid = $_GET['cust_id'];
             $model->setAttribute("cust_id", $custid);
         }
-        $custmodel = $this->loadModel($model->getAttribute("cust_id"));
-        if (isset($_GET['isajax'])) { 
+        if (isset($_GET['isajax'])) {
+
             $this->renderPartial('_history_note_list', array(
                 'model' => $model,
-                'custmodel'=>$custmodel
             ));
         }
     }

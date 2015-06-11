@@ -3,7 +3,7 @@
 /* @var $model CustomerInfo */
 
 $this->breadcrumbs=array(
-	'机会管理'=>array('admin'),
+	'安排联系机会'=>array('admin'),
 	'客户详情',
 );
 

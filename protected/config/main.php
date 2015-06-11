@@ -37,6 +37,7 @@ return array(
         'Service',
 		'Chance',
 		'Statistic',
+                'TransChance',
 	),
 
 	// application components
