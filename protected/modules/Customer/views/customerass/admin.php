@@ -48,6 +48,10 @@ $('.search-form form').submit(function(){
         $this->widget('GGridView', array(
 			'id'=>'CustomerAss-grid',
 			'dataProvider'=>$dataProvider,
+			'rowCssClassExpression' => '
+				( $row%2 ? $this->rowCssClass[1] : $this->rowCssClass[0] ) .
+				( $data->iskey ?  " red":null  )'
+			,
 			'columns'=>array(
 			array(
 				'class' => 'CCheckBoxColumn',
@@ -62,7 +66,7 @@ $('.search-form form').submit(function(){
             //'id',
 			'cust_name',
 			'corp_name',
-                        'shop_name',
+            'shop_name',
 			'shop_url',
 			'shop_addr',
 			'phone',

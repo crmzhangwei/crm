@@ -53,61 +53,67 @@ $('.search-form form').submit(function(){
 <?php $this->endWidget(); ?>
 
 <?php 
-        $dataProvider = $model->search();
+	$dataProvider = $model->search();
 	$dataProvider->pagination->pageVar = 'page';
-        $this->widget('GGridView', array(
-			'id'=>'CustomerInfo-grid',
-			'dataProvider'=>$dataProvider,
-			'columns'=>array(
-				array('class' => 'CCheckBoxColumn',
-					'name' => 'id',
-					'id' => 'select',
-					'selectableRows' => 2,
-					'headerTemplate' => '{item}',
-					'htmlOptions' => array(
-						'width' => '20',
-					),
-				),
-            //'id',
-			'cust_name',
-            'shop_name',
-			'shop_url',
-			'shop_addr',
-			'phone',
-			'qq',
-			array('name'=>'category', 'value'=>array($this, 'get_category_text')),
-			'mail',
-			'eno',
-			//array('name'=>'eno', 'value'=>array($this, 'get_eno_text')),
-			array('name'=>'assign_eno', 'value'=>array($this, 'get_assign_text')),
-			array('name'=>'assign_time', 'value'=>array($this, 'get_assign_time'),),
-			/*array(
-				'class'=>'CButtonColumn',
-					//'deleteButtonOptions'=>array('style'=>'display:none'),
-					'viewButtonOptions'=>array('style'=>'display:none'),
-					'htmlOptions'=>array(
-					'width'=>'50',
-					'style'=>'text-align:center',
-					),
-			),*/
-			array(
-				'class'=>'CButtonColumn',
-				'deleteButtonOptions'=>array('style'=>'display:none'),
-				'header' => '操作', 
-				'template'=>'{upda} {delete}',
+	$this->widget('GGridView', array(
+		'id'=>'CustomerInfo-grid',
+		'dataProvider'=>$dataProvider,
+		'rowCssClassExpression' => '
+			( $row%2 ? $this->rowCssClass[1] : $this->rowCssClass[0] ) .
+			( $data->iskey ?  " red":null  )
+		',
+		'columns'=>array(
+			array('class' => 'CCheckBoxColumn',
+				'name' => 'id',
+				'id' => 'select',
+				'selectableRows' => 2,
+				'headerTemplate' => '{item}',
 				'htmlOptions' => array(
-					'width' => '80',
-				    'style' => 'text-align:center',
+					'width' => '20',
 				),
-				'buttons'=>array(
-					'upda'=>array(
-						'label'=>'修改',
-						'url'=>'',
-						'imageUrl'=>'',
-						'options'=>array('class'=>'editNode btn btn-info btn-minier tooltip-info','data-placement'=>"bottom",'onclick'=>"updatarow(this)"),
-					),
-				)          
 			),
+		//'id',
+		'cust_name',
+		'shop_name',
+		'shop_url',
+		'shop_addr',
+		array('name' => 'phone', 'value' => 'substr_replace($data->phone,"****",3,4)'),
+		array('name' => 'qq', 'value' => 'substr_replace($data->qq,"****",3,4)'),
+		array('name'=>'category', 'value'=>array($this, 'get_category_text')),
+		array('name' => 'mail', 'value' => 'substr_replace($data->mail,"****",0,4)'),
+		'eno',
+		//array('name'=>'eno', 'value'=>array($this, 'get_eno_text')),
+		array('name'=>'assign_eno', 'value'=>array($this, 'get_assign_text')),
+		array('name'=>'assign_time', 'value'=>array($this, 'get_assign_time'),),
+		/*array(
+			'class'=>'CButtonColumn',
+				//'deleteButtonOptions'=>array('style'=>'display:none'),
+				'viewButtonOptions'=>array('style'=>'display:none'),
+				'htmlOptions'=>array(
+				'width'=>'50',
+				'style'=>'text-align:center',
+				),
+		),*/
+		array(
+			'class'=>'CButtonColumn',
+			'deleteButtonOptions'=>array(),
+			'viewButtonOptions'=>array('style'=>'background-color:red'),
+			'header' => '操作', 
+			'template'=>'{upda} {delete}',
+			'htmlOptions' => array(
+				'width' => '80',
+				'style' => 'text-align:center',
+			),
+			'buttons'=>array(
+				'upda'=>array(
+					'label'=>'修改',
+					'url'=>'',
+					'imageUrl'=>'',
+					'options'=>array('class'=>'editNode btn btn-info btn-minier tooltip-info','data-placement'=>"bottom",'onclick'=>"updatarow(this)"),
+				),
+			)          
+		),
+		
 	),
 )); ?>
 

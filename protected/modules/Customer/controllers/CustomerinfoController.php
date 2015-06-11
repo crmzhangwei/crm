@@ -168,11 +168,24 @@ class CustomerinfoController extends GController
 	 */
 	public function actionDelete($id)
 	{
-		$this->loadModel($id)->delete();
-
+		$model = $this->loadModel($id);
+		$sql = "delete from {{customer_info}} where id=$id";
+		$sql2 = "update {{users}} set cust_num=cust_num-1 where eno='{$model->eno}'";//删除一条记录后对应的所属工号人员已分配减1
+		$transaction = Yii::app()->db->beginTransaction();
+		try {
+			$res = Yii::app()->db->createCommand($sql)->execute();
+			$res2 = Yii::app()->db->createCommand($sql2)->execute();
+			$transaction->commit();
+			exit("<script>alert(\"恭喜你, 删除成功。\");javascript:history.go(-1);</script>");
+		} catch (Exception $exc) {
+			$transaction->rollBack();//事务回滚
+			$errors = $model->getErrors();
+			$error = current($errors) ;
+			exit("<script>alert(\"对不起, 本次操作失败, 请重新操作1。\");javascript:history.go(-2);</script>");	
+		}
 		// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
-		if(!isset($_GET['ajax']))
-			$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
+		//if(!isset($_GET['ajax']))
+			//$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
 	}
 
 	/**
@@ -305,10 +318,10 @@ class CustomerinfoController extends GController
 	 *批量导入EXCEL模板文件下载
 	 */
 	public function actionGetTemplate(){
-		header("Content-type:text/html;charset=utf-8"); 
-		$file_name="批量导入客户信息.xlsx"; 
+		/////header("Content-type:text/html;charset=utf-8"); 
+		$file_name="customerInfo.xlsx"; 
 		//用以解决中文不能显示出来的问题 
-		$file_name=iconv("utf-8","gb2312",$file_name); 
+		/////$file_name=iconv("utf-8","gb2312",$file_name); 
 		$file_sub_path=$_SERVER['DOCUMENT_ROOT']."document/"; 
 		$file_path=$file_sub_path.$file_name; 
 		//首先要判断给定的文件存在与否 
@@ -316,21 +329,23 @@ class CustomerinfoController extends GController
 			echo "没有该文件文件"; 
 			return ; 
 		} 
-		$fp=fopen($file_path,"r"); 
-		$file_size=filesize($file_path); 
+		/////$fp=fopen($file_path,"r"); 
+		/////$file_size=filesize($file_path); 
 		//下载文件需要用到的头 
 		Header("Content-type: application/octet-stream"); 
 		Header("Accept-Ranges: bytes"); 
-		Header("Accept-Length:".$file_size); 
-		Header("Content-Disposition: attachment; filename=".$file_name); 
-		$buffer=1024; 
-		$file_count=0; 
+		/////Header("Accept-Length:".$file_size); 
+		/////Header("Content-Disposition: attachment; filename=".$file_name); 
+		/////$buffer=1024; 
+		/////$file_count=0; 
 		//向浏览器返回数据 
-		while(!feof($fp) && $file_count<$file_size){ 
+		/*while(!feof($fp) && $file_count<$file_size){ 
 			$file_con=fread($fp,$buffer); 
 			$file_count+=$buffer; 
 			echo $file_con; 
 		} 
-		fclose($fp); 
+		fclose($fp); */
+		header("Content-Disposition: attachment; filename=".basename($file_path));
+		readfile($file_path);
 	}
 }
