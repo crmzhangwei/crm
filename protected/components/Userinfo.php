@@ -70,11 +70,54 @@ class Userinfo
 	}
 
 	public static function genCustTypeArray() {
-        $custTypeArr = Utils::mapArray(CustType::findByType(1), 'type_no', 'type_name');
-        $custTypeArr[-1] = '--请选择客户分类--';
-        ksort($custTypeArr);
-        return $custTypeArr;
-    }
+			$custTypeArr = Utils::mapArray(CustType::findByType(1), 'type_no', 'type_name');
+			$custTypeArr[-1] = '--请选择客户分类--';
+			ksort($custTypeArr);
+			return $custTypeArr;
+        }
+        /**
+         * 取出manager id 为$managerid 的所有用户及其下属用户列表
+         * @param type $managerid
+         * @return type Array
+         */
+        public static function getAllChildUsersId($managerid){
+            $user = Users::model()->findByPk($managerid);
+            if(empty($user)){
+                return null;
+            }
+            $ret = array();
+            $allData = Yii::app()->db->createCommand("select id from `c_users` where manager_id = :manager_id")->queryAll(TRUE,array(":manager_id"=>$managerid));
+            foreach ($allData as $k => $v) {
+			$ret[] = $v['id'];
+                        $temps = UserInfo::getAllChildUsersId($v['id']); 
+                        if($temps!=null&&!empty($temps)){
+                            $ret = array_merge($ret,$temps);
+                        }
+                        
+	    }
+            return $ret;
+        }
+        /**
+         * 取出manager id 为$managerid 的所有用户及其下属用户列表
+         * @param type $managerid
+         * @return type Array
+         */
+        public static function getAllChildUsersEno($managerid){
+            $user = Users::model()->findByPk($managerid);
+            if(empty($user)){
+                return null;
+            }
+            $ret = array();
+            $allData = Yii::app()->db->createCommand("select id,eno from `c_users` where manager_id = :manager_id")->queryAll(TRUE,array(":manager_id"=>$managerid));
+            foreach ($allData as $k => $v) {
+			$ret[] = $v['eno'];
+                        $temps = UserInfo::getAllChildUsersEno($v['id']); 
+                        if($temps!=null&&!empty($temps)){
+                            $ret = array_merge($ret,$temps);
+                        }
+	         }
+            return $ret;
+        } 
 	
 	/**
 	 *根据name查工号(eno)
@@ -82,4 +125,5 @@ class Userinfo
 	public static function getEnoByName($name){
 		return Users::model()->find('name=:name', array(':name'=>$name));
 	}
+ 
 }

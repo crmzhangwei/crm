@@ -4,7 +4,7 @@
 $this->pageTitle = '我的联系机会';
 $this->breadcrumbs = array(
     '机会管理' => array('admin'),
-    '我的联系机会',
+    '安排联系机会',
 );
 
 Yii::app()->clientScript->registerScript('search', "
@@ -28,11 +28,7 @@ $form = $this->beginWidget('CActiveForm', array(
         ));
 ?>
 <div class="form-group">
-    <div class="btn-group">
-        <a href="javascript:void(0)" onclick="javascript:openwinx('<?= Yii::app()->createUrl('CustomerInfo/create') ?>', '')" class="btn btn-sm btn-primary" > 
-            <i class="icon-plus"></i>新建用户
-        </a>
-    </div>        
+           
     <?php echo $form->label($model, 'contact_7_day'); ?>
     <?php echo $form->dropDownList($model, 'contact_7_day', array('--请选择--', '是'), array('style' => "height:34px;")); ?>
     <?php echo $form->label($model, 'iskey'); ?>

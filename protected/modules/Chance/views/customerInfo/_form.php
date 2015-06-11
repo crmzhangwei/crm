@@ -24,15 +24,14 @@
         <li class="ui-state-default ui-corner-top  <?php if($this->actionName =='historynote'){ echo 'ui-tabs-active ui-state-active';}else{}?>" role="tab" tabindex="-1" aria-controls="tabs-3" aria-labelledby="ui-id-32" <?php if($this->actionName =='historynote'){ echo 'aria-selected="true" aria-expanded="true"';}else{echo 'aria-selected="false" aria-expanded="false"';}?>>
             <a href="<?php echo $this->createUrl('historynote', array('id'=>$model->id))?>" class="ui-tabs-anchor" role="presentation" tabindex="-1" id="ui-id-32">历史小记</a>
         </li>
-        <li class="ui-state-default ui-corner-top" role="tab" tabindex="-1" aria-controls="tabs-4" aria-labelledby="ui-id-33" aria-selected="false" aria-expanded="false">
-            <a href="#tabs-4" class="ui-tabs-anchor" role="presentation" tabindex="-1" id="ui-id-33">共享小记</a>
+        <li class="ui-state-default ui-corner-top <?php if($this->actionName =='sharednote'){ echo 'ui-tabs-active ui-state-active';}else{}?>" role="tab" tabindex="-1" aria-controls="tabs-4" aria-labelledby="ui-id-33" <?php if($this->actionName =='sharednote'){ echo 'aria-selected="true" aria-expanded="true"';}else{echo 'aria-selected="false" aria-expanded="false"';}?>>
+            <a href="<?php echo $this->createUrl('sharednote', array('id'=>$model->id))?>" class="ui-tabs-anchor" role="presentation" tabindex="-1" id="ui-id-33">共享小记</a>
         </li>  
     </ul> 
 
     <div id="tabs-1" aria-labelledby="ui-id-29" class="ui-tabs-panel ui-widget-content ui-corner-bottom" role="tabpanel" aria-hidden="false" style="display: block;">
 
-      <?php   
-        
+      <?php    
          switch($this->actionName) {
          case 'update':
             $this->renderPartial('_baseinfo', array('model'=>$model,'user'=>$user));
@@ -43,9 +42,12 @@
        
          case 'historynote':
              $this->renderPartial('history_note', array('model'=>$historyNote,'custmodel'=>$model)); 
-          break;
+          break; 
+        case 'sharednote':
+             $this->renderPartial('shared_note', array('model'=>$sharedNote,'custmodel'=>$model)); 
+             break;
          default:
-         break;
+            break;
          }
          ?>
     </div> 
