@@ -30,7 +30,15 @@ class UsersController extends GController
 
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
-
+                $userinfo =  array();
+		$user_info['group_id'] = $userinfo?$userinfo->group_id:0;
+		$user_info['dept_id']  = $userinfo?$userinfo->dept_id:0;
+	        $user_info['name']     = $userinfo?$userinfo->username:0;
+		$user_info['id']     = $userinfo?$userinfo->id:0;
+		$user_info['group_arr'] = Userinfo::getGroupById($user_info['dept_id']);
+		$user_info['user_arr'] = Userinfo::getUserbygidanddid($user_info['group_id'],$user_info['dept_id']);	
+                $deptArr = Userinfo::getDept();
+		$deptArr = array_merge(array('0'=>'--请选择部门--'), $deptArr);
 		if(isset($_POST['Users']))
 		{
 			$model->attributes=$_POST['Users'];
@@ -56,6 +64,8 @@ class UsersController extends GController
 
 		$this->renderPartial('create',array(
 			'model'=>$model,
+                         'deptArr'=>$deptArr,
+                        'user_info'=>$user_info,
 		));
 	}
 
