@@ -17,7 +17,19 @@ Yii::app()->clientScript->registerScript('search1', "
 ?>  
 </div>
 <script type="text/javascript">
-    
+    function getList(url){
+        $.ajax({  
+        url:url,  
+        success:function(html){
+            if(url.indexOf('history')!=-1){
+                $('#search_history_list').html(html); 
+            }else{
+                $('#search_shared_list').html(html); 
+            }
+        }  
+        });  
+        return false; 
+    }
     $('#share_search_form form').submit(function(){
      var url = $(this).attr('action');
      url=url+"&isajax=1"; 

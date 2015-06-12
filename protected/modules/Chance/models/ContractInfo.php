@@ -38,7 +38,7 @@ class ContractInfo extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('cust_id, service_limit, total_money, pay_type, pay_time, promise, first_pay, second_pay, third_pay, fourth_pay, comm_royalty, comm_pay_time, creator, create_time', 'required'),
+			array('cust_id, service_limit, total_money, pay_type, pay_time, promise, first_pay, second_pay, third_pay, fourth_pay, comm_royalty, comm_pay_time', 'required'),
 			array('cust_id, total_money, pay_type, pay_time, fourth_pay, comm_royalty, comm_pay_time, creator, create_time', 'numerical', 'integerOnly'=>true),
 			array('service_limit, first_pay, second_pay, third_pay', 'length', 'max'=>10),
 			array('promise', 'length', 'max'=>200),

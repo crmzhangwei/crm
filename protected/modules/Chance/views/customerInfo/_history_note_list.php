@@ -1,7 +1,6 @@
  
 
-<?php
-
+<?php 
 $dataProvider = $model->searchHistoryNote($custmodel->id);
 $this->widget('GGridView', array(
     'id' => 'historynote-grid',

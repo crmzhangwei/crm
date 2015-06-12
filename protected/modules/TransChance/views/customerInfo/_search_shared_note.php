@@ -7,7 +7,7 @@
 <div class="wide form">
 
 <?php $form=$this->beginWidget('CActiveForm', array(
-	'action'=>Yii::app()->createUrl('/Service/new/sharedNoteList'),
+	'action'=>Yii::app()->createUrl('/Chance/customerinfo/sharedNoteList'),
 	'method'=>'get',
 )); ?>
         
@@ -15,8 +15,8 @@
             <tr>
                 <td width="5%" nowrap="nowrap"><?php echo $form->labelEx($model,'cust_info'); ?></td>
                 <td width="5%" nowrap="nowrap">
-                     <?php echo $form->textField($model,'cust_info'); 
-                     echo $form->hiddenField($model,'cust_id'); 
+                     <?php echo $form->textField($model,'cust_info');  
+                      echo Chtml::hiddenField("NoteInfo[cust_id]", $custmodel->id);
                      ?>
                 </td> 
                 <td width="5%" nowrap="nowrap"><?php echo $form->labelEx($model,'requirement'); ?></td>

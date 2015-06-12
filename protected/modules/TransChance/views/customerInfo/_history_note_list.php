@@ -1,7 +1,6 @@
  
 
-<?php
-
+<?php 
 $dataProvider = $model->searchHistoryNote($custmodel->id);
 $this->widget('GGridView', array(
     'id' => 'historynote-grid',
@@ -59,8 +58,8 @@ $this->widget('GGridView', array(
     <div class="col-sm-6 no-padding-right">
         <?php
         $pg = $dataProvider->getPagination();
-        $pg->route = "new/historyNoteList";
-        $pg->params = array('cust_id' => $model->cust_id);
+        $pg->route = 'customerinfo/historyNoteList';
+        $pg->params = array('cust_id' => $custmodel->id);
         $this->widget('GLinkPager', array('pages' => $pg, 'isajax' => 1));
         ?>
     </div>

@@ -6,6 +6,13 @@ $this->breadcrumbs=array(
 	'机会管理'=>array('admin'),
 	'客户详情',
 );
-
+Yii::app()->clientScript->registerScript('tab', " 
+  
+  $('#tabs').tabs({
+  activate: function( event, ui ) {
+        //alert(ui.newTab.attr('aria-controls'));
+    }
+ });  
+"); 
 ?>
-<?php $this->renderPartial('_form', array('model'=>$model,'user'=>$user,'noteinfo'=>!empty($noteinfo)?$noteinfo:'','historyNote' => !empty($historyNote)?$historyNote:'','sharedNote' => !empty($sharedNote)?$sharedNote:'')); ?>
+<?php $this->renderPartial('_form', array('model'=>$model,'user'=>$user,'noteinfo'=>$noteinfo,'historyNote' =>$historyNote,'sharedNote' => $sharedNote,'contract'=>$contract)); ?>

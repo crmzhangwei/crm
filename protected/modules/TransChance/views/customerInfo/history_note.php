@@ -7,6 +7,7 @@ Yii::app()->clientScript->registerScript('search2', "
  
  
 ");
+ 
 ?>  
 <div class="search-form" style="display:" id="history_search_form">
  <?php $this->renderPartial('_search_note',array('model'=>$model,'custmodel'=>$custmodel)); ?>

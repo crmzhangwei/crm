@@ -24,6 +24,8 @@
  * @property string $memo
  * @property integer $create_time
  * @property integer $creator
+ * @property integer visit_date
+ * @property integer abandon_reason 
  */
 class CustomerInfo extends CActiveRecord {
 
@@ -137,6 +139,7 @@ class CustomerInfo extends CActiveRecord {
         // @todo Please modify the following code to remove attributes that should not be searched.
         $type = intval(Yii::app()->request->getParam('type'));
         $criteria = new CDbCriteria;
+        $criteria->addInCondition("cust_type", array(0,1,2,3,4,5,6,8));
         $criteria->compare('eno', Yii::app()->session["user"]['eno']);  //只看到自己的客户
         if ($this->phone) {
             $criteria->compare('phone', $this->phone, true);
@@ -149,13 +152,8 @@ class CustomerInfo extends CActiveRecord {
         }
         if ($this->iskey) {
             $criteria->compare('iskey', $this->iskey);
-        }
-        if ($this->begintime && $this->endtime) {
-            $criteria->addBetweenCondition('next_time', $this->begintime, $this->endtime);
-        }
-        $curDate = date("Y-m-d", time());
-        $iDate = strtotime($curDate);
-        $criteria->addCondition(" t.next_time=" . $iDate);
+        }  
+            
         // $criteria->addCondition("eno = '".Yii::app()->user->identity->eno."'");
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
@@ -168,6 +166,7 @@ class CustomerInfo extends CActiveRecord {
     public function searchMyList() {
         $type = intval(Yii::app()->request->getParam('type'));
         $criteria = new CDbCriteria;
+        $criteria->addInCondition("cust_type", array(0,1,2,3,4,5,6,8));
         $criteria->compare('eno', Yii::app()->session["user"]['eno']);  //只看到自己的客户
         if ($this->phone) {
             $criteria->compare('phone', $this->phone, true);
@@ -181,9 +180,7 @@ class CustomerInfo extends CActiveRecord {
         if ($this->iskey) {
             $criteria->compare('iskey', $this->iskey);
         }
-        if ($this->begintime && $this->endtime) {
-            $criteria->addBetweenCondition('next_time', $this->begintime, $this->endtime);
-        } 
+            
         // $criteria->addCondition("eno = '".Yii::app()->user->identity->eno."'");
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
@@ -196,6 +193,7 @@ class CustomerInfo extends CActiveRecord {
     public function searchOldList() {
         $type = intval(Yii::app()->request->getParam('type'));
         $criteria = new CDbCriteria;
+        $criteria->addInCondition("cust_type", array(0,1,2,3,4,5,6,8));
         $criteria->compare('eno', Yii::app()->session["user"]['eno']);  //只看到自己的客户
         if ($this->phone) {
             $criteria->compare('phone', $this->phone, true);

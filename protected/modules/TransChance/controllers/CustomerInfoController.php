@@ -75,70 +75,134 @@ class CustomerInfoController extends GController {
 
     
      public function actionUpdate($id) {
-        //$noteinfo = new NoteInfo(); 
+        $noteinfo = new NoteInfo();
         $model = $this->loadModel($id);
+        $contract =  ContractInfo::model()->findBySql("select * from {{contract_info}} where cust_id=:cust_id",array(":cust_id"=>$id));
+        if(empty($contract)){
+            $contract=new ContractInfo();
+        }
+        $loginuser =  Users::model()->findByPk(Yii::app()->user->id);
         if (isset($_POST['CustomerInfo'])) {
             //保存  
-           // $sql = "select * from {{aftermarket_cust_info}} where cust_id=:cust_id";
+            // $sql = "select * from {{aftermarket_cust_info}} where cust_id=:cust_id";
             //$aftermodel = AftermarketCustInfo::model()->findBySql($sql, array(':cust_id' => $id));  
-            $newCustType = $_POST['CustomerInfo']['cust_type'];
-            $newCategory = $_POST['CustomerInfo']['category'];
-             $_POST['CustomerInfo']['next_time'] = strtotime($_POST['CustomerInfo']['next_time']);
-             $model->attributes = $_POST['CustomerInfo'];
-             $model->save();
-//            if ($aftermodel->cust_type != $newCustType) {
-//                //客户分类调整，生成转换明细数据
-//                $convt = new CustConvtDetail();
-//                $convt->setAttribute('lib_type', 3);
-//                $convt->setAttribute('cust_id', $id);
-//                $convt->setAttribute('cust_type_1', $aftermodel->cust_type);
-//                $convt->setAttribute('cust_type_2', $newCustType);
-//                $convt->setAttribute('convt_time', time());
-//                $convt->setAttribute('user_id', Yii::app()->user->id);
-//                $convt->save();
-//            }
-            if ($newCustType == 7) {
-                //客户分类转成7（放弃），生成公海资源数据
-                $blackinfo = new BlackInfo();
-                $blackinfo->setAttribute("cust_id", $id);
-                $blackinfo->setAttribute('lib_type', 3);
-                $blackinfo->setAttribute('old_cust_type', $aftermodel->cust_type);
-                $blackinfo->setAttribute('create_time', time());
-                $blackinfo->setAttribute('creator', Yii::app()->user->id);
-                $blackinfo->save();
-            } 
-            //更新类目
-            if($model->category!=$newCategory){
-                $model->category=$newCategory;
-                Yii::app()->db->createCommand()->update('{{customer_info}}',array('category' =>$newCategory),"id=$id"); 
+            $newCustType = $_POST['CustomerInfo']['cust_type']; 
+            $oldCustType = $model->getAttribute("cust_type"); 
+            //$contract->unsetAttributes();
+            $contract->attributes = $_POST['ContractInfo'];
+            $contract->cust_id=$id;  
+            $model->attributes = $_POST['CustomerInfo'];
+            if ($this->validCustomerInfo($model, $contract)) { 
+                if ($oldCustType != $newCustType) {
+                    //客户分类调整，生成转换明细数据
+                    $convt = new CustConvtDetail();
+                    $convt->setAttribute('lib_type', 1);
+                    $convt->setAttribute('cust_id', $id);
+                    $convt->setAttribute('cust_type_1', $oldCustType);
+                    $convt->setAttribute('cust_type_2', $newCustType);
+                    $convt->setAttribute('convt_time', time());
+                    $convt->setAttribute('user_id', Yii::app()->user->id);
+                    $convt->save();
+                }
+                if($oldCustType!=$newCustType&&$newCustType==6){
+                    //到店 生成成交师库
+                    $tran = new TransCustInfo();
+                    $tranuser = Users::model()->findByPk($model->trans_user); 
+                    $tran->eno=$tranuser->eno;
+                    $tran->cust_id=$id;
+                    $tran->cust_type=11;
+                    $tran->assign_eno=$loginuser->eno; 
+                    $tran->assign_time=time();
+                    $tran->assign_time=time();
+                    $tran->creator=$loginuser->id;
+                    $tran->create_time=time();
+                    $tran->save();
+                }
+                if($newCustType==7){
+                    //已签合同,生成合同信息表
+                    $contract->creator=$loginuser->id;
+                    $contract->create_time=time();
+                    $contract->pay_time=  strtotime($contract->pay_time);
+                    $contract->comm_pay_time=  strtotime($contract->comm_pay_time);
+                    //var_dump($contract);
+                    $contract->save();
+                }
+                if ($newCustType == 9) {
+                    //客户分类转成9（公海），生成公海资源数据
+                    $blackinfo = new BlackInfo();
+                    $blackinfo->setAttribute("cust_id", $id);
+                    $blackinfo->setAttribute('lib_type', 1);
+                    $blackinfo->setAttribute('old_cust_type', $oldCustType);
+                    $blackinfo->setAttribute('create_time', time());
+                    $blackinfo->setAttribute('creator', Yii::app()->user->id);
+                    $blackinfo->save();
+                }
+                if (isset($_POST['NoteInfo'])) {
+                    //保存小记
+                    $noteinfo->unsetAttributes();
+                    $noteinfo->attributes = $_POST['NoteInfo'];
+                    if ($model->iskey != $noteinfo->iskey) {
+                        $model->iskey = $noteinfo->iskey;
+                    }
+                    $noteinfo->next_contact = strtotime($noteinfo->next_contact);
+                    $noteinfo->setAttribute("eno", Yii::app()->user->id);
+                    $noteinfo->setAttribute("create_time", time());
+                    if ($noteinfo->save()) {
+                        //保存销售库
+                        $model->next_time = $noteinfo->next_contact;
+                        if($newCustType==6){
+                            $model->visit_date=strtotime($model->visit_date);
+                        } 
+                        $model->save();
+                    } else {
+                        $noteinfo->addError("memo", "请录入小记信息");
+                    }
+                    //更新电话拔打记录
+                    if ($noteinfo->dial_id > 0) {
+                        $dialdetail = DialDetail::model()->findByPk($noteinfo->dial_id);
+                        //获取通知录音路径，通知时长 
+                    }
+                }
             }
-     
-        
         }
-//        //加载页面数据
-//        if(!$noteinfo->hasErrors()){
-//            //保存成功，没有错误，清除数据
-//            $noteinfo->unsetAttributes();
-//            $noteinfo->setAttribute("iskey", 0);
-//            $noteinfo->setAttribute("isvalid", 0);
-//            $noteinfo->setAttribute("dial_id", 0);
-//            $noteinfo->setAttribute("message_id", 0);
-//            $noteinfo->setAttribute("next_contact", date('Y-m-d',time()));
-//            $noteinfo->cust_id = $id;
-//        }else{
-//            $noteinfo->setAttribute("next_contact", date('Y-m-d',$noteinfo->next_contact));
-//        } 
-       
+        //加载页面数据
+        if (!$noteinfo->hasErrors()) {
+            //保存成功，没有错误，清除数据
+            $noteinfo->unsetAttributes();
+            $noteinfo->setAttribute("iskey", 0);
+            $noteinfo->setAttribute("isvalid", 0);
+            $noteinfo->setAttribute("dial_id", 0);
+            $noteinfo->setAttribute("message_id", 0);
+            $noteinfo->setAttribute("next_contact", date('Y-m-d', time()));
+            $noteinfo->cust_id = $id;
+        } else {
+            $noteinfo->setAttribute("next_contact", date('Y-m-d', $noteinfo->next_contact));
+        }
+
         $model->setAttribute("create_time", date("Y-m-d", intval($model->getAttribute("create_time"))));
         $model->setAttribute("assign_time", date("Y-m-d", intval($model->getAttribute("assign_time"))));
-        $model->setAttribute("next_time", date("Y-m-d",intval( $model->getAttribute("next_time"))));
-        
+        $model->setAttribute("next_time", date("Y-m-d", intval($model->getAttribute("next_time"))));
+        if ($model->visit_date == 0) {
+            $model->setAttribute("visit_date", date("Y-m-d", time()));
+        }else {
+            $model->setAttribute("visit_date", date("Y-m-d", intval($model->getAttribute("visit_date"))));
+        } 
+        $sharedNote = NoteInfo::model();
+        $sharedNote->setAttribute("cust_id", $model->id);
+        $historyNote = NoteInfo::model();
+        $historyNote->setAttribute("cust_id", $model->id);
         $user = Users::model()->findByPk($model->creator);
+        $noteinfo->setAttribute("next_contact", date('Y-m-d', time()));
+        if($contract->id>0){
+            $contract->setAttribute("pay_time", date('Y-m-d',$contract->getAttribute("pay_time")));
+            $contract->setAttribute("comm_pay_time", date('Y-m-d',$contract->getAttribute("comm_pay_time")));
+        }
         $this->render('update', array(
             'model' => $model,
-           // 'sharedNote' => $sharedNote,
-           // 'historyNote' => $historyNote,
-           // 'noteinfo' => $noteinfo,
+            'sharedNote' => $sharedNote,
+            'historyNote' => $historyNote,
+            'noteinfo' => $noteinfo,
+            'contract'=>$contract,
             'user' => $user,
         ));
     }
@@ -380,5 +444,20 @@ class CustomerInfoController extends GController {
         $empty->type_name = "请选择客户分类";
         $custtype = array_merge(array($empty), $custtype);
         return CHtml::listData($custtype, 'type_no', 'type_name');
+    }
+    
+    protected function getTranUsers() {
+        $loginid = Yii::app()->user->id;
+        $user = Users::model()->findByPk($loginid);
+        $sql = "select u.id,u.eno from {{users}} u "
+                . "left join {{user_role}} ur on u.id=ur.user_id "
+                . "left join {{role_info}} ri on ur.role_id=ri.id "
+                . "where u.dept_id=:dept_id and ri.name='成交师'";
+        $users = Users::model()->findAllBySql($sql, array(':dept_id' => $user->dept_id));
+        $empty = new Users();
+        $empty->id = '';
+        $empty->eno = "请选择成交师";
+        $users = array_merge(array($empty), $users);
+        return CHtml::listData($users, 'id', 'eno');
     }
 }

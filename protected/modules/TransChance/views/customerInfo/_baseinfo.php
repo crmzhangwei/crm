@@ -34,51 +34,53 @@ function sendMail(cust_id){
 function changeCustType(obj){
    if(obj.value=='6'){
        $("#tr_visit").show();
-       $("#tb_contract").show();
+       $("#tb_contract").hide();
        $("#tr_abandon").hide();
-   }else if(obj.value=='8'){
+   }else if(obj.value=='7'){
+       $("#tb_contract").show();
+       $("#tr_visit").hide();
+       $("#tr_abandon").hide();
+   }else if(obj.value=='9'){
        $("#tr_abandon").show();
+       $("#tr_visit").hide();
+       $("#tb_contract").hide();
+   }else{
+       $("#tr_abandon").hide();
        $("#tr_visit").hide();
        $("#tb_contract").hide();
    }
 }
 </script> 
-    <?php $form=$this->beginWidget('CActiveForm', array(
-	'id'=>'customer-info-form',
-	// Please note: When you enable ajax validation, make sure the corresponding
-	// controller action is handling ajax validation correctly.
-	// There is a call to performAjaxValidation() commented in generated controller code.
-	// See class documentation of CActiveForm for details on this.
-        'action'=>Yii::app()->controller->createUrl($this->actionName, array('id'=>$model->id)),
-	'enableAjaxValidation'=>false,
-)); ?>
-	<?php echo $form->errorSummary($model); ?>
+ 
+	<?php echo $form->errorSummary($model); 
+               echo $form->errorSummary($contract);  
+        ?>
        
         <table class="table table-bordered"> 
             <tr>
                 <td width="10%" nowrap="nowrap"><?php echo $form->labelEx($model,'cust_name'); ?></td>
                 <td width="20%" nowrap="nowrap">
-                    <?php echo $form->textField($model,'cust_name',array('class'=>'col-md-6','maxlength'=>100))?>
+                    <?php echo $form->textField($model,'cust_name',array('maxlength'=>100,'size'=>30))?>
                     <?php echo $form->error($model,'cust_name'); ?>
                 </td>
                 <td width="10%" nowrap="nowrap"><?php echo $form->labelEx($model,'shop_name'); ?></td>
-                <td><?php echo $form->textField($model,'shop_name',array('class'=>'col-md-3','maxlength'=>100)); ?>
+                <td><?php echo $form->textField($model,'shop_name',array('maxlength'=>100,'size'=>30)); ?>
 		<?php echo $form->error($model,'shop_name'); ?></td>
             </tr>
             <tr>
                 <td nowrap="nowrap"><?php echo $form->labelEx($model,'corp_name'); ?></td>
                 <td>
-                    <?php echo $form->textField($model,'corp_name',array('class'=>'col-md-3','maxlength'=>100)); ?>
+                    <?php echo $form->textField($model,'corp_name',array('maxlength'=>100,'size'=>30)); ?>
                     <?php echo $form->error($model,'corp_name'); ?>
                 </td>
                 <td nowrap="nowrap"><?php echo $form->labelEx($model,'shop_url'); ?></td>
-                <td><?php echo $form->textField($model,'shop_url',array('class'=>'col-md-3','maxlength'=>100)); ?>
+                <td><?php echo $form->textField($model,'shop_url',array( 'maxlength'=>100,'size'=>30,)); ?>
 		<?php echo $form->error($model,'shop_url'); ?></td>
             </tr>
             <tr>
                 <td nowrap="nowrap"><?php echo $form->labelEx($model,'shop_addr'); ?></td>
                 <td>
-                   <?php echo $form->textField($model,'shop_addr',array('class'=>'col-md-3','maxlength'=>100)); ?>
+                   <?php echo $form->textField($model,'shop_addr',array('size'=>30,'maxlength'=>100)); ?>
                     <?php echo $form->error($model,'shop_addr'); ?>
                 </td>
                 <td nowrap="nowrap"><?php echo $form->labelEx($model,'phone'); ?></td>
@@ -90,19 +92,20 @@ function changeCustType(obj){
             </tr>
             <tr>
                 <td nowrap="nowrap"><?php echo $form->labelEx($model,'qq'); ?></td>
-                <td>
-                  <?php echo Utils::hideQq($model->qq); ?>
+                <td> 
+                    <?php echo Utils::hideQq($model->qq); ?>
 		   <?php echo $form->error($model,'qq'); ?>
                 </td>
                 <td nowrap="nowrap"><?php echo $form->labelEx($model,'mail'); ?></td>
-                <td><?php echo Utils::hideEmail($model->mail); ?>
+                <td> 
+                    <?php echo Utils::hideEmail($model->mail); ?>
                     <?php echo CHtml::button("发邮件",array('onclick'=>'javascript:sendMail('.$model->id.')','class' => 'editNode btn btn-info btn-minier tooltip-info', 'data-placement' => "bottom")) ?>
 		    <?php echo $form->error($model,'mail'); ?></td>
             </tr>
             <tr>
                 <td nowrap="nowrap"><?php echo $form->labelEx($model,'datafrom'); ?></td>
                 <td>
-                  <?php echo $form->textField($model,'datafrom',array('class'=>'col-md-6','maxlength'=>100)); ?>
+                  <?php echo $form->textField($model,'datafrom',array('size'=>30,'maxlength'=>100)); ?>
 		<?php echo $form->error($model,'datafrom'); ?>
                 </td>
                 <td nowrap="nowrap"><?php echo $form->labelEx($model,'category'); ?></td>
@@ -124,8 +127,8 @@ function changeCustType(obj){
                 <td nowrap="nowrap"><?php echo $form->labelEx($model,'visit_date'); ?></td>
                 <td><?php echo $form->textField($model,'visit_date',array('class'=>"Wdate", 'onClick'=>"WdatePicker()",'style'=>'height:30px;')); ?></td>
                 <td nowrap="nowrap"><?php echo $form->labelEx($model,'trans_user'); ?></td>
-                <td>
-                  <?php echo $form->textField($model,'trans_user',array('class'=>'col-md-3','maxlength'=>100)); ?>
+                <td> 
+                  <?php echo $form->dropDownList($model, 'trans_user',$this->getTranUsers(), array('id'=>'cust_type','style' => "height:34px;")); ?>   
                 </td>
             </tr>
             <tr style="display:none;" id="tr_abandon"> 
@@ -144,9 +147,10 @@ function changeCustType(obj){
                 </td>
             </tr> 
             <tr> 
-                <td nowrap="nowrap"><?php echo $form->labelEx($model,'next_time'); ?></td>
+                <td nowrap="nowrap"><?php echo $form->labelEx($model,'next_time'); ?><br/><br/>最后联系时间</td>
                 <td>
-                   <?php echo $form->textField($model,'next_time',array('class'=>"Wdate", 'onClick'=>"WdatePicker()",'style'=>'height:30px;')); ?>
+                    <?php echo $model->next_time; ?><br/><br/>
+                    <?php echo $model->next_time; ?>
                     <?php echo $form->error($model,'next_time'); ?></td>
                 <td nowrap="nowrap"><?php echo $form->labelEx($model,'memo'); ?></td>
                 <td>
@@ -165,87 +169,87 @@ function changeCustType(obj){
             </tr>
         </table>
 <hr>
-    <table class="table table-bordered" id="tb_contract" style="display:none;">
+<table class="table table-bordered" id="tb_contract" style="display:none;">
             <tr>
-                <td width="10%"  nowrap="nowrap"><?php echo $form->labelEx($model,'contract[service_limit]'); ?></td>
+                <td width="10%"  nowrap="nowrap"><?php echo $form->labelEx($contract,'service_limit'); ?></td>
                 <td width="20%" nowrap="nowrap"> 
-                    <?php echo $form->textField($model,'contract[service_limit]',array('size'=>50,'maxlength'=>50)); ?>
-		    <?php echo $form->error($model,'contract[service_limit]'); ?>
+                    <?php echo $form->textField($contract,'service_limit',array('size'=>50,'maxlength'=>50)); ?>
+                    <?php echo $form->hiddenField($contract, 'id'); ?>
+		    <?php echo $form->error($contract,'service_limit'); ?>
                 </td>
-                <td width="10%"  nowrap="nowrap"><?php echo $form->labelEx($model,'contract[total_money]'); ?></td>
+                <td width="10%"  nowrap="nowrap"><?php echo $form->labelEx($contract,'total_money'); ?></td>
                 <td> 
-                    <?php echo $form->textField($model,'contract[total_money]',array('class'=>'col-md-3','size'=>50,'maxlength'=>50)); ?>
-                    <?php echo $form->error($model,'contract[total_money]'); ?>
+                    <?php echo $form->textField($contract,'total_money',array('class'=>'col-md-3','size'=>50,'maxlength'=>50)); ?>
+                    <?php echo $form->error($contract,'total_money'); ?>
                 </td>
             </tr>
             <tr>
-                <td><?php echo $form->labelEx($model,'contract[pay_type]'); ?></td>
+                <td><?php echo $form->labelEx($contract,'pay_type'); ?></td>
                 <td> 
-                    <?php echo $form->textField($model,'contract[pay_type]',array('size'=>50,'maxlength'=>50)); ?>
-		   <?php echo $form->error($model,'contract[pay_type]'); ?>
+                    <?php echo $form->textField($contract,'pay_type',array('size'=>50,'maxlength'=>50)); ?>
+		   <?php echo $form->error($contract,'pay_type'); ?>
                 </td>
-                <td><?php echo $form->labelEx($model,'contract[pay_time]'); ?></td>
+                <td><?php echo $form->labelEx($contract,'pay_time'); ?></td>
                 <td> 
-                    <?php echo $form->textField($model,'contract[pay_time]',array('class'=>"Wdate", 'onClick'=>"WdatePicker()",'style'=>'height:30px;')); ?> 
-                    <?php echo $form->error($model,'contract[pay_time]'); ?>
+                    <?php echo $form->textField($contract,'pay_time',array('class'=>"Wdate", 'onClick'=>"WdatePicker()",'style'=>'height:30px;')); ?> 
+                    <?php echo $form->error($contract,'pay_time'); ?>
                 </td>
             </tr> 
             <tr>
-                <td><?php echo $form->labelEx($model,'contract[promise]'); ?></td>
+                <td><?php echo $form->labelEx($contract,'promise'); ?></td>
                 <td colspan="3"> 
-                    <?php echo $form->textArea($model,'contract[promise]',array('rows'=>3,'cols'=>50)); ?>
-		    <?php echo $form->error($model,'contract[promise]'); ?>
+                    <?php echo $form->textArea($contract,'promise',array('rows'=>3,'cols'=>50)); ?>
+		    <?php echo $form->error($contract,'promise'); ?>
                 </td> 
             </tr>
             <tr>
-                <td><?php echo $form->labelEx($model,'contract[first_pay]'); ?></td>
+                <td><?php echo $form->labelEx($contract,'first_pay'); ?></td>
                 <td> 
-                    <?php echo $form->textField($model,'contract[first_pay]',array('size'=>50,'maxlength'=>50)); ?>
-                    <?php echo $form->error($model,'contract[first_pay]'); ?>
+                    <?php echo $form->textField($contract,'first_pay',array('size'=>50,'maxlength'=>50)); ?>
+                    <?php echo $form->error($contract,'first_pay'); ?>
                 </td>
-                <td><?php echo $form->labelEx($model,'contract[second_pay]'); ?></td>
+                <td><?php echo $form->labelEx($contract,'second_pay'); ?></td>
                 <td> 
-                    <?php echo $form->textField($model,'contract[second_pay]',array('size'=>50,'maxlength'=>50)); ?>
-		    <?php echo $form->error($model,'contract[second_pay]'); ?>
+                    <?php echo $form->textField($contract,'second_pay',array('size'=>50,'maxlength'=>50)); ?>
+		    <?php echo $form->error($contract,'second_pay'); ?>
                 </td> 
             </tr>
             <tr>
-                <td><?php echo $form->labelEx($model,'contract[third_pay]'); ?></td>
+                <td><?php echo $form->labelEx($contract,'third_pay'); ?></td>
                 <td> 
-                    <?php echo $form->textField($model,'contract[third_pay]',array('size'=>50,'maxlength'=>50)); ?>
-                    <?php echo $form->error($model,'contract[third_pay]'); ?>
+                    <?php echo $form->textField($contract,'third_pay',array('size'=>50,'maxlength'=>50)); ?>
+                    <?php echo $form->error($contract,'third_pay'); ?>
                 </td>
-                <td><?php echo $form->labelEx($model,'contract[fourth_pay]'); ?></td>
+                <td><?php echo $form->labelEx($contract,'fourth_pay'); ?></td>
                 <td> 
-                    <?php echo $form->textField($model,'contract[fourth_pay]',array('size'=>50,'maxlength'=>50)); ?>
-		    <?php echo $form->error($model,'contract[fourth_pay]'); ?>
+                    <?php echo $form->textField($contract,'fourth_pay',array('size'=>50,'maxlength'=>50)); ?>
+		    <?php echo $form->error($contract,'fourth_pay'); ?>
                 </td> 
             </tr>
             <tr>
-                <td><?php echo $form->labelEx($model,'contract[comm_royalty]'); ?></td>
+                <td><?php echo $form->labelEx($contract,'comm_royalty'); ?></td>
                 <td> 
-                    <?php echo $form->textField($model,'contract[comm_royalty]',array('size'=>50,'maxlength'=>50)); ?>
-                    <?php echo $form->error($model,'contract[comm_royalty]'); ?>
+                    <?php echo $form->textField($contract,'comm_royalty',array('size'=>50,'maxlength'=>50)); ?>
+                    <?php echo $form->error($contract,'comm_royalty'); ?>
                 </td>
-                <td><?php echo $form->labelEx($model,'contract[comm_pay_time]'); ?></td>
+                <td><?php echo $form->labelEx($contract,'comm_pay_time'); ?></td>
                 <td> 
-                    <?php echo $form->textField($model,'contract[comm_pay_time]',array('class'=>"Wdate", 'onClick'=>"WdatePicker()",'style'=>'height:30px;')); ?>
-		   <?php echo $form->error($model,'contract[comm_pay_time]'); ?>
+                    <?php echo $form->textField($contract,'comm_pay_time',array('class'=>"Wdate", 'onClick'=>"WdatePicker()",'style'=>'height:30px;')); ?>
+		   <?php echo $form->error($contract,'comm_pay_time'); ?>
                 </td>
                 
             </tr>
             <tr>
-                <td><?php echo $form->labelEx($model,'contract[creator]'); ?></td>
+                <td><?php echo $form->labelEx($contract,'creator'); ?></td>
                 <td>
-                    <?=$user->username?> 
+                    <?=$user->username?>  
                 </td>
-                <td><?php echo $form->labelEx($model,'contract[create_time]'); ?></td>
+                <td><?php echo $form->labelEx($contract,'create_time'); ?></td>
                 <td> 
-		   <?php echo date("Y-m-d",time()); ?>
+		   <?php echo date("Y-m-d",time()); ?> 
                 </td> 
             </tr>
-    </table>
-<?php $this->endWidget();?>
+    </table> 
 <div class="row buttons">
 		<?php echo CHtml::submitButton('保存',array('class' => 'btn btn-sm btn-primary')); ?> 
     </div> 
