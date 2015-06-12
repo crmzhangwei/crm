@@ -32,7 +32,23 @@ function sendMail(cust_id){
     
 }
 function changeCustType(obj){
-    
+   if(obj.value=='6'){
+       $("#tr_visit").show();
+       $("#tb_contract").hide();
+       $("#tr_abandon").hide();
+   }else if(obj.value=='7'){
+       $("#tb_contract").show();
+       $("#tr_visit").hide();
+       $("#tr_abandon").hide();
+   }else if(obj.value=='9'){
+       $("#tr_abandon").show();
+       $("#tr_visit").hide();
+       $("#tb_contract").hide();
+   }else{
+       $("#tr_abandon").hide();
+       $("#tr_visit").hide();
+       $("#tb_contract").hide();
+   }
 }
 </script> 
  
