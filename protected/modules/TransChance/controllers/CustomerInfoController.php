@@ -55,7 +55,7 @@ class CustomerInfoController extends GController {
      */
     public function actionUpdate2($id) {
         $model = $this->loadModel($id);
-        
+
         // Uncomment the following line if AJAX validation is needed
         // $this->performAjaxValidation($model);
 
@@ -69,34 +69,64 @@ class CustomerInfoController extends GController {
         $model->toDate();
         $this->render('update', array(
             'model' => $model,
-            'user'=>$user,
+            'user' => $user,
         ));
     }
 
-    
-     public function actionUpdate($id) {
-        $noteinfo = new NoteInfo();
-        $model = $this->loadModel($id);
-        $contract =  ContractInfo::model()->findBySql("select * from {{contract_info}} where cust_id=:cust_id",array(":cust_id"=>$id));
-        if(empty($contract)){
-            $contract=new ContractInfo();
+    private function validCustomerInfo($custtype,$model, $contract) { 
+        $ret = true;
+        if ($custtype == 17) {
+            //已签合同  
+            if (!$contract->validate()) {
+                $model->addError("cust_type", "客户分类为17类，合同信息不能为空!");
+                $ret = false;
+            }
         }
-        $loginuser =  Users::model()->findByPk(Yii::app()->user->id);
+        if ($custtype == 18) {
+            //放入公海
+            if ($model->abandon_reason == '') {
+                $model->addError("abandon_reason", "客户分类为18类，放弃原因不能为空!");
+                $ret = false;
+            }
+        }
+        return $ret;
+    }
+
+    public function actionUpdate($id) {
+        $noteinfo = new NoteInfo();
+        $noteinfo->setAttribute("iskey", 0);
+        $noteinfo->setAttribute("isvalid", 1);
+        $noteinfo->setAttribute("dial_id", 0);
+        $noteinfo->setAttribute("message_id", 0);
+        $noteinfo->setAttribute("next_contact", '');
+        $noteinfo->cust_id = $id;
+        $model = $this->loadModel($id);
+        $trans_info = TransCustInfo::model()->findBySql("select * from {{trans_cust_info}} where cust_id=:cust_id", array(":cust_id" => $id));
+        $contract = new ContractInfo();
+//        ContractInfo::model()->findBySql("select * from {{contract_info}} where cust_id=:cust_id", array(":cust_id" => $id));
+//        if (empty($contract)) {
+//            $contract = new ContractInfo();
+//        }
+        $loginuser = Users::model()->findByPk(Yii::app()->user->id);
         if (isset($_POST['CustomerInfo'])) {
             //保存  
             // $sql = "select * from {{aftermarket_cust_info}} where cust_id=:cust_id";
             //$aftermodel = AftermarketCustInfo::model()->findBySql($sql, array(':cust_id' => $id));  
-            $newCustType = $_POST['CustomerInfo']['cust_type']; 
-            $oldCustType = $model->getAttribute("cust_type"); 
+            $newCustType = $_POST['TransCustInfo']['cust_type'];
+            $oldCustType = $trans_info->getAttribute("cust_type"); 
             //$contract->unsetAttributes();
             $contract->attributes = $_POST['ContractInfo'];
-            $contract->cust_id=$id;  
+            $contract->cust_id = $id;
+            $contract->pay_time=  strtotime($contract->pay_time);
+            $contract->comm_pay_time=strtotime($contract->comm_pay_time);
             $model->attributes = $_POST['CustomerInfo'];
-            if ($this->validCustomerInfo($model, $contract)) { 
-                if ($oldCustType != $newCustType) {
+            $trans_info->cust_type=$newCustType;
+            $transaction = Yii::app()->db->beginTransaction();  
+            if ($this->validCustomerInfo($newCustType,$model, $contract)) {
+                if ($oldCustType != $newCustType) { 
                     //客户分类调整，生成转换明细数据
                     $convt = new CustConvtDetail();
-                    $convt->setAttribute('lib_type', 1);
+                    $convt->setAttribute('lib_type', 2);
                     $convt->setAttribute('cust_id', $id);
                     $convt->setAttribute('cust_type_1', $oldCustType);
                     $convt->setAttribute('cust_type_2', $newCustType);
@@ -104,30 +134,31 @@ class CustomerInfoController extends GController {
                     $convt->setAttribute('user_id', Yii::app()->user->id);
                     $convt->save();
                 }
-                if($oldCustType!=$newCustType&&$newCustType==6){
-                    //到店 生成成交师库
-                    $tran = new TransCustInfo();
-                    $tranuser = Users::model()->findByPk($model->trans_user); 
-                    $tran->eno=$tranuser->eno;
-                    $tran->cust_id=$id;
-                    $tran->cust_type=11;
-                    $tran->assign_eno=$loginuser->eno; 
-                    $tran->assign_time=time();
-                    $tran->assign_time=time();
-                    $tran->creator=$loginuser->id;
-                    $tran->create_time=time();
-                    $tran->save();
+                if ($oldCustType != $newCustType && $newCustType == 17) {
+                    //到店 生成售后库
+                    $after = new AftermarketCustInfo();
+                    $after->eno = '';
+                    $after->cust_id = $id;
+                    $after->cust_type = 0; //初始0类，新分
+                    $after->webchat = '';
+                    $after->ww = '';
+                    $after->assign_eno = $loginuser->eno;
+                    $after->assign_time = time();
+                    $after->next_time = 0;
+                    $after->memo = '';
+                    $after->creator = $loginuser->id;
+                    $after->create_time = time();
+                    $after->save();
                 }
-                if($newCustType==7){
+                if ($newCustType == 17) {
                     //已签合同,生成合同信息表
-                    $contract->creator=$loginuser->id;
-                    $contract->create_time=time();
-                    $contract->pay_time=  strtotime($contract->pay_time);
-                    $contract->comm_pay_time=  strtotime($contract->comm_pay_time);
-                    //var_dump($contract);
+                    $contract->creator = $loginuser->id;
+                    $contract->create_time = time();
+                    $contract->pay_time = strtotime($contract->pay_time);
+                    $contract->comm_pay_time = strtotime($contract->comm_pay_time);
                     $contract->save();
                 }
-                if ($newCustType == 9) {
+                if ($newCustType == 18) {
                     //客户分类转成9（公海），生成公海资源数据
                     $blackinfo = new BlackInfo();
                     $blackinfo->setAttribute("cust_id", $id);
@@ -137,7 +168,7 @@ class CustomerInfoController extends GController {
                     $blackinfo->setAttribute('creator', Yii::app()->user->id);
                     $blackinfo->save();
                 }
-                if (isset($_POST['NoteInfo'])) {
+                if (isset($_POST['NoteInfo'])&&$_POST['NoteInfo']['next_contact']!='') {
                     //保存小记
                     $noteinfo->unsetAttributes();
                     $noteinfo->attributes = $_POST['NoteInfo'];
@@ -148,113 +179,119 @@ class CustomerInfoController extends GController {
                     $noteinfo->setAttribute("eno", Yii::app()->user->id);
                     $noteinfo->setAttribute("create_time", time());
                     if ($noteinfo->save()) {
-                        //保存销售库
-                        $model->next_time = $noteinfo->next_contact;
-                        if($newCustType==6){
-                            $model->visit_date=strtotime($model->visit_date);
-                        } 
-                        $model->save();
+                        //保存销售库下次联系时间
+                        $trans_info->next_time = $noteinfo->next_contact; 
                     } else {
                         $noteinfo->addError("memo", "请录入小记信息");
-                    }
-                    //更新电话拔打记录
-                    if ($noteinfo->dial_id > 0) {
-                        $dialdetail = DialDetail::model()->findByPk($noteinfo->dial_id);
-                        //获取通知录音路径，通知时长 
-                    }
+                    } 
+                } 
+                $model->save();
+                $trans_info->save();
+                //更新电话拔打记录
+                if ($noteinfo->dial_id > 0) {
+                    $dialdetail = DialDetail::model()->findByPk($noteinfo->dial_id);
+                    //获取通知录音路径，通知时长 
+//                        $uid = UnCall::getUid($dialdetail->extend_no);
+//                        $dial_long = UnCall::getDialLength($uid);
+//                        $record_path = UnCall::getRecord($uid);
+//                        $dialdetail->uid=$uid;
+//                        $dialdetail->dial_long=$dial_long;
+//                        $dialdetail->record_path=$record_path;
+//                        $dialdetail->save();
                 }
             }
+            //加载页面数据
+            if (!$noteinfo->hasErrors() && !$model->hasErrors()) {
+                //提交事务
+                $transaction->commit();
+                if ($newCustType == 17 || $newCustType == 18) {
+                    //客户已经转入到售后库或进入公海资源，跳转到成功页面
+                    $this->render("result");
+                    return;
+                } else {
+                    //保存成功，没有错误，清除数据
+                    $noteinfo->unsetAttributes();
+                    $noteinfo->setAttribute("iskey", 0);
+                    $noteinfo->setAttribute("isvalid", 1);
+                    $noteinfo->setAttribute("dial_id", 0);
+                    $noteinfo->setAttribute("message_id", 0);
+                    $noteinfo->setAttribute("next_contact", '');
+                    $noteinfo->cust_id = $id;
+                }
+            } else {
+                //回滚事务
+                $transaction->rollback();
+                $noteinfo->setAttribute("next_contact", '');
+            }
         }
-        //加载页面数据
-        if (!$noteinfo->hasErrors()) {
-            //保存成功，没有错误，清除数据
-            $noteinfo->unsetAttributes();
-            $noteinfo->setAttribute("iskey", 0);
-            $noteinfo->setAttribute("isvalid", 0);
-            $noteinfo->setAttribute("dial_id", 0);
-            $noteinfo->setAttribute("message_id", 0);
-            $noteinfo->setAttribute("next_contact", date('Y-m-d', time()));
-            $noteinfo->cust_id = $id;
-        } else {
-            $noteinfo->setAttribute("next_contact", date('Y-m-d', $noteinfo->next_contact));
-        }
+
 
         $model->setAttribute("create_time", date("Y-m-d", intval($model->getAttribute("create_time"))));
         $model->setAttribute("assign_time", date("Y-m-d", intval($model->getAttribute("assign_time"))));
         $model->setAttribute("next_time", date("Y-m-d", intval($model->getAttribute("next_time"))));
-        if ($model->visit_date == 0) {
-            $model->setAttribute("visit_date", date("Y-m-d", time()));
-        }else {
-            $model->setAttribute("visit_date", date("Y-m-d", intval($model->getAttribute("visit_date"))));
-        } 
+         
         $sharedNote = NoteInfo::model();
         $sharedNote->setAttribute("cust_id", $model->id);
         $historyNote = NoteInfo::model();
         $historyNote->setAttribute("cust_id", $model->id);
-        $user = Users::model()->findByPk($model->creator);
-        $noteinfo->setAttribute("next_contact", date('Y-m-d', time()));
-        if($contract->id>0){
-            $contract->setAttribute("pay_time", date('Y-m-d',$contract->getAttribute("pay_time")));
-            $contract->setAttribute("comm_pay_time", date('Y-m-d',$contract->getAttribute("comm_pay_time")));
-        }
+        $user = Users::model()->findByPk($model->creator); 
+        
         $this->render('update', array(
             'model' => $model,
+            'trans_model' => $trans_info,
             'sharedNote' => $sharedNote,
             'historyNote' => $historyNote,
             'noteinfo' => $noteinfo,
-            'contract'=>$contract,
+            'contract' => $contract,
             'user' => $user,
         ));
     }
-    
-    
-    public function actionNoteInfo($id)
-    {
-           $model = $this->loadModel($id);
-           $noteinfo = new NoteInfo(); 
-           $user = Users::model()->findByPk($model->creator);
-            if (isset($_POST['NoteInfo'])) { 
-                //保存小记
-                $noteinfo->unsetAttributes();  
-                $noteinfo->attributes = $_POST['NoteInfo'];
-                $noteinfo->next_contact = strtotime($noteinfo->next_contact);
-                $noteinfo->setAttribute("eno", Yii::app()->user->id);
-                $noteinfo->setAttribute("create_time", time());
-                if ($noteinfo->save()) {
-                    //保存售后库
-                   $model->next_time = $noteinfo->next_contact;
-                   $model->iskey = $noteinfo->iskey;
-                   $model->memo= $noteinfo->memo;
-                   $model->save();
-                } else {
-                    $noteinfo->addError("memo", "请录入小记信息");
-                }
-                //更新电话拔打记录
-                if($noteinfo->dial_id>0){
-                    $dialdetail =  DialDetail::model()->findByPk($noteinfo->dial_id);
-                    //获取通知录音路径，通知时长 
-                } 
-                
+
+    public function actionNoteInfo($id) {
+        $model = $this->loadModel($id);
+        $noteinfo = new NoteInfo();
+        $user = Users::model()->findByPk($model->creator);
+        if (isset($_POST['NoteInfo'])) {
+            //保存小记
+            $noteinfo->unsetAttributes();
+            $noteinfo->attributes = $_POST['NoteInfo'];
+            $noteinfo->next_contact = strtotime($noteinfo->next_contact);
+            $noteinfo->setAttribute("eno", Yii::app()->user->id);
+            $noteinfo->setAttribute("create_time", time());
+            if ($noteinfo->save()) {
+                //保存售后库
+                $model->next_time = $noteinfo->next_contact;
+                $model->iskey = $noteinfo->iskey;
+                $model->memo = $noteinfo->memo;
+                $model->save();
+            } else {
+                $noteinfo->addError("memo", "请录入小记信息");
             }
-            $sharedNote = NoteInfo::model();
-            $sharedNote->setAttribute("cust_id", $model->id);
-            // $historyNote = NoteInfo::model();
-            //$historyNote->setAttribute("cust_id", $model->id);
-            $this->render('update', array(
+            //更新电话拔打记录
+            if ($noteinfo->dial_id > 0) {
+                $dialdetail = DialDetail::model()->findByPk($noteinfo->dial_id);
+                //获取通知录音路径，通知时长 
+            }
+        }
+        $sharedNote = NoteInfo::model();
+        $sharedNote->setAttribute("cust_id", $model->id);
+        // $historyNote = NoteInfo::model();
+        //$historyNote->setAttribute("cust_id", $model->id);
+        $this->render('update', array(
             'model' => $model,
             'sharedNote' => $sharedNote,
-           // 'historyNote' => $historyNote,
+            // 'historyNote' => $historyNote,
             'noteinfo' => $noteinfo,
             'user' => $user,
         ));
     }
-    
-    public function actionHistoryNote($id){
-          $historyNote = NoteInfo::model();
-          $model = $this->loadModel($id);
-         // var_dump($model);die;
-          $user = Users::model()->findByPk($model->creator);
-          $this->render('update', array(
+
+    public function actionHistoryNote($id) {
+        $historyNote = NoteInfo::model();
+        $model = $this->loadModel($id);
+        // var_dump($model);die;
+        $user = Users::model()->findByPk($model->creator);
+        $this->render('update', array(
             'model' => $model,
             //'sharedNote' => $sharedNote,
             'historyNote' => $historyNote,
@@ -262,17 +299,19 @@ class CustomerInfoController extends GController {
             'user' => $user,
         ));
     }
-     public function actionSharedNote($id){ 
-          $sharedNote = NoteInfo::model();
-          $model = $this->loadModel($id); 
-          $user = Users::model()->findByPk($model->creator);
-          $this->render('update', array(
-            'model' => $model, 
-            'sharedNote' => $sharedNote, 
+
+    public function actionSharedNote($id) {
+        $sharedNote = NoteInfo::model();
+        $model = $this->loadModel($id);
+        $user = Users::model()->findByPk($model->creator);
+        $this->render('update', array(
+            'model' => $model,
+            'sharedNote' => $sharedNote,
             'user' => $user,
         ));
     }
-      /**
+
+    /**
      * 搜索共享小记列表数据
      */
     public function actionSharedNoteList() {
@@ -284,13 +323,16 @@ class CustomerInfoController extends GController {
             $custid = $_GET['cust_id'];
             $model->setAttribute("cust_id", $custid);
         }
+        $custmodel = $this->loadModel($model->getAttribute("cust_id"));
         if (isset($_GET['isajax'])) {
             $this->renderPartial('_shared_note_list', array(
                 'model' => $model,
+                'custmodel' => $custmodel
             ));
         }
     }
-        /**
+
+    /**
      * 搜索历史小记列表数据
      */
     public function actionHistoryNoteList() {
@@ -303,13 +345,16 @@ class CustomerInfoController extends GController {
             $custid = $_GET['cust_id'];
             $model->setAttribute("cust_id", $custid);
         }
+        $custmodel = $this->loadModel($model->getAttribute("cust_id"));
         if (isset($_GET['isajax'])) {
 
             $this->renderPartial('_history_note_list', array(
                 'model' => $model,
+                'custmodel' => $custmodel
             ));
         }
     }
+
     /**
      * Deletes a particular model.
      * If deletion is successful, the browser will be redirected to the 'admin' page.
@@ -337,7 +382,7 @@ class CustomerInfoController extends GController {
      * Manages all models.
      */
     public function actionAdmin() {
-    
+
         $model = new CustomerInfo('search');
         $model->unsetAttributes();  // clear any default values
         if (isset($_GET['CustomerInfo']))
@@ -351,12 +396,12 @@ class CustomerInfoController extends GController {
      * 我的机会
      */
     public function actionTodayList() {
-    
+
         $model = new CustomerInfo('search');
         $model->unsetAttributes();  // clear any default values
-        $begintime = strtotime( date('Y-m-d',time()));
-        $endtime = $begintime+86400;
-        $model->begintime=$begintime;
+        $begintime = strtotime(date('Y-m-d', time()));
+        $endtime = $begintime + 86400;
+        $model->begintime = $begintime;
         $model->endtime = $endtime;
         if (isset($_GET['CustomerInfo']))
             $model->attributes = $_GET['CustomerInfo'];
@@ -365,11 +410,11 @@ class CustomerInfoController extends GController {
         ));
     }
 
-     /**
+    /**
      * 未联系机会
      */
     public function actionOldList() {
-    
+
         $model = new CustomerInfo('search');
         $model->unsetAttributes();  // clear any default values
         if (isset($_GET['CustomerInfo']))
@@ -405,34 +450,35 @@ class CustomerInfoController extends GController {
     }
 
     protected function genCustTypeArray() {
+        $custTypeArr = Utils::mapArray(CustType::findByType(2), 'type_no', 'type_name');
+        $custTypeArr[0] = '--请选择--';
+        ksort($custTypeArr);
+        return $custTypeArr;
+    }
+
+    protected function genCategoryArray() {
         $custTypeArr = Utils::mapArray(CustType::findByType(1), 'type_no', 'type_name');
         $custTypeArr[0] = '--请选择--';
         ksort($custTypeArr);
         return $custTypeArr;
     }
 
-     protected function genCategoryArray() {
-        $custTypeArr = Utils::mapArray(CustType::findByType(1), 'type_no', 'type_name');
-        $custTypeArr[0] = '--请选择--';
-        ksort($custTypeArr);
-        return $custTypeArr;
-    }
-        /**
+    /**
      * 获取类目数组
      * @return type
      */
     public function getCategoryArr() {
         $category = Dic::model()->getCustCart();
-        return $category ;
+        return $category;
     }
-    protected  function getCartTxt($data)
-    {
-        $code=$data->category;
+
+    protected function getCartTxt($data) {
+        $code = $data->category;
         $custType = Dic::model()->getCustCart();
-        return $code&&!empty($custType[$code])?$custType[$code]:$code;
+        return $code && !empty($custType[$code]) ? $custType[$code] : $code;
     }
-    
-     /**
+
+    /**
      * 获取客户分类数组
      * @return type
      */
@@ -445,7 +491,7 @@ class CustomerInfoController extends GController {
         $custtype = array_merge(array($empty), $custtype);
         return CHtml::listData($custtype, 'type_no', 'type_name');
     }
-    
+
     protected function getTranUsers() {
         $loginid = Yii::app()->user->id;
         $user = Users::model()->findByPk($loginid);
@@ -460,4 +506,46 @@ class CustomerInfoController extends GController {
         $users = array_merge(array($empty), $users);
         return CHtml::listData($users, 'id', 'eno');
     }
+
+    /**
+     * 批量安排下次联系机会-多选情况
+     * @param type $id 客户id
+     */
+    public function actionAssignNextTime() {
+
+        if (isset($_POST['cust_id'])) {
+            /**
+             * 在分配页面点击保存按钮
+             * 1.更新下次联系时间
+             */
+            $cust_ids = $_POST['cust_id'];
+            $ids = implode(",", $cust_ids);
+            $next_time = $_POST['next_time'];
+            $next_time = strtotime($next_time);
+            Yii::app()->db->createCommand()->update('{{customer_info}}', array('next_time' => $next_time), "id in({$ids})");
+            $model = new CustomerInfo();
+            $model->addError("next_time", "操作成功!");
+            $this->render("result", array(
+                'model' => $model,
+            ));
+            return;
+        }
+        if (!isset($_POST['select'])) {
+            //没有选择记录的情况
+            $this->redirect($this->createUrl("customerinfo/admin"));
+            return;
+        }
+        //选择了记录，跳转到分配页面
+        $ids = $_POST['select'];
+        $model = CustomerInfo::model();
+        $sql = "";
+        if (is_array($ids)) {
+            $sql = "select id,cust_name from {{customer_info}} where id in (" . implode(",", $ids) . ")";
+        } else {
+            $sql = "select id,cust_name from {{customer_info}} where id=" . $ids;
+        }
+        $list = $model->findAllBySql($sql);
+        $this->render('assign', array('model' => $model, 'custlist' => $list));
+    }
+
 }

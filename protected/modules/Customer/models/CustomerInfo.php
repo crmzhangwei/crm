@@ -20,6 +20,7 @@
  * @property string $assign_eno
  * @property integer $assign_time
  * @property integer $next_time
+ * @property integer $last_time
  * @property string $memo
  * @property integer $create_time
  * @property integer $creator
@@ -100,6 +101,7 @@ class CustomerInfo extends CActiveRecord
 			'assign_eno' => '分配人',
 			'assign_time' => '分配时间',
 			'next_time' => '下次联系时间',
+                        'last_time'=>'最后联系时间',
 			'memo' => '备注',
 			'create_time' => '创建时间',
 			'creator' => '创建人',

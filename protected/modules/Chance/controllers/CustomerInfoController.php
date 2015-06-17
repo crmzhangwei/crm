@@ -73,33 +73,26 @@ class CustomerInfoController extends GController {
         ));
     }
 
-    private function validCustomerInfo($model, $contract) {
+    private function validCustomerInfo($model) {
         $custtype = $model->cust_type;
-        $ret=true;
+        $ret = true;
         if ($custtype == 6) {
             //到店
             if ($model->visit_date == '') {
                 $model->addError("visit_date", "客户分类为6类，到访时间不能为空!");
-                $ret=false;
+                $ret = false;
             }
             if ($model->trans_user == '') {
                 $model->addError("trans_user", "客户分类为6类，成交师不能为空!");
-                $ret=false;
+                $ret = false;
             }
         }
-        if ($custtype == 7) {
-            //已签合同
-             
-            if (!$contract->validate($contract->attributes)) {
-                $model->addError("memo", "客户分类为7类，合同信息不能为空!");
-                $ret=false;
-            }
-        }
+
         if ($custtype == 9) {
             //放入公海
             if ($model->abandon_reason == '') {
                 $model->addError("abandon_reason", "客户分类为9类，放弃原因不能为空!");
-                $ret=false;
+                $ret = false;
             }
         }
         return $ret;
@@ -107,24 +100,24 @@ class CustomerInfoController extends GController {
 
     public function actionUpdate($id) {
         $noteinfo = new NoteInfo();
+        $noteinfo->setAttribute("iskey", 0);
+        $noteinfo->setAttribute("isvalid", 1);
+        $noteinfo->setAttribute("dial_id", 0);
+        $noteinfo->setAttribute("message_id", 0);
+        $noteinfo->setAttribute("next_contact", '');
+        $noteinfo->cust_id = $id;
         $model = $this->loadModel($id);
-        $contract =  ContractInfo::model()->findBySql("select * from {{contract_info}} where cust_id=:cust_id",array(":cust_id"=>$id));
-        if(empty($contract)){
-            $contract=new ContractInfo();
-        }
-        $loginuser =  Users::model()->findByPk(Yii::app()->user->id);
+        $loginuser = Users::model()->findByPk(Yii::app()->user->id);
         if (isset($_POST['CustomerInfo'])) {
             //保存  
             // $sql = "select * from {{aftermarket_cust_info}} where cust_id=:cust_id";
             //$aftermodel = AftermarketCustInfo::model()->findBySql($sql, array(':cust_id' => $id));  
-            $newCustType = $_POST['CustomerInfo']['cust_type']; 
-            $oldCustType = $model->getAttribute("cust_type"); 
-            //$contract->unsetAttributes();
-            $contract->attributes = $_POST['ContractInfo'];
-            $contract->cust_id=$id; 
-            
+            $newCustType = $_POST['CustomerInfo']['cust_type'];
+            $oldCustType = $model->getAttribute("cust_type");
             $model->attributes = $_POST['CustomerInfo'];
-            if ($this->validCustomerInfo($model, $contract)) { 
+            $model->trans_user = $_POST['CustomerInfo']['trans_user'];
+            $transaction = Yii::app()->db->beginTransaction();
+            if ($this->validCustomerInfo($model)) {
                 if ($oldCustType != $newCustType) {
                     //客户分类调整，生成转换明细数据
                     $convt = new CustConvtDetail();
@@ -136,29 +129,22 @@ class CustomerInfoController extends GController {
                     $convt->setAttribute('user_id', Yii::app()->user->id);
                     $convt->save();
                 }
-                if($oldCustType!=$newCustType&&$newCustType==6){
+                if ($oldCustType != $newCustType && $newCustType == 6) {
                     //到店 生成成交师库
                     $tran = new TransCustInfo();
-                    $tranuser = Users::model()->findByPk($model->trans_user); 
-                    $tran->eno=$tranuser->eno;
-                    $tran->cust_id=$id;
-                    $tran->cust_type=11;
-                    $tran->assign_eno=$loginuser->eno; 
-                    $tran->assign_time=time();
-                    $tran->assign_time=time();
-                    $tran->creator=$loginuser->id;
-                    $tran->create_time=time();
+                    $tranuser = Users::model()->findByPk($model->trans_user);
+                    $model->eno = $tranuser->eno; //将客户的所属工号改为成交师
+                    $tran->eno = $tranuser->eno;
+                    $tran->cust_id = $id;
+                    $tran->cust_type = 10;
+                    $tran->assign_eno = $loginuser->eno;
+                    $tran->assign_time = time();
+                    $tran->assign_time = time();
+                    $tran->creator = $loginuser->id;
+                    $tran->create_time = time();
                     $tran->save();
                 }
-                if($newCustType==7){
-                    //已签合同,生成合同信息表
-                    $contract->creator=$loginuser->id;
-                    $contract->create_time=time();
-                    $contract->pay_time=  strtotime($contract->pay_time);
-                    $contract->comm_pay_time=  strtotime($contract->comm_pay_time);
-                    //var_dump($contract);
-                    $contract->save();
-                }
+
                 if ($newCustType == 9) {
                     //客户分类转成9（公海），生成公海资源数据
                     $blackinfo = new BlackInfo();
@@ -169,7 +155,7 @@ class CustomerInfoController extends GController {
                     $blackinfo->setAttribute('creator', Yii::app()->user->id);
                     $blackinfo->save();
                 }
-                if (isset($_POST['NoteInfo'])) {
+                if (isset($_POST['NoteInfo']) && $_POST['NoteInfo']['next_contact'] != '') {
                     //保存小记
                     $noteinfo->unsetAttributes();
                     $noteinfo->attributes = $_POST['NoteInfo'];
@@ -182,59 +168,71 @@ class CustomerInfoController extends GController {
                     if ($noteinfo->save()) {
                         //保存销售库
                         $model->next_time = $noteinfo->next_contact;
-                        if($newCustType==6){
-                            $model->visit_date=strtotime($model->visit_date);
-                        } 
-                        $model->save();
                     } else {
                         $noteinfo->addError("memo", "请录入小记信息");
                     }
-                    //更新电话拔打记录
-                    if ($noteinfo->dial_id > 0) {
-                        $dialdetail = DialDetail::model()->findByPk($noteinfo->dial_id);
-                        //获取通知录音路径，通知时长 
-                    }
+                }
+                if ($newCustType == 6) {
+                    $model->visit_date = strtotime($model->visit_date);
+                } else {
+                    $model->visit_date = 0;
+                }
+                $model->save();
+                //更新电话拔打记录
+                if ($noteinfo->dial_id > 0) {
+                    $dialdetail = DialDetail::model()->findByPk($noteinfo->dial_id);
+                    //获取通知录音路径，通知时长 
+//                        $uid = UnCall::getUid($dialdetail->extend_no);
+//                        $dial_long = UnCall::getDialLength($uid);
+//                        $record_path = UnCall::getRecord($uid);
+//                        $dialdetail->uid=$uid;
+//                        $dialdetail->dial_long=$dial_long;
+//                        $dialdetail->record_path=$record_path;
+//                        $dialdetail->save();
                 }
             }
+            //加载页面数据
+            if (!$noteinfo->hasErrors() && !$model->hasErrors()) {
+                //提交事务
+                $transaction->commit();
+                if ($newCustType == 6 || $newCustType == 9) {
+                    //客户已经转入到成交师库或进入公海资源，跳转到成功页面
+                    $this->render("result");
+                    return;
+                } else {
+                    //保存成功，清除数据
+                    $noteinfo->unsetAttributes();
+                    $noteinfo->setAttribute("iskey", 0);
+                    $noteinfo->setAttribute("isvalid", 1);
+                    $noteinfo->setAttribute("dial_id", 0);
+                    $noteinfo->setAttribute("message_id", 0);
+                    $noteinfo->setAttribute("next_contact", '');
+                    $noteinfo->cust_id = $id;
+                }
+            } else {
+                //回滚事务
+                $transaction->rollback();
+                $noteinfo->setAttribute("next_contact", date('Y-m-d', $noteinfo->next_contact));
+            }
         }
-        //加载页面数据
-        if (!$noteinfo->hasErrors()) {
-            //保存成功，没有错误，清除数据
-            $noteinfo->unsetAttributes();
-            $noteinfo->setAttribute("iskey", 0);
-            $noteinfo->setAttribute("isvalid", 0);
-            $noteinfo->setAttribute("dial_id", 0);
-            $noteinfo->setAttribute("message_id", 0);
-            $noteinfo->setAttribute("next_contact", date('Y-m-d', time()));
-            $noteinfo->cust_id = $id;
-        } else {
-            $noteinfo->setAttribute("next_contact", date('Y-m-d', $noteinfo->next_contact));
-        }
-
         $model->setAttribute("create_time", date("Y-m-d", intval($model->getAttribute("create_time"))));
         $model->setAttribute("assign_time", date("Y-m-d", intval($model->getAttribute("assign_time"))));
         $model->setAttribute("next_time", date("Y-m-d", intval($model->getAttribute("next_time"))));
         if ($model->visit_date == 0) {
             $model->setAttribute("visit_date", date("Y-m-d", time()));
-        }else {
+        } else {
             $model->setAttribute("visit_date", date("Y-m-d", intval($model->getAttribute("visit_date"))));
-        } 
+        }
         $sharedNote = NoteInfo::model();
         $sharedNote->setAttribute("cust_id", $model->id);
         $historyNote = NoteInfo::model();
         $historyNote->setAttribute("cust_id", $model->id);
         $user = Users::model()->findByPk($model->creator);
-        $noteinfo->setAttribute("next_contact", date('Y-m-d', time()));
-        if($contract->id>0){
-            $contract->setAttribute("pay_time", date('Y-m-d',$contract->getAttribute("pay_time")));
-            $contract->setAttribute("comm_pay_time", date('Y-m-d',$contract->getAttribute("comm_pay_time")));
-        }
         $this->render('update', array(
             'model' => $model,
             'sharedNote' => $sharedNote,
             'historyNote' => $historyNote,
             'noteinfo' => $noteinfo,
-            'contract'=>$contract,
             'user' => $user,
         ));
     }
@@ -497,6 +495,47 @@ class CustomerInfoController extends GController {
         $empty->type_name = "请选择客户分类";
         $custtype = array_merge(array($empty), $custtype);
         return CHtml::listData($custtype, 'type_no', 'type_name');
+    }
+
+    /**
+     * 批量安排下次联系机会-多选情况
+     * @param type $id 客户id
+     */
+    public function actionAssignNextTime() {
+
+        if (isset($_POST['cust_id'])) {
+            /**
+             * 在分配页面点击保存按钮
+             * 1.更新下次联系时间
+             */
+            $cust_ids = $_POST['cust_id'];
+            $ids = implode(",", $cust_ids);
+            $next_time = $_POST['next_time'];
+            $next_time = strtotime($next_time);
+            Yii::app()->db->createCommand()->update('{{customer_info}}', array('next_time' => $next_time), "id in({$ids})");
+            $model = new CustomerInfo();
+            $model->addError("next_time", "操作成功!");
+            $this->render("result", array(
+                'model' => $model,
+            ));
+            return;
+        }
+        if (!isset($_POST['select'])) {
+            //没有选择记录的情况
+            $this->redirect($this->createUrl("customerinfo/admin"));
+            return;
+        }
+        //选择了记录，跳转到分配页面
+        $ids = $_POST['select'];
+        $model = CustomerInfo::model();
+        $sql = "";
+        if (is_array($ids)) {
+            $sql = "select id,cust_name from {{customer_info}} where id in (" . implode(",", $ids) . ")";
+        } else {
+            $sql = "select id,cust_name from {{customer_info}} where id=" . $ids;
+        }
+        $list = $model->findAllBySql($sql);
+        $this->render('assign', array('model' => $model, 'custlist' => $list));
     }
 
 }

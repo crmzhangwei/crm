@@ -218,6 +218,8 @@ class ServiceController extends GController
          * @param type $cust_id
          */
         public function actionDial($cust_id){
+            //$ret = UnCall::dial($cust_id);
+            
             $result = array('status'=>0,'dial_id'=>123,'message'=>'dial ok');
             echo json_encode($result);
         }
@@ -310,11 +312,19 @@ class ServiceController extends GController
          */
         public function actionDownload($dial_id){
             $dialdetail = DialDetail::model()->findByPk($dial_id);
-            $file =  Yii::app()->request->hostInfo.$dialdetail->record_path ;
-            header("Content-Type: application/octet-stream");
-            Header("Accept-Ranges: bytes");
-            header("Content-Disposition: attachment; filename=".basename($file));
-            readfile($file);
+            if(!empty($dialdetail->record_path)){
+                $file="";
+                if(strpos($dialdetail->record_path,'192.168.1.200')){
+                    $file =  $dialdetail->record_path;
+                }else{
+                    $file =  Yii::app()->request->hostInfo.$dialdetail->record_path ;
+                } 
+                header("Content-Type: application/octet-stream");
+                Header("Accept-Ranges: bytes");
+                header("Content-Disposition: attachment; filename=".basename($file));
+                readfile($file);
+            }
+            
         } 
         /**
          * 查看小记

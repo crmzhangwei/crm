@@ -31,7 +31,7 @@ class Utils {
     public static function mapArray($array, $from, $to) {
         $result = array();
         foreach ($array AS $k => $element) {
-            $result[$element[$from]] = '【' . $k . '类】' . $element[$to];
+            $result[$element[$from]] = '【' . $element[$from] . '类】' . $element[$to];
         }
         return $result;
     }

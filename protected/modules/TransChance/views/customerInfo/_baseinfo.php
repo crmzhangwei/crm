@@ -32,21 +32,14 @@ function sendMail(cust_id){
     
 }
 function changeCustType(obj){
-   if(obj.value=='6'){
-       $("#tr_visit").show();
-       $("#tb_contract").hide();
+   if(obj.value=='17'){
+       $("#tb_contract").show(); 
        $("#tr_abandon").hide();
-   }else if(obj.value=='7'){
-       $("#tb_contract").show();
-       $("#tr_visit").hide();
-       $("#tr_abandon").hide();
-   }else if(obj.value=='9'){
-       $("#tr_abandon").show();
-       $("#tr_visit").hide();
+   }else if(obj.value=='18'){
+       $("#tr_abandon").show(); 
        $("#tb_contract").hide();
    }else{
-       $("#tr_abandon").hide();
-       $("#tr_visit").hide();
+       $("#tr_abandon").hide(); 
        $("#tb_contract").hide();
    }
 }
@@ -116,21 +109,13 @@ function changeCustType(obj){
             <tr>
                 <td nowrap="nowrap"><?php echo $form->labelEx($model,'cust_type'); ?></td>
                 <td> 
-                    <?php echo $form->dropDownList($model, 'cust_type',$this->genCustTypeArray(), array('id'=>'cust_type','style' => "height:34px;",'onchange'=>'changeCustType(this)')); ?>
-                    <?php echo $form->error($model,'cust_type'); ?>
+                    <?php echo $form->dropDownList($trans_model, 'cust_type',$this->genCustTypeArray(), array('id'=>'cust_type','style' => "height:34px;",'onchange'=>'changeCustType(this)')); ?>
+                    <?php echo $form->error($trans_model,'cust_type'); ?>
                 </td>
                 <td nowrap="nowrap"><?php echo $form->labelEx($model,'eno'); ?></td>
                 <td><?php echo $model->eno; ?>
 		<?php echo $form->error($model,'eno'); ?></td>
-            </tr>
-            <tr style="display:none;" id="tr_visit"> 
-                <td nowrap="nowrap"><?php echo $form->labelEx($model,'visit_date'); ?></td>
-                <td><?php echo $form->textField($model,'visit_date',array('class'=>"Wdate", 'onClick'=>"WdatePicker()",'style'=>'height:30px;')); ?></td>
-                <td nowrap="nowrap"><?php echo $form->labelEx($model,'trans_user'); ?></td>
-                <td> 
-                  <?php echo $form->dropDownList($model, 'trans_user',$this->getTranUsers(), array('id'=>'cust_type','style' => "height:34px;")); ?>   
-                </td>
-            </tr>
+            </tr> 
             <tr style="display:none;" id="tr_abandon"> 
                 <td nowrap="nowrap"><?php echo $form->labelEx($model,'abandon_reason'); ?></td>
                 <td><?php echo $form->textArea($model,'abandon_reason',array('rows'=>3,'cols'=>50)); ?></td>

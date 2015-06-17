@@ -13,7 +13,7 @@ Yii::app()->clientScript->registerScript('search2', "
 </div><!-- search-form -->
 <div id="search_history_list"> 
     <?php $this->renderPartial('_history_note_list',array(
-	'custmodel'=>$custmodel,
+	'model'=>$model,
 )); 
 ?>  
 </div>

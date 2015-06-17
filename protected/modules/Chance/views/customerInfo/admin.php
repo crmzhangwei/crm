@@ -41,14 +41,27 @@ $form = $this->beginWidget('CActiveForm', array(
     <button class="btn btn-sm btn-primary" type="submit">
         <i class="icon-search"></i>
         搜 索
-    </button>
+    </button> 
 </div>
 
 <?php $this->endWidget(); ?>
 <?php
+$form = $this->beginWidget('CActiveForm', array(
+    'action' => Yii::app()->createUrl('Chance/customerinfo/assignNextTime'),
+    'method' => 'post',
+        ));
+?>
+<div class="form-group">
+    <div class="btn-group">
+<?php echo CHtml::submitButton('批量安排联系时间', array('class' => 'btn btn-sm btn-primary')); ?>
+    </div>  
+</div>
+
+<?php
+$dataProvider = $model->search();
 $this->widget('GGridView', array(
     'id' => 'customer-info-grid',
-    'dataProvider' => $model->search(),
+    'dataProvider' => $dataProvider,
     'rowCssClassExpression' => '
         ( $row%2 ? $this->rowCssClass[1] : $this->rowCssClass[0] ) .
         ( $data->iskey ?  " red":null  )
@@ -113,3 +126,14 @@ $this->widget('GGridView', array(
     ),
 ));
 ?>
+<?php $this->endWidget(); ?>
+<div class="table-page"> 
+    <div class="col-sm-6">
+        共<span class="orange"><?= $dataProvider->totalItemCount ?></span>条记录 
+    </div>
+    <div class="col-sm-6 no-padding-right">
+<?php
+$this->widget('GLinkPager', array('pages' => $dataProvider->getPagination(),));
+?>
+    </div>
+</div>
