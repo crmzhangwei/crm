@@ -31,6 +31,7 @@ class oldController extends GController {
             $aftermodel = AftermarketCustInfo::model()->findBySql($sql, array(':cust_id' => $id));
             $newCustType = $_POST['CustomerInfo']['service']['cust_type'];
             $newCategory = $_POST['CustomerInfo']['category'];
+            $transaction = Yii::app()->db->beginTransaction();
             if ($aftermodel->cust_type != $newCustType) {
                 //客户分类调整，生成转换明细数据
                 $convt = new CustConvtDetail();
@@ -87,20 +88,28 @@ class oldController extends GController {
                 }
                 $model->memo = $_POST['CustomerInfo']['memo'];
             }
+            if (!$noteinfo->hasErrors()) {
+                $transaction->commit();
+                if ($newCustType == 8) {
+                    //转入成功页面
+                    $this->render("result");
+                    return;
+                } else {
+                    //保存成功，没有错误，清除数据
+                    $noteinfo->unsetAttributes();
+                    $noteinfo->setAttribute("iskey", 0);
+                    $noteinfo->setAttribute("isvalid", 0);
+                    $noteinfo->setAttribute("dial_id", 0);
+                    $noteinfo->setAttribute("message_id", 0);
+                    $noteinfo->setAttribute("next_contact", date('Y-m-d', time()));
+                    $noteinfo->cust_id = $id;
+                }  
+            } else {
+                $transaction->rollback();
+                $noteinfo->setAttribute("next_contact", date('Y-m-d', $noteinfo->next_contact));
+            }
         }
-        //加载页面数据
-        if (!$noteinfo->hasErrors()) {
-            //保存成功，没有错误，清除数据
-            $noteinfo->unsetAttributes();
-            $noteinfo->setAttribute("iskey", 0);
-            $noteinfo->setAttribute("isvalid", 0);
-            $noteinfo->setAttribute("dial_id", 0);
-            $noteinfo->setAttribute("message_id", 0);
-            $noteinfo->setAttribute("next_contact", date('Y-m-d', time()));
-            $noteinfo->cust_id = $id;
-        } else {
-            $noteinfo->setAttribute("next_contact", date('Y-m-d', $noteinfo->next_contact));
-        }
+         
 
         $model->setAttribute("create_time", date("Y-m-d", $model->getAttribute("create_time")));
         $model->setAttribute("assign_time", date("Y-m-d", $model->getAttribute("assign_time")));

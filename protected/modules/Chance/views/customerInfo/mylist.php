@@ -46,9 +46,10 @@ $form = $this->beginWidget('CActiveForm', array(
 
 <?php $this->endWidget(); ?>
 <?php
+$dataProvider=$model->searchMyList();
 $this->widget('GGridView', array(
     'id' => 'customer-info-grid',
-    'dataProvider' => $model->searchMyList(),
+    'dataProvider' =>$dataProvider ,
     'rowCssClassExpression' => '
         ( $row%2 ? $this->rowCssClass[1] : $this->rowCssClass[0] ) .
         ( $data->iskey ?  " red":null  )
@@ -113,3 +114,13 @@ $this->widget('GGridView', array(
     ),
 ));
 ?>
+<div class="table-page"> 
+    <div class="col-sm-6">
+        共<span class="orange"><?= $dataProvider->totalItemCount ?></span>条记录 
+    </div>
+    <div class="col-sm-6 no-padding-right">
+<?php
+$this->widget('GLinkPager', array('pages' => $dataProvider->getPagination(),));
+?>
+    </div>
+</div>

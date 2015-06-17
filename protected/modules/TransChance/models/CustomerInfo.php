@@ -21,6 +21,7 @@
  * @property string $assign_eno
  * @property integer $assign_time
  * @property integer $next_time
+ * @property integer $last_time
  * @property string $memo
  * @property integer $create_time
  * @property integer $creator
@@ -98,6 +99,7 @@ class CustomerInfo extends CActiveRecord {
             'assign_eno' => '分配人',
             'assign_time' => '分配时间',
             'next_time' => '下次联系时间',
+            'last_time'=>'最后联系时间',
             'memo' => '备注',
             'create_time' => '创建时间',
             'creator' => '创建人',
@@ -136,8 +138,9 @@ class CustomerInfo extends CActiveRecord {
     public function search() {
         // @todo Please modify the following code to remove attributes that should not be searched.
         $type = intval(Yii::app()->request->getParam('type'));
-        $criteria = new CDbCriteria; 
+        $criteria = new CDbCriteria;  
         $criteria->join="join {{trans_cust_info}} tci ";
+        $criteria->addInCondition("tci.cust_type", array(10,11,12,13,14,15,16));
         $criteria->select="t.id,tci.eno,t.cust_name,t.shop_name,t.corp_name,t.category,t.shop_addr,tci.assign_time,tci.assign_eno,tci.next_time";
         $criteria->addCondition("t.id=tci.cust_id");
         $criteria->compare('tci.eno', Yii::app()->session["user"]['eno']);  //只看到自己的客户
@@ -164,7 +167,8 @@ class CustomerInfo extends CActiveRecord {
     public function searchMyList() {
         $type = intval(Yii::app()->request->getParam('type'));
         $criteria = new CDbCriteria;
-        $criteria->join="join {{trans_cust_info}} tci ";
+        $criteria->join="join {{trans_cust_info}} tci "; 
+        $criteria->addInCondition("tci.cust_type", array(10,11,12,13,14,15,16));
         $criteria->select="t.id,tci.eno,t.cust_name,t.shop_name,t.corp_name,t.category,t.shop_addr,tci.assign_time,tci.assign_eno,tci.next_time";
         $criteria->addCondition("t.id=tci.cust_id");
         $criteria->compare('tci.eno', Yii::app()->session["user"]['eno']);  //只看到自己的客户
@@ -194,6 +198,7 @@ class CustomerInfo extends CActiveRecord {
         $type = intval(Yii::app()->request->getParam('type'));
         $criteria = new CDbCriteria;
         $criteria->join="join {{trans_cust_info}} tci ";
+        $criteria->addInCondition("tci.cust_type", array(10,11,12,13,14,15,16));
         $criteria->select="t.id,tci.eno,t.cust_name,t.shop_name,t.corp_name,t.category,t.shop_addr,tci.assign_time,tci.assign_eno,tci.next_time";
         $criteria->addCondition("t.id=tci.cust_id");
         $criteria->compare('tci.eno', Yii::app()->session["user"]['eno']);  //只看到自己的客户

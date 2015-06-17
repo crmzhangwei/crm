@@ -76,7 +76,7 @@ $form = $this->beginWidget('CActiveForm', array(
         ));
 ?>
         <div id="tabs-1" aria-labelledby="ui-id-29" class="ui-tabs-panel ui-widget-content ui-corner-bottom" role="tabpanel" aria-hidden="false" style="display: block;">
-<?php $this->renderPartial('_baseinfo', array('model' => $model, 'user' => $user,'contract'=>$contract,'form'=>$form)); ?>
+<?php $this->renderPartial('_baseinfo', array('model' => $model,'trans_model'=>$trans_model, 'user' => $user,'contract'=>$contract,'form'=>$form)); ?>
         </div> 
         <div id="tabs-3" aria-labelledby="ui-id-31" class="ui-tabs-panel ui-widget-content ui-corner-bottom" role="tabpanel" aria-hidden="true" style="display: none;">
 <?php $this->renderPartial('_noteinfo_form', array('model' => $noteinfo, 'custmodel' => $model,'form'=>$form)); ?>
@@ -96,21 +96,14 @@ $form = $this->beginWidget('CActiveForm', array(
 
         $(function () {
             var value = $('#cust_type').val();
-            if (value == 6) {
-                 $("#tr_visit").show();
-                 $("#tb_contract").hide();
-                 $("#tr_abandon").hide();
-            }else if (value == 7) {
-               $("#tb_contract").show();
-               $("#tr_visit").hide();
+            if (value == 17) {
+               $("#tb_contract").show(); 
                $("#tr_abandon").hide();
-            }else if (value ==9) {
-                $("#tr_abandon").show();
-                $("#tr_visit").hide();
+            }else if (value ==18) {
+                $("#tr_abandon").show(); 
                 $("#tb_contract").hide();
             } else {
-                $("#tr_abandon").hide();
-                $("#tr_visit").hide();
+                $("#tr_abandon").hide(); 
                 $("#tb_contract").hide();
             }
 

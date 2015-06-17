@@ -6,11 +6,15 @@
  * The followings are the available columns in table '{{dial_detail}}':
  * @property string $id
  * @property string $eno
+ * @property string $cust_id
+ * @property string $extend_no
+ * @property string $phone
  * @property integer $dial_time
  * @property double $dial_long
  * @property integer $dial_num
  * @property string $record_path
  * @property integer $isok
+ * @property integer $uid
  */
 class DialDetail extends CActiveRecord
 {
@@ -59,11 +63,15 @@ class DialDetail extends CActiveRecord
 		return array(
 			'id' => '主键',
 			'eno' => '工号',
+			'cust_id' => '客户id',
+			'extend_no' => '分机号',
+			'phone' => '电话号码',
 			'dial_time' => '拔打时间',
 			'dial_long' => '拔打时长',
 			'dial_num' => '拔打次数',
 			'record_path' => '录音路径',
 			'isok' => '是否成功',
+			'uid' => '接口id',
 		);
 	}
 

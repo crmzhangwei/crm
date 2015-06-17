@@ -63,14 +63,15 @@ class newController extends GController {
      * @param integer $id the ID of the model to be updated
      */
     public function actionUpdate($id) {
-        $noteinfo = new NoteInfo(); 
+        $noteinfo = new NoteInfo();
         $model = $this->loadModel($id);
         if (isset($_POST['CustomerInfo'])) {
             //保存  
             $sql = "select * from {{aftermarket_cust_info}} where cust_id=:cust_id";
-            $aftermodel = AftermarketCustInfo::model()->findBySql($sql, array(':cust_id' => $id));  
+            $aftermodel = AftermarketCustInfo::model()->findBySql($sql, array(':cust_id' => $id));
             $newCustType = $_POST['CustomerInfo']['service']['cust_type'];
             $newCategory = $_POST['CustomerInfo']['category'];
+            $transaction = Yii::app()->db->beginTransaction();
             if ($aftermodel->cust_type != $newCustType) {
                 //客户分类调整，生成转换明细数据
                 $convt = new CustConvtDetail();
@@ -82,8 +83,8 @@ class newController extends GController {
                 $convt->setAttribute('user_id', Yii::app()->user->id);
                 $convt->save();
             }
-            if ($newCustType == 7) {
-                //客户分类转成7（放弃），生成公海资源数据
+            if ($newCustType == 8) {
+                //客户分类转成8，生成公海资源数据
                 $blackinfo = new BlackInfo();
                 $blackinfo->setAttribute("cust_id", $id);
                 $blackinfo->setAttribute('lib_type', 3);
@@ -91,22 +92,22 @@ class newController extends GController {
                 $blackinfo->setAttribute('create_time', time());
                 $blackinfo->setAttribute('creator', Yii::app()->user->id);
                 $blackinfo->save();
-            } 
-            //更新类目
-            if($model->category!=$newCategory){
-                $model->category=$newCategory;
-                Yii::app()->db->createCommand()->update('{{customer_info}}',array('category' =>$newCategory),"id=$id"); 
             }
-            if($model->service){
+            //更新类目
+            if ($model->category != $newCategory) {
+                $model->category = $newCategory;
+                Yii::app()->db->createCommand()->update('{{customer_info}}', array('category' => $newCategory), "id=$id");
+            }
+            if ($model->service) {
                 $model->service['cust_type'] = $_POST['CustomerInfo']['service']['cust_type'];
-            } 
-            if (isset($_POST['NoteInfo'])) { 
+            }
+            if (isset($_POST['NoteInfo'])) {
                 //保存小记
-                $noteinfo->unsetAttributes();  
+                $noteinfo->unsetAttributes();
                 $noteinfo->attributes = $_POST['NoteInfo'];
                 if ($model->iskey != $noteinfo->iskey) {
-                    $model->iskey=$noteinfo->iskey;
-                    Yii::app()->db->createCommand()->update('{{customer_info}}',array('iskey' =>$noteinfo->iskey),"id=$id"); 
+                    $model->iskey = $noteinfo->iskey;
+                    Yii::app()->db->createCommand()->update('{{customer_info}}', array('iskey' => $noteinfo->iskey), "id=$id");
                 }
                 $noteinfo->next_contact = strtotime($noteinfo->next_contact);
                 $noteinfo->setAttribute("eno", Yii::app()->user->id);
@@ -121,27 +122,36 @@ class newController extends GController {
                     $noteinfo->addError("memo", "请录入小记信息");
                 }
                 //更新电话拔打记录
-                if($noteinfo->dial_id>0){
-                    $dialdetail =  DialDetail::model()->findByPk($noteinfo->dial_id);
+                if ($noteinfo->dial_id > 0) {
+                    $dialdetail = DialDetail::model()->findByPk($noteinfo->dial_id);
                     //获取通知录音路径，通知时长 
-                } 
-                $model->memo=$_POST['CustomerInfo']['memo'];
+                }
+                $model->memo = $_POST['CustomerInfo']['memo'];
+            }
+            //加载页面数据
+            if (!$noteinfo->hasErrors()) {
+                $transaction->commit();
+                if ($newCustType == 8) {
+                    //转入成功页面
+                    $this->render("result");
+                    return;
+                } else {
+                    //保存成功，没有错误，清除数据
+                    $noteinfo->unsetAttributes();
+                    $noteinfo->setAttribute("iskey", 0);
+                    $noteinfo->setAttribute("isvalid", 0);
+                    $noteinfo->setAttribute("dial_id", 0);
+                    $noteinfo->setAttribute("message_id", 0);
+                    $noteinfo->setAttribute("next_contact", date('Y-m-d', time()));
+                    $noteinfo->cust_id = $id;
+                }  
+            } else {
+                $transaction->rollback();
+                $noteinfo->setAttribute("next_contact", date('Y-m-d', $noteinfo->next_contact));
             }
         }
-        //加载页面数据
-        if(!$noteinfo->hasErrors()){
-            //保存成功，没有错误，清除数据
-            $noteinfo->unsetAttributes();
-            $noteinfo->setAttribute("iskey", 0);
-            $noteinfo->setAttribute("isvalid", 0);
-            $noteinfo->setAttribute("dial_id", 0);
-            $noteinfo->setAttribute("message_id", 0);
-            $noteinfo->setAttribute("next_contact", date('Y-m-d',time()));
-            $noteinfo->cust_id = $id;
-        }else{
-            $noteinfo->setAttribute("next_contact", date('Y-m-d',$noteinfo->next_contact));
-        } 
-       
+
+
         $model->setAttribute("create_time", date("Y-m-d", $model->getAttribute("create_time")));
         $model->setAttribute("assign_time", date("Y-m-d", $model->getAttribute("assign_time")));
         $model->setAttribute("next_time", date("Y-m-d", $model->getAttribute("next_time")));
@@ -157,7 +167,7 @@ class newController extends GController {
         if ($model->service) {
             $model->service['assign_time'] = date("Y-m-d", $model->service['assign_time']);
             $model->service['next_time'] = date("Y-m-d", $model->service['next_time']);
-            $model->service['create_time'] = date("Y-m-d", $model->service['create_time']); 
+            $model->service['create_time'] = date("Y-m-d", $model->service['create_time']);
             $user = Users::model()->findByPk($model->service['creator']);
             $model->service['creator'] = $user->getAttribute('eno');
         }
