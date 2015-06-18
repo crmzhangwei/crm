@@ -37,6 +37,7 @@ return array(
         'Service',
 		'Chance',
 		'Statistic',
+                'TransChance',
 	),
 
 	// application components
@@ -60,7 +61,8 @@ return array(
 
 		// database settings are configured in database.php
 		'db'=>require(dirname(__FILE__).'/database.php'),
-
+                //'db2'=>require(dirname(__FILE__).'/database2.php'),
+                'db3'=>require(dirname(__FILE__).'/database3.php'),
 		'errorHandler'=>array(
 			// use 'site/error' action to display errors
 			//'errorAction'=>'site/error',

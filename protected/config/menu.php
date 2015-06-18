@@ -21,13 +21,20 @@ return array(
 			array('label' => '未联系机会', 'url' => array('/Chance/customerinfo/oldList')),
            ),
     ),
-  
+    'TransChance' => array(
+        'label' => '成交师-机会管理', 'icon' => 'menu-icon fa fa-stack-exchange','url' => array('/TransChance/'),
+         'items' => array(
+			array('label' => '安排联系机会', 'url' => array('/TransChance/customerinfo/admin')),
+			array('label' => '我的机会', 'url' => array('/TransChance/customerinfo/todaylist')),
+			array('label' => '未联系机会', 'url' => array('/TransChance/customerinfo/oldList')),
+           ),
+    ),
 
     
      'Statistic' => array(
         'label' => '报表分析','icon' => 'menu-icon fa fa-table', 'url' => array('/Statistic/'),
         'items' => array(
-			array('label' => '业绩报表', 'url' => array('/Statistic/finance/yeji')),
+			array('label' => '业绩报表', 'url' => array('/Statistic/finance/performance')),
 			array('label' => '联系量统计', 'url' => array('/site/page', 'view' => 'about')),
 			array('label' => '话务员工作统计', 'url' => array('/site/contact')),
 			array('label' => '安排时间分布', 'url' => array('/site/contact')),

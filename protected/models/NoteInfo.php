@@ -144,7 +144,7 @@ class NoteInfo extends CActiveRecord
             $criteria->addCondition("cust_id=$custid");
             $criteria->compare('cust_info',$this->cust_info,true);
 	    $criteria->compare('requirement',$this->requirement,true);
-	    $criteria->compare('service',$this->service,true);
+	    $criteria->compare('service',$this->service,true); 
             return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
 		));

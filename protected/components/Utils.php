@@ -31,7 +31,7 @@ class Utils {
     public static function mapArray($array, $from, $to) {
         $result = array();
         foreach ($array AS $k => $element) {
-            $result[$element[$from]] = '【' . $k . '类】' . $element[$to];
+            $result[$element[$from]] = '【' . $element[$from] . '类】' . $element[$to];
         }
         return $result;
     }
@@ -195,6 +195,40 @@ class Utils {
         } else {
             header("location:" . $url);
         }
+    }
+    /**
+     * 检查是否需要保存小记信息
+     * @param type $noteinfo
+     */
+    public static function isNeedSaveNoteInfo($noteinfo){ 
+        if($noteinfo['next_contact']!=''){
+            return true;
+        }
+        if($noteinfo['cust_info']!=''){
+            return true;
+        }
+        if($noteinfo['requirement']!=''){ 
+            return true;
+        }
+        if($noteinfo['service']!=''){
+           return true;
+        }
+        if($noteinfo['dissent']!=''){
+            return true;
+        }
+        if($noteinfo['next_followup']!=''){
+            return true;
+        }
+        if($noteinfo['memo']!=''){
+            return true;
+        }
+        if($noteinfo['dial_id']!=''){
+            return true;
+        }
+        if($noteinfo['message_id']!=''){
+            return true;
+        }
+        return false;
     }
 
 }

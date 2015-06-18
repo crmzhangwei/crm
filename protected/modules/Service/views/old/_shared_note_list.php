@@ -56,7 +56,7 @@ $this->widget('GGridView', array(
     <div class="col-sm-6 no-padding-right">
         <?php
         $pg = $dataProvider->getPagination();
-        $pg->route = "service/sharedNoteList";
+        $pg->route = "old/sharedNoteList";
         $pg->params = array('cust_id' => $model->cust_id);
         $this->widget('GLinkPager', array('pages' => $pg, 'isajax' => 1));
         ?>
