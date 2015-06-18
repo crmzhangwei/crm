@@ -11,4 +11,5 @@ return array(
 	'password' => 'zhenai.123',
 	'charset' => 'utf8',
 	'tablePrefix'=>'',
+        'class'=>'CDbConnection'
 );

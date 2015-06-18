@@ -23,6 +23,7 @@
  * @property integer $next_time
  * @property integer $last_time
  * @property string $memo
+ * @property string $status
  * @property integer $create_time
  * @property integer $creator
  */
@@ -141,6 +142,7 @@ class CustomerInfo extends CActiveRecord {
         $criteria = new CDbCriteria;  
         $criteria->join="join {{trans_cust_info}} tci ";
         $criteria->addInCondition("tci.cust_type", array(10,11,12,13,14,15,16));
+        $criteria->addInCondition("t.status", array(0,3));
         $criteria->select="t.id,tci.eno,t.cust_name,t.shop_name,t.corp_name,t.category,t.shop_addr,tci.assign_time,tci.assign_eno,tci.next_time";
         $criteria->addCondition("t.id=tci.cust_id");
         $criteria->compare('tci.eno', Yii::app()->session["user"]['eno']);  //只看到自己的客户
@@ -169,6 +171,7 @@ class CustomerInfo extends CActiveRecord {
         $criteria = new CDbCriteria;
         $criteria->join="join {{trans_cust_info}} tci "; 
         $criteria->addInCondition("tci.cust_type", array(10,11,12,13,14,15,16));
+        $criteria->addInCondition("t.status", array(0,3));
         $criteria->select="t.id,tci.eno,t.cust_name,t.shop_name,t.corp_name,t.category,t.shop_addr,tci.assign_time,tci.assign_eno,tci.next_time";
         $criteria->addCondition("t.id=tci.cust_id");
         $criteria->compare('tci.eno', Yii::app()->session["user"]['eno']);  //只看到自己的客户
@@ -199,6 +202,7 @@ class CustomerInfo extends CActiveRecord {
         $criteria = new CDbCriteria;
         $criteria->join="join {{trans_cust_info}} tci ";
         $criteria->addInCondition("tci.cust_type", array(10,11,12,13,14,15,16));
+        $criteria->addInCondition("t.status", array(0,3));
         $criteria->select="t.id,tci.eno,t.cust_name,t.shop_name,t.corp_name,t.category,t.shop_addr,tci.assign_time,tci.assign_eno,tci.next_time";
         $criteria->addCondition("t.id=tci.cust_id");
         $criteria->compare('tci.eno', Yii::app()->session["user"]['eno']);  //只看到自己的客户

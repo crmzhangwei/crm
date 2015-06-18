@@ -383,5 +383,12 @@ class FinanceController extends GController {
         echo "</pre>";
         echo $t;
     }
-
+    public function actionTest6() {
+        $uid='1392880205.0';
+        $ret = Yii::app()->db3->createCommand("select duration from {{cdr}} where uniqueid=:uniqueid")->queryRow(TRUE,array(":uniqueid"=>$uid));
+        echo "<pre>";
+        var_dump($ret);
+        echo "</pre>";
+        echo $ret['duration'];
+    }
 }

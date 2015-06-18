@@ -142,6 +142,7 @@ class CustomerInfo extends CActiveRecord {
         $type = intval(Yii::app()->request->getParam('type'));
         $criteria = new CDbCriteria;
         $criteria->addInCondition("cust_type", array(0,1,2,3,4,5,7,8));
+        $criteria->addInCondition("status", array(0,3));
         $criteria->compare('eno', Yii::app()->session["user"]['eno']);  //只看到自己的客户
         if ($this->phone) {
             $criteria->compare('phone', $this->phone, true);
@@ -169,6 +170,7 @@ class CustomerInfo extends CActiveRecord {
         $type = intval(Yii::app()->request->getParam('type'));
         $criteria = new CDbCriteria;
         $criteria->addInCondition("cust_type", array(0,1,2,3,4,5,7,8));
+        $criteria->addInCondition("status", array(0,3));
         $criteria->compare('eno', Yii::app()->session["user"]['eno']);  //只看到自己的客户
         if ($this->phone) {
             $criteria->compare('phone', $this->phone, true);
@@ -196,6 +198,7 @@ class CustomerInfo extends CActiveRecord {
         $type = intval(Yii::app()->request->getParam('type'));
         $criteria = new CDbCriteria;
         $criteria->addInCondition("cust_type", array(0,1,2,3,4,5,7,8));
+        $criteria->addInCondition("status", array(0,3));
         $criteria->compare('eno', Yii::app()->session["user"]['eno']);  //只看到自己的客户
         if ($this->phone) {
             $criteria->compare('phone', $this->phone, true);

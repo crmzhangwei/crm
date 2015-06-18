@@ -154,10 +154,10 @@ class CustomerInfoController extends GController {
                     $blackinfo->setAttribute('create_time', time());
                     $blackinfo->setAttribute('creator', Yii::app()->user->id);
                     $blackinfo->save();
+                    $model->status="1";//将客户状态改为1(无效）
                 }
-                if (isset($_POST['NoteInfo']) && $_POST['NoteInfo']['next_contact'] != '') {
-                    //保存小记
-                    $noteinfo->unsetAttributes();
+                if (Utils::isNeedSaveNoteInfo($_POST['NoteInfo'])) {
+                    //保存小记 
                     $noteinfo->attributes = $_POST['NoteInfo'];
                     if ($model->iskey != $noteinfo->iskey) {
                         $model->iskey = $noteinfo->iskey;
