@@ -154,8 +154,8 @@ class CustomerInfoController extends GController {
                     //已签合同,生成合同信息表
                     $contract->creator = $loginuser->id;
                     $contract->create_time = time();
-                    $contract->pay_time = strtotime($contract->pay_time);
-                    $contract->comm_pay_time = strtotime($contract->comm_pay_time);
+                    //$contract->pay_time = strtotime($contract->pay_time);
+                    //$contract->comm_pay_time = strtotime($contract->comm_pay_time);
                     $contract->save();
                 } 
                 if (isset($_POST['NoteInfo'])&&$_POST['NoteInfo']['next_contact']!='') {

@@ -143,7 +143,7 @@ class AftermarketCustInfo extends CActiveRecord
                                 " left join {{dic}} d on c.category=d.code and d.ctype='cust_category' ".
                                 " left join {{contract_info}} ci on t.cust_id=ci.cust_id ";
                 $criteria->addCondition(" t.cust_type=0");
-                $criteria->addInCondition("t.status", array(0,3));
+                $criteria->addInCondition("c.status", array(0,3));
                 $login_user_eno =Yii::app()->session["user"]['eno'];
                 $criteria->addCondition(" t.eno='$login_user_eno'");    
                     
@@ -197,7 +197,7 @@ class AftermarketCustInfo extends CActiveRecord
                 $curDate = date("Y-m-d",time());
                 $iDate = strtotime($curDate);
                 $criteria->addCondition("t.next_time<".$iDate);
-                $criteria->addInCondition("t.status", array(0,3));
+                $criteria->addInCondition("c.status", array(0,3));
                 $sort = new CSort();
                 $sort->attributes=array(
                     'defaultOrder'=>'id desc',
@@ -247,7 +247,7 @@ class AftermarketCustInfo extends CActiveRecord
                 $curDate = date("Y-m-d",time());
                 $iDate = strtotime($curDate);
                 $criteria->addCondition(" t.next_time=".$iDate);
-                $criteria->addInCondition("t.status", array(0,3));
+                $criteria->addInCondition("c.status", array(0,3));
                 $sort = new CSort();
                 $sort->attributes=array(
                     'defaultOrder'=>'id desc',
