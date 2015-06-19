@@ -24,6 +24,12 @@ class oldController extends GController {
      */
     public function actionUpdate($id) {
         $noteinfo = new NoteInfo();
+        $noteinfo->setAttribute("iskey", 0);
+        $noteinfo->setAttribute("isvalid", 1);
+        $noteinfo->setAttribute("dial_id", 0);
+        $noteinfo->setAttribute("message_id", 0);
+        $noteinfo->setAttribute("next_contact", '');
+        $noteinfo->setAttribute("cust_id", $id);
         $model = $this->loadModel($id);
         if (isset($_POST['CustomerInfo'])) {
             //保存  
@@ -32,10 +38,12 @@ class oldController extends GController {
             $newCustType = $_POST['CustomerInfo']['service']['cust_type'];
             $newCategory = $_POST['CustomerInfo']['category'];
             $transaction = Yii::app()->db->beginTransaction();
+            $memo = $_POST['CustomerInfo']['memo'];
+
             if ($aftermodel->cust_type != $newCustType) {
                 //客户分类调整，生成转换明细数据
                 $convt = new CustConvtDetail();
-                $convt->setAttribute('lib_type', 3);
+                $convt->setAttribute('lib_type', 3); //售后库
                 $convt->setAttribute('cust_id', $id);
                 $convt->setAttribute('cust_type_1', $aftermodel->cust_type);
                 $convt->setAttribute('cust_type_2', $newCustType);
@@ -43,8 +51,36 @@ class oldController extends GController {
                 $convt->setAttribute('user_id', Yii::app()->user->id);
                 $convt->save();
             }
-            if ($newCustType == 7) {
-                //客户分类转成7（放弃），生成公海资源数据
+            
+            if ($model->service) {
+                $model->service['cust_type'] = $_POST['CustomerInfo']['service']['cust_type'];
+            }
+            if (Utils::isNeedSaveNoteInfo($_POST['NoteInfo'])) {
+                //保存小记 
+                $noteinfo->attributes = $_POST['NoteInfo'];
+                if ($model->iskey != $noteinfo->iskey) {
+                    $model->iskey = $noteinfo->iskey;
+                }
+                $noteinfo->next_contact = strtotime($noteinfo->next_contact);
+                $aftermodel->next_time = $noteinfo->next_contact;
+                $noteinfo->setAttribute("eno", Yii::app()->user->id);
+                $noteinfo->setAttribute("create_time", time());
+                $noteinfo->save();
+                //更新电话拔打记录
+                if ($noteinfo->dial_id > 0) {
+                    $dialdetail = DialDetail::model()->findByPk($noteinfo->dial_id);
+                    //获取通知录音路径，通知时长 
+//                        $uid = UnCall::getUid($dialdetail->extend_no);
+//                        $dial_long = UnCall::getDialLength($uid);
+//                        $record_path = UnCall::getRecord($uid);
+//                        $dialdetail->uid=$uid;
+//                        $dialdetail->dial_long=$dial_long;
+//                        $dialdetail->record_path=$record_path;
+//                        $dialdetail->save();
+                }
+            }
+            if ($newCustType == 8) {
+                //客户分类转成8，生成公海资源数据
                 $blackinfo = new BlackInfo();
                 $blackinfo->setAttribute("cust_id", $id);
                 $blackinfo->setAttribute('lib_type', 3);
@@ -52,42 +88,19 @@ class oldController extends GController {
                 $blackinfo->setAttribute('create_time', time());
                 $blackinfo->setAttribute('creator', Yii::app()->user->id);
                 $blackinfo->save();
-            } 
-            //更新类目
-            if ($model->category != $newCategory) {
-                $model->category = $newCategory;
-                Yii::app()->db->createCommand()->update('{{customer_info}}', array('category' => $newCategory), "id=$id");
+                $aftermodel->delete();//删除售后库
+                $model->status="1";
+            }else{
+                //保存售后库 
+                $aftermodel->cust_type = $newCustType;
+                $aftermodel->save();
             }
-            if($model->service){
-                $model->service['cust_type'] = $_POST['CustomerInfo']['service']['cust_type'];
-            } 
-            if (isset($_POST['NoteInfo'])) {
-                //保存小记
-                $noteinfo->unsetAttributes();
-                $noteinfo->attributes = $_POST['NoteInfo'];
-                if ($model->iskey != $noteinfo->iskey) {
-                    $model->iskey = $noteinfo->iskey;
-                    Yii::app()->db->createCommand()->update('{{customer_info}}', array('iskey' => $noteinfo->iskey), "id=$id");
-                }
-                $noteinfo->next_contact = strtotime($noteinfo->next_contact);
-                $noteinfo->setAttribute("eno", Yii::app()->user->id);
-                $noteinfo->setAttribute("create_time", time());
-                if ($noteinfo->save()) {
-                    //保存售后库
-                    $aftermodel->next_time = $noteinfo->next_contact;
-                    $aftermodel->cust_type = $newCustType;
-                    $aftermodel->memo = $_POST['CustomerInfo']['memo'];
-                    $aftermodel->save();
-                } else {
-                    $noteinfo->addError("memo", "请录入小记信息");
-                }
-                //更新电话拔打记录
-                if ($noteinfo->dial_id > 0) {
-                    $dialdetail = DialDetail::model()->findByPk($noteinfo->dial_id);
-                    //获取通知录音路径，通知时长 
-                }
-                $model->memo = $_POST['CustomerInfo']['memo'];
-            }
+            //更新类目或备注 
+            $model->memo = $_POST['CustomerInfo']['memo'];
+            $model->category = $newCategory;
+            $model->save(); 
+             
+            //加载页面数据
             if (!$noteinfo->hasErrors()) {
                 $transaction->commit();
                 if ($newCustType == 8) {
@@ -98,18 +111,18 @@ class oldController extends GController {
                     //保存成功，没有错误，清除数据
                     $noteinfo->unsetAttributes();
                     $noteinfo->setAttribute("iskey", 0);
-                    $noteinfo->setAttribute("isvalid", 0);
+                    $noteinfo->setAttribute("isvalid", 1);
                     $noteinfo->setAttribute("dial_id", 0);
                     $noteinfo->setAttribute("message_id", 0);
-                    $noteinfo->setAttribute("next_contact", date('Y-m-d', time()));
+                    $noteinfo->setAttribute("next_contact", '');
                     $noteinfo->cust_id = $id;
-                }  
+                }
             } else {
                 $transaction->rollback();
-                $noteinfo->setAttribute("next_contact", date('Y-m-d', $noteinfo->next_contact));
+                $noteinfo->setAttribute("next_contact", '');
             }
         }
-         
+
 
         $model->setAttribute("create_time", date("Y-m-d", $model->getAttribute("create_time")));
         $model->setAttribute("assign_time", date("Y-m-d", $model->getAttribute("assign_time")));
@@ -126,7 +139,7 @@ class oldController extends GController {
         if ($model->service) {
             $model->service['assign_time'] = date("Y-m-d", $model->service['assign_time']);
             $model->service['next_time'] = date("Y-m-d", $model->service['next_time']);
-            $model->service['create_time'] = date("Y-m-d", $model->service['create_time']); 
+            $model->service['create_time'] = date("Y-m-d", $model->service['create_time']);
             $user = Users::model()->findByPk($model->service['creator']);
             $model->service['creator'] = $user->getAttribute('eno');
         }

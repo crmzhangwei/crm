@@ -65,7 +65,6 @@ function sendMail(cust_id){
                 <td nowrap="nowrap"><?php echo $form->labelEx($model,'phone'); ?></td>
                 <td><?php echo Utils::hidePhone($model->phone); ?>
                     <?php echo CHtml::ajaxButton("拔打电话", Yii::app()->createUrl('Service/service/dial',array('cust_id'=>$model->id)), array('success'=>'dial_ret'),array('class' => 'editNode btn btn-info btn-minier tooltip-info', 'data-placement' => "bottom")) ?>
-                    <?php echo CHtml::ajaxButton("监听电话", Yii::app()->createUrl('Service/service/listen',array('cust_id'=>$model->id)), array('success'=>'listen_ret'),array('class' => 'editNode btn btn-info btn-minier tooltip-info', 'data-placement' => "bottom")) ?>
                     <?php echo CHtml::button("发送短信", array('onclick'=>'javascript:sendMessage('.$model->id.')','class' => 'editNode btn btn-info btn-minier tooltip-info', 'data-placement' => "bottom")) ?>
                     <?php echo $form->error($model,'phone'); ?>
                 </td>

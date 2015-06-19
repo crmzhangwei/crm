@@ -157,20 +157,9 @@ class CustomerInfoController extends GController {
                     $contract->pay_time = strtotime($contract->pay_time);
                     $contract->comm_pay_time = strtotime($contract->comm_pay_time);
                     $contract->save();
-                }
-                if ($newCustType == 18) {
-                    //客户分类转成9（公海），生成公海资源数据
-                    $blackinfo = new BlackInfo();
-                    $blackinfo->setAttribute("cust_id", $id);
-                    $blackinfo->setAttribute('lib_type', 1);
-                    $blackinfo->setAttribute('old_cust_type', $oldCustType);
-                    $blackinfo->setAttribute('create_time', time());
-                    $blackinfo->setAttribute('creator', Yii::app()->user->id);
-                    $blackinfo->save();
-                }
+                } 
                 if (isset($_POST['NoteInfo'])&&$_POST['NoteInfo']['next_contact']!='') {
-                    //保存小记
-                    $noteinfo->unsetAttributes();
+                    //保存小记 
                     $noteinfo->attributes = $_POST['NoteInfo'];
                     if ($model->iskey != $noteinfo->iskey) {
                         $model->iskey = $noteinfo->iskey;
@@ -184,9 +173,22 @@ class CustomerInfoController extends GController {
                     } else {
                         $noteinfo->addError("memo", "请录入小记信息");
                     } 
-                } 
+                }  
+                if ($newCustType == 18) {
+                    //客户分类转成9（公海），生成公海资源数据
+                    $blackinfo = new BlackInfo();
+                    $blackinfo->setAttribute("cust_id", $id);
+                    $blackinfo->setAttribute('lib_type', 1);
+                    $blackinfo->setAttribute('old_cust_type', $oldCustType);
+                    $blackinfo->setAttribute('create_time', time());
+                    $blackinfo->setAttribute('creator', Yii::app()->user->id);
+                    $blackinfo->save(); 
+                    $trans_info->delete();//删除成交师库记录
+                    $model->status='1';
+                }else{
+                    $trans_info->save();
+                }
                 $model->save();
-                $trans_info->save();
                 //更新电话拔打记录
                 if ($noteinfo->dial_id > 0) {
                     $dialdetail = DialDetail::model()->findByPk($noteinfo->dial_id);

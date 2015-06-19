@@ -130,6 +130,7 @@ CREATE TABLE `c_customer_info` (
   `assign_eno` varchar(10) DEFAULT '' COMMENT '分配人',
   `assign_time` int(11) DEFAULT 0 COMMENT '分配时间',
   `next_time` int(11) DEFAULT 0 COMMENT '下次联系时间',
+  `last_time` int(11) default 0 COMMENT '最后联系时间',
   `memo` varchar(100) DEFAULT '' COMMENT '备注',
   `status` int(11) DEFAULT '0' COMMENT '状态',
   `create_time` int(11) NOT NULL default 0 COMMENT '创建时间',
@@ -174,11 +175,15 @@ DROP TABLE IF EXISTS `c_dial_detail`;
 CREATE TABLE `c_dial_detail` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键',
   `eno` varchar(10) NOT NULL default '' COMMENT '工号',
+  `cust_id` int NOT NULL default 0 COMMENT '客户id',
+  `extend_no` varchar(10) NOT NULL default '' COMMENT '客户id',
+  `phone` varchar(20) NOT NULL default '' COMMENT '电话',
   `dial_time` int(11) NOT NULL default 0 COMMENT '拔打时间',
   `dial_long` float NOT NULL default 0 COMMENT '拔打时长',
   `dial_num` int(11) NOT NULL DEFAULT '1' COMMENT '拔打次数',
   `record_path` varchar(200) DEFAULT '' COMMENT '录音路径',
   `isok` int(11) DEFAULT '0' COMMENT '是否成功',
+  `uid` varchar(20) NOT NULL default '' COMMENT '接口id',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
