@@ -222,10 +222,10 @@ class Utils {
         if($noteinfo['memo']!=''){
             return true;
         }
-        if($noteinfo['dial_id']!=''){
+        if(intval($noteinfo['dial_id'])>0){
             return true;
         }
-        if($noteinfo['message_id']!=''){
+        if(intval($noteinfo['message_id'])>0){
             return true;
         }
         return false;

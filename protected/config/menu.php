@@ -34,8 +34,8 @@ return array(
      'Statistic' => array(
         'label' => '报表分析','icon' => 'menu-icon fa fa-table', 'url' => array('/Statistic/'),
         'items' => array(
-			array('label' => '业绩报表', 'url' => array('/Statistic/finance/performance')),
-			array('label' => '联系量统计', 'url' => array('/site/page', 'view' => 'about')),
+			array('label' => '业绩报表', 'url' => array('/Statistic/finance/yeji')),
+			array('label' => '联系量统计', 'url' => array('/Statistics/count/index')),
 			array('label' => '话务员工作统计', 'url' => array('/site/contact')),
 			array('label' => '安排时间分布', 'url' => array('/site/contact')),
 			array('label' => '开3, 4类跟踪分析', 'url' => array('/site/contact')),
