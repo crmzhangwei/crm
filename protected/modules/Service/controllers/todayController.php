@@ -62,6 +62,7 @@ class todayController extends GController {
                     $model->iskey = $noteinfo->iskey;
                 }
                 $noteinfo->next_contact = strtotime($noteinfo->next_contact);
+                $model->last_time=time();//最后联系时间等于今天
                 $aftermodel->next_time = $noteinfo->next_contact;
                 $noteinfo->setAttribute("eno", Yii::app()->user->id);
                 $noteinfo->setAttribute("create_time", time());

@@ -22,6 +22,9 @@
  */
 class NoteInfo extends CActiveRecord
 {
+        public $last_time;
+        public $next_contact_repeat;
+        
 	/**
 	 * @return string the associated database table name
 	 */
@@ -39,6 +42,7 @@ class NoteInfo extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			array('cust_id, eno, create_time,next_contact', 'required'),
+                        //array('next_contact','compare','on'=>array('insert','update'),'compareAttribute'=>'last_time','operator'=>'>'),
 			array('cust_id, isvalid, iskey, next_contact, dial_id, eno, create_time', 'numerical', 'integerOnly'=>true),
 			array('cust_info, requirement, service, dissent, next_followup, memo', 'length', 'max'=>200), 
 			// The following rule is used by search().
@@ -81,6 +85,7 @@ class NoteInfo extends CActiveRecord
 			'message_id' => '短信发送记录',
 			'eno' => '工号',
 			'create_time' => '创建时间',
+                        'last_time'=>'最后联系时间',
 		);
 	}
 
