@@ -50,6 +50,9 @@ $this->widget('GGridView', array(
         array('name'=>'next_time',  
                     'value'=>'date("Y-m-d",$data->next_time)',//格式化日期  
                 ),
+        array('name'=>'last_time',  
+                    'value'=>'date("Y-m-d",$data->last_time)',//格式化日期  
+                ),
         array(
             'class' => 'CButtonColumn',
             'template' => '{upda}',

@@ -162,7 +162,10 @@ class CustomerInfoController extends GController {
                     if ($model->iskey != $noteinfo->iskey) {
                         $model->iskey = $noteinfo->iskey;
                     }
+                    //$noteinfo->last_time=$model->last_time;//仅用于比较
                     $noteinfo->next_contact = strtotime($noteinfo->next_contact);
+                    
+                    $model->last_time=time();//最后联系时间等于今天
                     $noteinfo->setAttribute("eno", Yii::app()->user->id);
                     $noteinfo->setAttribute("create_time", time());
                     if ($noteinfo->save()) {
