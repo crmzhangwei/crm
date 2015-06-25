@@ -50,8 +50,7 @@ class Gcontroller extends Controller
             }
             $this->moduelid=$module?$module->id:null;
             $this->controllerName = $id;
-            $this->allMenu = Yii::app()->params['items'];
-            //$permission =  Yii::app()->session["tmpuser"];
+            //$this->allMenu = Yii::app()->params['items'];
             $meauinfo = Yii::app()->params['items'];
             $permission = Yii::app()->session["tmpuser"];
             $meauinfonew = array();
@@ -78,7 +77,7 @@ class Gcontroller extends Controller
             }
 
             $this->allMenu  = $meauinfonew;
-            $this->allMenu  = Yii::app()->params['items'];
+           // $this->allMenu  = Yii::app()->params['items'];   
             parent::__construct($id, $module);
                
        
@@ -90,7 +89,7 @@ class Gcontroller extends Controller
         $this->actionName = $action->id;
         if($this->module&&$this->module->id !== null) {
             if ($this->checkPriv() === false) {
-                //  Utils::redirect($this->createUrl('/site/forbidden'));
+                 Utils::redirect($this->createUrl('/site/forbidden'));
             }
         }
         return true;

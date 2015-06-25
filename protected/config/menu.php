@@ -59,7 +59,7 @@ return array(
 			array('label' => '人员角色管理', 'url' => array('/User/userrole/admin')),
             array('label' => '菜单资源管理', 'url' => array('/User/menuinfo/admin')),
 			array('label' => '角色权限分配', 'url' => array('/User/privilege/admin')),
-			array('label' => '分机号管理', 'url' => array('/User/ExtNumber/admin')),
+			array('label' => '分机号管理', 'url' => array('/User/extnumber/admin')),
 		),
     ),
     
