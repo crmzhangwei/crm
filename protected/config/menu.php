@@ -31,10 +31,10 @@ return array(
     ),
 
     
-     'Statistic' => array(
-        'label' => '报表分析','icon' => 'menu-icon fa fa-table', 'url' => array('/Statistic/'),
+     'Statistics' => array(
+        'label' => '报表分析','icon' => 'menu-icon fa fa-table', 'url' => array('/Statistics/'),
         'items' => array(
-			array('label' => '业绩报表', 'url' => array('/Statistic/finance/yeji')),
+			array('label' => '业绩报表', 'url' => array('/Statistics/count/yeji')),
 			array('label' => '联系量统计', 'url' => array('/Statistics/count/index')),
 			array('label' => '话务员工作统计', 'url' => array('/site/contact')),
 			array('label' => '安排时间分布', 'url' => array('/site/contact')),
@@ -54,11 +54,12 @@ return array(
 			array('label' => '用户管理', 'url' => array('/User/users/admin')),
 			array('label' => '部门管理', 'url' => array('/User/deptinfo/admin' )),
 			array('label' => '组别管理', 'url' => array('/User/groupinfo/admin')),
-                        array('label' => '角色管理', 'url' => array('/User/roleinfo/admin')),
+            array('label' => '角色管理', 'url' => array('/User/roleinfo/admin')),
 			array('label' => '部门组别管理', 'url' => array('/User/deptgroup/admin')),
 			array('label' => '人员角色管理', 'url' => array('/User/userrole/admin')),
-                        array('label' => '菜单资源管理', 'url' => array('/User/menuinfo/admin')),
+            array('label' => '菜单资源管理', 'url' => array('/User/menuinfo/admin')),
 			array('label' => '角色权限分配', 'url' => array('/User/privilege/admin')),
+			array('label' => '分机号管理', 'url' => array('/User/ExtNumber/admin')),
 		),
     ),
     

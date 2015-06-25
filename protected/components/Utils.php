@@ -231,4 +231,37 @@ class Utils {
         return false;
     }
 
+	public static function addWhere($where){
+		$whereStr = '';
+		foreach($where as $k=>$v){
+			if($v && !strpos($whereStr, 'where')){
+				if($k == 'stime'){
+					$v = strtotime($v);
+					$whereStr .= " where $k>='$v' and";
+				}
+				elseif($k == 'ftime'){
+					$v = strtotime($v);
+					$whereStr .= " where $k<='$v' and";
+				}
+				else{
+					$whereStr .= " where $k='$v' and";
+				}
+			}
+			elseif($v && strpos($whereStr, 'where')){
+				if($k == 'stime'){
+					$v = strtotime($v);
+					$whereStr .= " $k='$v' and";
+				}
+				elseif($k == 'ftime'){
+					$v = strtotime($v);
+					$whereStr .= " $k='$v' and";
+				}
+				else{
+					$whereStr .= " $k='$v' and";
+				}	
+			}
+		}
+		$whereStr  = $whereStr? trim($whereStr,' and') : '';
+		return $whereStr;
+	}
 }
