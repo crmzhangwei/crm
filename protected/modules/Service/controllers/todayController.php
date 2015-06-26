@@ -62,6 +62,10 @@ class todayController extends GController {
                     $model->iskey = $noteinfo->iskey;
                 }
                 $noteinfo->next_contact = strtotime($noteinfo->next_contact);
+                $model->next_time=$noteinfo->next_contact;
+                if ($model->service) {
+                    $model->service['next_time'] = $model->next_time;
+                }
                 $model->last_time=time();//最后联系时间等于今天
                 $aftermodel->next_time = $noteinfo->next_contact;
                 $noteinfo->setAttribute("eno", Yii::app()->user->id);
@@ -91,6 +95,9 @@ class todayController extends GController {
                 $blackinfo->save();
                 $aftermodel->delete();//删除售后库
                 $model->status="1";
+                //售后员已分配资源数减1
+                $sql = "update {{users}} set cust_num=cust_num-1 where eno='{$aftermodel->eno}'";
+                Yii::app()->db->createCommand($sql)->execute();
             }else{
                 //保存售后库 
                 $aftermodel->cust_type = $newCustType;

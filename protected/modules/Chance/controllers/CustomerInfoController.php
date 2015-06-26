@@ -143,6 +143,12 @@ class CustomerInfoController extends GController {
                     $tran->creator = $loginuser->id;
                     $tran->create_time = time();
                     $tran->save();
+                    //业务员已分配资源数减1
+                    $sql = "update {{users}} set cust_num=cust_num-1 where id={$loginuser->id}";
+                    Yii::app()->db->createCommand($sql)->execute();
+                    //成交师已分配资源数加1
+                    $sql = "update {{users}} set cust_num=cust_num+1 where eno='{$tran->eno}'";
+                    Yii::app()->db->createCommand($sql)->execute();
                 }
 
                 if ($newCustType == 9) {
@@ -155,6 +161,9 @@ class CustomerInfoController extends GController {
                     $blackinfo->setAttribute('creator', Yii::app()->user->id);
                     $blackinfo->save();
                     $model->status="1";//将客户状态改为1(无效）
+                    //成交师已分配资源数减1
+                    $sql = "update {{users}} set cust_num=cust_num-1 where id={$model->trans_user}";
+                    Yii::app()->db->createCommand($sql)->execute();
                 }
                 if (Utils::isNeedSaveNoteInfo($_POST['NoteInfo'])) {
                     //保存小记 

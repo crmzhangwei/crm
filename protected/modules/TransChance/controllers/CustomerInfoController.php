@@ -149,6 +149,9 @@ class CustomerInfoController extends GController {
                     $after->creator = $loginuser->id;
                     $after->create_time = time();
                     $after->save();
+                    //当前成交师已分配资源数减1
+                    $sql = "update {{users}} set cust_num=cust_num-1 where id={$loginuser->id}";
+                    Yii::app()->db->createCommand($sql)->execute(); 
                 }
                 if ($newCustType == 17) {
                     //已签合同,生成合同信息表
