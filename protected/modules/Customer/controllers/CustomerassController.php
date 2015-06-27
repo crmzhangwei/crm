@@ -59,14 +59,51 @@ class CustomerassController extends GController
 				{
 					exit("<script>alert(\"对不起, 您没有选择被分配人, 本次操作失败。\");javascript:history.go(-1);</script>");
 				}
+				$allocation = Yii::app()->db->createCommand("select id from {{customer_info}} where eno='$eno'")->queryAll();//已分配的
+				if($allocation){
+					$alArr = array();
+					foreach ($allocation as $k1=>$v1){
+						$alArr[] = $v1['id'];
+					}
+					
+					$idArr = explode(',', $model->ids);
+					//$intersectArr = array_intersect($alArr, $idArr);//取出已分配给该员工的客户ID
+					$diffArr = array_diff($idArr, $alArr);
+					if($diffArr){
+						$model->ids = implode(',', $diffArr);
+						$assCount = count($diffArr);//待分配的资源个数
+					}
+					else{
+						$model->ids = 0;
+						$assCount = 0;//待分配的资源个数
+					}
+				}
 				$assign_eno = Yii::app()->session['user']['eno'];
 				$assign_time = time();
 				$sql = "update {{customer_info}} set eno='$eno',assign_time=$assign_time,assign_eno='$assign_eno' where id in({$model->ids})";
 				$sql2 = "update {{users}} set cust_num=cust_num+$assCount where eno='{$model->eno}'";
+				/////////////分配资源的时候原所属工号减1/////////
+				if($model->ids){
+					$reduce = explode(',', $model->ids);
+					$reduceArr = array();
+					foreach ($reduce as $k2=>$v2){
+						$result = Customerass::model()->findByPk($v2);
+						$beEno = $result->getAttribute('eno');
+						if($result){
+							$reduceArr[] = "update {{users}} set cust_num=cust_num-1 where eno='$beEno'";
+						}
+					}
+				}
+				///////////////////////////////////////////////////
 				$transaction = Yii::app()->db->beginTransaction();
 				try {
 					$res = Yii::app()->db->createCommand($sql)->execute();
 					$res2 = Yii::app()->db->createCommand($sql2)->execute();
+					if($reduceArr){
+						foreach ($reduceArr as $k3=>$v3){
+							Yii::app()->db->createCommand($v3)->execute();
+						}
+					}
 					$transaction->commit();
 					exit("<script>alert(\"恭喜你, 成功分配了".$assCount."个资源。\");javascript:history.go(-1);</script>");	
 				} catch (Exception $exc) {
