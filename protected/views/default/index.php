@@ -2,12 +2,22 @@
 /* @var $this DefaultController */
 
 $this->breadcrumbs=array(
-	'Default',
+	'默认页面',
 );
 ?>
-<h1><?php echo $this->id . '/' . $this->action->id; ?></h1>
-
+<h1>欢迎进入客户管理系统</h1>
+<p>&nbsp</p>
 <p>
-	You may change the content of this page by modifying
-	the file <tt><?php echo __FILE__; ?></tt>.
+<h5><b>专业制胜</b>：独立的销售管理系统，专业的销售数据管理和客户数据分析，大力挖掘顾客的二次需求与粘度，大幅度提高网店的复购率;</h3>
 </p>
+<p>&nbsp</p>
+<p>
+<h5><b>团队制胜</b>：精细化淘宝运营团队，从店长、策划、设计、分析、推广到客服，各司其职，组织架构完善，流程通畅，确保服务质量和目标销量的达成;</h3>
+</p>
+<p> &nbsp </p>
+<p>
+<h5><b>战略制胜</b>：广明发长期服务淘宝、天猫店铺，善于根据品牌的战略计划制定网店战略方案，包括店铺定位、产品规划和营销策略，形成切实可行的整体运营战略。</h3>
+</p>
+　
+　　
+　
