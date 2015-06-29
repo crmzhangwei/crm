@@ -46,9 +46,9 @@
                 <td width="5%" nowrap="nowrap">
                     <?php echo $form->dropDownList($model,'category',$this->getCategoryArr()); ?>
                 </td>
+                <td><?php echo CHtml::submitButton('搜索',array('class' => 'btn btn-sm btn-primary')); ?></td>
             </tr>  
-    </table>  
- <?php echo CHtml::submitButton('搜索',array('class' => 'btn btn-sm btn-primary')); ?>
+    </table>   
 <?php $this->endWidget(); ?>
 
 </div><!-- search-form -->

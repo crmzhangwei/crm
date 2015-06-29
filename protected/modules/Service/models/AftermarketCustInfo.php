@@ -34,6 +34,7 @@ class AftermarketCustInfo extends CActiveRecord
         public $searchtype;
         public $keyword;
         public $last_time;
+        public $iskey;
         
 	/**
 	 * @return string the associated database table name
@@ -137,7 +138,7 @@ class AftermarketCustInfo extends CActiveRecord
                     $criteria->compare('u.group_id',$this->group);
                 }  
 		$criteria->compare('c.category',$this->category);
-                $criteria->select="c.id,c.cust_name,t.cust_type,ct.type_name as cust_type_name,c.category,d.name as category_name,c.qq,t.webchat,t.ww,ci.service_limit,t.eno,t.assign_eno,t.assign_time,t.next_time ";
+                $criteria->select="c.id,c.cust_name,t.cust_type,ct.type_name as cust_type_name,c.category,c.iskey,d.name as category_name,c.qq,t.webchat,t.ww,ci.service_limit,t.eno,t.assign_eno,t.assign_time,t.next_time ";
                  
                 $criteria->join=" left join {{customer_info}} c on t.cust_id = c.id ".
                                 " left join {{users}} u on t.eno=u.eno ".
@@ -190,7 +191,7 @@ class AftermarketCustInfo extends CActiveRecord
                     case 4:$criteria->compare('webchat',$this->keyword,true);  break;
                     default:break;
                 }
-                $criteria->select="c.id,c.cust_name,t.cust_type,ct.type_name as cust_type_name,c.category,d.name as category_name,c.qq,t.webchat,t.ww,ci.service_limit,t.eno,t.assign_eno,t.assign_time,t.next_time,c.last_time ";
+                $criteria->select="c.id,c.cust_name,c.iskey,t.cust_type,ct.type_name as cust_type_name,c.category,d.name as category_name,c.qq,t.webchat,t.ww,ci.service_limit,t.eno,t.assign_eno,t.assign_time,t.next_time,c.last_time ";
                 $criteria->join=" left join {{customer_info}} c on t.cust_id = c.id ".
                                 " left join {{users}} u on t.eno=u.eno ".
                                 " left join {{cust_type}} ct on ct.type_no=t.cust_type and ct.lib_type=3 ".
@@ -241,7 +242,7 @@ class AftermarketCustInfo extends CActiveRecord
                     case 4:$criteria->compare('webchat',$this->keyword,true);  break;
                     default:break;
                 }
-                $criteria->select="c.id,c.cust_name,t.cust_type,ct.type_name as cust_type_name,c.category,d.name as category_name,c.qq,t.webchat,t.ww,ci.service_limit,t.eno,t.assign_eno,t.assign_time,t.next_time,c.last_time ";
+                $criteria->select="c.id,c.cust_name,c.iskey,t.cust_type,ct.type_name as cust_type_name,c.category,d.name as category_name,c.qq,t.webchat,t.ww,ci.service_limit,t.eno,t.assign_eno,t.assign_time,t.next_time,c.last_time ";
                 $criteria->join=" left join {{customer_info}} c on t.cust_id = c.id ".
                                 " left join {{users}} u on t.eno=u.eno ".
                                 " left join {{cust_type}} ct on ct.type_no=t.cust_type and ct.lib_type=3 ".

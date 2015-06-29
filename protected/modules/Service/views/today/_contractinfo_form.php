@@ -1,95 +1,94 @@
 <?php
-/* @var $this NoteInfoController */
+/* @var $this todayController */
 /* @var $model NoteInfo */
 /* @var $form CActiveForm */
 ?>
 
 <div class="form">   
-	<?php echo $form->errorSummary($model); ?>
+	<?php echo $form->errorSummary($contract); ?>
          <table class="table table-bordered"> 
             <tr>
-                <td width="10%"  nowrap="nowrap"><?php echo $form->labelEx($model,'contract[service_limit]'); ?></td>
-                <td width="20%" nowrap="nowrap">
-                   <?php echo $model->contract['service_limit']; ?>
-		   <?php echo $form->error($model,'contract[service_limit]'); ?>
+                <td width="10%"  nowrap="nowrap"><?php echo $form->labelEx($contract,'service_limit'); ?></td>
+                <td width="20%" nowrap="nowrap"> 
+                   <?php echo $form->textField($contract,'service_limit'); ?>
+		   <?php echo $form->error($contract,'service_limit'); ?>
                 </td>
-                <td width="10%"  nowrap="nowrap"><?php echo $form->labelEx($model,'contract[total_money]'); ?></td>
-                <td>
-                    <?php echo $model->contract['total_money']; ?>
-                    <?php echo $form->error($model,'contract[total_money]'); ?>
+                <td width="10%"  nowrap="nowrap"><?php echo $form->labelEx($contract,'total_money'); ?></td>
+                <td> 
+                    <?php echo $form->textField($contract,'total_money'); ?>
+                    <?php echo $form->error($contract,'total_money'); ?>
                 </td>
             </tr>
             <tr>
-                <td><?php echo $form->labelEx($model,'contract[pay_type]'); ?></td>
-                <td>
-                   <?php echo $model->contract['pay_type']; ?>
-		   <?php echo $form->error($model,'contract[pay_type]'); ?>
+                <td><?php echo $form->labelEx($contract,'pay_type'); ?></td>
+                <td> 
+                   <?php echo $form->textField($contract,'pay_type'); ?>
+		   <?php echo $form->error($contract,'pay_type'); ?>
                 </td>
-                <td><?php echo $form->labelEx($model,'contract[pay_time]'); ?></td>
-                <td>
-                    <?php echo $model->contract['pay_time']; ?>
-                    <?php echo $form->error($model,'contract[pay_time]'); ?>
+                <td><?php echo $form->labelEx($contract,'pay_time'); ?></td>
+                <td>  
+                    <?php echo $form->textField($contract,'pay_time',array('class'=>"Wdate", 'onClick'=>"WdatePicker()",'style'=>'height:30px;')); ?>
+                    <?php echo $form->error($contract,'pay_time'); ?>
                 </td>
             </tr> 
             <tr>
-                <td><?php echo $form->labelEx($model,'contract[promise]'); ?></td>
-                <td>
-                   <?php echo $model->contract['promise']; ?>
-		   <?php echo $form->error($model,'contract[promise]'); ?>
+                <td><?php echo $form->labelEx($contract,'promise'); ?></td>
+                <td> 
+                    <?php echo $form->textField($contract,'promise'); ?>
+		   <?php echo $form->error($contract,'promise'); ?>
                 </td>
-                <td><?php echo $form->labelEx($model,'contract[first_pay]'); ?></td>
-                <td>
-                    <?php echo $model->contract['first_pay']; ?>
-                    <?php echo $form->error($model,'contract[first_pay]'); ?>
-                </td>
-            </tr>
-            <tr>
-                <td><?php echo $form->labelEx($model,'contract[second_pay]'); ?></td>
-                <td>
-                   <?php echo $model->contract['second_pay']; ?>
-		   <?php echo $form->error($model,'contract[second_pay]'); ?>
-                </td>
-                <td><?php echo $form->labelEx($model,'contract[third_pay]'); ?></td>
-                <td>
-                    <?php echo $model->contract['third_pay']; ?>
-                    <?php echo $form->error($model,'contract[third_pay]'); ?>
+                <td><?php echo $form->labelEx($contract,'first_pay'); ?></td>
+                <td> 
+                    <?php echo $form->textField($contract,'first_pay'); ?>
+                    <?php echo $form->error($contract,'first_pay'); ?>
                 </td>
             </tr>
             <tr>
-                <td><?php echo $form->labelEx($model,'contract[fourth_pay]'); ?></td>
-                <td>
-                   <?php echo $model->contract['fourth_pay']; ?>
-		   <?php echo $form->error($model,'contract[fourth_pay]'); ?>
+                <td><?php echo $form->labelEx($contract,'second_pay'); ?></td>
+                <td> 
+                    <?php echo $form->textField($contract,'second_pay'); ?>
+		   <?php echo $form->error($contract,'second_pay'); ?>
                 </td>
-                <td><?php echo $form->labelEx($model,'contract[comm_royalty]'); ?></td>
-                <td>
-                    <?php echo $model->contract['comm_royalty']; ?>
-                    <?php echo $form->error($model,'contract[comm_royalty]'); ?>
-                </td>
-            </tr>
-            <tr>
-                <td><?php echo $form->labelEx($model,'contract[comm_pay_time]'); ?></td>
-                <td>
-                   <?php echo $model->contract['comm_pay_time']; ?>
-		   <?php echo $form->error($model,'contract[comm_pay_time]'); ?>
-                </td>
-                <td><?php echo $form->labelEx($model,'contract[creator]'); ?></td>
-                <td>
-                    <?php echo $model->contract['user']['eno']; ?>
-                    <?php echo $form->error($model,'contract[creator]'); ?>
+                <td><?php echo $form->labelEx($contract,'third_pay'); ?></td>
+                <td> 
+                    <?php echo $form->textField($contract,'third_pay'); ?>
+                    <?php echo $form->error($contract,'third_pay'); ?>
                 </td>
             </tr>
             <tr>
-                <td><?php echo $form->labelEx($model,'contract[create_time]'); ?></td>
-                <td>
-                   <?php echo $model->contract['create_time'];?>
-		   <?php echo $form->error($model,'contract[create_time]'); ?>
+                <td><?php echo $form->labelEx($contract,'fourth_pay'); ?></td>
+                <td colspan="3"> 
+                    <?php echo $form->textField($contract,'fourth_pay'); ?>
+		   <?php echo $form->error($contract,'fourth_pay'); ?>
                 </td>
-                <td></td>
-                <td>
-                    
+                 
+            </tr>
+            <tr>
+                <td><?php echo $form->labelEx($contract,'comm_royalty'); ?></td>
+                <td> 
+                    <?php echo $form->textField($contract,'comm_royalty'); ?>
+                    <?php echo $form->error($contract,'comm_royalty'); ?>
                 </td>
+                <td><?php echo $form->labelEx($contract,'comm_pay_time'); ?></td>
+                <td>  
+                   <?php echo $form->textField($contract,'comm_pay_time',array('class'=>"Wdate", 'onClick'=>"WdatePicker()",'style'=>'height:30px;')); ?>
+		   <?php echo $form->error($contract,'comm_pay_time'); ?>
+                </td>
+                
+            </tr>
+            <tr>
+                <td><?php echo $form->labelEx($contract,'creator'); ?></td>
+                <td>
+                    <?php echo $contract->creator; ?> 
+                </td>
+                <td><?php echo $form->labelEx($contract,'create_time'); ?></td>
+                <td>
+                   <?php echo $contract->create_time;?> 
+                </td> 
             </tr>
          </table>    
 
 </div><!-- form -->
+<div class="row buttons">
+		<?php echo CHtml::submitButton('保存',array('class' => 'btn btn-sm btn-primary')); ?>
+    </div> 

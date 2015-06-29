@@ -75,9 +75,9 @@ class CustomerInfo extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-                    'service'=>array(self::HAS_ONE,'AftermarketCustInfo','cust_id'),
-                    'contract'=>array(self::HAS_ONE,'ContractInfo','cust_id'), 
-                    'user'=>array(self::BELONGS_TO,'Users','creator'), 
+                    //'service'=>array(self::HAS_ONE,'AftermarketCustInfo','cust_id'),
+                    //'contract'=>array(self::HAS_ONE,'ContractInfo','cust_id'), 
+                    //'user'=>array(self::BELONGS_TO,'Users','creator'), 
 		);
 	}
 

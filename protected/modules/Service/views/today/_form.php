@@ -1,5 +1,5 @@
 <?php
-/* @var $this ServiceController */
+/* @var $this todayController */
 /* @var $model CustomerInfo */
 /* @var $form CActiveForm */
 ?>
@@ -35,10 +35,10 @@
 	'enableAjaxValidation'=>false,
 )); ?>
     <div id="tabs-1" aria-labelledby="ui-id-29" class="ui-tabs-panel ui-widget-content ui-corner-bottom" role="tabpanel" aria-hidden="false" style="display: block;">
-	<?php $this->renderPartial('_baseinfo', array('model'=>$model,'form'=>$form,'note'=>$noteinfo)); ?> 
+	<?php $this->renderPartial('_baseinfo', array('model'=>$model,'form'=>$form,'note'=>$noteinfo,'after'=>$after,'contract'=>$contract)); ?> 
     </div>
     <div id="tabs-2" aria-labelledby="ui-id-30" class="ui-tabs-panel ui-widget-content ui-corner-bottom" role="tabpanel" aria-hidden="true" style="display: none;">
-        <?php $this->renderPartial('_contractinfo_form', array('model'=>$model,'form'=>$form)); ?> 
+        <?php $this->renderPartial('_contractinfo_form', array('model'=>$model,'form'=>$form,'contract'=>$contract)); ?>
     </div> 
     <div id="tabs-3" aria-labelledby="ui-id-31" class="ui-tabs-panel ui-widget-content ui-corner-bottom" role="tabpanel" aria-hidden="true" style="display: none;">
        <?php $this->renderPartial('_noteinfo_form', array('model'=>$noteinfo,'form'=>$form,'loginuser'=>$loginuser)); ?>

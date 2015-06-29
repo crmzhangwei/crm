@@ -135,6 +135,8 @@ class NoteInfo extends CActiveRecord
             $criteria->compare('t.cust_info',$this->cust_info,true);
 	    $criteria->compare('t.requirement',$this->requirement,true);
 	    $criteria->compare('t.service',$this->service,true);
+            $uid = Yii::app()->user->id;
+            $criteria->addCondition("t.eno<>$uid");
             $criteria->select="t.id,t.cust_info,t.requirement,t.service,t.next_contact,t.create_time,u.eno";
             $criteria->join=" left join {{users}} u on t.eno=u.id ";
             return new CActiveDataProvider($this, array(
@@ -150,6 +152,9 @@ class NoteInfo extends CActiveRecord
             $criteria->compare('cust_info',$this->cust_info,true);
 	    $criteria->compare('requirement',$this->requirement,true);
 	    $criteria->compare('service',$this->service,true); 
+            $uid = Yii::app()->user->id;
+	    $criteria->addCondition("eno=$uid"); 
+            
             return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
 		));

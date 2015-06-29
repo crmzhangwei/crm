@@ -1,6 +1,6 @@
 
 <?php
-/* @var $this ServiceController */
+/* @var $this oldController */
 /* @var $model CustomerInfo */
  
 
@@ -26,8 +26,7 @@ $('#btn_cancel').click(
 ?> 
 <script type="text/javascript">
 function sendMessage(cust_id){ 
-    public.dialog('发送短信', '<?= Yii::app()->createUrl('Service/service/message') ?>', {'cust_id':cust_id}, 900);
-    
+    public.dialog('发送短信', '<?= Yii::app()->createUrl('Service/service/message') ?>', {'cust_id':cust_id}, 900); 
 }
 function sendMail(cust_id){
     alert(cust_id);
@@ -36,6 +35,7 @@ function sendMail(cust_id){
 </script> 
 	<?php echo $form->errorSummary($model); ?>
         <?php echo $form->errorSummary($note); ?>
+        <?php echo $form->errorSummary($contract); ?>
         <table class="table table-bordered"> 
             <tr>
                 <td width="10%" nowrap="nowrap"><?php echo $form->labelEx($model,'cust_name'); ?></td>
@@ -95,27 +95,34 @@ function sendMail(cust_id){
             <tr>
                 <td nowrap="nowrap"><?php echo $form->labelEx($model,'cust_type'); ?></td>
                 <td> 
-                    <?php echo  $form->dropDownList($model, "service[cust_type]", $this->getCustTypeArr());?>
-                    <?php echo $form->error($model,'service[cust_type]'); ?>
+                    <?php echo  $form->dropDownList($after, "cust_type", $this->getCustTypeArr()) ?>
+                    <?php echo $form->error($after,'cust_type'); ?>
                 </td>
                 <td nowrap="nowrap"><?php echo $form->labelEx($model,'eno'); ?></td>
-                <td><?php echo $model['service']['eno']; ?>
+                <td><?php echo $model->eno; ?>
 		<?php echo $form->error($model,'eno'); ?></td>
             </tr>
             <tr> 
-                <td nowrap="nowrap"><?php echo $form->labelEx($model,'assign_eno'); ?></td>
-                <td><?php echo $model['service']['assign_eno']; ?></td>
-                <td nowrap="nowrap"><?php echo $form->labelEx($model,'assign_time'); ?></td>
+                <td nowrap="nowrap"><?php echo $form->labelEx($after,'assign_eno'); ?></td>
+                <td><?php echo $after->assign_eno; ?></td>
+                <td nowrap="nowrap"><?php echo $form->labelEx($after,'assign_time'); ?></td>
                 <td>
-                   <?php echo $model['service']['assign_time']; ?>  
+                   <?php echo $after->assign_time; ?>  
                 </td>
             </tr>
-            
             <tr> 
-                <td nowrap="nowrap"><?php echo $form->labelEx($model,'next_time'); ?></td>
-                <td>
-                    <?php echo $model['service']['next_time'];?>
-                    <?php echo $form->error($model,'next_time'); ?></td>
+                <td nowrap="nowrap"><?php echo $form->labelEx($after,'webchat'); ?></td>
+                <td><?php echo $form->textField($after,'webchat'); ?></td>
+                <td nowrap="nowrap"><?php echo $form->labelEx($after,'ww'); ?></td>
+                <td><?php echo $form->textField($after,'ww'); ?></td>
+            </tr>
+            <tr> 
+                <td nowrap="nowrap"><?php echo $form->labelEx($after,'next_time'); ?><br/>
+                <?php echo $form->labelEx($after,'last_time'); ?>
+                </td>
+                <td> <?php echo $model->next_time;?> <br/>
+                <?php echo $model->last_time;?>
+                </td>
                 <td nowrap="nowrap"><?php echo $form->labelEx($model,'memo'); ?></td>
                 <td>
                 <?php echo $form->textArea($model,'memo',array('rows'=>3,'cols'=>50)); ?>
@@ -123,13 +130,12 @@ function sendMail(cust_id){
                 </td> 
             </tr>
             <tr> 
-                <td nowrap="nowrap"><?php echo $form->labelEx($model,'creator'); ?></td>
+                <td nowrap="nowrap"><?php echo $form->labelEx($after,'creator'); ?></td>
                 <td>
-                   <?php echo $model->service['creator']; ?>  
+                   <?php echo $after->creator; ?>  
                 </td> 
-                <td nowrap="nowrap"><?php echo $form->labelEx($model,'create_time'); ?></td>
-                <td><?php echo $model->service['create_time']; ?>
-		<?php echo $form->error($model,'create_time'); ?></td>
+                <td nowrap="nowrap"><?php echo $form->labelEx($after,'create_time'); ?></td>
+                <td><?php echo $model->create_time; ?> </td>
             </tr>
         </table>
 <div class="row buttons">

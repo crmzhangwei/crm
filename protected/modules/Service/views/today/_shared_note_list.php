@@ -17,6 +17,8 @@ $this->widget('GGridView', array(
         'requirement',
         'service',
         array('name' => 'next_contact', 'value' => 'date("Y-m-d",$data->next_contact)'),
+        array('name' => 'create_time', 'value' => 'date("Y-m-d",$data->create_time)'),
+        array('name' => 'eno', 'value' => '$data->eno'),
         array(
             'class' => 'CButtonColumn',
             'template' => '{play} {download} {view}',

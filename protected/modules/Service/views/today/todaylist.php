@@ -26,7 +26,17 @@ $('.search-form form').submit(function(){
     ));
     ?>
 </div><!-- search-form -->
-
+<?php
+$form = $this->beginWidget('CActiveForm', array(
+    'action' => Yii::app()->createUrl('Service/service/assignNextTime'),
+    'method' => 'post',
+        ));
+?>
+<div class="form-group">
+    <div class="btn-group">
+    <?php echo CHtml::submitButton('批量安排联系时间', array('class' => 'btn btn-sm btn-primary')); ?>
+    </div>  
+</div>
 <?php
 $dataProvider = $model->searchTodayList();
 $this->widget('GGridView', array(
@@ -34,6 +44,15 @@ $this->widget('GGridView', array(
     'dataProvider' => $dataProvider,
     'filter' => null,
     'columns' => array(
+        array('class' => 'CCheckBoxColumn',
+            'name' => 'id',
+            'id' => 'select',
+            'selectableRows' => 2,
+            'headerTemplate' => '{item}',
+            'htmlOptions' => array(
+                'width' => '20',
+            ),
+        ),
         'id',
         array('name' => 'cust_id', 'value' => '$data->cust_name'),
         array('name' => 'cust_type', 'value' => '$data->cust_type_name'),
@@ -59,7 +78,7 @@ $this->widget('GGridView', array(
             'buttons' => array(
                 'upda' => array(
                     'label' => '查看客户详情',
-                    'url' => 'Yii::app()->controller->createUrl("update",array("id"=>$data->primaryKey))',
+                    'url' => 'Yii::app()->controller->createUrl("edit",array("id"=>$data->primaryKey))',
                     'imageUrl' => '',
                     'options' => array('class' => 'editNode btn btn-info btn-minier tooltip-info', 'data-placement' => "bottom"),
                 ),
@@ -68,7 +87,7 @@ $this->widget('GGridView', array(
     ),
 ));
 ?>
-
+<?php $this->endWidget(); ?>
 <div class="table-page"> 
     <div class="col-sm-6">
         共<span class="orange"><?= $dataProvider->totalItemCount ?></span>条记录 

@@ -68,7 +68,7 @@ return array(
 			// use 'site/error' action to display errors
 			//'errorAction'=>'site/error',
 		),
-
+                /*
 		'log'=>array(
 			'class'=>'CLogRouter',
 			'routes'=>array(
@@ -83,7 +83,7 @@ return array(
 				),
 				
 			),
-		),
+		),*/
 
 	),
 
@@ -119,7 +119,7 @@ return array(
                     15=>"拓展码无效(1-999)",
                 ),
                 'UNCALL'=>array(
-                    'webservice'=>'',
+                    'webservice'=>'http://192.168.1.200/uncall_api/index.php?wsdl',
                 ),
 	),
         //短信服务商配置

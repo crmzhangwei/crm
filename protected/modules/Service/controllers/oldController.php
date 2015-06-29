@@ -16,7 +16,52 @@ class oldController extends GController {
             'model' => $this->loadModel($id),
         ));
     }
-
+    /**
+     * 进入客户详情页面
+     * @param type $id 客户id
+     */
+    public function actionEdit($id) {
+        $noteinfo = new NoteInfo();
+        $noteinfo->setAttribute("iskey", 0);
+        $noteinfo->setAttribute("isvalid", 1);
+        $noteinfo->setAttribute("dial_id", 0);
+        $noteinfo->setAttribute("message_id", 0);
+        $noteinfo->setAttribute("next_contact", '');
+        $noteinfo->setAttribute("cust_id", $id);
+        $model = $this->loadModel($id);
+        $sql = "select * from {{aftermarket_cust_info}} where cust_id=:cust_id";
+        $aftermodel = AftermarketCustInfo::model()->findBySql($sql, array(':cust_id' => $id));
+        $sql = "select * from {{contract_info}} where cust_id=:cust_id";
+        $contractmodel = ContractInfo::model()->findBySql($sql, array(':cust_id' => $id));
+        $model->setAttribute("create_time", date("Y-m-d", $model->getAttribute("create_time")));
+        $model->setAttribute("assign_time", date("Y-m-d", $model->getAttribute("assign_time")));
+        $model->setAttribute("next_time", date("Y-m-d", $model->getAttribute("next_time"))); 
+        $model->setAttribute("last_time", date("Y-m-d", $model->getAttribute("last_time"))); 
+        $aftermodel->setAttribute("assign_time", date("Y-m-d", $aftermodel->getAttribute("assign_time")));
+        $aftermodel->setAttribute("next_time", date("Y-m-d", $aftermodel->getAttribute("next_time"))); 
+        $aftermodel->setAttribute("create_time", date("Y-m-d", $aftermodel->getAttribute("create_time"))); 
+        $creator = Users::model()->findByPk($aftermodel->creator);
+        $aftermodel->creator = $creator->getAttribute('eno'); 
+        $contractmodel->setAttribute("create_time", date("Y-m-d", $contractmodel->getAttribute("create_time")));
+        $contractmodel->setAttribute("comm_pay_time", date("Y-m-d", $contractmodel->getAttribute("comm_pay_time")));
+        $contractmodel->setAttribute("pay_time", date("Y-m-d", $contractmodel->getAttribute("pay_time")));
+        $creator2 = Users::model()->findByPk($contractmodel->creator);
+        $contractmodel->creator = $creator2->getAttribute('eno'); 
+        $sharedNote = NoteInfo::model();
+        $sharedNote->setAttribute("cust_id", $model->id);
+        $historyNote = NoteInfo::model();
+        $historyNote->setAttribute("cust_id", $model->id);
+        $user = Users::model()->findByPk(Yii::app()->user->id);
+        $this->render('update', array(
+            'model' => $model,
+            'after'=>$aftermodel,
+            'contract'=>$contractmodel,
+            'sharedNote' => $sharedNote,
+            'historyNote' => $historyNote,
+            'noteinfo' => $noteinfo,
+            'loginuser' => $user,
+        )); 
+    }
     /**
      * Updates a particular model.
      * If update is successful, the browser will be redirected to the 'view' page.
@@ -31,15 +76,21 @@ class oldController extends GController {
         $noteinfo->setAttribute("next_contact", '');
         $noteinfo->setAttribute("cust_id", $id);
         $model = $this->loadModel($id);
-        if (isset($_POST['CustomerInfo'])) {
-            //保存  
-            $sql = "select * from {{aftermarket_cust_info}} where cust_id=:cust_id";
-            $aftermodel = AftermarketCustInfo::model()->findBySql($sql, array(':cust_id' => $id));
-            $newCustType = $_POST['CustomerInfo']['service']['cust_type'];
+        $sql = "select * from {{aftermarket_cust_info}} where cust_id=:cust_id";
+        $aftermodel = AftermarketCustInfo::model()->findBySql($sql, array(':cust_id' => $id));
+        $sql = "select * from {{contract_info}} where cust_id=:cust_id";
+        $contractmodel = ContractInfo::model()->findBySql($sql, array(':cust_id' => $id));
+        if (isset($_POST['AftermarketCustInfo'])) {
+            //保存   
+            $newCustType = $_POST['AftermarketCustInfo']['cust_type'];
             $newCategory = $_POST['CustomerInfo']['category'];
             $transaction = Yii::app()->db->beginTransaction();
             $memo = $_POST['CustomerInfo']['memo'];
-
+            $aftermodel->setAttribute("webchat", $_POST['AftermarketCustInfo']['webchat']); 
+            $aftermodel->setAttribute("ww", $_POST['AftermarketCustInfo']['ww']);   
+            $contractmodel->attributes=$_POST['ContractInfo'];
+            $contractmodel->pay_time =  strtotime($contractmodel->pay_time);
+            $contractmodel->comm_pay_time = strtotime($contractmodel->comm_pay_time);
             if ($aftermodel->cust_type != $newCustType) {
                 //客户分类调整，生成转换明细数据
                 $convt = new CustConvtDetail();
@@ -51,10 +102,9 @@ class oldController extends GController {
                 $convt->setAttribute('user_id', Yii::app()->user->id);
                 $convt->save();
             }
-            
-            if ($model->service) {
-                $model->service['cust_type'] = $_POST['CustomerInfo']['service']['cust_type'];
-            }
+            //保存合同信息
+            $contractmodel->save(); 
+            //保存小记信息
             if (Utils::isNeedSaveNoteInfo($_POST['NoteInfo'])) {
                 //保存小记 
                 $noteinfo->attributes = $_POST['NoteInfo'];
@@ -63,11 +113,7 @@ class oldController extends GController {
                 }
                 $noteinfo->next_contact = strtotime($noteinfo->next_contact);
                 $aftermodel->next_time = $noteinfo->next_contact;
-                $model->next_time=$noteinfo->next_contact;
-                if ($model->service) {
-                    $model->service['next_time'] = $model->next_time;
-                }
-                $model->last_time=time();//最后联系时间等于今天
+                $model->next_time=$noteinfo->next_contact;  
                 $noteinfo->setAttribute("eno", Yii::app()->user->id);
                 $noteinfo->setAttribute("create_time", time());
                 $noteinfo->save();
@@ -104,62 +150,56 @@ class oldController extends GController {
                 $aftermodel->save();
             }
             //更新类目或备注 
-            
+            $model->last_time=time();//最后联系时间等于今天
             $model->memo = $_POST['CustomerInfo']['memo'];
             $model->category = $newCategory;
             $model->save(); 
              
             //加载页面数据
-            if (!$noteinfo->hasErrors()) {
+            if (!$noteinfo->hasErrors()&&!$contractmodel->hasErrors()&&!$aftermodel->hasErrors()&&!$model->hasErrors()) {
                 $transaction->commit();
                 if ($newCustType == 8) {
                     //转入成功页面
                     $this->render("result");
                     return;
                 } else {
-                    //保存成功，没有错误，清除数据
-                    $noteinfo->unsetAttributes();
-                    $noteinfo->setAttribute("iskey", 0);
-                    $noteinfo->setAttribute("isvalid", 1);
-                    $noteinfo->setAttribute("dial_id", 0);
-                    $noteinfo->setAttribute("message_id", 0);
-                    $noteinfo->setAttribute("next_contact", '');
-                    $noteinfo->cust_id = $id;
+                    //保存成功，没有错误，跳转到编辑页面
+                    $this->redirect($this->createUrl("old/Edit",array('id'=>$id)));
                 }
             } else {
                 $transaction->rollback();
-                $noteinfo->setAttribute("next_contact", '');
+                $noteinfo->setAttribute("next_contact", date("Y-m-d",$noteinfo->getAttribute("next_contact")));
             }
         }
-
-
         $model->setAttribute("create_time", date("Y-m-d", $model->getAttribute("create_time")));
         $model->setAttribute("assign_time", date("Y-m-d", $model->getAttribute("assign_time")));
-        $model->setAttribute("next_time", date("Y-m-d", $model->getAttribute("next_time")));
+        $model->setAttribute("next_time", date("Y-m-d", $model->getAttribute("next_time"))); 
+        $model->setAttribute("last_time", date("Y-m-d", $model->getAttribute("last_time"))); 
+        $aftermodel->setAttribute("assign_time", date("Y-m-d", $aftermodel->getAttribute("assign_time")));
+        $aftermodel->setAttribute("next_time", date("Y-m-d", $aftermodel->getAttribute("next_time"))); 
+        $aftermodel->setAttribute("create_time", date("Y-m-d", $aftermodel->getAttribute("create_time"))); 
+        $creator = Users::model()->findByPk($aftermodel->creator);
+        $aftermodel->creator = $creator->getAttribute('eno'); 
+        $contractmodel->setAttribute("create_time", date("Y-m-d", $contractmodel->getAttribute("create_time")));
+        $contractmodel->setAttribute("comm_pay_time", date("Y-m-d", $contractmodel->getAttribute("comm_pay_time")));
+        $contractmodel->setAttribute("pay_time", date("Y-m-d", $contractmodel->getAttribute("pay_time")));
+        $creator2 = Users::model()->findByPk($contractmodel->creator);
+        $contractmodel->creator = $creator2->getAttribute('eno'); 
         $sharedNote = NoteInfo::model();
         $sharedNote->setAttribute("cust_id", $model->id);
         $historyNote = NoteInfo::model();
-        $historyNote->setAttribute("cust_id", $model->id);
-        if ($model->contract) {
-            $model->contract['create_time'] = date("Y-m-d", $model->contract['create_time']);
-            $model->contract['comm_pay_time'] = date("Y-m-d", $model->contract['comm_pay_time']);
-            $model->contract['pay_time'] = date("Y-m-d", $model->contract['pay_time']);
-        }
-        if ($model->service) {
-            $model->service['assign_time'] = date("Y-m-d", $model->service['assign_time']);
-            $model->service['next_time'] = date("Y-m-d", $model->service['next_time']);
-            $model->service['create_time'] = date("Y-m-d", $model->service['create_time']);
-            $user = Users::model()->findByPk($model->service['creator']);
-            $model->service['creator'] = $user->getAttribute('eno');
-        }
+        $historyNote->setAttribute("cust_id", $model->id); 
+         
         $user = Users::model()->findByPk(Yii::app()->user->id);
         $this->render('update', array(
             'model' => $model,
+            'after'=>$aftermodel,
+            'contract'=>$contractmodel,
             'sharedNote' => $sharedNote,
             'historyNote' => $historyNote,
             'noteinfo' => $noteinfo,
             'loginuser' => $user,
-        ));
+        )); 
     }
 
     /**
