@@ -20,7 +20,7 @@ return array(
                 'application.extensions.*',
                 'application.extensions.PHPExcel.*',
         ),
-        'defaultController'=>'User/users/admin',
+        'defaultController'=>'default/index',
 	'modules'=>array(
 		// uncomment the following to enable the Gii tool
 		'User',
