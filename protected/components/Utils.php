@@ -243,7 +243,12 @@ class Utils {
 					$v = strtotime($v);
 					$whereStr .= " where $k<='$v' and";
 				}
-				else{
+				elseif($k == 'dept'){
+					$k = 'u.dept_id';
+					$whereStr .= " where $k='$v' and";
+				}
+				elseif($k == 'group'){
+					$k = 'u.group_id';
 					$whereStr .= " where $k='$v' and";
 				}
 			}
@@ -256,9 +261,14 @@ class Utils {
 					$v = strtotime($v);
 					$whereStr .= " $k='$v' and";
 				}
-				else{
+				elseif($k == 'dept'){
+					$k = 'u.dept_id';
 					$whereStr .= " $k='$v' and";
-				}	
+				}
+				elseif($k == 'group'){
+					$k = 'u.group_id';
+					$whereStr .= " $k='$v' and";
+				}
 			}
 		}
 		$whereStr  = $whereStr? trim($whereStr,' and') : '';

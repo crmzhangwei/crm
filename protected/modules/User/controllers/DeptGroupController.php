@@ -25,6 +25,7 @@ class DeptGroupController extends GController
          $dataProvider=new CActiveDataProvider('GroupInfo');
         $dataProvider->pagination->pageSize = 1000;
         $data = $dataProvider->getData();
+		$priv=array();
         if($data)
         {
             foreach ($data as $obj)

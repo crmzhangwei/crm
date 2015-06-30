@@ -39,7 +39,7 @@ class CustomerassController extends GController
 	{
 		$model=new CustomerAss;
 		$deptArr = Userinfo::getDept();
-		$deptArr = array_merge(array('0'=>'--请选择部门--'), $deptArr);
+		$deptArr = array('0'=>'--请选择部门--') + $deptArr;
 		$category = Userinfo::getCategory();//类目
 		$ids = Yii::app()->request->getParam('ids');
 		$model->ids = $ids;

@@ -101,7 +101,7 @@ class CustomerInfo extends CActiveRecord
 			'assign_eno' => '分配人',
 			'assign_time' => '分配时间',
 			'next_time' => '下次联系时间',
-                        'last_time'=>'最后联系时间',
+            'last_time'=>'最后联系时间',
 			'memo' => '备注',
 			'create_time' => '创建时间',
 			'creator' => '创建人',
@@ -146,6 +146,7 @@ class CustomerInfo extends CActiveRecord
 		$criteria->compare('memo',$this->memo,true);
 		$criteria->compare('create_time',$this->create_time);
 		$criteria->compare('creator',$this->creator);
+		$criteria->addCondition("`status` <>'2'");  
 
 		if ($this->keyword) {
                     switch ($this->searchtype) {

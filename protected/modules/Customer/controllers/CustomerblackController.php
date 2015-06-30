@@ -32,7 +32,7 @@ class CustomerblackController extends GController
 	{
 		$model=new CustomerBlack;
 		$deptArr = Userinfo::getDept();
-		$deptArr = array_merge(array('0'=>'--请选择部门--'), $deptArr);
+		$deptArr = array('0'=>'--请选择部门--' + $deptArr);
 		$category = Userinfo::getCategory();//类目
 		if(isset($_POST['CustomerBlack']))
 		{

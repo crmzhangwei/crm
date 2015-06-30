@@ -39,13 +39,13 @@ class CustomerinfoController extends GController
 	{
 		$model=new CustomerInfo;
 		$deptArr = Userinfo::getDept();
-		$deptArr = array_merge(array('0'=>'--请选择部门--'), $deptArr);
+		$deptArr = array('0'=>'--请选择部门--') + $deptArr;
 		$category = Userinfo::getCategory();//类目
 		if(isset($_POST['CustomerInfo']))
 		{
 
 			$model->attributes=$_POST['CustomerInfo'];
-     		        $model->assign_eno = Yii::app()->session['user']['eno'];//分配人
+     		$model->assign_eno = Yii::app()->session['user']['eno'];//分配人
 			$model->assign_time = time();//分配时间
 			$model->create_time = time();
 			$model->creator = Yii::app()->user->id;
@@ -152,7 +152,7 @@ class CustomerinfoController extends GController
 		}
 		$category = $this->getCategory();
 		$deptArr = Userinfo::getDept();
-		$deptArr = array_merge(array('0'=>'--请选择部门--'), $deptArr);
+		$deptArr = array('0'=>'--请选择部门--') + $deptArr;
 		$this->renderPartial('update',array(
 			'model'=>$model,
 			'category'=>$category,
@@ -169,7 +169,7 @@ class CustomerinfoController extends GController
 	public function actionDelete($id)
 	{
 		$model = $this->loadModel($id);
-		$sql = "delete from {{customer_info}} where id=$id";
+		$sql = "update {{customer_info}} set `status`=2 where id=$id";
 		$sql2 = "update {{users}} set cust_num=cust_num-1 where eno='{$model->eno}'";//删除一条记录后对应的所属工号人员已分配减1
 		$transaction = Yii::app()->db->beginTransaction();
 		try {

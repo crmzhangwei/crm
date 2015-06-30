@@ -65,6 +65,11 @@
 		<?php echo $form->error($model,'datafrom'); ?></td>
 	</tr>
 	<tr>
+		<td><?php echo $form->labelEx($model,'iskey'); ?></td>
+		<td><?php echo $form->textField($model,'iskey',array('size'=>15,'maxlength'=>30)); echo '<span class="red"> 填: 1重点 0非重点<span>';?>
+		<?php echo $form->error($model,'iskey'); ?></td>
+	</tr>
+	<tr>
 		<td><?php echo $form->labelEx($model,'category'); ?></td>
 		<td><?php echo $form->dropDownList($model, 'category' ,$category);?>
 		<?php echo $form->error($model,'category'); ?></td>
@@ -101,7 +106,7 @@
 		endif;?>
 		</td>
 	</tr> 
-	<tr>
+	<tr style="display:none">
 		<td><?php echo $form->textField($model,'eno',array('id'=>'userid','size'=>10,'maxlength'=>10)); ?></td>
 		<td><?php echo $form->error($model,'eno'); ?>
 		<?php echo $form->textField($model,'oldEno',array('id'=>'oldEno','size'=>10,'maxlength'=>10)); ?></td>

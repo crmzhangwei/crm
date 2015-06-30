@@ -69,7 +69,7 @@ class CountController extends GController
 		
 		$offset = ($page-1)*$this->pageSize;
 		$param = array();
-		
+
 		//这一部分获取总记录行
 		/*$sql = "select id,dial_time as d,dial_long as l from {{dial_detail}} where 1";
 		$criteria = new CDbCriteria();
@@ -96,14 +96,13 @@ class CountController extends GController
 				. "left join {{group_info}} as g on u.group_id=g.id $where";
 		$result = Yii::app()->db->createCommand($sql)->queryAll();
 		$total = 0;
+		$resArr = array();
 		if($result){
 			$deptGrp = array();
 			foreach ($result as $k=>$v){
 				$deptGrp[] = $v['dname'].$v['gname'];
 			}
 			$deptGrp = array_unique($deptGrp);
-			$resArr = array();
-
 			foreach ($deptGrp as $k1 => $v1) {
 				$resArr[$v1]['amount'] = 0;
 				$resArr[$v1]['number'] = 0;
