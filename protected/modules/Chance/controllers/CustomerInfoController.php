@@ -194,13 +194,13 @@ class CustomerInfoController extends GController {
                 if ($noteinfo->dial_id > 0) {
                     $dialdetail = DialDetail::model()->findByPk($noteinfo->dial_id);
                     //获取通知录音路径，通知时长 
-//                        $uid = UnCall::getUid($dialdetail->extend_no);
-//                        $dial_long = UnCall::getDialLength($uid);
-//                        $record_path = UnCall::getRecord($uid);
-//                        $dialdetail->uid=$uid;
-//                        $dialdetail->dial_long=$dial_long;
-//                        $dialdetail->record_path=$record_path;
-//                        $dialdetail->save();
+                        $uid = UnCall::getUid($dialdetail->extend_no);
+                        $dial_long = UnCall::getDialLength($uid);
+                        $record_path = UnCall::getRecord($uid);
+                        $dialdetail->uid=$uid;
+                        $dialdetail->dial_long=$dial_long;
+                        $dialdetail->record_path=$record_path;
+                        $dialdetail->save();
                 }
             }
             //加载页面数据

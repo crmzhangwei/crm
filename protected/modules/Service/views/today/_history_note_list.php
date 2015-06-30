@@ -20,21 +20,15 @@ $this->widget('GGridView', array(
         array('name' => 'next_contact', 'value' => 'date("Y-m-d",$data->next_contact)'),
         array(
             'class' => 'CButtonColumn',
-            'template' => '{play} {download} {view}',
+            'template' => '{play} {view}',
             'header' => '操作',
             'buttons' => array(
                 'play' => array(
-                    'label' => '播放',
+                    'label' => '播放和下载',
                     'url' => '',
                     'imageUrl' => '',
-                    'options' => array('class' => 'btn btn-info btn-minier tooltip-info', 'onclick'=>'playit(this)'),
-                ),
-                'download' => array(
-                    'label' => '下载',
-                    'url' => 'Yii::app()->controller->createUrl("service/download",array("dial_id"=>$data->dial_id))',
-                    'imageUrl' => '',
-                    'options' => array('class' => 'btn btn-info btn-minier tooltip-info', 'target' => '_blank'),
-                ),
+                    'options' => array('class' => 'btn btn-info btn-minier tooltip-info', 'onclick'=>'playAndDown(this)'),
+                ), 
                 'view' => array(
                     'label' => '查看',
                     'url' => '',
@@ -73,6 +67,16 @@ $this->widget('GGridView', array(
         echo 'url=' . "'$a'";
         ?> 
         public.dialog('播放录音', url + '&id=' + note_id);
+    }
+    function playAndDown(obj)
+    { 
+        var trindex = $(obj).parents('tr').index();
+        var note_id = $('#select_' + trindex).val();
+        var url;
+        <?php $a = Yii::app()->createurl('Service/service/play2');
+        echo 'url=' . "'$a'";
+        ?> 
+        public.dialog('播放和下载录音', url + '&id=' + note_id);
     }
      function viewit(obj)
     { 

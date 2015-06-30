@@ -375,6 +375,22 @@ class ServiceController extends GController {
             readfile($file);
         }
     }
+    /**
+     * 播放下载
+     * @param type $id
+     */
+    public function actionPlay2($id){
+        $noteinfo = NoteInfo::model()->findByPk($id);
+        $playurl='';
+        if($noteinfo->dial_id>0){
+           $dialdetail = DialDetail::model()->findByPk($noteinfo->dial_id);
+           if (!empty($dialdetail->record_path)) {
+                $uncall = Yii::app()->params['UNCALL'];
+                $playurl = $uncall["playurl"].$dialdetail->record_path;  
+            }
+        } 
+        $this->renderPartial("playAndDown", array('playurl' => $playurl)); 
+    }
 
     /**
      * 查看小记

@@ -132,7 +132,7 @@ class UnCall {
      */
     public static function getDialLength($uid) {
         $duration = 0;
-        $result = Yii::app()->db2->createCommand("select duration from {{cdr}} where uniqueid=:uniqueid")->queryRow(TRUE, array(":uniqueid" => $uid));
+        $result = Yii::app()->db3->createCommand("select duration from {{cdr}} where uniqueid=:uniqueid")->queryRow(TRUE, array(":uniqueid" => $uid));
         if (!empty($result) && is_array($result)) {
             $duration = $result['duration'];
         }

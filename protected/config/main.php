@@ -120,6 +120,7 @@ return array(
                 ),
                 'UNCALL'=>array(
                     'webservice'=>'http://192.168.1.200/uncall_api/index.php?wsdl',
+                    'playurl'=>'http://192.168.1.200/outbound/index.php/RecordingAction/index.php?m=Public&a=record&uniqueid=',
                 ),
 	),
         //短信服务商配置

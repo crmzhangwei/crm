@@ -391,4 +391,8 @@ class FinanceController extends GController {
         echo "</pre>";
         echo $ret['duration'];
     }
+    
+    public function actionTest7(){
+        $this->render("test");
+    }
 }
