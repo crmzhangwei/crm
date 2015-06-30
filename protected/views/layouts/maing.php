@@ -84,8 +84,8 @@
                     <div class="footer-inner">
                         <div class="footer-content">
                             <span class="bigger-120">
-                                <span class="blue bolder"><?php echo Yii::powered(); ?></span>
-                                Application &copy; 2013-<?php echo date('Y'); ?>
+                                <span class="blue bolder">广明发科技</span>
+                                 &copy; 2013-<?php echo date('Y'); ?>
                             </span>
                             &nbsp; &nbsp;
                         </div>
