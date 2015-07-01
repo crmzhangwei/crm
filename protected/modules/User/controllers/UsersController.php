@@ -38,7 +38,7 @@ class UsersController extends GController
 		$user_info['group_arr'] = Userinfo::getGroupById($user_info['dept_id']);
 		$user_info['user_arr'] = Userinfo::getUserbygidanddid($user_info['group_id'],$user_info['dept_id']);	
                 $deptArr = Userinfo::getDept();
-		$deptArr = array_merge(array('0'=>'--请选择部门--'), $deptArr);
+		$deptArr = array('0'=>'--请选择部门--') + $deptArr;
 		if(isset($_POST['Users']))
 		{
 			$model->attributes=$_POST['Users'];
@@ -114,7 +114,7 @@ class UsersController extends GController
                          exit; 
 		}
                 $deptArr = Userinfo::getDept();
-		$deptArr = array_merge(array('0'=>'--请选择部门--'), $deptArr);
+		$deptArr = array('0'=>'--请选择部门--') + $deptArr;
 		$this->renderPartial('update',array(
 			'model'=>$model,
                         'deptArr'=>$deptArr,

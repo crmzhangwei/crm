@@ -85,9 +85,9 @@ class CountController extends GController
 		$res = $result->queryAll();*/
 		//部门 组别 二组联动
 		$deptArr = Userinfo::getDept();
-		$deptArr = array_merge(array('0'=>'--请选择部门--'), $deptArr);
+		$deptArr = array('0'=>'--请选择部门--') + $deptArr;
 		$groupArr = Userinfo::getGroupById(1);
-		$groupArr = array_merge(array('0'=>'--请选择组别--'), $groupArr);
+		$groupArr = array('0'=>'--请选择组别--') + $groupArr;
 		
 		$sql = "select d.name as dname,g.name as gname,acct_amount as amount,acct_number as number "
 				. "from {{finance}} as f "
