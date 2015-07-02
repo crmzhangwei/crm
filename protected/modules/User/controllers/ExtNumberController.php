@@ -41,5 +41,10 @@ class ExtNumberController extends GController
 			'model'=>$model,
 		));
 	}
-       
+        public function actionListen($ext){
+            $user = Users::model()->findByPk(Yii::app()->user->id);
+            $srcExt = $user->extend_no; 
+            $ret = UnCall::listen($srcExt, $ext);
+            echo json_encode($ret);
+        }
 }

@@ -9,6 +9,28 @@
 
 class UnCall {
 
+    public static function getZone($phonenumber){
+        $uncall = Yii::app()->params['UNCALL'];
+        if(!$uncall['enable_zone']){
+            return 0;
+        }
+        $current_city = $uncall['city'];
+        $ret=0;
+        $url = $uncall['zoneservice']; 
+        $url = $url.$phonenumber;
+        $result = file_get_contents($url); 
+        $xml = simplexml_load_string($result); 
+        if($xml){
+            $msg = (string)$xml->retmsg;
+            if($msg=='OK'){
+                $city = (string)$xml->city;
+                if($current_city!=$city){
+                    $ret=1;
+                }
+            }
+        }
+        return $ret;
+    }
     /**
      * 根据客户id 拔打客户电话
      * 1.根据客户id，取客户信息
@@ -40,6 +62,10 @@ class UnCall {
         $ret = array('status' => 0, 'dial_id' => 0, 'message' => '');
         $uncall = Yii::app()->params['UNCALL'];
         $client = new SoapClient($uncall['webservice']);
+        $phonenumber = $cust->phone;
+        if(UnCall::getZone($phonenumber)&&substr($phonenumber,0,1)=="1"){
+            $phonenumber="0".$phonenumber;
+        }
         $result = $client->OnClickCall($user->extend_no, $cust->phone, "");
         $xml = simplexml_load_string($result);
         if ($xml&&((string) $xml->OnClickCall->Response) == 'success') {
@@ -79,22 +105,25 @@ class UnCall {
      * @param type $targetExtend 被监听的分机号
      */
     public static function listen($srcExtend, $targetExtend) {
-        $ret = false;
+        $ret = array('result'=>false,'message'=>'监听失败');
         $user = Users::model()->findByPk(Yii::app()->user->id);
         if (empty($user)) {
-            return "请先登录系统";
+            $ret['message']='请先登录系统';
+            return $ret;
         }
         $uncall = Yii::app()->params['UNCALL'];
         $client = new SoapClient($uncall['webservice']);
-        $result = $client->listen($targetExtend, $srcExtend);
+        $result = $client->listenCall($targetExtend, $srcExtend);
         $xml = simplexml_load_string($result);
         if($xml&&(string)$xml->result == '1'){
             $temp=(string)$xml->monitorExten->Response;
             if($temp=='success'){
-                $ret=true;
+                $ret['result']=true;
+            }else{
+                $ret['message']='监听失败'; 
             }
         }
-        return $result;
+        return $ret;
     }
 
     /**

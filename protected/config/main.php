@@ -9,7 +9,7 @@ return array(
 	'basePath'=>dirname(__FILE__).DIRECTORY_SEPARATOR.'..',
 	'name'=>'客户关系管理系统',
 	// preloading 'log' component
-	'preload'=>array('log'),
+	'preload'=>array(),
         'language'=>'zh_cn',
 	// autoloading model and component classes
 	'import'=>array(
@@ -25,12 +25,12 @@ return array(
 		// uncomment the following to enable the Gii tool
 		'User',
 		'Customer',
-		'gii'=>array(
+		/*'gii'=>array(
 			'class'=>'system.gii.GiiModule',
 			'password'=>false,
 			// If removed, Gii defaults to localhost only. Edit carefully to taste.
 			'ipFilters'=>array('127.0.0.1','::1'),
-		),
+		),*/
         'Finance',
         'Custtype',
         'Dictionary',
@@ -121,6 +121,9 @@ return array(
                 'UNCALL'=>array(
                     'webservice'=>'http://192.168.1.200/uncall_api/index.php?wsdl',
                     'playurl'=>'http://192.168.1.200/outbound/index.php/RecordingAction/index.php?m=Public&a=record&uniqueid=',
+                    'zoneservice'=>'http://life.tenpay.com/cgi-bin/mobile/MobileQueryAttribution.cgi?chgmobile=',
+                    'city'=>'深圳',
+                    'enable_zone'=>true,
                 ),
 	),
         //短信服务商配置

@@ -273,7 +273,7 @@ class FinanceController extends GController {
         $userarr = array_merge(array($user_empty), $userarr);
         echo json_encode($userarr);
     }
-
+/*
     public function actionTest() {
         // $content="上周A股市场风格出现分化，在大盘蓝筹股的带动下主板市场屡创新高。面对不断冲高的大盘，市场的恐高心理也有所增加，业内人士认为，近期，在大盘加速冲刺阶段积累了巨量短线获利盘，市场面临巨大的技术性调整压力。当然，也有券商机构喊出，“牛市将持续三年到五年”上周A股市场风格出现分化上周A股市场风格出现分化，，。上周A股市场风格出现分化上周A股市场风格出现";
         //Utils::sendMessage("13536580119", $content,"post"); 
@@ -395,4 +395,8 @@ class FinanceController extends GController {
     public function actionTest7(){
         $this->render("test");
     }
+     public function actionTest8(){
+        $str = "0123";
+        echo substr($str,1,1);
+    }*/
 }
