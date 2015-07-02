@@ -84,7 +84,7 @@
                     <div class="footer-inner">
                         <div class="footer-content">
                             <span class="bigger-120">
-                                <span class="blue bolder">广明发科技</span>
+                                <span class="blue bolder">客户关系管理系统</span>
                                  &copy; 2013-<?php echo date('Y'); ?>
                             </span>
                             &nbsp; &nbsp;

@@ -81,8 +81,8 @@ $('.search-form form').submit(function(){
 		array('name' => 'qq', 'value' => 'substr_replace($data->qq,"****",3,4)'),
 		array('name'=>'category', 'value'=>array($this, 'get_category_text')),
 		array('name' => 'mail', 'value' => 'substr_replace($data->mail,"****",0,4)'),
-		'eno',
-		//array('name'=>'eno', 'value'=>array($this, 'get_eno_text')),
+		//'eno',
+		array('name'=>'eno', 'value'=>array($this, 'get_eno_text')),
 		array('name'=>'assign_eno', 'value'=>array($this, 'get_assign_text')),
 		array('name'=>'assign_time', 'value'=>array($this, 'get_assign_time'),),
 		/*array(
