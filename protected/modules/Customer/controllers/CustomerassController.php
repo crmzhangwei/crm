@@ -207,7 +207,7 @@ class CustomerassController extends GController
 	 * 	将时间戳格式化成日期格式
 	 */ 	
 	public function formatDate($data){
-		return $data->assign_eno ? date("Y-m-d",$data->assign_time) : '未分配';
+		return $data->assign_eno ? date("Y-m-d H:i:s",$data->assign_time) : '未分配';
 	}
 	/**
 	 * 	根据工号查用户名 

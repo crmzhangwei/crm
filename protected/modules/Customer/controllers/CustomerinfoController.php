@@ -312,7 +312,7 @@ class CustomerinfoController extends GController
 	}
 	
 	public function get_assign_time($data){
-		return $data->assign_time ? date("Y-m-d",$data->assign_time) : '未分配';
+		return $data->assign_time ? date("Y-m-d H:i:s",$data->assign_time) : '未分配';
 	}
 	/**
 	 *批量导入EXCEL模板文件下载

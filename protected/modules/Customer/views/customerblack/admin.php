@@ -68,8 +68,8 @@ $('.search-form form').submit(function(){
 		array('name' => 'phone', 'value' => 'substr_replace($data->phone,"****",3,4)'),
 		array('name' => 'qq', 'value' => 'substr_replace($data->qq,"****",3,4)'),
 		array('name' => 'mail', 'value' => 'substr_replace($data->mail,"****",0,4)'),
-		array('name'=>'assign_time', 'value'=>'date("Y-m-d",$data->assign_time)',),
-		array('name'=>'next_time', 'value'=>'date("Y-m-d",$data->assign_time)',),
+		array('name'=>'assign_time', 'value'=>'date("Y-m-d H:i:s",$data->assign_time)',),
+		array('name'=>'next_time', 'value'=>'date("Y-m-d H:i:s",$data->assign_time)',),
 		/*array(
 			'class'=>'CButtonColumn',
 						'deleteButtonOptions'=>array('style'=>'display:none'),

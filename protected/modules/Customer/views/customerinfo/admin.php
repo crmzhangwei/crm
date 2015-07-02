@@ -66,7 +66,7 @@ $('.search-form form').submit(function(){
 			array('class' => 'CCheckBoxColumn',
 				'name' => 'id',
 				'id' => 'select',
-				'selectableRows' => 2,
+				'selectableRows' => 0,
 				'headerTemplate' => '{item}',
 				'htmlOptions' => array(
 					'width' => '20',
@@ -101,7 +101,7 @@ $('.search-form form').submit(function(){
 			'header' => '操作', 
 			'template'=>'{upda} {delete}',
 			'htmlOptions' => array(
-				'width' => '80',
+				'width' => '50',
 				'style' => 'text-align:center',
 			),
 			'buttons'=>array(
