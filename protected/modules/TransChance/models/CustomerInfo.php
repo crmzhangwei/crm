@@ -158,6 +158,10 @@ class CustomerInfo extends CActiveRecord {
         if ($this->iskey) {
             $criteria->compare('iskey', $this->iskey);
         } 
+        if ($this->next_time) {
+            $iTime = strtotime($this->next_time);
+            $criteria->addCondition("tci.next_time=$iTime");
+        }
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
         ));

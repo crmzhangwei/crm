@@ -52,9 +52,7 @@ class CustomerInfo extends CActiveRecord {
     public function rules() {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
-        return array(
-            array('cust_name,shop_name,mail', 'required'),
-            array('mail', 'email'),
+        return array( 
             array('category, cust_type, iskey, status, creator', 'numerical', 'integerOnly' => true),
             array('cust_name, shop_name, corp_name, shop_url, shop_addr, datafrom, memo', 'length', 'max' => 100),
             array('phone, qq', 'length', 'max' => 20),
@@ -156,6 +154,10 @@ class CustomerInfo extends CActiveRecord {
         if ($this->iskey) {
             $criteria->compare('iskey', $this->iskey);
         }
+        if ($this->next_time) {
+            $iTime = strtotime($this->next_time);
+            $criteria->addCondition("next_time=$iTime");
+        }
         // $criteria->addCondition("eno = '".Yii::app()->user->identity->eno."'");
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
@@ -182,8 +184,7 @@ class CustomerInfo extends CActiveRecord {
         }
         if ($this->iskey) {
             $criteria->compare('iskey', $this->iskey);
-        }
-
+        } 
         // $criteria->addCondition("eno = '".Yii::app()->user->identity->eno."'");
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,

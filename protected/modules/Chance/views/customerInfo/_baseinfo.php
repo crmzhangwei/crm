@@ -28,8 +28,7 @@ function sendMessage(cust_id){
     public.dialog('发送短信', '<?= Yii::app()->createUrl('Service/service/message') ?>', {'cust_id':cust_id}, 900); 
 }
 function sendMail(cust_id){
-    alert(cust_id);
-    
+    window.open('http://exmail.qq.com/login');  
 }
 function changeCustType(obj){
     var value = $('#cust_type').val();
@@ -84,13 +83,13 @@ function changeCustType(obj){
             </tr>
             <tr>
                 <td nowrap="nowrap"><?php echo $form->labelEx($model,'qq'); ?></td>
-                <td> 
-                    <?php echo Utils::hideQq($model->qq); ?>
+                <td>  
+                   <?php echo $form->textField($model,'qq',array('size'=>30,'maxlength'=>20)); ?>
 		   <?php echo $form->error($model,'qq'); ?>
                 </td>
                 <td nowrap="nowrap"><?php echo $form->labelEx($model,'mail'); ?></td>
-                <td> 
-                    <?php echo Utils::hideEmail($model->mail); ?>
+                <td>  
+                    <?php echo $form->textField($model,'mail',array('size'=>60,'maxlength'=>50)); ?>
                     <?php echo CHtml::button("发邮件",array('onclick'=>'javascript:sendMail('.$model->id.')','class' => 'editNode btn btn-info btn-minier tooltip-info', 'data-placement' => "bottom")) ?>
 		    <?php echo $form->error($model,'mail'); ?></td>
             </tr>
