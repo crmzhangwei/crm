@@ -94,6 +94,7 @@ class DeptGroup extends CActiveRecord
             $cir->select = 'group_id';
             $cir->compare('dept_id', $dept_id);
             $groupobj = $this->findAll($cir);
+            $res=null;
             if($groupobj)
             {
                 $groupArr = array();
@@ -105,10 +106,15 @@ class DeptGroup extends CActiveRecord
                 {
                     $cir2 = new CDbCriteria;
                     $cir2->addInCondition('id', $groupArr);
-                    $res = CHtml::listData(GroupInfo::model()->findAll($cir2), 'id', 'name');
+                    $list = GroupInfo::model()->findAll($cir2);
+                    $empty = new GroupInfo();
+                    $empty->id=0;
+                    $empty->name="请选择组别";
+                    $list = array_merge(array($empty),$list);
+                    $res = CHtml::listData($list, 'id', 'name');
                 }
             }
-           return $dept_id&&$res?$res:array(0=>'请选择');
+           return $dept_id&&$res?$res:array(0=>'请选择组别');
         }
 
 	/**

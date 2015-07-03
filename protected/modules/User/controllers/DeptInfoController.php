@@ -34,6 +34,7 @@ class DeptInfoController extends GController
 		if(isset($_POST['DeptInfo']))
 		{
 			$model->attributes=$_POST['DeptInfo'];
+                        
 			if($model->save())
 			 Utils::showMsg (1, '部门增加成功!');
                          else
@@ -62,6 +63,10 @@ class DeptInfoController extends GController
 		if(isset($_POST['DeptInfo']))
 		{
 			$model->attributes=$_POST['DeptInfo'];
+                        if(!empty($model->parent_id)&&$model->parent_id==$model->id){
+                            Utils::showMsg (0, '上级部门不能等于当前部门!');
+                            exit;
+                        }
 			if($model->save())
 			   Utils::showMsg (1, '部门修改成功!');
                          else
@@ -141,4 +146,23 @@ class DeptInfoController extends GController
 			Yii::app()->end();
 		}
 	}
+        
+        public function get_parent_text($data){
+                $val = $data->parent_id;
+                $res = "";
+                if(!empty($val)){
+                    $dept = DeptInfo::model()->findByPk($val); 
+                    $res = $dept->name;
+                } 
+		return $res;
+        }
+        
+        public function getDeptList(){
+            $deptarr = DeptInfo::model()->findAll();
+            $empty = new DeptInfo();
+            $empty->id='';
+            $empty->name='请选择上级部门'; 
+            $list = array_merge(array($empty), $deptarr);
+            return CHtml::listData($list, 'id', 'name');
+        }
 }

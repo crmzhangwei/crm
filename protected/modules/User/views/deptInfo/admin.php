@@ -33,7 +33,8 @@ $this->widget('GGridView', array(
                    ),
                    ), 
 		'id',
-		'name',
+		'name', 
+                array('name'=>'parent_id', 'value'=>array($this, 'get_parent_text')),
 		array(
                     'class'=>'CButtonColumn',
                     'header' => '操作', 

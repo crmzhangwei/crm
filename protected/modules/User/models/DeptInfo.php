@@ -6,6 +6,7 @@
  * The followings are the available columns in table '{{dept_info}}':
  * @property string $id
  * @property string $name
+ * @property integer $parent_id
  */
 class DeptInfo extends CActiveRecord
 {
@@ -25,10 +26,11 @@ class DeptInfo extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
+			array('parent_id', 'numerical', 'integerOnly'=>true),
 			array('name', 'length', 'max'=>100),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, name', 'safe', 'on'=>'search'),
+			array('id, name, parent_id', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -51,6 +53,7 @@ class DeptInfo extends CActiveRecord
 		return array(
 			'id' => '主键',
 			'name' => '部门名称',
+			'parent_id' => '上级部门',
 		);
 	}
 
@@ -73,7 +76,7 @@ class DeptInfo extends CActiveRecord
 		$criteria=new CDbCriteria;
 
 		$criteria->compare('id',$this->id,true);
-		$criteria->compare('name',$this->name,true);
+		$criteria->compare('name',$this->name,true); 
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,

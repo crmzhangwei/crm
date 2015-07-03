@@ -387,8 +387,11 @@ class CustomerInfoController extends GController {
 
         $model = new CustomerInfo('search');
         $model->unsetAttributes();  // clear any default values
-        if (isset($_GET['CustomerInfo']))
+        if (isset($_GET['CustomerInfo'])){
             $model->attributes = $_GET['CustomerInfo'];
+            $model->cust_type_from=$_GET['CustomerInfo']['cust_type_from'];
+            $model->cust_type_to=$_GET['CustomerInfo']['cust_type_to'];
+        }
         $this->render('admin', array(
             'model' => $model,
         ));

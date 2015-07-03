@@ -25,12 +25,12 @@ return array(
 		// uncomment the following to enable the Gii tool
 		'User',
 		'Customer',
-		/*'gii'=>array(
+		 'gii'=>array(
 			'class'=>'system.gii.GiiModule',
 			'password'=>false,
 			// If removed, Gii defaults to localhost only. Edit carefully to taste.
 			'ipFilters'=>array('127.0.0.1','::1'),
-		),*/
+		), 
         'Finance',
         'Custtype',
         'Dictionary',

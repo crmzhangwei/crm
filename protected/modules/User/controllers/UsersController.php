@@ -94,8 +94,9 @@ class UsersController extends GController
 		$user_info['dept_id']  = $userinfo?$userinfo->dept_id:0;
 	        $user_info['name']     = $userinfo?$userinfo->username:0;
 		$user_info['id']     = $userinfo?$userinfo->id:0;
-		$user_info['group_arr'] = Userinfo::getGroupById($user_info['dept_id']);
-		$user_info['user_arr'] = Userinfo::getUserbygidanddid($user_info['group_id'],$user_info['dept_id']);	
+		$user_info['group_arr'] = array_merge(array(0=>'--请选择组别--'),Userinfo::getGroupById($user_info['dept_id']));
+                 
+		$user_info['user_arr'] = Userinfo::getAllUserbygidanddid($user_info['group_id'],$user_info['dept_id']);	
        
 		if(isset($_POST['Users']))
 		{
@@ -201,7 +202,7 @@ class UsersController extends GController
 	{
 		$gid = Yii::app()->request->getparam('gid');
                 $deptid = Yii::app()->request->getparam('deptid');
-		$userinfo = Userinfo::getUserbygidanddid($gid, $deptid);
+		$userinfo = Userinfo::getAllUserbygidanddid($gid, $deptid);
 		echo json_encode($userinfo);
 	}
 

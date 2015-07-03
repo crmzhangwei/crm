@@ -21,13 +21,19 @@
         <div class="col-xs-12"/>
 
         <div class="form-group">
-            <?php echo $form->labelEx($model, 'name', array('class' => 'col-sm-2 control-label no-padding-right')); ?>
+             <?php echo $form->labelEx($model, 'name', array('class' => 'col-sm-2 control-label no-padding-right')); ?>
              <?php echo $form->hiddenField($model, 'id') ?>
             <div class="col-sm-3 col-xs-12">
                 <?php echo $form->textField($model, 'name', array('size' => 10, 'maxlength' => 10, 'id' => "form-field-1", 'placeholder' => "", 'class' => "input-large")); ?>
 
-            </div>
+            </div> 
         </div>
+        <div class="form-group">
+             <?php echo $form->labelEx($model, 'parent_id', array('class' => 'col-sm-2 control-label no-padding-right')); ?>
+             <div class="col-sm-3 col-xs-12"> 
+                <?php echo $form->dropDownList($model, 'parent_id',$this->getDeptList()); ?> 
+            </div>
+        </div> 
         <div class="form-group">
             <label class="col-sm-3 col-xs-12 control-label"></label>
             <div class="col-sm-9">
