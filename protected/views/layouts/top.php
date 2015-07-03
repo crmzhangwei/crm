@@ -175,14 +175,14 @@
                                 <i class="ace-icon fa fa-cog"></i>
                                 Settings
                             </a>
-                        </li>
+                        </li>-->
 
                         <li>
-                            <a href="profile.html">
+                            <a href="javascript:void(0)" id="fa-user">
                                 <i class="ace-icon fa fa-user"></i>
-                                个人信息
+                                修改密码
                             </a>
-                        </li>-->
+                        </li>
 
                         <li class="divider"></li>
 
@@ -198,3 +198,12 @@
         </div>
     </div><!-- /.navbar-container -->
 </div>
+<script>
+    $(function ()
+    {
+        $('#fa-user').click(function ()
+        {
+            public.dialog('修改密码', '<?= Yii::app()->createUrl('site/updatepw') ?>')
+        })
+    })
+</script>

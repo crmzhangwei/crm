@@ -30,6 +30,7 @@ class Users extends CActiveRecord
         public $keyword;
         public $id;
         public $name;
+        public $newpass;
                        
         
 	/**
@@ -99,6 +100,7 @@ class Users extends CActiveRecord
 			'status' => '状态',
                         'pass_repeat'=>'重复密码',
                         'login_time'=>'最后登录时间',
+                        'newpass'=>'新密码',
 		);
 	}
 

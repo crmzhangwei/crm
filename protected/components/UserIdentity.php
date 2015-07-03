@@ -62,11 +62,7 @@ class UserIdentity extends CUserIdentity
                     $this->errorCode = self::ERROR_NONE;
                     }
                 }
-            if($this->username =='admin' && $this->pass =='admin') 
-            {
-                 $this->errorCode = self::ERROR_NONE;
-                 $this->_id = 'admin';
-            }
+          
             if($this->errorCode == self::ERROR_NONE)
             {
                 $param['user_id'] =  $this->_id;

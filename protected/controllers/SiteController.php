@@ -71,7 +71,35 @@ class SiteController extends GController
 		}
 		$this->render('contact',array('model'=>$model));
 	}
-
+        /**
+         * 修改密码
+         */
+        public function actionUpdatePW()
+        {
+            $model = Users::model()->findByPk(Yii::app()->user->id);
+            if(isset($_POST['Users']))
+            {
+                        if ($model->pass !== $model->encrypt($_POST['Users']['pass'])) {
+                           $model->addError('pass', '旧密码不正确');
+                        }else
+                        {
+                            $model->pass = $model->encrypt($_POST['Users']['newpass']);
+                        }
+			if(!$model->getErrors() && $model->save())
+                        {
+                             Utils::showMsg (1, '密码修改成功!');
+                        } 
+                        else
+                        {
+                            $error = $model->getErrors();
+                            $error = current($error);
+                            Utils::showMsg (0, "$error[0]");
+                        }
+                     Yii::app()->end;	
+            }
+            $model->pass = '';
+            $this->renderPartial('UpdatePW',array('model'=>$model));
+        }
 	/**
 	 * Displays the login page
 	 */
