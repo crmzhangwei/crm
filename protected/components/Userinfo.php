@@ -21,11 +21,11 @@ class Userinfo
 
 	public static function getUserbygid($gid, $deptid)
 	{
-            $where = $gid=='-1' ? "ismaster=1 and dept_id=$deptid and username<>'admin'" : "group_id=:id and ismaster<>1 and username<>'admin'";//-1为精英组
+            $where = $gid=='-1' ? "ismaster=1 and dept_id=$deptid and username<>'admin'" : " dept_id=:deptid and group_id=:id and ismaster<>1 and username<>'admin'";//-1为精英组
             $modelgroup = Yii::app()->db->createCommand()
                 ->select('eno, username, cust_num')
                 ->from('{{users}}')
-                ->where($where, array(':id'=>$gid))
+                ->where($where, array(':deptid'=>$deptid,':id'=>$gid))
                 ->queryAll();
 	    $Users = array();
 	    foreach ($modelgroup as $key => $value) {
