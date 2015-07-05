@@ -99,13 +99,14 @@ class DeptGroupController extends GController
             }
         }
         //var_dump($pids);
-        $insert = array_diff($pids,  $resArr);
+        $insert = is_array($pids)?array_diff($pids,  $resArr):'';
        
-        $noinsert = array_uintersect($pids, $resArr,"strcasecmp");  //求交集
+        $noinsert = is_array($pids)?array_uintersect($pids, $resArr,"strcasecmp"):'';  //求交集
         if($noinsert != $resArr)
         {
             $cir = new CDbCriteria;
             $cir ->addCondition( "dept_id = $roleid");
+            if($noinsert)
             $cir->addnotInCondition('group_id', $noinsert);
             $res1 = DeptGroup::model()->deleteAll($cir);
           
