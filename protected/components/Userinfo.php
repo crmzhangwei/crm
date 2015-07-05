@@ -141,5 +141,18 @@ class Userinfo
 	public static function getEnoByName($name){
 		return Users::model()->find('name=:name', array(':name'=>$name));
 	}
- 
+
+	/**
+	 *查询用户新分资源
+	 */
+	public static function newResource($eno){
+		if($eno){
+			$nSource = Yii::app()->db->createCommand("select id from `{{tip_info}}` where eno=:eno")->queryAll(TRUE,array(":eno"=>$eno));
+			$cusId = '';
+			foreach ($nSource as $k2 => $v2){
+				$cusId .= $v2['id'].',';
+			}
+			return $cusId ? trim($cusId, ',') : '';
+		}
+	}
 }
