@@ -73,7 +73,7 @@
             </div>
              <label class="col-sm-2 control-label no-padding-right">组别：</label>
             <div class="col-sm-3">
-                   <?php echo $form->dropDownList($model, 'group_id',  DeptGroup::model()->getByDeptId($model->dept_id),array('id'=>'groupinfo')); ?>
+                   <?php echo $form->dropDownList($model, 'group_id',  DeptGroup::model()->getByDeptId($user_info['group_id']),array('id'=>'groupinfo')); ?>
             </div>
         </div>
 
