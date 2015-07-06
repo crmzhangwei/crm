@@ -21,11 +21,11 @@ class Userinfo
 
 	public static function getUserbygid($gid, $deptid)
 	{
-            $where = $gid=='-1' ? "ismaster=1 and dept_id=$deptid and username<>'admin'" : "group_id=:id and ismaster<>1 and username<>'admin'";//-1为精英组
+            $where = $gid=='-1' ? "ismaster=1 and dept_id=$deptid and username<>'admin'" : " dept_id=:deptid and group_id=:id and ismaster<>1 and username<>'admin'";//-1为精英组
             $modelgroup = Yii::app()->db->createCommand()
                 ->select('eno, username, cust_num')
                 ->from('{{users}}')
-                ->where($where, array(':id'=>$gid))
+                ->where($where, array(':deptid'=>$deptid,':id'=>$gid))
                 ->queryAll();
 	    $Users = array();
 	    foreach ($modelgroup as $key => $value) {
@@ -161,5 +161,18 @@ class Userinfo
 	public static function getEnoByName($name){
 		return Users::model()->find('name=:name', array(':name'=>$name));
 	}
- 
+
+	/**
+	 *查询用户新分资源
+	 */
+	public static function newResource($eno){
+		if($eno){
+			$nSource = Yii::app()->db->createCommand("select id from `{{tip_info}}` where eno=:eno")->queryAll(TRUE,array(":eno"=>$eno));
+			$cusId = '';
+			foreach ($nSource as $k2 => $v2){
+				$cusId .= $v2['id'].',';
+			}
+			return $cusId ? trim($cusId, ',') : '';
+		}
+	}
 }

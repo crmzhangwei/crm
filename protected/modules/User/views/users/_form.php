@@ -97,7 +97,9 @@
 		     endif;?>
 
 		<?php if($model->isNewRecord):?>
+
 		<select id='userinfo' name="Users[manager_id]" onchange="enoval(this)">	
+
 			<option value ="0">---请选择人员---</option>
 		</select>
 		<?php else: 
@@ -106,11 +108,7 @@
             </div> 
             </div> 
         </div>
-        <script>
-           $('#selectBoss').click(function(){
-               $("#sle").show();
-           })
-        </script>
+ 
          <div class="form-group" id='sle' style="display:none;">
              <label class="col-sm-2 control-label no-padding-right"></label>
             

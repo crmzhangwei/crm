@@ -31,6 +31,7 @@ class CustomerInfo extends CActiveRecord
 	public $keyword;
 	public $searchtype;
 	public $oldEno;	//更新客户信息时会用到
+	public $customerId; //新分资源弹窗会用到
 	/**
 	 * @return string the associated database table name
 	 */
@@ -53,7 +54,7 @@ class CustomerInfo extends CActiveRecord
 			array('mail', 'email', 'allowEmpty'=>true, 'message'=>'邮箱不正确'),
 			array('phone, qq', 'check_contact'),
 			array('mail', 'length', 'max'=>50),
-			array('oldEno, keyword, shop_name, corp_name, shop_url, shop_addr, datafrom, memo,searchtype', 'safe'),
+			array('oldEno, keyword, shop_name, corp_name, shop_url, shop_addr, datafrom, memo, searchtype, customerId', 'safe'),
 			array('id, cust_name, shop_name, corp_name, shop_url, shop_addr, phone, qq, mail, datafrom, category, cust_type, eno, assign_eno, assign_time, next_time, memo, create_time, creator', 'safe', 'on'=>'search'),
 		);
 	}
@@ -147,29 +148,31 @@ class CustomerInfo extends CActiveRecord
 		$criteria->compare('create_time',$this->create_time);
 		$criteria->compare('creator',$this->creator);
 		$criteria->addCondition("`status` <>'2'");  
-
+		if($this->customerId){
+			$criteria->addCondition("id in({$this->customerId})"); //查询条件 
+		}
 		if ($this->keyword) {
-                    switch ($this->searchtype) {
-                        case 1:
-                            $criteria->addCondition("cust_name like :keyword");
-                            $criteria->params[':keyword'] = "%{$this->keyword}%";
-                            break;
-                        case 2:
-                            $criteria->addCondition("shop_name like :keyword");
-                            $criteria->params[':keyword'] = "%{$this->keyword}%";
-                            break;
-                        case 3:
-                            $criteria->addCondition("corp_name like :keyword");
-                            $criteria->params[':keyword'] = "%{$this->keyword}%";
-                            break;
-                        case 4:
-                            $criteria->compare('phone', $this->keyword, true);
-                            break;
-                        case 5:
-                            $criteria->compare('qq', $this->keyword, true);
-                            break;
-                    }
-                 }
+			switch ($this->searchtype) {
+				case 1:
+					$criteria->addCondition("cust_name like :keyword");
+					$criteria->params[':keyword'] = "%{$this->keyword}%";
+					break;
+				case 2:
+					$criteria->addCondition("shop_name like :keyword");
+					$criteria->params[':keyword'] = "%{$this->keyword}%";
+					break;
+				case 3:
+					$criteria->addCondition("corp_name like :keyword");
+					$criteria->params[':keyword'] = "%{$this->keyword}%";
+					break;
+				case 4:
+					$criteria->compare('phone', $this->keyword, true);
+					break;
+				case 5:
+					$criteria->compare('qq', $this->keyword, true);
+					break;
+			}
+		}
 
 
         return new CActiveDataProvider($this, array(

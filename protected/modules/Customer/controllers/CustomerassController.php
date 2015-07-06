@@ -95,6 +95,19 @@ class CustomerassController extends GController
 					}
 				}
 				///////////////////////////////////////////////////
+				///////////分配资源成功的同时向临时表中写入数据用于弹窗提醒用户///////////
+				if($model->ids){
+					$sArr = explode(',', $model->ids);
+					$sql3 = "insert into {{tip_info}} value ";
+					$sqlstr = '';
+					foreach ($sArr as $k5 => $v5){
+						$sqlstr .= '('."$v5".','."'$eno'".')'.',';
+					}
+					$sqlstr = trim($sqlstr, ',');
+					$sql5 = $sql3.$sqlstr;	
+				}
+
+				////////////////////////////////////////////////////////////////////
 				$transaction = Yii::app()->db->beginTransaction();
 				try {
 					$res = Yii::app()->db->createCommand($sql)->execute();
@@ -104,7 +117,9 @@ class CustomerassController extends GController
 							Yii::app()->db->createCommand($v3)->execute();
 						}
 					}
+					Yii::app()->db->createCommand($sql5)->execute();/////新分资源弹窗提示用户
 					$transaction->commit();
+					
 					exit("<script>alert(\"恭喜你, 成功分配了".$assCount."个资源。\");javascript:history.go(-1);</script>");	
 				} catch (Exception $exc) {
 					$transaction->rollBack();//事务回滚

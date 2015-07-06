@@ -206,6 +206,11 @@ class CustomerinfoController extends GController
 	{
 		$model=new CustomerInfo('search');
 		$model->unsetAttributes();  // clear any default values
+		if(Yii::app()->request->getParam('customerId')){
+			$model->customerId = Yii::app()->request->getParam('customerId');
+			//Yii::app()->db->createCommand()->delete('{{tip_info}}',"id in( {$model->customerId} )"); 
+		}
+		
 		if(isset($_GET['CustomerInfo']))
 			$model->attributes=$_GET['CustomerInfo'];
 
@@ -347,5 +352,10 @@ class CustomerinfoController extends GController
 		fclose($fp); */
 		header("Content-Disposition: attachment; filename=".basename($file_path));
 		readfile($file_path);
+	}
+	
+	public function actionDelTipInfo(){
+		$custId = Yii::app()->request->getParam('custId');
+		Yii::app()->db->createCommand()->delete('{{tip_info}}',"id in( $custId )"); 
 	}
 }
