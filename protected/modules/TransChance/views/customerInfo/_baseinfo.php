@@ -176,7 +176,7 @@ function changeCustType(obj){
                 </td>
                 <td><?php echo $form->labelEx($contract,'pay_time'); ?></td>
                 <td> 
-                    <?php echo $form->textField($contract,'pay_time',array('class'=>"Wdate", 'onClick'=>"WdatePicker()",'style'=>'height:30px;')); ?> 
+                    <?php echo $form->textField($contract,'pay_time',array('class'=>"Wdate", 'onClick'=>"WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})",'style'=>'height:30px;')); ?> 
                     <?php echo $form->error($contract,'pay_time'); ?>
                 </td>
             </tr> 
@@ -219,7 +219,7 @@ function changeCustType(obj){
                 </td>
                 <td><?php echo $form->labelEx($contract,'comm_pay_time'); ?></td>
                 <td> 
-                    <?php echo $form->textField($contract,'comm_pay_time',array('class'=>"Wdate", 'onClick'=>"WdatePicker()",'style'=>'height:30px;')); ?>
+                    <?php echo $form->textField($contract,'comm_pay_time',array('class'=>"Wdate", 'onClick'=>"WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})",'style'=>'height:30px;')); ?>
 		   <?php echo $form->error($contract,'comm_pay_time'); ?>
                 </td>
                 
@@ -231,7 +231,7 @@ function changeCustType(obj){
                 </td>
                 <td><?php echo $form->labelEx($contract,'create_time'); ?></td>
                 <td> 
-		   <?php echo date("Y-m-d",time()); ?> 
+		   <?php echo date("Y-m-d H:i:s",time()); ?> 
                 </td> 
             </tr>
     </table> 

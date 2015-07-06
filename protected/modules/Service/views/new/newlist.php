@@ -61,16 +61,16 @@ $this->widget('GGridView', array(
         ),
         'id',
         array('name' => 'cust_id', 'value' => '$data->cust_name'),
-        array('name' => 'cust_type', 'value' => '$data->cust_type_name'),
+        array('name' => 'cust_type', 'value' => array($this,'get_after_type_text')),
         'qq',
         'webchat',
         'ww',
         array('name' => 'category', 'value' => '$data->category_name'),
         'service_limit',
-        'eno',
-        'assign_eno',
+        array('name' => 'eno', 'value' => array($this,'get_eno_text')),
+        array('name' => 'assign_eno', 'value' => array($this,'get_eno_text')),
         array('name'=>'assign_time',  
-                    'value'=>'date("Y-m-d",$data->assign_time)',//格式化日期  
+                    'value'=>'date("Y-m-d H:i:s",$data->assign_time)',//格式化日期  
                 ),  
         array(
             'class' => 'CButtonColumn',

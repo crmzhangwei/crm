@@ -138,8 +138,7 @@ class CustomerInfoController extends GController {
                     $tran->cust_id = $id;
                     $tran->cust_type = 10;
                     $tran->assign_eno = $loginuser->eno;
-                    $tran->assign_time = time();
-                    $tran->assign_time = time();
+                    $tran->assign_time = time(); 
                     $tran->creator = $loginuser->id;
                     $tran->create_time = time();
                     $tran->save();
@@ -173,7 +172,8 @@ class CustomerInfoController extends GController {
                     }
                     //$noteinfo->last_time=$model->last_time;//仅用于比较
                     $noteinfo->next_contact = strtotime($noteinfo->next_contact);
-                    
+                    $noteinfo->cust_type=$newCustType;
+                    $noteinfo->lib_type="1";
                     $model->last_time=time();//最后联系时间等于今天
                     $noteinfo->setAttribute("eno", Yii::app()->user->id);
                     $noteinfo->setAttribute("create_time", time());
@@ -224,16 +224,16 @@ class CustomerInfoController extends GController {
             } else {
                 //回滚事务
                 $transaction->rollback();
-                $noteinfo->setAttribute("next_contact", date('Y-m-d', $noteinfo->next_contact));
+                $noteinfo->setAttribute("next_contact", date('Y-m-d H:i:s', $noteinfo->next_contact));
             }
         }
-        $model->setAttribute("create_time", date("Y-m-d", intval($model->getAttribute("create_time"))));
-        $model->setAttribute("assign_time", date("Y-m-d", intval($model->getAttribute("assign_time"))));
-        $model->setAttribute("next_time", date("Y-m-d", intval($model->getAttribute("next_time"))));
+        $model->setAttribute("create_time", date("Y-m-d H:i:s", intval($model->getAttribute("create_time"))));
+        $model->setAttribute("assign_time", date("Y-m-d H:i:s", intval($model->getAttribute("assign_time"))));
+        $model->setAttribute("next_time", date("Y-m-d H:i:s", intval($model->getAttribute("next_time"))));
         if ($model->visit_date == 0) {
-            $model->setAttribute("visit_date", date("Y-m-d", time()));
+            $model->setAttribute("visit_date", date("Y-m-d H:i:s", time()));
         } else {
-            $model->setAttribute("visit_date", date("Y-m-d", intval($model->getAttribute("visit_date"))));
+            $model->setAttribute("visit_date", date("Y-m-d H:i:s", intval($model->getAttribute("visit_date"))));
         }
         $sharedNote = NoteInfo::model();
         $sharedNote->setAttribute("cust_id", $model->id);
@@ -275,7 +275,7 @@ class CustomerInfoController extends GController {
                 //获取通知录音路径，通知时长 
             }
         }
-        $noteinfo->next_contact = date('Y-m-d', time());
+        $noteinfo->next_contact = date('Y-m-d H:i:s', time());
         $sharedNote = NoteInfo::model();
         $sharedNote->setAttribute("cust_id", $model->id);
         // $historyNote = NoteInfo::model();
@@ -404,7 +404,7 @@ class CustomerInfoController extends GController {
 
         $model = new CustomerInfo('search');
         $model->unsetAttributes();  // clear any default values
-        $begintime = strtotime(date('Y-m-d', time()));
+        $begintime = strtotime(date('Y-m-d H:i:s', time()));
         $endtime = $begintime + 86400;
         $model->begintime = $begintime;
         $model->endtime = $endtime;
@@ -454,9 +454,9 @@ class CustomerInfoController extends GController {
         }
     }
 
-    protected function genCustTypeArray() {
+    protected function genCustTypeArray() { 
         $custTypeArr = Utils::mapArray(CustType::findByType(1), 'type_no', 'type_name');
-        $custTypeArr[0] = '--请选择--';
+        $custTypeArr[-1] = '--请选择--';
         ksort($custTypeArr);
         return $custTypeArr;
     }
@@ -552,5 +552,42 @@ class CustomerInfoController extends GController {
         $list = $model->findAllBySql($sql);
         $this->render('assign', array('model' => $model, 'custlist' => $list));
     }
+    public function get_user_text($data) {
+        $val = $data->eno;
+        $enoArr = $this->getUserArr($val);
+        $res = isset($enoArr[$val]) ? $enoArr[$val] : $val;
+        return $res;
+    }
 
+    public function getUserArr($id) {
+        return CHtml::listData(Users::model()->findAll('id=:id', array(':id' => $id)), 'id', 'name');
+    }
+    public function get_eno_text($data) {
+        $val = $data->eno;
+        $enoArr = $this->getEnoArr($val);
+        $res = isset($enoArr[$val]) ? $enoArr[$val] : $val;
+        return $res;
+    }
+
+    public function getEnoArr($eno) {
+        return CHtml::listData(Users::model()->findAll('eno=:eno', array(':eno' => $eno)), 'eno', 'name');
+    }
+    public function get_sale_type_text($data) {
+        $val = $data->cust_type;
+        $lib_type = 1;
+        $typeArr = $this->gettypeArr($val,$lib_type);
+        $res = isset($typeArr[$val]) ? "【".$val."类】".$typeArr[$val] : $val;
+        return $res;
+    }
+    public function get_type_text($data) {
+        $val = $data->cust_type;
+        $lib_type = $data->lib_type;
+        $typeArr = $this->gettypeArr($val,$lib_type);
+        $res = isset($typeArr[$val]) ? "【".$val."类】".$typeArr[$val] : $val;
+        return $res;
+    }
+
+    public function gettypeArr($type_no,$lib_type) {
+        return CHtml::listData(CustType::model()->findAll('lib_type=:lib_type and type_no=:type_no', array(':type_no' => $type_no,'lib_type'=>$lib_type)), 'type_no', 'type_name');
+    }
 }

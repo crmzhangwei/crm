@@ -78,8 +78,8 @@ class FinanceController extends GController {
     public function actionUpdate($id) {
         $model = $this->loadModel($id);
         if ($model) {
-            $model->create_time = date('Y-m-d', $model->create_time);
-            $model->acct_time = date('Y-m-d', $model->acct_time);
+            $model->create_time = date('Y-m-d H:i:s', $model->create_time);
+            $model->acct_time = date('Y-m-d H:i:s', $model->acct_time);
             $user = Users::model()->findByPk($model->sale_user);
             $model->dept = $user->dept_id;
             $model->group = $user->group_id;
@@ -399,4 +399,19 @@ class FinanceController extends GController {
         $str = "0123";
         echo substr($str,1,1);
     }*/
+     public function actionTest8(){
+        echo "<pre>"; 
+        $result  = Userinfo::getAllChildUsersId(2);
+        $result[]='2';
+        $temp = array_chunk($result, 5);
+        $where ="";
+        foreach($temp as $t){
+            $str = implode(",", $t);
+            $where = $where." or id in (".$str.")";
+             
+        }
+        $where =  substr($where, 3);
+        echo $where;
+        echo "</pre>";
+    }
 }

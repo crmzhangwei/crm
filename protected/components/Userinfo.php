@@ -112,7 +112,27 @@ class Userinfo
                         if($temps!=null&&!empty($temps)){
                             $ret = array_merge($ret,$temps);
                         }
-                        
+	    }
+            return $ret;
+        }
+         /**
+         * 取出部门deptid及其下属部门列表
+         * @param type $deptid 部门id
+         * @return type Array
+         */
+        public static function getAllChildDeptId($deptid){
+            $dept = DeptInfo::model()->findByPk($deptid);
+            if(empty($dept)){
+                return null;
+            }
+            $ret = array();
+            $allData = Yii::app()->db->createCommand("select id from `c_dept_info` where parent_id = :parent_id")->queryAll(TRUE,array(":parent_id"=>$deptid));
+            foreach ($allData as $k => $v) {
+			$ret[] = $v['id'];
+                        $temps = UserInfo::getAllChildDeptId($v['id']); 
+                        if($temps!=null&&!empty($temps)){
+                            $ret = array_merge($ret,$temps);
+                        }
 	    }
             return $ret;
         }

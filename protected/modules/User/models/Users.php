@@ -16,6 +16,7 @@
  * @property integer $dept
  * @property integer $group
  * @property integer $ismaster
+ * @property integer $manager_id
  * @property integer $status
  * @property integer $cust_num
  * @property integer $extend_no
@@ -97,6 +98,7 @@ class Users extends CActiveRecord
 			'group_id' => '组别',
                         'extend_no'=>'分机号',
 			'ismaster' => '是否精英',
+			'manager_id' => '上级',
 			'status' => '状态',
                         'pass_repeat'=>'重复密码',
                         'login_time'=>'最后登录时间',

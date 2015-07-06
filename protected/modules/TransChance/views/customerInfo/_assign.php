@@ -41,7 +41,7 @@ Yii::app()->clientScript->registerScript('buttonA', "
             <tr>
                 <td width="10%"> 下次联系时间</td> 
                 <td> 
-                    <?php  echo '<input type="text" name="next_time" value="" class="Wdate" onclick="WdatePicker()" style="height:30px;" />'; ?>
+                     <input type="text" name="next_time" value="" class="Wdate" onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})" style="height:30px;" /> 
                 </td>
                 
             </tr> 

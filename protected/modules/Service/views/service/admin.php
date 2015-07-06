@@ -64,10 +64,10 @@ $this->widget('GGridView', array(
         'eno',
         'assign_eno',
         array('name' => 'assign_time',
-            'value' => 'date("Y-m-d",$data->assign_time)', //格式化日期  
+            'value' => 'date("Y-m-d H:i:s",$data->assign_time)', //格式化日期  
         ),
         array('name' => 'next_time',
-            'value' => 'date("Y-m-d",$data->next_time)', //格式化日期  
+            'value' => 'date("Y-m-d H:i:s",$data->next_time)', //格式化日期  
         ),
     ),
 ));

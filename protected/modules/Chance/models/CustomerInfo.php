@@ -141,7 +141,16 @@ class CustomerInfo extends CActiveRecord {
         $criteria = new CDbCriteria;
         $criteria->addInCondition("cust_type", array(0, 1, 2, 3, 4, 5, 7, 8));
         $criteria->addInCondition("status", array(0, 3));
-        $criteria->compare('eno', Yii::app()->session["user"]['eno']);  //只看到自己的客户
+        //只看到自己的客户,及下属客户
+        $user_arr = Userinfo::getAllChildUsersId(Yii::app()->user->id);
+        $user_arr[]=Yii::app()->user->id;
+        if(!empty($user_arr)&&count($user_arr)>0){
+            $wherestr = Utils::genUserCondition($user_arr);
+            if(!empty($wherestr)){
+               $criteria->addCondition(" exists (select 1 from {{users}} where eno=t.eno and $wherestr)") ; 
+            } 
+        }
+           
         if ($this->phone) {
             $criteria->compare('phone', $this->phone, true);
         }
@@ -155,8 +164,9 @@ class CustomerInfo extends CActiveRecord {
             $criteria->compare('iskey', $this->iskey);
         }
         if ($this->next_time) {
-            $iTime = strtotime($this->next_time);
-            $criteria->addCondition("next_time=$iTime");
+            $istartTime = strtotime($this->next_time);
+            $iendTime = $istartTime+86400;
+            $criteria->addBetweenCondition('next_time', $istartTime, $iendTime); 
         }
         // $criteria->addCondition("eno = '".Yii::app()->user->identity->eno."'");
         return new CActiveDataProvider($this, array(
@@ -172,7 +182,15 @@ class CustomerInfo extends CActiveRecord {
         $criteria = new CDbCriteria;
         $criteria->addInCondition("cust_type", array(0, 1, 2, 3, 4, 5, 7, 8));
         $criteria->addInCondition("status", array(0, 3));
-        $criteria->compare('eno', Yii::app()->session["user"]['eno']);  //只看到自己的客户
+        //只看到自己的客户,及下属客户
+        $user_arr = Userinfo::getAllChildUsersId(Yii::app()->user->id);
+        $user_arr[]=Yii::app()->user->id;
+        if(!empty($user_arr)&&count($user_arr)>0){
+            $wherestr = Utils::genUserCondition($user_arr);
+            if(!empty($wherestr)){
+               $criteria->addCondition(" exists (select 1 from {{users}} where eno=t.eno and $wherestr)") ; 
+            } 
+        }   
         if ($this->phone) {
             $criteria->compare('phone', $this->phone, true);
         }
@@ -199,7 +217,15 @@ class CustomerInfo extends CActiveRecord {
         $criteria = new CDbCriteria;
         $criteria->addInCondition("cust_type", array(0, 1, 2, 3, 4, 5, 7, 8));
         $criteria->addInCondition("status", array(0, 3));
-        $criteria->compare('eno', Yii::app()->session["user"]['eno']);  //只看到自己的客户
+        //只看到自己的客户,及下属客户
+        $user_arr = Userinfo::getAllChildUsersId(Yii::app()->user->id);
+        $user_arr[]=Yii::app()->user->id;
+        if(!empty($user_arr)&&count($user_arr)>0){
+            $wherestr = Utils::genUserCondition($user_arr);
+            if(!empty($wherestr)){
+               $criteria->addCondition(" exists (select 1 from {{users}} where eno=t.eno and $wherestr)") ; 
+            } 
+        }
         if ($this->phone) {
             $criteria->compare('phone', $this->phone, true);
         }
@@ -217,6 +243,7 @@ class CustomerInfo extends CActiveRecord {
         }
         $curDate = date("Y-m-d", time());
         $iDate = strtotime($curDate);
+        $iDate = $iDate+86400;
         $criteria->addCondition("t.next_time<" . $iDate);
         // $criteria->addCondition("eno = '".Yii::app()->user->identity->eno."'");
         return new CActiveDataProvider($this, array(
@@ -264,10 +291,10 @@ class CustomerInfo extends CActiveRecord {
 
     public function toDate() {
         if ($this->next_time > 0) {
-            $this->next_time = date('Y-m-d', $this->next_time);
+            $this->next_time = date('Y-m-d H:i:s', $this->next_time);
         }
         if ($this->visit_date > 0) {
-            $this->visit_date = date('Y-m-d', $this->visit_date);
+            $this->visit_date = date('Y-m-d H:i:s', $this->visit_date);
         }
     }
 

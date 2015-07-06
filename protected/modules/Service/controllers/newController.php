@@ -34,18 +34,18 @@ class newController extends GController {
         $aftermodel = AftermarketCustInfo::model()->findBySql($sql, array(':cust_id' => $id));
         $sql = "select * from {{contract_info}} where cust_id=:cust_id";
         $contractmodel = ContractInfo::model()->findBySql($sql, array(':cust_id' => $id));
-        $model->setAttribute("create_time", date("Y-m-d", $model->getAttribute("create_time")));
-        $model->setAttribute("assign_time", date("Y-m-d", $model->getAttribute("assign_time")));
-        $model->setAttribute("next_time", date("Y-m-d", $model->getAttribute("next_time"))); 
-        $model->setAttribute("last_time", date("Y-m-d", $model->getAttribute("last_time"))); 
-        $aftermodel->setAttribute("assign_time", date("Y-m-d", $aftermodel->getAttribute("assign_time")));
-        $aftermodel->setAttribute("next_time", date("Y-m-d", $aftermodel->getAttribute("next_time"))); 
-        $aftermodel->setAttribute("create_time", date("Y-m-d", $aftermodel->getAttribute("create_time"))); 
+        $model->setAttribute("create_time", date("Y-m-d H:i:s", $model->getAttribute("create_time")));
+        $model->setAttribute("assign_time", date("Y-m-d H:i:s", $model->getAttribute("assign_time")));
+        $model->setAttribute("next_time", date("Y-m-d H:i:s", $model->getAttribute("next_time"))); 
+        $model->setAttribute("last_time", date("Y-m-d H:i:s", $model->getAttribute("last_time"))); 
+        $aftermodel->setAttribute("assign_time", date("Y-m-d H:i:s", $aftermodel->getAttribute("assign_time")));
+        $aftermodel->setAttribute("next_time", date("Y-m-d H:i:s", $aftermodel->getAttribute("next_time"))); 
+        $aftermodel->setAttribute("create_time", date("Y-m-d H:i:s", $aftermodel->getAttribute("create_time"))); 
         $creator = Users::model()->findByPk($aftermodel->creator);
         $aftermodel->creator = $creator->getAttribute('eno'); 
-        $contractmodel->setAttribute("create_time", date("Y-m-d", $contractmodel->getAttribute("create_time")));
-        $contractmodel->setAttribute("comm_pay_time", date("Y-m-d", $contractmodel->getAttribute("comm_pay_time")));
-        $contractmodel->setAttribute("pay_time", date("Y-m-d", $contractmodel->getAttribute("pay_time")));
+        $contractmodel->setAttribute("create_time", date("Y-m-d H:i:s", $contractmodel->getAttribute("create_time")));
+        $contractmodel->setAttribute("comm_pay_time", date("Y-m-d H:i:s", $contractmodel->getAttribute("comm_pay_time")));
+        $contractmodel->setAttribute("pay_time", date("Y-m-d H:i:s", $contractmodel->getAttribute("pay_time")));
         $creator2 = Users::model()->findByPk($contractmodel->creator);
         $contractmodel->creator = $creator2->getAttribute('eno'); 
         $sharedNote = NoteInfo::model();
@@ -116,6 +116,8 @@ class newController extends GController {
                 $noteinfo->next_contact = strtotime($noteinfo->next_contact);
                 $aftermodel->next_time = $noteinfo->next_contact;
                 $model->next_time=$noteinfo->next_contact; 
+                $noteinfo->cust_type=$newCustType;
+                $noteinfo->lib_type="3";
                 $noteinfo->setAttribute("eno", Yii::app()->user->id);
                 $noteinfo->setAttribute("create_time", time());
                 $noteinfo->save();
@@ -168,21 +170,21 @@ class newController extends GController {
                 } 
             } else {
                 $transaction->rollback();
-                $noteinfo->setAttribute("next_contact", date("Y-m-d",$noteinfo->getAttribute("next_contact")));
+                $noteinfo->setAttribute("next_contact", date("Y-m-d H:i:s",$noteinfo->getAttribute("next_contact")));
             }
         } 
-        $model->setAttribute("create_time", date("Y-m-d", $model->getAttribute("create_time")));
-        $model->setAttribute("assign_time", date("Y-m-d", $model->getAttribute("assign_time")));
-        $model->setAttribute("next_time", date("Y-m-d", $model->getAttribute("next_time"))); 
-        $model->setAttribute("last_time", date("Y-m-d", $model->getAttribute("last_time"))); 
-        $aftermodel->setAttribute("assign_time", date("Y-m-d", $aftermodel->getAttribute("assign_time")));
-        $aftermodel->setAttribute("next_time", date("Y-m-d", $aftermodel->getAttribute("next_time"))); 
-        $aftermodel->setAttribute("create_time", date("Y-m-d", $aftermodel->getAttribute("create_time"))); 
+        $model->setAttribute("create_time", date("Y-m-d H:i:s", $model->getAttribute("create_time")));
+        $model->setAttribute("assign_time", date("Y-m-d H:i:s", $model->getAttribute("assign_time")));
+        $model->setAttribute("next_time", date("Y-m-d H:i:s", $model->getAttribute("next_time"))); 
+        $model->setAttribute("last_time", date("Y-m-d H:i:s", $model->getAttribute("last_time"))); 
+        $aftermodel->setAttribute("assign_time", date("Y-m-d H:i:s", $aftermodel->getAttribute("assign_time")));
+        $aftermodel->setAttribute("next_time", date("Y-m-d H:i:s", $aftermodel->getAttribute("next_time"))); 
+        $aftermodel->setAttribute("create_time", date("Y-m-d H:i:s", $aftermodel->getAttribute("create_time"))); 
         $creator = Users::model()->findByPk($aftermodel->creator);
         $aftermodel->creator = $creator->getAttribute('eno'); 
-        $contractmodel->setAttribute("create_time", date("Y-m-d", $contractmodel->getAttribute("create_time")));
-        $contractmodel->setAttribute("comm_pay_time", date("Y-m-d", $contractmodel->getAttribute("comm_pay_time")));
-        $contractmodel->setAttribute("pay_time", date("Y-m-d", $contractmodel->getAttribute("pay_time")));
+        $contractmodel->setAttribute("create_time", date("Y-m-d H:i:s", $contractmodel->getAttribute("create_time")));
+        $contractmodel->setAttribute("comm_pay_time", date("Y-m-d H:i:s", $contractmodel->getAttribute("comm_pay_time")));
+        $contractmodel->setAttribute("pay_time", date("Y-m-d H:i:s", $contractmodel->getAttribute("pay_time")));
         $creator2 = Users::model()->findByPk($contractmodel->creator);
         $contractmodel->creator = $creator2->getAttribute('eno'); 
         $sharedNote = NoteInfo::model();
@@ -455,5 +457,42 @@ class newController extends GController {
         $userarr = array_merge(array($user_empty), $userarr);
         echo json_encode($userarr);
     }
+    public function get_after_type_text($data) {
+        $val = $data->cust_type;
+        $lib_type = 3;
+        $typeArr = $this->gettypeArr($val,$lib_type);
+        $res = isset($typeArr[$val]) ? "【".$val."类】".$typeArr[$val] : $val;
+        return $res;
+    }
+    public function get_type_text($data) {
+        $val = $data->cust_type;
+        $lib_type = $data->lib_type;
+        $typeArr = $this->gettypeArr($val,$lib_type);
+        $res = isset($typeArr[$val]) ? "【".$val."类】".$typeArr[$val] : $val;
+        return $res;
+    }
 
+    public function gettypeArr($type_no,$lib_type) {
+        return CHtml::listData(CustType::model()->findAll('lib_type=:lib_type and type_no=:type_no', array(':type_no' => $type_no,'lib_type'=>$lib_type)), 'type_no', 'type_name');
+    }
+    public function get_eno_text($data) {
+        $val = $data->eno;
+        $enoArr = $this->getEnoArr($val);
+        $res = isset($enoArr[$val]) ? $enoArr[$val] : $val;
+        return $res;
+    }
+
+    public function getEnoArr($eno) {
+        return CHtml::listData(Users::model()->findAll('eno=:eno', array(':eno' => $eno)), 'eno', 'name');
+    }
+    public function get_user_text($data) {
+        $val = $data->eno;
+        $enoArr = $this->getUserArr2($val);
+        $res = isset($enoArr[$val]) ? $enoArr[$val] : $val;
+        return $res;
+    }
+
+    public function getUserArr2($id) {
+        return CHtml::listData(Users::model()->findAll('id=:id', array(':id' => $id)), 'id', 'name');
+    }
 }
