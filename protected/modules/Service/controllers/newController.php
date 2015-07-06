@@ -116,6 +116,7 @@ class newController extends GController {
                 $noteinfo->next_contact = strtotime($noteinfo->next_contact);
                 $aftermodel->next_time = $noteinfo->next_contact;
                 $model->next_time=$noteinfo->next_contact; 
+                $noteinfo->cust_type=$newCustType;
                 $noteinfo->setAttribute("eno", Yii::app()->user->id);
                 $noteinfo->setAttribute("create_time", time());
                 $noteinfo->save();
@@ -455,5 +456,14 @@ class newController extends GController {
         $userarr = array_merge(array($user_empty), $userarr);
         echo json_encode($userarr);
     }
+    public function get_type_text($data) {
+        $val = $data->cust_type;
+        $typeArr = $this->gettypeArr($val);
+        $res = isset($typeArr[$val]) ? "【".$val."类】".$typeArr[$val] : $val;
+        return $res;
+    }
 
+    public function gettypeArr($type_no) {
+        return CHtml::listData(CustType::model()->findAll('lib_type=2 and type_no=:type_no', array(':type_no' => $type_no)), 'type_no', 'type_name');
+    }
 }

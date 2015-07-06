@@ -39,6 +39,7 @@ DROP TABLE IF EXISTS `c_dept_info`;
 CREATE TABLE `c_dept_info` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键',
   `name` varchar(100) NOT NULL DEFAULT '' COMMENT '部门名称',
+  `parent_id` int  NULL COMMENT '上级部门',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -167,6 +168,7 @@ CREATE TABLE `c_note_info` (
   `dial_id` int(11) DEFAULT '0' COMMENT '电话拔打记录',
   `message_id` int(11) default '0' COMMENT '短信发送记录',
   `eno` int(11) NOT NULL default 0 COMMENT '工号',
+  `cust_type` varchar(5) NOT NULL default '' COMMENT '客户分类',
   `create_time` int(11) NOT NULL default 0 COMMENT '创建时间',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

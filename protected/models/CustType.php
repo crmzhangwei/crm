@@ -99,5 +99,9 @@ class CustType extends CActiveRecord {
     public static function findByType($type) {
         return CustType::model()->findAll('lib_type=:lib_type', array(":lib_type" => $type));
     }
-
+    public static function findByTypeAndNo($type,$typeno) {
+        $sql ="select * from {{cust_type}} where lib_type=:lib_type and type_no=:type_no";
+        return CustType::model()->findBySql($sql,array(":lib_type" => $type,"type_no"=>$typeno));
+        
+    }
 }

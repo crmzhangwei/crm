@@ -138,8 +138,7 @@ class CustomerInfoController extends GController {
                     $tran->cust_id = $id;
                     $tran->cust_type = 10;
                     $tran->assign_eno = $loginuser->eno;
-                    $tran->assign_time = time();
-                    $tran->assign_time = time();
+                    $tran->assign_time = time(); 
                     $tran->creator = $loginuser->id;
                     $tran->create_time = time();
                     $tran->save();
@@ -173,7 +172,7 @@ class CustomerInfoController extends GController {
                     }
                     //$noteinfo->last_time=$model->last_time;//仅用于比较
                     $noteinfo->next_contact = strtotime($noteinfo->next_contact);
-                    
+                    $noteinfo->cust_type=$newCustType;
                     $model->last_time=time();//最后联系时间等于今天
                     $noteinfo->setAttribute("eno", Yii::app()->user->id);
                     $noteinfo->setAttribute("create_time", time());
@@ -454,9 +453,9 @@ class CustomerInfoController extends GController {
         }
     }
 
-    protected function genCustTypeArray() {
+    protected function genCustTypeArray() { 
         $custTypeArr = Utils::mapArray(CustType::findByType(1), 'type_no', 'type_name');
-        $custTypeArr[0] = '--请选择--';
+        $custTypeArr[-1] = '--请选择--';
         ksort($custTypeArr);
         return $custTypeArr;
     }
@@ -552,5 +551,24 @@ class CustomerInfoController extends GController {
         $list = $model->findAllBySql($sql);
         $this->render('assign', array('model' => $model, 'custlist' => $list));
     }
+    public function get_eno_text($data) {
+        $val = $data->eno;
+        $enoArr = $this->getEnoArr($val);
+        $res = isset($enoArr[$val]) ? $enoArr[$val] : $val;
+        return $res;
+    }
 
+    public function getEnoArr($eno) {
+        return CHtml::listData(Users::model()->findAll('eno=:eno', array(':eno' => $eno)), 'eno', 'name');
+    }
+    public function get_type_text($data) {
+        $val = $data->cust_type;
+        $typeArr = $this->gettypeArr($val);
+        $res = isset($typeArr[$val]) ? "【".$val."类】".$typeArr[$val] : $val;
+        return $res;
+    }
+
+    public function gettypeArr($type_no) {
+        return CHtml::listData(CustType::model()->findAll('lib_type=1 and type_no=:type_no', array(':type_no' => $type_no)), 'type_no', 'type_name');
+    }
 }

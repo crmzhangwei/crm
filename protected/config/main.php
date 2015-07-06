@@ -9,7 +9,7 @@ return array(
 	'basePath'=>dirname(__FILE__).DIRECTORY_SEPARATOR.'..',
 	'name'=>'客户关系管理系统',
 	// preloading 'log' component
-	'preload'=>array(),
+	'preload'=>array('log'),
         'language'=>'zh_cn',
 	// autoloading model and component classes
 	'import'=>array(
@@ -68,7 +68,7 @@ return array(
 			// use 'site/error' action to display errors
 			//'errorAction'=>'site/error',
 		),
-                /*
+               
 		'log'=>array(
 			'class'=>'CLogRouter',
 			'routes'=>array(
@@ -83,7 +83,7 @@ return array(
 				),
 				
 			),
-		),*/
+		), 
 
 	),
 
@@ -92,7 +92,7 @@ return array(
 	'params'=>array(
 		// this is used in contact page
 		'adminEmail'=>'webmaster@example.com',
-                'items'=>  require_once '/menu.php', 
+                'items'=>  require_once 'menu.php', 
                 'SMS'=>array(
                     'url'=>'http://210.5.158.31:9011/hy/',
                     'uid'=>'50013',

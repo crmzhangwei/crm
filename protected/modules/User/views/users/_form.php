@@ -97,11 +97,11 @@
 		     endif;?>
 
 		<?php if($model->isNewRecord):?>
-		<select id='userinfo' name="users" onchange="enoval(this)">	
+		<select id='userinfo' name="Users[manager_id]" onchange="enoval(this)">	
 			<option value ="0">---请选择人员---</option>
 		</select>
 		<?php else: 
-		    echo CHtml::dropDownList('manager_id', $user_info['id'], $user_info['user_arr'], array('id'=>"userinfo",'onchange'=>"enoval(this)"));
+		    echo CHtml::dropDownList('Users[manager_id]', $user_info['id'], $user_info['user_arr'], array('id'=>"userinfo",'onchange'=>"enoval(this)"));
 		endif;?>
             </div> 
             </div> 
@@ -217,7 +217,7 @@
      function listgroup(obj)
     {
       	var deptid = $(obj).val();
-      	var groupStr = '<option value ="0">--请选择组--</option>';
+      	var groupStr = '<option value ="0">--请选择组别--</option>';
       	if (deptid == 0) {
             $('#groupinfo2').html(groupStr);
             $('#userinfo').html('<option value ="0">--请选择人员--</option>');

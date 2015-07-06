@@ -111,6 +111,7 @@ class todayController extends GController {
                 if ($model->iskey != $noteinfo->iskey) {
                     $model->iskey = $noteinfo->iskey;
                 }
+                $noteinfo->cust_type=$newCustType;
                 $noteinfo->next_contact = strtotime($noteinfo->next_contact);
                 $aftermodel->next_time = $noteinfo->next_contact;
                 $model->next_time=$noteinfo->next_contact;  
@@ -471,5 +472,14 @@ class todayController extends GController {
     public function actionDownload($dial_id) {
         
     }
+    public function get_type_text($data) {
+        $val = $data->cust_type;
+        $typeArr = $this->gettypeArr($val);
+        $res = isset($typeArr[$val]) ? "【".$val."类】".$typeArr[$val] : $val;
+        return $res;
+    }
 
+    public function gettypeArr($type_no) {
+        return CHtml::listData(CustType::model()->findAll('lib_type=2 and type_no=:type_no', array(':type_no' => $type_no)), 'type_no', 'type_name');
+    }
 }

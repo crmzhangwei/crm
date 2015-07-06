@@ -14,9 +14,13 @@ $this->widget('GGridView', array(
             'headerTemplate' => '{item}',
             'htmlOptions' => array('width' => '20'),
         ),
+        array('name' => 'cust_type',  'value'=>array($this, 'get_type_text')),
         'cust_info',
         'requirement',
         'service',
+        'dissent',
+        'next_followup',
+        'memo',
         array('name' => 'next_contact', 'value' => 'date("Y-m-d",$data->next_contact)'),
         array(
             'class' => 'CButtonColumn',

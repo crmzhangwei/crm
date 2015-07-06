@@ -8,7 +8,7 @@ return array(
 	'connectionString' => 'mysql:host=localhost;dbname=crm',
 	'emulatePrepare' => true,
 	'username' => 'root',
-	'password' => 'zhenai.123',
+	'password' => '564aaf',
 	'charset' => 'utf8',
 	'tablePrefix'=>'c_',
 );

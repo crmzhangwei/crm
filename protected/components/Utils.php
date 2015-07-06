@@ -105,8 +105,8 @@ class Utils {
         $message->setAttribute('creator', Yii::app()->user->id);
         $message->setAttribute('create_time', time());
         $message->setAttribute('status', $iret);
-        $message->setAttribute('memo',  Yii::app()->params['SMS_RETURN_CODE'][$iret]);
-        $message->save(); 
+        $message->setAttribute('memo', Yii::app()->params['SMS_RETURN_CODE'][$iret]);
+        $message->save();
         return $message;
     }
 
@@ -196,82 +196,94 @@ class Utils {
             header("location:" . $url);
         }
     }
+
     /**
      * 检查是否需要保存小记信息
      * @param type $noteinfo
      */
-    public static function isNeedSaveNoteInfo($noteinfo){ 
-        if($noteinfo['next_contact']!=''){
+    public static function isNeedSaveNoteInfo($noteinfo) {
+        if ($noteinfo['next_contact'] != '') {
             return true;
         }
-        if($noteinfo['cust_info']!=''){
+        if ($noteinfo['cust_info'] != '') {
             return true;
         }
-        if($noteinfo['requirement']!=''){ 
+        if ($noteinfo['requirement'] != '') {
             return true;
         }
-        if($noteinfo['service']!=''){
-           return true;
-        }
-        if($noteinfo['dissent']!=''){
+        if ($noteinfo['service'] != '') {
             return true;
         }
-        if($noteinfo['next_followup']!=''){
+        if ($noteinfo['dissent'] != '') {
             return true;
         }
-        if($noteinfo['memo']!=''){
+        if ($noteinfo['next_followup'] != '') {
             return true;
         }
-        if(intval($noteinfo['dial_id'])>0){
+        if ($noteinfo['memo'] != '') {
             return true;
         }
-        if(intval($noteinfo['message_id'])>0){
+        if (intval($noteinfo['dial_id']) > 0) {
+            return true;
+        }
+        if (intval($noteinfo['message_id']) > 0) {
             return true;
         }
         return false;
     }
 
-	public static function addWhere($where){
-		$whereStr = '';
-		foreach($where as $k=>$v){
-			if($v && !strpos($whereStr, 'where')){
-				if($k == 'stime'){
-					$v = strtotime($v);
-					$whereStr .= " where $k>='$v' and";
-				}
-				elseif($k == 'ftime'){
-					$v = strtotime($v);
-					$whereStr .= " where $k<='$v' and";
-				}
-				elseif($k == 'dept'){
-					$k = 'u.dept_id';
-					$whereStr .= " where $k='$v' and";
-				}
-				elseif($k == 'group'){
-					$k = 'u.group_id';
-					$whereStr .= " where $k='$v' and";
-				}
-			}
-			elseif($v && strpos($whereStr, 'where')){
-				if($k == 'stime'){
-					$v = strtotime($v);
-					$whereStr .= " $k='$v' and";
-				}
-				elseif($k == 'ftime'){
-					$v = strtotime($v);
-					$whereStr .= " $k='$v' and";
-				}
-				elseif($k == 'dept'){
-					$k = 'u.dept_id';
-					$whereStr .= " $k='$v' and";
-				}
-				elseif($k == 'group'){
-					$k = 'u.group_id';
-					$whereStr .= " $k='$v' and";
-				}
-			}
-		}
-		$whereStr  = $whereStr? trim($whereStr,' and') : '';
-		return $whereStr;
-	}
+    public static function addWhere($where) {
+        $whereStr = '';
+        foreach ($where as $k => $v) {
+            if ($v && !strpos($whereStr, 'where')) {
+                if ($k == 'stime') {
+                    $v = strtotime($v);
+                    $whereStr .= " where $k>='$v' and";
+                } elseif ($k == 'ftime') {
+                    $v = strtotime($v);
+                    $whereStr .= " where $k<='$v' and";
+                } elseif ($k == 'dept') {
+                    $k = 'u.dept_id';
+                    $whereStr .= " where $k='$v' and";
+                } elseif ($k == 'group') {
+                    $k = 'u.group_id';
+                    $whereStr .= " where $k='$v' and";
+                }
+            } elseif ($v && strpos($whereStr, 'where')) {
+                if ($k == 'stime') {
+                    $v = strtotime($v);
+                    $whereStr .= " $k='$v' and";
+                } elseif ($k == 'ftime') {
+                    $v = strtotime($v);
+                    $whereStr .= " $k='$v' and";
+                } elseif ($k == 'dept') {
+                    $k = 'u.dept_id';
+                    $whereStr .= " $k='$v' and";
+                } elseif ($k == 'group') {
+                    $k = 'u.group_id';
+                    $whereStr .= " $k='$v' and";
+                }
+            }
+        }
+        $whereStr = $whereStr ? trim($whereStr, ' and') : '';
+        return $whereStr;
+    }
+
+    public static function genUserCondition($user_arr) { 
+        $wherestr = "";
+        if(empty($user_arr)){
+            return '';
+        } 
+        $user_chunks = array_chunk($user_arr, 50);
+        $wherestr = "";
+        foreach ($user_chunks as $arr) {
+            $instr = implode(",", $arr);
+            $wherestr = $wherestr . " or id in( " . $instr . ")";
+        }
+        if(is_array($user_chunks)&&count($user_chunks)>0){
+             $wherestr = substr($wherestr, 3);
+        }
+        return $wherestr;
+    }
+
 }

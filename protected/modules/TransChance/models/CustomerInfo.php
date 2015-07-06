@@ -143,9 +143,17 @@ class CustomerInfo extends CActiveRecord {
         $criteria->join="join {{trans_cust_info}} tci ";
         $criteria->addInCondition("tci.cust_type", array(10,11,12,13,14,15,16));
         $criteria->addInCondition("t.status", array(0,3));
-        $criteria->select="t.id,tci.eno,t.cust_name,t.shop_name,t.corp_name,t.category,t.shop_addr,tci.assign_time,tci.assign_eno,tci.next_time";
+        $criteria->select="t.id,tci.eno,t.cust_name,t.shop_name,t.corp_name,t.category,t.shop_addr,tci.cust_type,tci.assign_time,tci.assign_eno,tci.next_time";
         $criteria->addCondition("t.id=tci.cust_id");
-        $criteria->compare('tci.eno', Yii::app()->session["user"]['eno']);  //只看到自己的客户
+        //只看到自己的客户,及下属客户
+        $user_arr = Userinfo::getAllChildUsersId(Yii::app()->user->id);
+        $user_arr[]=Yii::app()->user->id;
+        if(!empty($user_arr)&&count($user_arr)>0){
+            $wherestr = Utils::genUserCondition($user_arr);
+            if(!empty($wherestr)){
+               $criteria->addCondition(" exists (select 1 from {{users}} where eno=tci.eno and $wherestr)") ; 
+            } 
+        }
         if ($this->phone) {
             $criteria->compare('phone', $this->phone, true);
         }
@@ -176,9 +184,17 @@ class CustomerInfo extends CActiveRecord {
         $criteria->join="join {{trans_cust_info}} tci "; 
         $criteria->addInCondition("tci.cust_type", array(10,11,12,13,14,15,16));
         $criteria->addInCondition("t.status", array(0,3));
-        $criteria->select="t.id,tci.eno,t.cust_name,t.shop_name,t.corp_name,t.category,t.shop_addr,tci.assign_time,tci.assign_eno,tci.next_time";
+        $criteria->select="t.id,tci.eno,t.cust_name,t.shop_name,t.corp_name,t.category,t.shop_addr,tci.cust_type,tci.assign_time,tci.assign_eno,tci.next_time";
         $criteria->addCondition("t.id=tci.cust_id");
-        $criteria->compare('tci.eno', Yii::app()->session["user"]['eno']);  //只看到自己的客户
+        //只看到自己的客户,及下属客户
+        $user_arr = Userinfo::getAllChildUsersId(Yii::app()->user->id);
+        $user_arr[]=Yii::app()->user->id;
+        if(!empty($user_arr)&&count($user_arr)>0){
+            $wherestr = Utils::genUserCondition($user_arr);
+            if(!empty($wherestr)){
+               $criteria->addCondition(" exists (select 1 from {{users}} where eno=tci.eno and $wherestr)") ; 
+            } 
+        }
         if ($this->phone) {
             $criteria->compare('phone', $this->phone, true);
         }
@@ -207,9 +223,17 @@ class CustomerInfo extends CActiveRecord {
         $criteria->join="join {{trans_cust_info}} tci ";
         $criteria->addInCondition("tci.cust_type", array(10,11,12,13,14,15,16));
         $criteria->addInCondition("t.status", array(0,3));
-        $criteria->select="t.id,tci.eno,t.cust_name,t.shop_name,t.corp_name,t.category,t.shop_addr,tci.assign_time,tci.assign_eno,tci.next_time";
+        $criteria->select="t.id,tci.eno,t.cust_name,t.shop_name,t.corp_name,t.category,t.shop_addr,tci.cust_type,tci.assign_time,tci.assign_eno,tci.next_time";
         $criteria->addCondition("t.id=tci.cust_id");
-        $criteria->compare('tci.eno', Yii::app()->session["user"]['eno']);  //只看到自己的客户
+        //只看到自己的客户,及下属客户
+        $user_arr = Userinfo::getAllChildUsersId(Yii::app()->user->id);
+        $user_arr[]=Yii::app()->user->id;
+        if(!empty($user_arr)&&count($user_arr)>0){
+            $wherestr = Utils::genUserCondition($user_arr);
+            if(!empty($wherestr)){
+               $criteria->addCondition(" exists (select 1 from {{users}} where eno=tci.eno and $wherestr)") ; 
+            } 
+        }
         if ($this->phone) {
             $criteria->compare('phone', $this->phone, true);
         }

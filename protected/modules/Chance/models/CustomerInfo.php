@@ -141,7 +141,16 @@ class CustomerInfo extends CActiveRecord {
         $criteria = new CDbCriteria;
         $criteria->addInCondition("cust_type", array(0, 1, 2, 3, 4, 5, 7, 8));
         $criteria->addInCondition("status", array(0, 3));
-        $criteria->compare('eno', Yii::app()->session["user"]['eno']);  //只看到自己的客户
+        //只看到自己的客户,及下属客户
+        $user_arr = Userinfo::getAllChildUsersId(Yii::app()->user->id);
+        $user_arr[]=Yii::app()->user->id;
+        if(!empty($user_arr)&&count($user_arr)>0){
+            $wherestr = Utils::genUserCondition($user_arr);
+            if(!empty($wherestr)){
+               $criteria->addCondition(" exists (select 1 from {{users}} where eno=t.eno and $wherestr)") ; 
+            } 
+        }
+           
         if ($this->phone) {
             $criteria->compare('phone', $this->phone, true);
         }
@@ -172,7 +181,15 @@ class CustomerInfo extends CActiveRecord {
         $criteria = new CDbCriteria;
         $criteria->addInCondition("cust_type", array(0, 1, 2, 3, 4, 5, 7, 8));
         $criteria->addInCondition("status", array(0, 3));
-        $criteria->compare('eno', Yii::app()->session["user"]['eno']);  //只看到自己的客户
+        //只看到自己的客户,及下属客户
+        $user_arr = Userinfo::getAllChildUsersId(Yii::app()->user->id);
+        $user_arr[]=Yii::app()->user->id;
+        if(!empty($user_arr)&&count($user_arr)>0){
+            $wherestr = Utils::genUserCondition($user_arr);
+            if(!empty($wherestr)){
+               $criteria->addCondition(" exists (select 1 from {{users}} where eno=t.eno and $wherestr)") ; 
+            } 
+        }   
         if ($this->phone) {
             $criteria->compare('phone', $this->phone, true);
         }
@@ -199,7 +216,15 @@ class CustomerInfo extends CActiveRecord {
         $criteria = new CDbCriteria;
         $criteria->addInCondition("cust_type", array(0, 1, 2, 3, 4, 5, 7, 8));
         $criteria->addInCondition("status", array(0, 3));
-        $criteria->compare('eno', Yii::app()->session["user"]['eno']);  //只看到自己的客户
+        //只看到自己的客户,及下属客户
+        $user_arr = Userinfo::getAllChildUsersId(Yii::app()->user->id);
+        $user_arr[]=Yii::app()->user->id;
+        if(!empty($user_arr)&&count($user_arr)>0){
+            $wherestr = Utils::genUserCondition($user_arr);
+            if(!empty($wherestr)){
+               $criteria->addCondition(" exists (select 1 from {{users}} where eno=t.eno and $wherestr)") ; 
+            } 
+        }
         if ($this->phone) {
             $criteria->compare('phone', $this->phone, true);
         }

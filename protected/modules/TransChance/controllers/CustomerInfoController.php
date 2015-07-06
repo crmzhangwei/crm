@@ -167,6 +167,7 @@ class CustomerInfoController extends GController {
                     if ($model->iskey != $noteinfo->iskey) {
                         $model->iskey = $noteinfo->iskey;
                     }
+                    $noteinfo->cust_type=$newCustType;
                     $noteinfo->next_contact = strtotime($noteinfo->next_contact);
                     $model->last_time=time();//最后联系时间等于今天
                     $noteinfo->setAttribute("eno", Yii::app()->user->id);
@@ -553,5 +554,24 @@ class CustomerInfoController extends GController {
         $list = $model->findAllBySql($sql);
         $this->render('assign', array('model' => $model, 'custlist' => $list));
     }
+    public function get_eno_text($data) {
+        $val = $data->eno;
+        $enoArr = $this->getEnoArr($val);
+        $res = isset($enoArr[$val]) ? $enoArr[$val] : $val;
+        return $res;
+    }
 
+    public function getEnoArr($eno) {
+        return CHtml::listData(Users::model()->findAll('eno=:eno', array(':eno' => $eno)), 'eno', 'name');
+    }
+    public function get_type_text($data) {
+        $val = $data->cust_type;
+        $typeArr = $this->gettypeArr($val);
+        $res = isset($typeArr[$val]) ? "【".$val."类】".$typeArr[$val] : $val;
+        return $res;
+    }
+
+    public function gettypeArr($type_no) {
+        return CHtml::listData(CustType::model()->findAll('lib_type=2 and type_no=:type_no', array(':type_no' => $type_no)), 'type_no', 'type_name');
+    }
 }

@@ -399,4 +399,19 @@ class FinanceController extends GController {
         $str = "0123";
         echo substr($str,1,1);
     }*/
+     public function actionTest8(){
+        echo "<pre>"; 
+        $result  = Userinfo::getAllChildUsersId(2);
+        $result[]='2';
+        $temp = array_chunk($result, 5);
+        $where ="";
+        foreach($temp as $t){
+            $str = implode(",", $t);
+            $where = $where." or id in (".$str.")";
+             
+        }
+        $where =  substr($where, 3);
+        echo $where;
+        echo "</pre>";
+    }
 }

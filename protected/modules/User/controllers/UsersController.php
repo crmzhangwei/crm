@@ -41,7 +41,7 @@ class UsersController extends GController
 		$deptArr = array('0'=>'--请选择部门--') + $deptArr;
 		if(isset($_POST['Users']))
 		{
-			$model->attributes=$_POST['Users'];
+			$model->attributes=$_POST['Users']; 
                         $validate = json_decode(CActiveForm::validate($model)) ;
                         if($validate)
                         {
@@ -100,7 +100,7 @@ class UsersController extends GController
        
 		if(isset($_POST['Users']))
 		{
-			$model->attributes=$_POST['Users'];
+			$model->attributes=$_POST['Users']; 
 			if($model->save())
                         {
                              Utils::showMsg (1, '用户信息修改成功!');

@@ -18,6 +18,7 @@
  * @property integer $dial_id
  * @property integer $message_id
  * @property integer $eno
+ * @property integer $cust_type
  * @property integer $create_time
  */
 class NoteInfo extends CActiveRecord
@@ -84,6 +85,7 @@ class NoteInfo extends CActiveRecord
 			'dial_id' => '电话拔打记录',
 			'message_id' => '短信发送记录',
 			'eno' => '工号',
+                        'cust_type'=>'客户分类',
 			'create_time' => '创建时间',
                         'last_time'=>'最后联系时间',
 		);

@@ -247,7 +247,7 @@ DROP TABLE IF EXISTS `c_dept_info`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `c_dept_info` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键',
-  `name` varchar(100) NOT NULL DEFAULT '' COMMENT '部门名称',
+  `name` varchar(100) NOT NULL DEFAULT '' COMMENT '部门名称', 
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
