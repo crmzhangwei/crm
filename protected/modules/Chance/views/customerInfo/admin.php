@@ -39,7 +39,7 @@ $form = $this->beginWidget('CActiveForm', array(
     <?php echo $form->dropDownList($model, 'cust_type_from',$this->genCustTypeArray(), array('style' => "height:34px;")); ?>至
     <?php echo $form->dropDownList($model, 'cust_type_to', $this->genCustTypeArray(), array('style' => "height:34px;")); ?>
     安排联系时间:
-    <?php echo $form->textField($model,'next_time',array('class'=>"Wdate", 'onClick'=>"WdatePicker()",'style'=>'height:30px;')); ?>
+    <?php echo $form->textField($model,'next_time',array('class'=>"Wdate", 'onClick'=>"WdatePicker({dateFmt:'yyyy-MM-dd'})",'style'=>'height:30px;')); ?>
     <button class="btn btn-sm btn-primary" type="submit">
         <i class="icon-search"></i>
         搜 索
@@ -91,18 +91,18 @@ $this->widget('GGridView', array(
         array(
           'name'=>'assign_time',
           'type'=>'raw',
-          'value'=>'date("Y-m-d",$data->assign_time)',
+          'value'=>'date("Y-m-d H:i:s",$data->assign_time)',
         ),
         array(
           'name'=>'next_time',
           'header'=>'安排联系时间',
           'type'=>'raw',
-          'value'=>'date("Y-m-d",$data->next_time)',
+          'value'=>'date("Y-m-d H:i:s",$data->next_time)',
         ),
         array(
           'name'=>'last_time',
           'type'=>'raw',
-          'value'=>'date("Y-m-d",$data->last_time)',
+          'value'=>'date("Y-m-d H:i:s",$data->last_time)',
         ),
         'shop_addr',
         /*

@@ -18,9 +18,9 @@
                 </td> 
                 <td width="5%" nowrap="nowrap"><?php echo $form->labelEx($model,'begin_end_time'); ?></td>
                 <td width="5%" nowrap="nowrap">
-                     <?php echo $form->textField($model,'createtime_start',array('class'=>"Wdate", 'onClick'=>"WdatePicker()",'style'=>'height:30px;',)); ?>
+                     <?php echo $form->textField($model,'createtime_start',array('class'=>"Wdate", 'onClick'=>"WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})",'style'=>'height:30px;',)); ?>
                      to 
-                     <?php echo $form->textField($model,'createtime_end',array('class'=>"Wdate", 'onClick'=>"WdatePicker()",'style'=>'height:30px;')); ?>
+                     <?php echo $form->textField($model,'createtime_end',array('class'=>"Wdate", 'onClick'=>"WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})",'style'=>'height:30px;')); ?>
                 </td> 
                 <td width="10%" nowrap="nowrap" colspan="2" align="center"> 
                    <?php echo CHtml::submitButton('搜索',array('class' => 'btn btn-sm btn-primary')); ?>

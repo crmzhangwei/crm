@@ -54,9 +54,9 @@
                 </td>  
                 <td width="5%" nowrap="nowrap">时间段</td>
                 <td width="5%" nowrap="nowrap">
-                     <?php echo $form->textField($model,'acct_time_start',array('class'=>"Wdate", 'onClick'=>"WdatePicker()",'style'=>'height:30px;',)); ?>
+                     <?php echo $form->textField($model,'acct_time_start',array('class'=>"Wdate", 'onClick'=>"WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})",'style'=>'height:30px;',)); ?>
                       to 
-                     <?php echo $form->textField($model,'acct_time_end',array('class'=>"Wdate", 'onClick'=>"WdatePicker()",'style'=>'height:30px;')); ?>
+                     <?php echo $form->textField($model,'acct_time_end',array('class'=>"Wdate", 'onClick'=>"WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})",'style'=>'height:30px;')); ?>
                 </td> 
                 <td width="5%" nowrap="nowrap"><?php echo $form->dropDownList($model, "searchtype", array('1'=>'客户名称','2'=>'店铺名称','3'=>'客户电话')) ?></td>
                 <td width="10%" nowrap="nowrap">

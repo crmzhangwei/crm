@@ -96,7 +96,7 @@
             <tr>
                 <td width="10%"><?php echo $form->labelEx($model,'acct_time'); ?></td> 
                 <td>
-                   <?php echo $form->textField($model,'acct_time',array('class'=>"Wdate", 'onClick'=>"WdatePicker()",'style'=>'height:30px;')); ?>
+                   <?php echo $form->textField($model,'acct_time',array('class'=>"Wdate", 'onClick'=>"WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})",'style'=>'height:30px;')); ?>
 		   <?php echo $form->error($model,'acct_time'); ?>
                 </td>
             </tr>

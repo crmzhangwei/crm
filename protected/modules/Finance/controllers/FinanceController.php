@@ -78,8 +78,8 @@ class FinanceController extends GController {
     public function actionUpdate($id) {
         $model = $this->loadModel($id);
         if ($model) {
-            $model->create_time = date('Y-m-d', $model->create_time);
-            $model->acct_time = date('Y-m-d', $model->acct_time);
+            $model->create_time = date('Y-m-d H:i:s', $model->create_time);
+            $model->acct_time = date('Y-m-d H:i:s', $model->acct_time);
             $user = Users::model()->findByPk($model->sale_user);
             $model->dept = $user->dept_id;
             $model->group = $user->group_id;

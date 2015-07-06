@@ -21,7 +21,7 @@ $this->widget('GGridView', array(
         'dissent',
         'next_followup',
         'memo',
-        array('name' => 'next_contact', 'value' => 'date("Y-m-d",$data->next_contact)'),
+        array('name' => 'next_contact', 'value' => 'date("Y-m-d H:i:s",$data->next_contact)'),
         array(
             'class' => 'CButtonColumn',
             'template' => '{play} {view}',

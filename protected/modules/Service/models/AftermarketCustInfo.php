@@ -207,6 +207,7 @@ class AftermarketCustInfo extends CActiveRecord {
                 " left join {{contract_info}} ci on t.cust_id=ci.cust_id ";
         $curDate = date("Y-m-d", time());
         $iDate = strtotime($curDate);
+        $iDate = $iDate+86400;
         $criteria->addCondition("t.next_time<" . $iDate);
         $criteria->addInCondition("c.status", array(0, 3));
         //只看到自己的客户,及下属客户
@@ -270,8 +271,9 @@ class AftermarketCustInfo extends CActiveRecord {
                 " left join {{dic}} d on c.category=d.code and d.ctype='cust_category' " .
                 " left join {{contract_info}} ci on t.cust_id=ci.cust_id ";
         $curDate = date("Y-m-d", time());
-        $iDate = strtotime($curDate);
-        $criteria->addCondition(" t.next_time=" . $iDate);
+        $istartTime = strtotime($curDate);
+        $iendTime = $istartTime+86400;
+        $criteria->addBetweenCondition("t.next_time", $istartTime, $iendTime);
         $criteria->addInCondition("c.status", array(0, 3));
         //只看到自己的客户,及下属客户
         $user_arr = Userinfo::getAllChildUsersId(Yii::app()->user->id);

@@ -70,7 +70,7 @@ $this->widget('GGridView', array(
         array('name' => 'eno', 'value' => array($this,'get_eno_text')),
         array('name' => 'assign_eno', 'value' => array($this,'get_eno_text')),
         array('name'=>'assign_time',  
-                    'value'=>'date("Y-m-d",$data->assign_time)',//格式化日期  
+                    'value'=>'date("Y-m-d H:i:s",$data->assign_time)',//格式化日期  
                 ),  
         array(
             'class' => 'CButtonColumn',

@@ -224,16 +224,16 @@ class CustomerInfoController extends GController {
             } else {
                 //回滚事务
                 $transaction->rollback();
-                $noteinfo->setAttribute("next_contact", date('Y-m-d', $noteinfo->next_contact));
+                $noteinfo->setAttribute("next_contact", date('Y-m-d H:i:s', $noteinfo->next_contact));
             }
         }
-        $model->setAttribute("create_time", date("Y-m-d", intval($model->getAttribute("create_time"))));
-        $model->setAttribute("assign_time", date("Y-m-d", intval($model->getAttribute("assign_time"))));
-        $model->setAttribute("next_time", date("Y-m-d", intval($model->getAttribute("next_time"))));
+        $model->setAttribute("create_time", date("Y-m-d H:i:s", intval($model->getAttribute("create_time"))));
+        $model->setAttribute("assign_time", date("Y-m-d H:i:s", intval($model->getAttribute("assign_time"))));
+        $model->setAttribute("next_time", date("Y-m-d H:i:s", intval($model->getAttribute("next_time"))));
         if ($model->visit_date == 0) {
-            $model->setAttribute("visit_date", date("Y-m-d", time()));
+            $model->setAttribute("visit_date", date("Y-m-d H:i:s", time()));
         } else {
-            $model->setAttribute("visit_date", date("Y-m-d", intval($model->getAttribute("visit_date"))));
+            $model->setAttribute("visit_date", date("Y-m-d H:i:s", intval($model->getAttribute("visit_date"))));
         }
         $sharedNote = NoteInfo::model();
         $sharedNote->setAttribute("cust_id", $model->id);
@@ -275,7 +275,7 @@ class CustomerInfoController extends GController {
                 //获取通知录音路径，通知时长 
             }
         }
-        $noteinfo->next_contact = date('Y-m-d', time());
+        $noteinfo->next_contact = date('Y-m-d H:i:s', time());
         $sharedNote = NoteInfo::model();
         $sharedNote->setAttribute("cust_id", $model->id);
         // $historyNote = NoteInfo::model();
@@ -404,7 +404,7 @@ class CustomerInfoController extends GController {
 
         $model = new CustomerInfo('search');
         $model->unsetAttributes();  // clear any default values
-        $begintime = strtotime(date('Y-m-d', time()));
+        $begintime = strtotime(date('Y-m-d H:i:s', time()));
         $endtime = $begintime + 86400;
         $model->begintime = $begintime;
         $model->endtime = $endtime;

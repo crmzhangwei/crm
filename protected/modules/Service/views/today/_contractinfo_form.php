@@ -27,7 +27,7 @@
                 </td>
                 <td><?php echo $form->labelEx($contract,'pay_time'); ?></td>
                 <td>  
-                    <?php echo $form->textField($contract,'pay_time',array('class'=>"Wdate", 'onClick'=>"WdatePicker()",'style'=>'height:30px;')); ?>
+                    <?php echo $form->textField($contract,'pay_time',array('class'=>"Wdate", 'onClick'=>"WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})",'style'=>'height:30px;')); ?>
                     <?php echo $form->error($contract,'pay_time'); ?>
                 </td>
             </tr> 
@@ -71,7 +71,7 @@
                 </td>
                 <td><?php echo $form->labelEx($contract,'comm_pay_time'); ?></td>
                 <td>  
-                   <?php echo $form->textField($contract,'comm_pay_time',array('class'=>"Wdate", 'onClick'=>"WdatePicker()",'style'=>'height:30px;')); ?>
+                   <?php echo $form->textField($contract,'comm_pay_time',array('class'=>"Wdate", 'onClick'=>"WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})",'style'=>'height:30px;')); ?>
 		   <?php echo $form->error($contract,'comm_pay_time'); ?>
                 </td>
                 

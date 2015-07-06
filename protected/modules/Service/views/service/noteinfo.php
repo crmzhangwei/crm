@@ -20,7 +20,7 @@
                 </td>
                 <td width="10%" nowrap="nowrap"><?php echo $form->labelEx($model,'next_contact'); ?></td>
                 <td>  
-                    <?php echo date('Y-m-d',$model->next_contact); ?>
+                    <?php echo date('Y-m-d H:i:s',$model->next_contact); ?>
                 </td>
             </tr>
             <tr>

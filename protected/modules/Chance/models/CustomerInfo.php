@@ -164,8 +164,9 @@ class CustomerInfo extends CActiveRecord {
             $criteria->compare('iskey', $this->iskey);
         }
         if ($this->next_time) {
-            $iTime = strtotime($this->next_time);
-            $criteria->addCondition("next_time=$iTime");
+            $istartTime = strtotime($this->next_time);
+            $iendTime = $istartTime+86400;
+            $criteria->addBetweenCondition('next_time', $istartTime, $iendTime); 
         }
         // $criteria->addCondition("eno = '".Yii::app()->user->identity->eno."'");
         return new CActiveDataProvider($this, array(
@@ -242,6 +243,7 @@ class CustomerInfo extends CActiveRecord {
         }
         $curDate = date("Y-m-d", time());
         $iDate = strtotime($curDate);
+        $iDate = $iDate+86400;
         $criteria->addCondition("t.next_time<" . $iDate);
         // $criteria->addCondition("eno = '".Yii::app()->user->identity->eno."'");
         return new CActiveDataProvider($this, array(
@@ -289,10 +291,10 @@ class CustomerInfo extends CActiveRecord {
 
     public function toDate() {
         if ($this->next_time > 0) {
-            $this->next_time = date('Y-m-d', $this->next_time);
+            $this->next_time = date('Y-m-d H:i:s', $this->next_time);
         }
         if ($this->visit_date > 0) {
-            $this->visit_date = date('Y-m-d', $this->visit_date);
+            $this->visit_date = date('Y-m-d H:i:s', $this->visit_date);
         }
     }
 

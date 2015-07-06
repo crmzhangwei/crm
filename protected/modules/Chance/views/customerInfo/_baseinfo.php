@@ -116,7 +116,7 @@ function changeCustType(obj){
             </tr>
             <tr style="display:none;" id="tr_visit"> 
                 <td nowrap="nowrap"><?php echo $form->labelEx($model,'visit_date'); ?></td>
-                <td><?php echo $form->textField($model,'visit_date',array('class'=>"Wdate", 'onClick'=>"WdatePicker()",'style'=>'height:30px;')); ?></td>
+                <td><?php echo $form->textField($model,'visit_date',array('class'=>"Wdate", 'onClick'=>"WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})",'style'=>'height:30px;')); ?></td>
                 <td nowrap="nowrap"><?php echo $form->labelEx($model,'trans_user'); ?></td>
                 <td> 
                   <?php echo $form->dropDownList($model, 'trans_user',$this->getTranUsers(), array('id'=>'cust_type','style' => "height:34px;")); ?>   
