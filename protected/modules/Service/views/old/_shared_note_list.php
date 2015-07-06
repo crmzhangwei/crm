@@ -22,7 +22,7 @@ $this->widget('GGridView', array(
         'memo',
         array('name' => 'next_contact', 'value' => 'date("Y-m-d",$data->next_contact)'),
         array('name' => 'create_time', 'value' => 'date("Y-m-d",$data->create_time)'),
-        array('name' => 'eno', 'value' => '$data->eno'),
+        array('name' => 'eno', 'value' => array($this,'get_user_text')),
         array(
             'class' => 'CButtonColumn',
             'template' => '{play} {view}',

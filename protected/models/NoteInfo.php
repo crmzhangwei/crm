@@ -18,7 +18,8 @@
  * @property integer $dial_id
  * @property integer $message_id
  * @property integer $eno
- * @property integer $cust_type
+ * @property string $cust_type
+ * @property int $lib_type
  * @property integer $create_time
  */
 class NoteInfo extends CActiveRecord
@@ -86,6 +87,7 @@ class NoteInfo extends CActiveRecord
 			'message_id' => '短信发送记录',
 			'eno' => '工号',
                         'cust_type'=>'客户分类',
+                        'lib_type'=>'库类型',
 			'create_time' => '创建时间',
                         'last_time'=>'最后联系时间',
 		);
@@ -138,9 +140,7 @@ class NoteInfo extends CActiveRecord
 	    $criteria->compare('t.requirement',$this->requirement,true);
 	    $criteria->compare('t.service',$this->service,true);
             $uid = Yii::app()->user->id;
-            $criteria->addCondition("t.eno<>$uid");
-            $criteria->select="t.id,t.cust_info,t.requirement,t.service,t.next_contact,t.create_time,u.eno";
-            $criteria->join=" left join {{users}} u on t.eno=u.id ";
+            $criteria->addCondition("t.eno<>$uid"); 
             return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
 		));

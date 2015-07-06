@@ -168,6 +168,7 @@ class CustomerInfoController extends GController {
                         $model->iskey = $noteinfo->iskey;
                     }
                     $noteinfo->cust_type=$newCustType;
+                    $noteinfo->lib_type="2";
                     $noteinfo->next_contact = strtotime($noteinfo->next_contact);
                     $model->last_time=time();//最后联系时间等于今天
                     $noteinfo->setAttribute("eno", Yii::app()->user->id);
@@ -554,6 +555,16 @@ class CustomerInfoController extends GController {
         $list = $model->findAllBySql($sql);
         $this->render('assign', array('model' => $model, 'custlist' => $list));
     }
+     public function get_user_text($data) {
+        $val = $data->eno;
+        $enoArr = $this->getUserArr($val);
+        $res = isset($enoArr[$val]) ? $enoArr[$val] : $val;
+        return $res;
+    }
+
+    public function getUserArr($id) {
+        return CHtml::listData(Users::model()->findAll('id=:id', array(':id' => $id)), 'id', 'name');
+    }
     public function get_eno_text($data) {
         $val = $data->eno;
         $enoArr = $this->getEnoArr($val);
@@ -564,14 +575,22 @@ class CustomerInfoController extends GController {
     public function getEnoArr($eno) {
         return CHtml::listData(Users::model()->findAll('eno=:eno', array(':eno' => $eno)), 'eno', 'name');
     }
+    public function get_trans_type_text($data) {
+        $val = $data->cust_type;
+        $lib_type = 2;
+        $typeArr = $this->gettypeArr($val,$lib_type);
+        $res = isset($typeArr[$val]) ? "【".$val."类】".$typeArr[$val] : $val;
+        return $res;
+    }
     public function get_type_text($data) {
         $val = $data->cust_type;
-        $typeArr = $this->gettypeArr($val);
+        $lib_type = $data->lib_type;
+        $typeArr = $this->gettypeArr($val,$lib_type);
         $res = isset($typeArr[$val]) ? "【".$val."类】".$typeArr[$val] : $val;
         return $res;
     }
 
-    public function gettypeArr($type_no) {
-        return CHtml::listData(CustType::model()->findAll('lib_type=2 and type_no=:type_no', array(':type_no' => $type_no)), 'type_no', 'type_name');
+    public function gettypeArr($type_no,$lib_type) {
+        return CHtml::listData(CustType::model()->findAll('lib_type=:lib_type and type_no=:type_no', array(':type_no' => $type_no,'lib_type'=>$lib_type)), 'type_no', 'type_name');
     }
 }

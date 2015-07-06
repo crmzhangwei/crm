@@ -79,7 +79,7 @@ $this->widget('GGridView', array(
         ),
         'id',
         array('name'=>'eno', 'value'=>array($this, 'get_eno_text')),
-        array('name'=>'cust_type', 'value'=>array($this, 'get_type_text')),
+        array('name'=>'cust_type', 'value'=>array($this, 'get_trans_type_text')),
         'cust_name',
         'shop_name',
         'corp_name',

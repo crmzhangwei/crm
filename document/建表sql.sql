@@ -169,6 +169,7 @@ CREATE TABLE `c_note_info` (
   `message_id` int(11) default '0' COMMENT '短信发送记录',
   `eno` int(11) NOT NULL default 0 COMMENT '工号',
   `cust_type` varchar(5) NOT NULL default '' COMMENT '客户分类',
+  `lib_type` int NOT NULL default 0 COMMENT '库类型',
   `create_time` int(11) NOT NULL default 0 COMMENT '创建时间',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -287,3 +288,8 @@ CREATE TABLE `c_message` (
   `creator` int(11) NOT NULL default 0 COMMENT '创建人',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+create table `c_tip_info` (
+  `id` int(11) not null comment '客户id',
+  `eno` varchar(10) not null comment '所属工号'
+) engine=innodb default charset=utf8;
