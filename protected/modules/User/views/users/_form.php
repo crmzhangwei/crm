@@ -73,13 +73,27 @@
             </div>
              <label class="col-sm-2 control-label no-padding-right">组别：</label>
             <div class="col-sm-3">
-                   <?php echo $form->dropDownList($model, 'group_id',  DeptGroup::model()->getByDeptId($user_info['group_id']),array('id'=>'groupinfo')); ?>
+                   <?php echo $form->dropDownList($model, 'group_id',  DeptGroup::model()->getByDeptId($model->dept_id),array('id'=>'groupinfo')); ?>
             </div>
         </div>
 
      <div class="form-group">
             <label class="col-sm-2 control-label no-padding-right">上级：</label>
             <div class="col-sm-4">
+                <input name="bossname" id="userinfo_bossname" class="form-control" type="text"  value="<?php echo $user_info['name']?$user_info['name']:'';?>" readonly>
+                <?php echo $form->hiddenField($model, 'manager_id') ;?>
+            </div>
+            <div class="col-sm-1">
+                <button type="button" id="selectBoss" class="btn btn-primary btn-sm"><i class="icon-plus"></i> 选择上级</button>
+            </div>
+        </div>
+        <script>
+           $('#selectBoss').click(function(){
+               $("#sle").show();
+           })
+        </script>
+         <div class="form-group" id='sle' style="display:none;">
+             <label class="col-sm-2 control-label no-padding-right"></label>
                  <div class="col-sm-10">
                  <?php if($model->isNewRecord):
 			echo CHtml::dropDownList('dept','',$deptArr,array('onchange'=>'listgroup(this)'));
@@ -90,27 +104,21 @@
 		
 		<?php if($model->isNewRecord):?>
 		<select id="groupinfo2" name="group" onchange="listuser(this)">
-			<option value ="0">--请选择组别--</option>
+			<option value ="0">--请选择组--</option>
 		</select>
 		<?php else: 
 		    echo   CHtml::dropDownList('group', intval($user_info['group_id']), $user_info['group_arr'], array('id'=>"groupinfo2",'onchange'=>"listuser(this)"));
 		     endif;?>
 
 		<?php if($model->isNewRecord):?>
-		<select id='userinfo' name="Users[users]" onchange="enoval(this)">	
+		<select id='userinfo' name="users" onchange="enoval(this)">	
 			<option value ="0">---请选择人员---</option>
 		</select>
 		<?php else: 
-		    echo CHtml::dropDownList('Users[manager_id]', $user_info['id'], $user_info['user_arr'], array('id'=>"userinfo",'onchange'=>"enoval(this)"));
+		    echo   CHtml::dropDownList('users', $user_info['id'], $user_info['user_arr'], array('id'=>"userinfo",'onchange'=>"enoval(this)"));
 		endif;?>
             </div> 
-            </div> 
-        </div>
- 
-         <div class="form-group" id='sle' style="display:none;">
-             <label class="col-sm-2 control-label no-padding-right"></label>
             
-           
         </div>
   
         <div class="form-group">
@@ -140,7 +148,7 @@
     function getgroup(obj)
     {
         var deptid = $(obj).val(),groupStr;
-        $.post("<?php echo $this->createUrl("/User/users/getGroup")?>",{'deptid':deptid},function(data)
+        $.post("<?php echo $this->createUrl("/User/users/getGroup")?>",{'deptid':deptid,type:2},function(data)
 	    {
                 groupStr='<option value ="0">--请选择组别--</option>';
 	    	for(i in data)
