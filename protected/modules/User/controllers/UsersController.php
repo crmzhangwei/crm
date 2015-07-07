@@ -279,8 +279,8 @@ class UsersController extends GController
         {
             $val = $data->group_id;
             $group =  $this->getGroupArr();
-            $res = isset($group[$val])?$group[$val]:$val;
-             return $res;
+            $res = isset($group[$val])?$group[$val]:'未分组';
+            return $res;
         }
         
         public function  get_ismaster_text($data)
@@ -299,6 +299,12 @@ class UsersController extends GController
             return $res;
         }
         
-       
+       public function  get_manager_id($data)
+		{
+			$val = $data->manager_id;
+			$userinfo =  Users::model()->findByPk($val);
+			$res = $userinfo ? $userinfo->username : '暂无上级';
+			return $res;
+		}
           
 }
