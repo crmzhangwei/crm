@@ -303,7 +303,7 @@ class UsersController extends GController
 		{
 			$val = $data->manager_id;
 			$userinfo =  Users::model()->findByPk($val);
-			$res = $userinfo ? $userinfo->username : '暂无上级';
+			$res = $userinfo ? $userinfo->name : '暂无上级';
 			return $res;
 		}
           
