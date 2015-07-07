@@ -153,19 +153,21 @@ class CustomerInfo extends CActiveRecord {
            
         if ($this->phone) {
             $criteria->compare('phone', $this->phone, true);
-        }
-        if ($this->cust_type_from && $this->cust_type_to) {
+        } 
+        if ($this->cust_type_from>-1 && $this->cust_type_to>-1) {
             $criteria->addBetweenCondition('cust_type', intval($this->cust_type_from), intval($this->cust_type_to));
         }
         if ($this->contact_7_day) {
-            
+            $itime = time();
+            $itime = $itime - 86400*7;
+            $criteria->addCondition("last_time>=$itime");
         }
-        if ($this->iskey) {
+        if ($this->iskey>-1) {
             $criteria->compare('iskey', $this->iskey);
         }
         if ($this->next_time) {
             $istartTime = strtotime($this->next_time);
-            $iendTime = $istartTime+86400;
+            $iendTime = $istartTime+86400; 
             $criteria->addBetweenCondition('next_time', $istartTime, $iendTime); 
         }
         // $criteria->addCondition("eno = '".Yii::app()->user->identity->eno."'");
@@ -194,13 +196,18 @@ class CustomerInfo extends CActiveRecord {
         if ($this->phone) {
             $criteria->compare('phone', $this->phone, true);
         }
-        if ($this->cust_type_from && $this->cust_type_to) {
+        if ($this->qq) {
+            $criteria->compare('qq', $this->qq, true);
+        }
+        if ($this->cust_type_from>-1 && $this->cust_type_to >-1) {
             $criteria->addBetweenCondition('cust_type', intval($this->cust_type_from), intval($this->cust_type_to));
         }
         if ($this->contact_7_day) {
-            
+            $itime = time();
+            $itime = $itime - 86400*7;
+            $criteria->addCondition("last_time>=$itime");
         }
-        if ($this->iskey) {
+        if ($this->iskey>-1) {
             $criteria->compare('iskey', $this->iskey);
         } 
         // $criteria->addCondition("eno = '".Yii::app()->user->identity->eno."'");
@@ -229,18 +236,18 @@ class CustomerInfo extends CActiveRecord {
         if ($this->phone) {
             $criteria->compare('phone', $this->phone, true);
         }
-        if ($this->cust_type_from && $this->cust_type_to) {
+        if ($this->cust_type_from>-1 && $this->cust_type_to>-1) {
             $criteria->addBetweenCondition('cust_type', intval($this->cust_type_from), intval($this->cust_type_to));
         }
         if ($this->contact_7_day) {
-            
+            $itime = time();
+            $itime = $itime - 86400*7;
+            $criteria->addCondition("last_time>=$itime");
         }
-        if ($this->iskey) {
+        if ($this->iskey>-1) {
             $criteria->compare('iskey', $this->iskey);
         }
-        if ($this->begintime && $this->endtime) {
-            $criteria->addBetweenCondition('next_time', $this->begintime, $this->endtime);
-        }
+            
         $curDate = date("Y-m-d", time());
         $iDate = strtotime($curDate);
         $iDate = $iDate+86400;

@@ -229,7 +229,16 @@ class CustomerInfoController extends GController {
         }
         $model->setAttribute("create_time", date("Y-m-d H:i:s", intval($model->getAttribute("create_time"))));
         $model->setAttribute("assign_time", date("Y-m-d H:i:s", intval($model->getAttribute("assign_time"))));
-        $model->setAttribute("next_time", date("Y-m-d H:i:s", intval($model->getAttribute("next_time"))));
+        if(intval($model->next_time)<100){
+            $model->setAttribute("next_time", '无');
+        }else{
+            $model->setAttribute("next_time", date("Y-m-d H:i:s", intval($model->getAttribute("next_time"))));
+        }
+        if(intval($model->last_time)<100){
+            $model->setAttribute("last_time", '无');
+        }else{
+            $model->setAttribute("last_time", date("Y-m-d H:i:s", intval($model->getAttribute("last_time"))));
+        }
         if ($model->visit_date == 0) {
             $model->setAttribute("visit_date", date("Y-m-d H:i:s", time()));
         } else {
@@ -391,6 +400,7 @@ class CustomerInfoController extends GController {
             $model->attributes = $_GET['CustomerInfo'];
             $model->cust_type_from=$_GET['CustomerInfo']['cust_type_from'];
             $model->cust_type_to=$_GET['CustomerInfo']['cust_type_to'];
+            $model->contact_7_day=$_GET['CustomerInfo']['contact_7_day'];
         }
         $this->render('admin', array(
             'model' => $model,
@@ -404,12 +414,16 @@ class CustomerInfoController extends GController {
 
         $model = new CustomerInfo('search');
         $model->unsetAttributes();  // clear any default values
-        $begintime = strtotime(date('Y-m-d H:i:s', time()));
+        $begintime = strtotime(date('Y-m-d', time()));
         $endtime = $begintime + 86400;
         $model->begintime = $begintime;
         $model->endtime = $endtime;
-        if (isset($_GET['CustomerInfo']))
+        if (isset($_GET['CustomerInfo'])){
             $model->attributes = $_GET['CustomerInfo'];
+            $model->cust_type_from=$_GET['CustomerInfo']['cust_type_from'];
+            $model->cust_type_to=$_GET['CustomerInfo']['cust_type_to'];
+            $model->contact_7_day=$_GET['CustomerInfo']['contact_7_day'];
+        }
         $this->render('mylist', array(
             'model' => $model,
         ));
@@ -422,8 +436,12 @@ class CustomerInfoController extends GController {
 
         $model = new CustomerInfo('search');
         $model->unsetAttributes();  // clear any default values
-        if (isset($_GET['CustomerInfo']))
+        if (isset($_GET['CustomerInfo'])){
             $model->attributes = $_GET['CustomerInfo'];
+            $model->cust_type_from=$_GET['CustomerInfo']['cust_type_from'];
+            $model->cust_type_to=$_GET['CustomerInfo']['cust_type_to'];
+            $model->contact_7_day=$_GET['CustomerInfo']['contact_7_day'];
+        }
         $this->render('oldlist', array(
             'model' => $model,
         ));
@@ -568,7 +586,12 @@ class CustomerInfoController extends GController {
         $res = isset($enoArr[$val]) ? $enoArr[$val] : $val;
         return $res;
     }
-
+    public function get_assign_eno_text($data) {
+        $val = $data->assign_eno;
+        $enoArr = $this->getEnoArr($val);
+        $res = isset($enoArr[$val]) ? $enoArr[$val] : $val;
+        return $res;
+    }
     public function getEnoArr($eno) {
         return CHtml::listData(Users::model()->findAll('eno=:eno', array(':eno' => $eno)), 'eno', 'name');
     }

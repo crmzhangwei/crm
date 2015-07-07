@@ -29,8 +29,7 @@ function sendMessage(cust_id){
     public.dialog('发送短信', '<?= Yii::app()->createUrl('Service/service/message') ?>', {'cust_id':cust_id}, 900); 
 }
 function sendMail(cust_id){
-    alert(cust_id);
-    
+    window.open('http://exmail.qq.com/login'); 
 }
 </script> 
 	<?php echo $form->errorSummary($model); ?>
@@ -73,11 +72,11 @@ function sendMail(cust_id){
             <tr>
                 <td nowrap="nowrap"><?php echo $form->labelEx($model,'qq'); ?></td>
                 <td>
-                   <?php  echo Utils::hideQq($model->qq);  ?>
+                   <?php echo $form->textField($model,'qq',array('size'=>30,'maxlength'=>20)); ?>
 		   <?php echo $form->error($model,'qq'); ?>
                 </td>
                 <td nowrap="nowrap"><?php echo $form->labelEx($model,'mail'); ?></td>
-                <td><?php  echo Utils::hideEmail($model->mail);  ?>
+                <td><?php echo $form->textField($model,'mail',array('size'=>60,'maxlength'=>50)); ?>
                     <?php echo CHtml::button("发邮件",array('onclick'=>'javascript:sendMail('.$model->id.')','class' => 'editNode btn btn-info btn-minier tooltip-info', 'data-placement' => "bottom")) ?>
 		    <?php echo $form->error($model,'mail'); ?></td>
             </tr>
@@ -99,12 +98,12 @@ function sendMail(cust_id){
                     <?php echo $form->error($after,'cust_type'); ?>
                 </td>
                 <td nowrap="nowrap"><?php echo $form->labelEx($model,'eno'); ?></td>
-                <td><?php echo $model->eno; ?>
+                <td><?php echo $this->get_eno_text($model); ?>
 		<?php echo $form->error($model,'eno'); ?></td>
             </tr>
             <tr> 
                 <td nowrap="nowrap"><?php echo $form->labelEx($after,'assign_eno'); ?></td>
-                <td><?php echo $after->assign_eno; ?></td>
+                <td><?php echo $this->get_assign_eno_text($after); ?></td>
                 <td nowrap="nowrap"><?php echo $form->labelEx($after,'assign_time'); ?></td>
                 <td>
                    <?php echo $after->assign_time; ?>  
@@ -117,11 +116,13 @@ function sendMail(cust_id){
                 <td><?php echo $form->textField($after,'ww'); ?></td>
             </tr>
             <tr> 
-                <td nowrap="nowrap"><?php echo $form->labelEx($after,'next_time'); ?><br/>
-                <?php echo $form->labelEx($after,'last_time'); ?>
+                <td nowrap="nowrap"><?php echo $form->labelEx($after,'next_time'); ?><br/><br/>
+                <?php echo $form->labelEx($after,'last_time'); ?><br/><br/>
+                是否重点
                 </td>
-                <td> <?php echo $model->next_time;?> <br/>
-                <?php echo $model->last_time;?>
+                <td> <?php echo $model->next_time;?> <br/><br/>
+                <?php echo $model->last_time;?><br/><br/>
+                    <?php echo $model->iskey?'是':'否'; ?>
                 </td>
                 <td nowrap="nowrap"><?php echo $form->labelEx($model,'memo'); ?></td>
                 <td>

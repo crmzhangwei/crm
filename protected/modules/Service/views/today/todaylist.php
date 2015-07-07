@@ -62,7 +62,7 @@ $this->widget('GGridView', array(
         array('name' => 'category', 'value' => '$data->category_name'),
         'service_limit',
         array('name' => 'eno', 'value' => array($this,'get_eno_text')),
-        array('name' => 'assign_eno', 'value' => array($this,'get_eno_text')),
+        array('name' => 'assign_eno', 'value' => array($this,'get_assign_eno_text')),
         array('name'=>'assign_time',  
                     'value'=>'date("Y-m-d H:i:s",$data->assign_time)',//格式化日期  
                 ),  

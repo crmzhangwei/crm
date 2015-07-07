@@ -42,7 +42,7 @@ class newController extends GController {
         $aftermodel->setAttribute("next_time", date("Y-m-d H:i:s", $aftermodel->getAttribute("next_time"))); 
         $aftermodel->setAttribute("create_time", date("Y-m-d H:i:s", $aftermodel->getAttribute("create_time"))); 
         $creator = Users::model()->findByPk($aftermodel->creator);
-        $aftermodel->creator = $creator->getAttribute('eno'); 
+        $aftermodel->creator = $creator->getAttribute('name'); 
         $contractmodel->setAttribute("create_time", date("Y-m-d H:i:s", $contractmodel->getAttribute("create_time")));
         $contractmodel->setAttribute("comm_pay_time", date("Y-m-d H:i:s", $contractmodel->getAttribute("comm_pay_time")));
         $contractmodel->setAttribute("pay_time", date("Y-m-d H:i:s", $contractmodel->getAttribute("pay_time")));
@@ -155,6 +155,8 @@ class newController extends GController {
             }
             //更新类目或备注 
             $model->memo = $_POST['CustomerInfo']['memo'];
+            $model->qq =  $_POST['CustomerInfo']['qq'];
+            $model->mail =  $_POST['CustomerInfo']['mail'];
             $model->category = $newCategory;
             $model->last_time=time();
             $model->save();
@@ -481,7 +483,12 @@ class newController extends GController {
         $res = isset($enoArr[$val]) ? $enoArr[$val] : $val;
         return $res;
     }
-
+    public function get_assign_eno_text($data) {
+        $val = $data->assign_eno;
+        $enoArr = $this->getEnoArr($val);
+        $res = isset($enoArr[$val]) ? $enoArr[$val] : $val;
+        return $res;
+    }
     public function getEnoArr($eno) {
         return CHtml::listData(Users::model()->findAll('eno=:eno', array(':eno' => $eno)), 'eno', 'name');
     }

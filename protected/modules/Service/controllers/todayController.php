@@ -153,6 +153,8 @@ class todayController extends GController {
             }
             //更新类目或备注 
             $model->last_time=time();//最后联系时间等于今天
+            $model->qq =  $_POST['CustomerInfo']['qq'];
+            $model->mail =  $_POST['CustomerInfo']['mail'];
             $model->memo = $_POST['CustomerInfo']['memo'];
             $model->category = $newCategory;
             $model->save(); 
@@ -497,7 +499,12 @@ class todayController extends GController {
         $res = isset($enoArr[$val]) ? $enoArr[$val] : $val;
         return $res;
     }
-
+    public function get_assign_eno_text($data) {
+        $val = $data->assign_eno;
+        $enoArr = $this->getEnoArr($val);
+        $res = isset($enoArr[$val]) ? $enoArr[$val] : $val;
+        return $res;
+    }
     public function getEnoArr($eno) {
         return CHtml::listData(Users::model()->findAll('eno=:eno', array(':eno' => $eno)), 'eno', 'name');
     }

@@ -255,7 +255,7 @@ class FinanceController extends GController {
      * need to do when role has done.
      */
     public function getAllTransUser() {
-        $sql = "select id,name from {{users}} t where exists (select 1 from {{user_role}} where role_id=1 and user_id=t.id  )";
+        $sql = "select id,name from {{users}} t where exists (select 1 from {{user_role}} ur,{{role_info}} r where ur.role_id=r.id and r.name='成交师' and ur.user_id=t.id  )";
         return CHtml::listData(Users::model()->findAllBySql($sql), 'id', 'name');
     }
 

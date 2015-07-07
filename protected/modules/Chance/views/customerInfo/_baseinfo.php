@@ -111,7 +111,7 @@ function changeCustType(obj){
                     <?php echo $form->error($model,'cust_type'); ?>
                 </td>
                 <td nowrap="nowrap"><?php echo $form->labelEx($model,'eno'); ?></td>
-                <td><?php echo $model->eno; ?>
+                <td><?php echo $this->get_eno_text($model); ?>
 		<?php echo $form->error($model,'eno'); ?></td>
             </tr>
             <tr style="display:none;" id="tr_visit"> 
@@ -131,17 +131,18 @@ function changeCustType(obj){
             </tr>
             <tr> 
                 <td nowrap="nowrap"><?php echo $form->labelEx($model,'assign_eno'); ?></td>
-                <td><?php echo $model->assign_eno; ?></td>
+                <td><?php echo $this->get_assign_eno_text($model); ?></td>
                 <td nowrap="nowrap"><?php echo $form->labelEx($model,'assign_time'); ?></td>
                 <td>
                    <?php echo $model->assign_time; ?>  
                 </td>
             </tr> 
             <tr> 
-                <td nowrap="nowrap"><?php echo $form->labelEx($model,'next_time'); ?><br/><br/>最后联系时间</td>
+                <td nowrap="nowrap"><?php echo $form->labelEx($model,'next_time'); ?><br/><br/>最后联系时间<br/><br/>是否重点</td>
                 <td>
                     <?php echo $model->next_time; ?><br/><br/>
-                    <?php echo $model->next_time; ?>
+                    <?php echo $model->last_time ; ?><br/><br/>
+                    <?php echo $model->iskey?'是':'否'; ?>
                     <?php echo $form->error($model,'next_time'); ?></td>
                 <td nowrap="nowrap"><?php echo $form->labelEx($model,'memo'); ?></td>
                 <td>

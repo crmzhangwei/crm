@@ -86,12 +86,12 @@ function changeCustType(obj){
             <tr>
                 <td nowrap="nowrap"><?php echo $form->labelEx($model,'qq'); ?></td>
                 <td> 
-                    <?php echo Utils::hideQq($model->qq); ?>
+                    <?php echo $form->textField($model,'qq',array('size'=>30,'maxlength'=>20)); ?>
 		   <?php echo $form->error($model,'qq'); ?>
                 </td>
                 <td nowrap="nowrap"><?php echo $form->labelEx($model,'mail'); ?></td>
                 <td> 
-                    <?php echo Utils::hideEmail($model->mail); ?>
+                    <?php echo $form->textField($model,'mail',array('size'=>60,'maxlength'=>50)); ?>
                     <?php echo CHtml::button("发邮件",array('onclick'=>'javascript:sendMail('.$model->id.')','class' => 'editNode btn btn-info btn-minier tooltip-info', 'data-placement' => "bottom")) ?>
 		    <?php echo $form->error($model,'mail'); ?></td>
             </tr>
@@ -113,7 +113,7 @@ function changeCustType(obj){
                     <?php echo $form->error($trans_model,'cust_type'); ?>
                 </td>
                 <td nowrap="nowrap"><?php echo $form->labelEx($model,'eno'); ?></td>
-                <td><?php echo $model->eno; ?>
+                <td><?php echo $this->get_eno_text($model); ?>
 		<?php echo $form->error($model,'eno'); ?></td>
             </tr> 
             <tr style="display:none;" id="tr_abandon"> 
@@ -125,17 +125,18 @@ function changeCustType(obj){
             </tr>
             <tr> 
                 <td nowrap="nowrap"><?php echo $form->labelEx($model,'assign_eno'); ?></td>
-                <td><?php echo $model->assign_eno; ?></td>
+                <td><?php echo $this->get_assign_eno_text($model); ?></td>
                 <td nowrap="nowrap"><?php echo $form->labelEx($model,'assign_time'); ?></td>
                 <td>
                    <?php echo $model->assign_time; ?>  
                 </td>
             </tr> 
             <tr> 
-                <td nowrap="nowrap"><?php echo $form->labelEx($model,'next_time'); ?><br/><br/>最后联系时间</td>
+                <td nowrap="nowrap"><?php echo $form->labelEx($model,'next_time'); ?><br/><br/>最后联系时间<br/><br/>是否重点</td>
                 <td>
                     <?php echo $model->next_time; ?><br/><br/>
-                    <?php echo $model->next_time; ?>
+                    <?php echo $model->last_time; ?><br/><br/>
+                    <?php echo $model->iskey?'是':'否'; ?>
                     <?php echo $form->error($model,'next_time'); ?></td>
                 <td nowrap="nowrap"><?php echo $form->labelEx($model,'memo'); ?></td>
                 <td>

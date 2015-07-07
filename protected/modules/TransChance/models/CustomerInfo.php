@@ -143,7 +143,7 @@ class CustomerInfo extends CActiveRecord {
         $criteria->join="join {{trans_cust_info}} tci ";
         $criteria->addInCondition("tci.cust_type", array(10,11,12,13,14,15,16));
         $criteria->addInCondition("t.status", array(0,3));
-        $criteria->select="t.id,tci.eno,t.cust_name,t.shop_name,t.corp_name,t.category,t.shop_addr,tci.cust_type,tci.assign_time,tci.assign_eno,tci.next_time";
+        $criteria->select="t.id,tci.eno,t.cust_name,t.shop_name,t.corp_name,t.category,t.iskey,t.shop_addr,tci.cust_type,tci.assign_time,tci.assign_eno,tci.next_time";
         $criteria->addCondition("t.id=tci.cust_id");
         //只看到自己的客户,及下属客户
         $user_arr = Userinfo::getAllChildUsersId(Yii::app()->user->id);
@@ -157,15 +157,18 @@ class CustomerInfo extends CActiveRecord {
         if ($this->phone) {
             $criteria->compare('phone', $this->phone, true);
         }
-        if ($this->cust_type_from && $this->cust_type_to) {
-            $criteria->addBetweenCondition('cust_type', intval($this->cust_type_from), intval($this->cust_type_to));
+        
+        if ($this->cust_type_from>0 && $this->cust_type_to>0) {
+            $criteria->addBetweenCondition('tci.cust_type', intval($this->cust_type_from), intval($this->cust_type_to));
         }
         if ($this->contact_7_day) {
-            
+            $itime = time();
+            $itime = $itime - 86400*7;
+            $criteria->addCondition("last_time>=$itime");
         }
-        if ($this->iskey) {
+        if ($this->iskey>-1) {
             $criteria->compare('iskey', $this->iskey);
-        } 
+        }
         if ($this->next_time) {
             $istartTime = strtotime($this->next_time);
             $iendTime = $istartTime+86400;
@@ -185,7 +188,7 @@ class CustomerInfo extends CActiveRecord {
         $criteria->join="join {{trans_cust_info}} tci "; 
         $criteria->addInCondition("tci.cust_type", array(10,11,12,13,14,15,16));
         $criteria->addInCondition("t.status", array(0,3));
-        $criteria->select="t.id,tci.eno,t.cust_name,t.shop_name,t.corp_name,t.category,t.shop_addr,tci.cust_type,tci.assign_time,tci.assign_eno,tci.next_time";
+        $criteria->select="t.id,tci.eno,t.cust_name,t.shop_name,t.corp_name,t.iskey,t.category,t.shop_addr,tci.cust_type,tci.assign_time,tci.assign_eno,tci.next_time";
         $criteria->addCondition("t.id=tci.cust_id");
         //只看到自己的客户,及下属客户
         $user_arr = Userinfo::getAllChildUsersId(Yii::app()->user->id);
@@ -199,13 +202,19 @@ class CustomerInfo extends CActiveRecord {
         if ($this->phone) {
             $criteria->compare('phone', $this->phone, true);
         }
-        if ($this->cust_type_from && $this->cust_type_to) {
-            $criteria->addBetweenCondition('cust_type', intval($this->cust_type_from), intval($this->cust_type_to));
+        if ($this->qq) {
+            $criteria->compare('qq', $this->qq, true);
+        }
+        if ($this->cust_type_from>0 && $this->cust_type_to>0) {
+            $criteria->addBetweenCondition('tci.cust_type', intval($this->cust_type_from), intval($this->cust_type_to));
         }
         if ($this->contact_7_day) {
-            
+            $itime = time();
+            $itime = $itime - 86400*7;
+            $criteria->addCondition("last_time>=$itime");
         }
-        if ($this->iskey) {
+        echo $this->iskey;
+        if ($this->iskey>-1) {
             $criteria->compare('iskey', $this->iskey);
         }
             
@@ -224,7 +233,7 @@ class CustomerInfo extends CActiveRecord {
         $criteria->join="join {{trans_cust_info}} tci ";
         $criteria->addInCondition("tci.cust_type", array(10,11,12,13,14,15,16));
         $criteria->addInCondition("t.status", array(0,3));
-        $criteria->select="t.id,tci.eno,t.cust_name,t.shop_name,t.corp_name,t.category,t.shop_addr,tci.cust_type,tci.assign_time,tci.assign_eno,tci.next_time";
+        $criteria->select="t.id,tci.eno,t.cust_name,t.shop_name,t.corp_name,t.iskey,t.category,t.shop_addr,tci.cust_type,tci.assign_time,tci.assign_eno,tci.next_time";
         $criteria->addCondition("t.id=tci.cust_id");
         //只看到自己的客户,及下属客户
         $user_arr = Userinfo::getAllChildUsersId(Yii::app()->user->id);
@@ -238,18 +247,17 @@ class CustomerInfo extends CActiveRecord {
         if ($this->phone) {
             $criteria->compare('phone', $this->phone, true);
         }
-        if ($this->cust_type_from && $this->cust_type_to) {
-            $criteria->addBetweenCondition('cust_type', intval($this->cust_type_from), intval($this->cust_type_to));
+        if ($this->cust_type_from>0 && $this->cust_type_to>0) {
+            $criteria->addBetweenCondition('tci.cust_type', intval($this->cust_type_from), intval($this->cust_type_to));
         }
         if ($this->contact_7_day) {
-            
+            $itime = time();
+            $itime = $itime - 86400*7;
+            $criteria->addCondition("last_time>=$itime");
         }
-        if ($this->iskey) {
+        if ($this->iskey>-1) {
             $criteria->compare('iskey', $this->iskey);
-        }
-        if ($this->begintime && $this->endtime) {
-            $criteria->addBetweenCondition('next_time', $this->begintime, $this->endtime);
-        }
+        } 
         $curDate = date("Y-m-d", time());
         $iDate = strtotime($curDate);
         $iDate = $iDate+86400;

@@ -161,6 +161,22 @@ class Userinfo
 	public static function getEnoByName($name){
 		return Users::model()->find('name=:name', array(':name'=>$name));
 	}
+        public static function getNameByEno($eno){
+                $ret = "";
+                $user = Users::model()->find('eno=:eno', array(':eno'=>$eno)); 
+                if(!empty($user)){
+                    $ret = $user->name;
+                }
+                return $ret;
+	}
+        public static function getNameById($id){ 
+                $ret = "";
+                $user = Users::model()->findByPk($id);
+                if(!empty($user)){
+                    $ret = $user->name;
+                }
+                return $ret;
+	}
 
 	/**
 	 *查询用户新分资源

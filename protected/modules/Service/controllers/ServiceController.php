@@ -400,5 +400,30 @@ class ServiceController extends GController {
         $noteinfo = NoteInfo::model()->findByPk($id);
         $this->renderPartial("noteinfo", array('model' => $noteinfo));
     }
+    public function get_eno_text($data) {
+        $val = $data->eno;
+        $enoArr = $this->getEnoArr($val);
+        $res = isset($enoArr[$val]) ? $enoArr[$val] : $val;
+        return $res;
+    }
+    public function get_assign_eno_text($data) {
+        $val = $data->assign_eno;
+        $enoArr = $this->getEnoArr($val);
+        $res = isset($enoArr[$val]) ? $enoArr[$val] : $val;
+        return $res;
+    }
+    public function getEnoArr($eno) {
+        return CHtml::listData(Users::model()->findAll('eno=:eno', array(':eno' => $eno)), 'eno', 'name');
+    }
+    public function get_after_type_text($data) {
+        $val = $data->cust_type;
+        $lib_type = 3;
+        $typeArr = $this->gettypeArr($val,$lib_type);
+        $res = isset($typeArr[$val]) ? "【".$val."类】".$typeArr[$val] : $val;
+        return $res;
+    }
+    public function gettypeArr($type_no,$lib_type) {
+        return CHtml::listData(CustType::model()->findAll('lib_type=:lib_type and type_no=:type_no', array(':type_no' => $type_no,'lib_type'=>$lib_type)), 'type_no', 'type_name');
+    }
 
 }

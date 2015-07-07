@@ -32,7 +32,7 @@ $form = $this->beginWidget('CActiveForm', array(
     <?php echo $form->label($model, 'contact_7_day'); ?>
     <?php echo $form->dropDownList($model, 'contact_7_day', array('--请选择--', '是'), array('style' => "height:34px;")); ?>
     <?php echo $form->label($model, 'iskey'); ?>
-    <?php echo $form->dropDownList($model, 'iskey', array('--请选择--', '是', '否'), array('style' => "height:34px;")); ?>
+    <?php echo $form->dropDownList($model, 'iskey', array('-1'=>'--请选择--','1'=> '是','0'=> '否'), array('style' => "height:34px;")); ?>
     <?php echo $form->label($model, 'phone'); ?>
     <?php echo $form->textField($model, 'phone', array('size' => 15, 'maxlength' => 15)); ?><br />
     <?php echo $form->label($model, 'cust_type'); ?>
