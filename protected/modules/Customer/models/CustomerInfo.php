@@ -151,6 +151,15 @@ class CustomerInfo extends CActiveRecord
 		if($this->customerId){
 			$criteria->addCondition("id in({$this->customerId})"); //查询条件 
 		}
+		//只看到自己的客户,及下属客户
+        $user_arr = Userinfo::getAllChildUsersId(Yii::app()->user->id);
+        $user_arr[]=Yii::app()->user->id;
+        if(!empty($user_arr)&&count($user_arr)>0){
+            $wherestr = Utils::genUserCondition($user_arr);
+            if(!empty($wherestr)){
+               $criteria->addCondition(" exists (select 1 from {{users}} where eno=t.eno and $wherestr)") ; 
+            } 
+        }
 		if ($this->keyword) {
 			switch ($this->searchtype) {
 				case 1:

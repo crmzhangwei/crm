@@ -65,7 +65,7 @@ class Userinfo
             return $Users;
 	}
 
-	public static function getGroupById($deptid){
+	public static function getGroupById($deptid,$type=''){
 		
 		$allData = Yii::app()->db->createCommand("select g.`group_id`,i.`name` from `c_dept_group` as g left join `c_group_info` as i 
 			on g.`group_id`=i.`id` where dept_id = :deptid")->queryAll(TRUE,array(":deptid"=>$deptid));
@@ -73,8 +73,11 @@ class Userinfo
 		foreach ($allData as $k => $v) {
 			$groupArr[$v['group_id']] = $v['name'];
 		}
-                if($deptid != 0){
-                    $groupArr['-1'] = '精英组';
+                if(empty($type))
+                {
+                     if($deptid != 0){
+                     $groupArr['-1'] = '精英组';
+                     }
                 }
 		return $groupArr;
 	}
