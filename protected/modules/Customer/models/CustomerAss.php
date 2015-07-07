@@ -149,7 +149,16 @@ class CustomerAss extends CActiveRecord
 		$criteria->compare('creator',$this->creator);
 		$sess_eno = Yii::app()->session['user']['eno'];
 		$criteria->addCondition("`status` ='0' or (`status`='3' and eno='$sess_eno')");  
-
+		//只看到自己的客户,及下属客户
+        $user_arr = Userinfo::getAllChildUsersId(Yii::app()->user->id);
+        $user_arr[]=Yii::app()->user->id;
+        if(!empty($user_arr)&&count($user_arr)>0){
+            $wherestr = Utils::genUserCondition($user_arr);
+            if(!empty($wherestr)){
+               $criteria->addCondition(" exists (select 1 from {{users}} where eno=t.eno and $wherestr)") ; 
+            } 
+        }
+		
 		if($this->keyword)
         {
             switch ($this->searchtype)
