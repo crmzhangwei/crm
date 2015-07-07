@@ -78,18 +78,18 @@ $this->widget('GGridView', array(
           'name'=>'assign_time',
           'header'=>'分配时间',
           'type'=>'raw',
-          'value'=>'date("Y-m-d",$data->assign_time)',
+          'value'=>array($this,'get_assign_time'),
         ),
         array(
           'name'=>'next_time',
           'header'=>'安排联系时间',
           'type'=>'raw',
-          'value'=>'date("Y-m-d",$data->next_time)',
+          'value'=>array($this,'get_next_time'),
         ),
         array(
           'name'=>'last_time',
           'type'=>'raw',
-          'value'=>'date("Y-m-d",$data->last_time)',
+          'value'=>array($this,'get_last_time'),
         ),
         'shop_addr',
         /*
