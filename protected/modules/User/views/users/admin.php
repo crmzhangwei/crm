@@ -63,6 +63,10 @@ $this->widget('GGridView', array(
             'value' => array($this, 'get_group_text'),
         ),
         //'dept_id'
+		array(
+            'name' => 'manager_id',
+            'value' => array($this, 'get_manager_id'),
+        ),
         array(
             'name' => 'ismaster',
             'value' => array($this, 'get_ismaster_text'),

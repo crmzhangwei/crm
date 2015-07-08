@@ -613,4 +613,16 @@ class CustomerInfoController extends GController {
     public function gettypeArr($type_no,$lib_type) {
         return CHtml::listData(CustType::model()->findAll('lib_type=:lib_type and type_no=:type_no', array(':type_no' => $type_no,'lib_type'=>$lib_type)), 'type_no', 'type_name');
     }
+	
+	public function get_assign_time($data){
+		return $data->assign_time ? date("Y-m-d H:i:s",$data->assign_time) : '';
+	}
+	
+	public function get_next_time($data){
+		return $data->next_time ? date("Y-m-d H:i:s",$data->next_time) : '';
+	}
+	
+	public function get_last_time($data){
+		return $data->last_time ? date("Y-m-d H:i:s",$data->last_time) : '';
+	}
 }
