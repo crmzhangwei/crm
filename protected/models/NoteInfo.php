@@ -26,7 +26,8 @@ class NoteInfo extends CActiveRecord
 {
         public $last_time;
         public $next_contact_repeat;
-        
+        public $stime;//开始时间
+        public $etime;//结束时间
 	/**
 	 * @return string the associated database table name
 	 */

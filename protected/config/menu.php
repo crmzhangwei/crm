@@ -42,9 +42,9 @@ return array(
 			array('label' => '新分资源跟踪分析', 'url' => array('/site/contact')),
 			array('label' => '成交师开14，15，17类跟踪分析', 'url' => array('/site/contact')),
 			array('label' => '资源录入统计', 'url' => array('/site/contact')),
-			array('label' => '售后-联系量统计', 'url' => array('/site/contact')),
-			array('label' => '售后-新分资源跟踪分析', 'url' => array('/site/contact')),
-			array('label' => '售后-续费会员分析', 'url' => array('/site/contact')),
+			array('label' => '售后-联系量统计', 'url' => array('/Statistics/after/yeji')),
+			array('label' => '售后-新分资源跟踪分析', 'url' => array('/Statistics/after/newResource')),
+			array('label' => '售后-续费会员分析', 'url' => array('/Statistics/after/renewals')),
             ),
     ),
     

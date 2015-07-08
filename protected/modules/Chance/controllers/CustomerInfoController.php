@@ -224,7 +224,7 @@ class CustomerInfoController extends GController {
             } else {
                 //回滚事务
                 $transaction->rollback();
-                $noteinfo->setAttribute("next_contact", date('Y-m-d H:i:s', $noteinfo->next_contact));
+                $noteinfo->setAttribute("next_contact", '');
             }
         }
         $model->setAttribute("create_time", date("Y-m-d H:i:s", intval($model->getAttribute("create_time"))));

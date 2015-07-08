@@ -171,8 +171,8 @@ class newController extends GController {
                     $this->redirect($this->createUrl("new/Edit",array('id'=>$id)));
                 } 
             } else {
-                $transaction->rollback();
-                $noteinfo->setAttribute("next_contact", date("Y-m-d H:i:s",$noteinfo->getAttribute("next_contact")));
+                $transaction->rollback(); 
+                $noteinfo->setAttribute("next_contact", '');
             }
         } 
         $model->setAttribute("create_time", date("Y-m-d H:i:s", $model->getAttribute("create_time")));
