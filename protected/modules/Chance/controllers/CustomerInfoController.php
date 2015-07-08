@@ -402,8 +402,35 @@ class CustomerInfoController extends GController {
             $model->cust_type_to=$_GET['CustomerInfo']['cust_type_to'];
             $model->contact_7_day=$_GET['CustomerInfo']['contact_7_day'];
         }
+		
+		//部门 组别 二组联动
+		$deptArr = Userinfo::getDept();
+		$deptArr = array('0'=>'--请选择部门--') + $deptArr;
+		$groupArr = Userinfo::getGroupById(1);
+		$groupArr = array('0'=>'--请选择组别--') + $groupArr;
+		
+		$infoArr = array();
+		$user_info = array();
+		if(Yii::app()->request->getParam( 'search' )){
+			$infoArr['dept'] = $_GET['search']['dept'];
+			$infoArr['group'] = $_GET['search']['group'];
+			$infoArr['users'] = $_GET['search']['users'];
+			$user_info['group_arr'] = Userinfo::getGroupById($infoArr['dept']);
+			$user_info['user_arr'] = Userinfo::getUserbygid($infoArr['group'],$infoArr['dept']);	
+		}
+		else{
+			$infoArr['dept'] = 0;
+			$infoArr['group'] = 0;
+			$infoArr['users'] = 0;
+			$user_info['group_arr']=0;
+			$user_info['user_arr']=0;
+		}
         $this->render('admin', array(
             'model' => $model,
+			'deptArr'=>$deptArr,
+			'groupArr'=>$groupArr,
+			'infoArr'=>$infoArr,
+			'user_info'=>$user_info,
         ));
     }
 
@@ -424,8 +451,35 @@ class CustomerInfoController extends GController {
             $model->cust_type_to=$_GET['CustomerInfo']['cust_type_to'];
             $model->contact_7_day=$_GET['CustomerInfo']['contact_7_day'];
         }
+		//部门 组别 二组联动
+		$deptArr = Userinfo::getDept();
+		$deptArr = array('0'=>'--请选择部门--') + $deptArr;
+		$groupArr = Userinfo::getGroupById(1);
+		$groupArr = array('0'=>'--请选择组别--') + $groupArr;
+		
+		$infoArr = array();
+		$user_info = array();
+		if(Yii::app()->request->getParam( 'search' )){
+			$infoArr['dept'] = $_GET['search']['dept'];
+			$infoArr['group'] = $_GET['search']['group'];
+			$infoArr['users'] = $_GET['search']['users'];
+			$user_info['group_arr'] = Userinfo::getGroupById($infoArr['dept']);
+			$user_info['user_arr'] = Userinfo::getUserbygid($infoArr['group'],$infoArr['dept']);	
+		}
+		else{
+			$infoArr['dept'] = 0;
+			$infoArr['group'] = 0;
+			$infoArr['users'] = 0;
+			$user_info['group_arr']=0;
+			$user_info['user_arr']=0;
+		}
+		
         $this->render('mylist', array(
             'model' => $model,
+			'deptArr'=>$deptArr,
+			'groupArr'=>$groupArr,
+			'infoArr'=>$infoArr,
+			'user_info'=>$user_info,
         ));
     }
 

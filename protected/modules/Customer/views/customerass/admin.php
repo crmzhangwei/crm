@@ -32,8 +32,30 @@ $('.search-form form').submit(function(){
        <div class="form-group">  
             <?php echo $form->dropDownList($model,'searchtype',CustomerAss::getsearchArr(),array('style'=>"height:34px;"));?>
             <?php echo $form->textField($model,'keyword',array('size'=>30,'maxlength'=>30));?>
-			<?php echo $form->label($model, 'cust_type');echo ':'; ?>
-			<?php echo $form->dropDownList($model,'cust_type',$custtype,array('style'=>"height:34px;"));?>
+		   
+			<?php echo $form->labelEx($model, 'eno'); ?>
+			<?php echo CHtml::dropDownList('search[dept]', $infoArr['dept'], $deptArr, array('onchange' => 'listgroup(this)')); ?>
+			<?php if(!$user_info['group_arr']):?>
+			<select id="groupinfo" name="search[group]" onchange="listuser(this)">
+				<option value ="0">--请选择组--</option>
+			</select>
+			<?php else:
+				echo CHtml::dropDownList('search[group]', intval($infoArr['group']), $user_info['group_arr'], array('onchange'=>"listuser(this)",'id'=>'groupinfo'));
+			endif;?>
+
+			<?php if(!$user_info['user_arr']):?>
+			<select id='userinfo' name="search[users]" onchange="enoval(this)">	
+				<option value ="0">---请选择人员---</option>
+			</select>
+			<?php else:
+				echo   CHtml::dropDownList('search[users]', $infoArr['users'], $user_info['user_arr'], array('id'=>"userinfo",'onchange'=>"enoval(this)"));
+			endif;?>
+			<div style="display: none">
+			<?php echo $form->textField($model,'eno',array('size'=>5,'maxlength'=>100,'id'=>'usereno'));?> 
+			</div>
+		   <br>
+		    <?php echo $form->label($model, 'cust_type');echo ':'; ?>
+			<?php echo $form->dropDownList($model,'cust_type',$custtype,array('style'=>"height:32px;"));?>
             <button class="btn btn-sm btn-primary" type="submit">
             <i class="icon-search"></i>
             搜 索
@@ -129,3 +151,5 @@ function getIds(dom){
 EOF;
 Yii::app()->clientScript->registerScript('topicjss', $jss);
 ?>
+
+<script src="/static/js/secondlevel.js"></script>

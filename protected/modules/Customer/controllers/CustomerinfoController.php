@@ -80,7 +80,7 @@ class CustomerinfoController extends GController
 	public function actiongetUsers()
 	{
 		$gid = Yii::app()->request->getparam('gid');
-                $deptid = Yii::app()->request->getparam('deptid');
+        $deptid = Yii::app()->request->getparam('deptid');
 		$userinfo = Userinfo::getUserbygid($gid, $deptid);
 		echo json_encode($userinfo);
 	}
@@ -210,12 +210,37 @@ class CustomerinfoController extends GController
 			$model->customerId = Yii::app()->request->getParam('customerId');
 			//Yii::app()->db->createCommand()->delete('{{tip_info}}',"id in( {$model->customerId} )"); 
 		}
-		
 		if(isset($_GET['CustomerInfo']))
 			$model->attributes=$_GET['CustomerInfo'];
-
+		
+		//部门 组别 二组联动
+		$deptArr = Userinfo::getDept();
+		$deptArr = array('0'=>'--请选择部门--') + $deptArr;
+		$groupArr = Userinfo::getGroupById(1);
+		$groupArr = array('0'=>'--请选择组别--') + $groupArr;
+		
+		$infoArr = array();
+		$user_info = array();
+		if(Yii::app()->request->getParam( 'search' )){
+			$infoArr['dept'] = $_GET['search']['dept'];
+			$infoArr['group'] = $_GET['search']['group'];
+			$infoArr['users'] = $_GET['search']['users'];
+			$user_info['group_arr'] = Userinfo::getGroupById($infoArr['dept']);
+			$user_info['user_arr'] = Userinfo::getUserbygid($infoArr['group'],$infoArr['dept']);	
+		}
+		else{
+			$infoArr['dept'] = 0;
+			$infoArr['group'] = 0;
+			$infoArr['users'] = 0;
+			$user_info['group_arr']=0;
+			$user_info['user_arr']=0;
+		}
 		$this->render('admin',array(
 			'model'=>$model,	
+			'deptArr'=>$deptArr,
+			'groupArr'=>$groupArr,
+			'infoArr'=>$infoArr,
+			'user_info'=>$user_info,
 		));
 	}
     
@@ -327,7 +352,7 @@ class CustomerinfoController extends GController
 		$file_name="customerInfo.xlsx"; 
 		//用以解决中文不能显示出来的问题 
 		/////$file_name=iconv("utf-8","gb2312",$file_name); 
-		$file_sub_path=$_SERVER['DOCUMENT_ROOT']."document/"; 
+		$file_sub_path=$_SERVER['DOCUMENT_ROOT']."/document/"; 
 		$file_path=$file_sub_path.$file_name; 
 		//首先要判断给定的文件存在与否 
 		if(!file_exists($file_path)){ 

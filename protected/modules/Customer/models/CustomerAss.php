@@ -191,8 +191,17 @@ class CustomerAss extends CActiveRecord
                    break;
 			   case 8:
 				   $userinfo = Userinfo::getEnoByName($this->keyword);
-				   $eno = $userinfo->eno;
-                   $criteria->compare('eno', $eno, true);
+				   $enostr = '';
+				   if($userinfo){
+					   foreach ($userinfo as $k=>$v){
+						   $enostr .= "'".$v['eno']."',";
+					   }
+					   $enostr = trim($enostr, ',');
+				   }
+				   else{
+					   $enostr = -111;//搜索不到结果
+				   }
+				   $criteria->addCondition("eno in($enostr)");
                    break;
            }
         }

@@ -23,13 +23,13 @@ class Userinfo
 	{
             $where = $gid=='-1' ? "ismaster=1 and dept_id=$deptid and username<>'admin'" : " dept_id=:deptid and group_id=:id and ismaster<>1 and username<>'admin'";//-1为精英组
             $modelgroup = Yii::app()->db->createCommand()
-                ->select('eno, username, cust_num')
+                ->select('eno, name, cust_num')
                 ->from('{{users}}')
                 ->where($where, array(':deptid'=>$deptid,':id'=>$gid))
                 ->queryAll();
 	    $Users = array();
 	    foreach ($modelgroup as $key => $value) {
-	    	$Users[$value['eno']] = $value['username'].' (已分配'."$value[cust_num]".')' ;
+	    	$Users[$value['eno']] = $value['name'].' (已分配'."$value[cust_num]".')' ;
 	    }
         return $Users;
 	}
@@ -162,7 +162,9 @@ class Userinfo
 	 *根据name查工号(eno)
 	 */
 	public static function getEnoByName($name){
-		return Users::model()->find('name=:name', array(':name'=>$name));
+		//return Users::model()->find('name like :name', array(':name'=>"%".$name."%"));
+		$res = Yii::app()->db->createCommand("select eno from `{{users}}` where name like :name")->queryAll(TRUE,array(":name"=>"%".$name."%"));
+		return $res;
 	}
         public static function getNameByEno($eno){
                 $ret = "";
