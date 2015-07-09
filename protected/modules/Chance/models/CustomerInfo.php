@@ -188,6 +188,7 @@ class CustomerInfo extends CActiveRecord {
         $criteria = new CDbCriteria;
         $criteria->addInCondition("cust_type", array(0, 1, 2, 3, 4, 5, 7, 8));
         $criteria->addInCondition("status", array(0, 3));
+		$criteria->compare('eno', $this->eno, true);
         //只看到自己的客户,及下属客户
         $user_arr = Userinfo::getAllChildUsersId(Yii::app()->user->id);
         $user_arr[]=Yii::app()->user->id;
@@ -228,6 +229,7 @@ class CustomerInfo extends CActiveRecord {
         $criteria = new CDbCriteria;
         $criteria->addInCondition("cust_type", array(0, 1, 2, 3, 4, 5, 7, 8));
         $criteria->addInCondition("status", array(0, 3));
+		$criteria->compare('eno', $this->eno, true);
         //只看到自己的客户,及下属客户
         $user_arr = Userinfo::getAllChildUsersId(Yii::app()->user->id);
         $user_arr[]=Yii::app()->user->id;

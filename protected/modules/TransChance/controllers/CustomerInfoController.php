@@ -408,9 +408,16 @@ class CustomerInfoController extends GController {
             $model->cust_type_to=$_GET['CustomerInfo']['cust_type_to'];
             $model->contact_7_day=$_GET['CustomerInfo']['contact_7_day'];
         }
-        $this->render('admin', array(
-            'model' => $model,
-        ));
+		
+		//部门组别人员三级联动
+		$uInfo = Userinfo::secondlevel();
+		$this->render('admin',array(
+			'model'=>$model,	
+			'deptArr'=>$uInfo['deptArr'],
+			'groupArr'=>$uInfo['groupArr'],
+			'infoArr'=>$uInfo['infoArr'],
+			'user_info'=>$uInfo['user_info'],
+		));
     }
 
     /**
@@ -430,8 +437,15 @@ class CustomerInfoController extends GController {
             $model->cust_type_to=$_GET['CustomerInfo']['cust_type_to'];
             $model->contact_7_day=$_GET['CustomerInfo']['contact_7_day'];
         }
+		
+		//部门组别人员三级联动
+		$uInfo = Userinfo::secondlevel();
         $this->render('mylist', array(
             'model' => $model,
+			'deptArr'=>$uInfo['deptArr'],
+			'groupArr'=>$uInfo['groupArr'],
+			'infoArr'=>$uInfo['infoArr'],
+			'user_info'=>$uInfo['user_info'],
         ));
     }
 
@@ -448,8 +462,14 @@ class CustomerInfoController extends GController {
             $model->cust_type_to=$_GET['CustomerInfo']['cust_type_to'];
             $model->contact_7_day=$_GET['CustomerInfo']['contact_7_day'];
         }
+		//部门组别人员三级联动
+		$uInfo = Userinfo::secondlevel();
         $this->render('oldlist', array(
             'model' => $model,
+			'deptArr'=>$uInfo['deptArr'],
+			'groupArr'=>$uInfo['groupArr'],
+			'infoArr'=>$uInfo['infoArr'],
+			'user_info'=>$uInfo['user_info'],
         ));
     }
 

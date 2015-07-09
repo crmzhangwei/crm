@@ -145,6 +145,7 @@ class CustomerInfo extends CActiveRecord {
         $criteria->addInCondition("t.status", array(0,3));
         $criteria->select="t.id,tci.eno,t.cust_name,t.shop_name,t.corp_name,t.category,t.iskey,t.shop_addr,tci.cust_type,tci.assign_time,tci.assign_eno,tci.next_time";
         $criteria->addCondition("t.id=tci.cust_id");
+		$criteria->addCondition("t.eno='$this->eno'");
         //只看到自己的客户,及下属客户
         $user_arr = Userinfo::getAllChildUsersId(Yii::app()->user->id);
         $user_arr[]=Yii::app()->user->id;
@@ -190,6 +191,7 @@ class CustomerInfo extends CActiveRecord {
         $criteria->addInCondition("t.status", array(0,3));
         $criteria->select="t.id,tci.eno,t.cust_name,t.shop_name,t.corp_name,t.iskey,t.category,t.shop_addr,tci.cust_type,tci.assign_time,tci.assign_eno,tci.next_time";
         $criteria->addCondition("t.id=tci.cust_id");
+		$criteria->addCondition("t.eno='$this->eno'");
         //只看到自己的客户,及下属客户
         $user_arr = Userinfo::getAllChildUsersId(Yii::app()->user->id);
         $user_arr[]=Yii::app()->user->id;
@@ -235,6 +237,7 @@ class CustomerInfo extends CActiveRecord {
         $criteria->addInCondition("t.status", array(0,3));
         $criteria->select="t.id,tci.eno,t.cust_name,t.shop_name,t.corp_name,t.iskey,t.category,t.shop_addr,tci.cust_type,tci.assign_time,tci.assign_eno,tci.next_time";
         $criteria->addCondition("t.id=tci.cust_id");
+		$criteria->addCondition("t.eno='$this->eno'");
         //只看到自己的客户,及下属客户
         $user_arr = Userinfo::getAllChildUsersId(Yii::app()->user->id);
         $user_arr[]=Yii::app()->user->id;

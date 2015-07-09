@@ -184,35 +184,15 @@ class CustomerassController extends GController
 		if(isset($_GET['CustomerAss']))
 			$model->attributes=$_GET['CustomerAss'];
 		
-		//部门 组别 二组联动
-		$deptArr = Userinfo::getDept();
-		$deptArr = array('0'=>'--请选择部门--') + $deptArr;
-		$groupArr = Userinfo::getGroupById(1);
-		$groupArr = array('0'=>'--请选择组别--') + $groupArr;
-		
-		$infoArr = array();
-		$user_info = array();
-		if(Yii::app()->request->getParam( 'search' )){
-			$infoArr['dept'] = $_GET['search']['dept'];
-			$infoArr['group'] = $_GET['search']['group'];
-			$infoArr['users'] = $_GET['search']['users'];
-			$user_info['group_arr'] = Userinfo::getGroupById($infoArr['dept']);
-			$user_info['user_arr'] = Userinfo::getUserbygid($infoArr['group'],$infoArr['dept']);	
-		}
-		else{
-			$infoArr['dept'] = 0;
-			$infoArr['group'] = 0;
-			$infoArr['users'] = 0;
-			$user_info['group_arr']=0;
-			$user_info['user_arr']=0;
-		}
+		//部门组别人员三级联动
+		$uInfo = Userinfo::secondlevel();
 		$this->render('admin',array(
 			'model'=>$model,	
 			'custtype'=>$custtype,
-			'deptArr'=>$deptArr,
-			'groupArr'=>$groupArr,
-			'infoArr'=>$infoArr,
-			'user_info'=>$user_info,
+			'deptArr'=>$uInfo['deptArr'],
+			'groupArr'=>$uInfo['groupArr'],
+			'infoArr'=>$uInfo['infoArr'],
+			'user_info'=>$uInfo['user_info'],
 		));
 	}
     

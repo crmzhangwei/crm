@@ -34,10 +34,29 @@ $form = $this->beginWidget('CActiveForm', array(
     <?php echo $form->label($model, 'iskey'); ?>
     <?php echo $form->dropDownList($model, 'iskey', array('-1'=>'--请选择--','1'=> '是','0'=> '否'), array('style' => "height:34px;")); ?>
     <?php echo $form->label($model, 'phone'); ?>
-    <?php echo $form->textField($model, 'phone', array('size' => 15, 'maxlength' => 15)); ?>
+    <?php echo $form->textField($model, 'phone', array('size' => 12, 'maxlength' => 15)); ?>
      <?php echo $form->label($model, 'qq'); ?>
-    <?php echo $form->textField($model, 'qq', array('size' => 15, 'maxlength' => 15)); ?><br />
-    <br />
+    <?php echo $form->textField($model, 'qq', array('size' => 12, 'maxlength' => 15)); ?>
+    <?php echo $form->labelEx($model, 'eno'); ?>
+	<?php echo CHtml::dropDownList('search[dept]', $infoArr['dept'], $deptArr, array('onchange' => 'listgroup(this)')); ?>
+	<?php if(!$user_info['group_arr']):?>
+	<select id="groupinfo" name="search[group]" onchange="listuser(this)">
+		<option value ="0">--请选择组--</option>
+	</select>
+	<?php else:
+		echo CHtml::dropDownList('search[group]', intval($infoArr['group']), $user_info['group_arr'], array('onchange'=>"listuser(this)",'id'=>'groupinfo'));
+	endif;?>
+	
+	<?php if(!$user_info['user_arr']):?>
+	<select id='userinfo' name="search[users]" onchange="enoval(this)">	
+		<option value ="0">---请选择人员---</option>
+	</select>
+	<?php else:
+		echo   CHtml::dropDownList('search[users]', $infoArr['users'], $user_info['user_arr'], array('id'=>"userinfo",'onchange'=>"enoval(this)"));
+	endif;?>
+	<div style="display: none">
+	<?php echo $form->textField($model,'eno',array('size'=>5,'maxlength'=>100,'id'=>'usereno'));?> 
+	</div><br>
     <?php echo $form->label($model, 'cust_type'); ?>
     <?php echo $form->dropDownList($model, 'cust_type_from',$this->genCustTypeArray(), array('style' => "height:34px;")); ?>至
     <?php echo $form->dropDownList($model, 'cust_type_to', $this->genCustTypeArray(), array('style' => "height:34px;")); ?>
@@ -134,3 +153,5 @@ $this->widget('GLinkPager', array('pages' => $dataProvider->getPagination(),));
 ?>
     </div>
 </div>
+
+<script src="/static/js/secondlevel.js"></script>
