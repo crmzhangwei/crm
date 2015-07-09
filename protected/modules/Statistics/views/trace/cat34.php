@@ -1,7 +1,7 @@
 <?php
 	$this->breadcrumbs = array(
-		'报表分析',
-		'售后-续费会员分析',
+		'报表分析' ,
+		'开3、开4跟踪分析',
 	);
 ?>
 
@@ -11,20 +11,29 @@
         $form = $this->beginWidget('CActiveForm', array(
             'id' => 'user-form',
             'method' => 'post',
-            'action' => $this->createUrl('after/renewals'),
+            'action' => $this->createUrl('trace/cat34'),
             'htmlOptions' => array(
                 'class' => 'form-inline',
                 'role' => 'form'
             ),
         ));
-        ?> 
-             <div class="form-group"> 
+        ?> <div class="form-group">
+            开3<input type="radio" name="search[ctype]" value="3" <?php echo $search['ctype']==3?'checked':'';?>/>
+            开4<input type="radio" name="search[ctype]" value="4" <?php echo $search['ctype']==4?'checked':'';?>/> 
+            </div>
+	    <div class="form-group"> 
                 <?php echo CHtml::dropDownList( 'search[dept]', '', $this->getDeptArr(), array('onchange'=>'listgroup(this)')); ?>
             </div>
-			<div class="form-group"> 
-				<select id="groupinfo" name="search[group]">
-					<option value ="0">--请选择组--</option>
-				</select>
+	    <div class="form-group"> 
+		<select id="groupinfo" name="search[group]">
+			<option value ="0">--请选择组--</option>
+		</select>
+            </div>
+            <div class="form-group">
+				&nbsp;&nbsp;时间段: 
+                                <input type="text" class="form-control" name="search[stime]" value="<?php echo $search['stime'];?>" placeholder="" onClick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})">
+		to  
+                <input type="text" class="form-control" name="search[etime]" value="<?php echo $search['etime'];?>" placeholder="" onClick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})">
             </div>
             <div class="form-group"> 
                 <button type="submit" class="btn btn-info form-control">
@@ -33,7 +42,7 @@
                 </button>
             </div> 
             <div class="form-group" style="padding-left: 10px; padding-top: 10px;"> 
-                <a href="<?php echo $this->createUrl('renewals'); ?>">
+                <a href="<?php echo $this->createUrl('cat34'); ?>">
                     <i class="icon-undo"></i>
                     取消筛选
                 </a>
@@ -46,9 +55,15 @@
             <thead>
                 <tr> 
                     <th>序号</th>
-                    <th>客户名称</th>
-                    <th>转换时间</th>
-                    <th>金额</th> 
+                    <th>组别</th>
+                    <th>合计</th>
+                    <th>0类</th> 
+                    <th>1类</th> 
+                    <th>2类</th> 
+                    <th>3类</th> 
+                    <th>4类</th> 
+                    <th>5类</th> 
+                    <th>6类</th>  
                 </tr>
             </thead>
             <tbody>
@@ -58,9 +73,15 @@
                         ?>
                         <tr>
                             <td><?php echo $k+1; ?></td>
-                            <td><?php echo $v['cust_name']; ?></td>
-                            <td><?php echo $v['convt_time']; ?></td>
-                            <td><?php echo $v['total_money']; ?></td> 
+                            <td><?php echo $v['group_name']; ?></td>
+                            <td><?php echo $v['total']; ?></td>
+                            <td><?php echo $v['a0']; ?></td> 
+                            <td><?php echo $v['a1']; ?></td> 
+                            <td><?php echo $v['a2']; ?></td> 
+                            <td><?php echo $v['a3']; ?></td>  
+                            <td><?php echo $v['a4']; ?></td> 
+                            <td><?php echo $v['a5']; ?></td> 
+                            <td><?php echo $v['a6']; ?></td>  
                         </tr>
                         <?php
                     endforeach;
@@ -83,4 +104,5 @@
 
 </div> <!-- .row -->
 <div class="space-20"></div>
+ 
  <script src="/static/js/secondlevel.js"></script>

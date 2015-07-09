@@ -1,7 +1,7 @@
 <?php
 	$this->breadcrumbs = array(
 		'报表分析' ,
-		'售后-新分资源分析',
+		'新分资源跟踪分析',
 	);
 ?>
 
@@ -55,6 +55,8 @@
                     <th>未处理的分类%</th>
                     <th>3/4/5类</th>
                     <th>3/4/5类%</th>
+                    <th>10类</th>
+                    <th>10类%</th>
                     <th>0类</th>
                     <th>0类%</th>
                     <th>1类</th>
@@ -84,6 +86,8 @@
                             <td><?php echo $v['total']==0?'0%':number_format(100*$v['a']/$v['total'],2).'%'; ?></td>
                             <td><?php echo $v['b']; ?></td>
                             <td><?php echo $v['total']==0?'0%':number_format(100*$v['b']/$v['total'],2).'%'; ?></td>
+                            <td><?php echo $v['c']; ?></td>
+                            <td><?php echo $v['total']==0?'0%':number_format(100*$v['c']/$v['total'],2).'%'; ?></td>
                             <td><?php echo $v['a0']; ?></td>
                             <td><?php echo $v['total']==0?'0%':number_format(100*$v['a0']/$v['total'],2).'%'; ?></td>
                             <td><?php echo $v['a1']; ?></td>

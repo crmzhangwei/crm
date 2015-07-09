@@ -536,16 +536,16 @@ class CustomerInfoController extends GController {
     protected function getTranUsers() {
         $loginid = Yii::app()->user->id;
         $user = Users::model()->findByPk($loginid);
-        $sql = "select u.id,u.eno from {{users}} u "
+        $sql = "select u.id,u.name from {{users}} u "
                 . "left join {{user_role}} ur on u.id=ur.user_id "
                 . "left join {{role_info}} ri on ur.role_id=ri.id "
                 . "where u.dept_id=:dept_id and ri.name='成交师'";
         $users = Users::model()->findAllBySql($sql, array(':dept_id' => $user->dept_id));
         $empty = new Users();
         $empty->id = '';
-        $empty->eno = "请选择成交师";
+        $empty->name = "请选择成交师";
         $users = array_merge(array($empty), $users);
-        return CHtml::listData($users, 'id', 'eno');
+        return CHtml::listData($users, 'id', 'name');
     }
 
     protected function genCategoryArray() {

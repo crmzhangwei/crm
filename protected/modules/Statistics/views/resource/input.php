@@ -1,7 +1,7 @@
 <?php
 	$this->breadcrumbs = array(
 		'报表分析',
-		'售后-续费会员分析',
+		'资源录入统计',
 	);
 ?>
 
@@ -11,21 +11,23 @@
         $form = $this->beginWidget('CActiveForm', array(
             'id' => 'user-form',
             'method' => 'post',
-            'action' => $this->createUrl('after/renewals'),
+            'action' => $this->createUrl('resource/input'),
             'htmlOptions' => array(
                 'class' => 'form-inline',
                 'role' => 'form'
             ),
         ));
         ?> 
-             <div class="form-group"> 
-                <?php echo CHtml::dropDownList( 'search[dept]', '', $this->getDeptArr(), array('onchange'=>'listgroup(this)')); ?>
+             <div class="form-group">
+				&nbsp;&nbsp;时间段: 
+                <input type="text" class="form-control" name="search[stime]" value="<?php echo $search['stime'];?>" placeholder="" onClick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})">
+		to  
+                <input type="text" class="form-control" name="search[etime]" value="<?php echo $search['etime'];?>" placeholder="" onClick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})">
             </div>
-			<div class="form-group"> 
-				<select id="groupinfo" name="search[group]">
-					<option value ="0">--请选择组--</option>
-				</select>
-            </div>
+            <div class="form-group">
+				&nbsp;&nbsp;姓名: 
+                <input type="text" class="form-control" name="search[eno]" value="<?php echo $search['eno'];?>" placeholder="" >
+	    </div>
             <div class="form-group"> 
                 <button type="submit" class="btn btn-info form-control">
                     <i class="icon-search"></i>
@@ -33,7 +35,7 @@
                 </button>
             </div> 
             <div class="form-group" style="padding-left: 10px; padding-top: 10px;"> 
-                <a href="<?php echo $this->createUrl('renewals'); ?>">
+                <a href="<?php echo $this->createUrl('input'); ?>">
                     <i class="icon-undo"></i>
                     取消筛选
                 </a>
@@ -46,9 +48,8 @@
             <thead>
                 <tr> 
                     <th>序号</th>
-                    <th>客户名称</th>
-                    <th>转换时间</th>
-                    <th>金额</th> 
+                    <th>姓名</th>
+                    <th>录入总数</th> 
                 </tr>
             </thead>
             <tbody>
@@ -58,9 +59,8 @@
                         ?>
                         <tr>
                             <td><?php echo $k+1; ?></td>
-                            <td><?php echo $v['cust_name']; ?></td>
-                            <td><?php echo $v['convt_time']; ?></td>
-                            <td><?php echo $v['total_money']; ?></td> 
+                            <td><?php echo $v['name']; ?></td>
+                            <td><?php echo $v['total']; ?></td> 
                         </tr>
                         <?php
                     endforeach;
@@ -83,4 +83,4 @@
 
 </div> <!-- .row -->
 <div class="space-20"></div>
- <script src="/static/js/secondlevel.js"></script>
+ 

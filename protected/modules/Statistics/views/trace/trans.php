@@ -1,7 +1,7 @@
 <?php
 	$this->breadcrumbs = array(
 		'报表分析' ,
-		'售后-联系量统计',
+		'成交师开14、15、17类跟踪分析',
 	);
 ?>
 
@@ -11,13 +11,25 @@
         $form = $this->beginWidget('CActiveForm', array(
             'id' => 'user-form',
             'method' => 'post',
-            'action' => $this->createUrl('after/yeji'),
+            'action' => $this->createUrl('trace/trans'),
             'htmlOptions' => array(
                 'class' => 'form-inline',
                 'role' => 'form'
             ),
         ));
-        ?> 
+        ?> <div class="form-group">
+            开14<input type="radio" name="search[ctype]" value="14" <?php echo $search['ctype']==14?'checked':'';?>/>
+            开15<input type="radio" name="search[ctype]" value="15" <?php echo $search['ctype']==15?'checked':'';?>/>
+            开17<input type="radio" name="search[ctype]" value="17" <?php echo $search['ctype']==17?'checked':'';?>/>
+            </div>
+	    <div class="form-group"> 
+                <?php echo CHtml::dropDownList( 'search[dept]', '', $this->getDeptArr(), array('onchange'=>'listgroup(this)')); ?>
+            </div>
+	    <div class="form-group"> 
+		<select id="groupinfo" name="search[group]">
+			<option value ="0">--请选择组--</option>
+		</select>
+            </div>
             <div class="form-group">
 				&nbsp;&nbsp;时间段: 
                                 <input type="text" class="form-control" name="search[stime]" value="<?php echo $search['stime'];?>" placeholder="" onClick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})">
@@ -31,7 +43,7 @@
                 </button>
             </div> 
             <div class="form-group" style="padding-left: 10px; padding-top: 10px;"> 
-                <a href="<?php echo $this->createUrl('yeji'); ?>">
+                <a href="<?php echo $this->createUrl('trans'); ?>">
                     <i class="icon-undo"></i>
                     取消筛选
                 </a>
@@ -44,21 +56,17 @@
             <thead>
                 <tr> 
                     <th>序号</th>
-                    <th>日期</th>
-                    <th>工号</th>
-                    <th>姓名</th>
-                    <th>9-10</th>
-                    <th>10-11</th>
-                    <th>11-12</th>
-                    <th>12-13</th>
-                    <th>13-14</th>
-                    <th>14-15</th>
-                    <th>15-16</th>
-                    <th>16-17</th>
-                    <th>17-18</th>
-                    <th>18-19</th>
-                    <th>19-20</th>
-                    <th>20-21</th>
+                    <th>成交师</th>
+                    <th>合计</th>
+                    <th>10类</th> 
+                    <th>11类</th> 
+                    <th>12类</th> 
+                    <th>13类</th> 
+                    <th>14类</th> 
+                    <th>15类</th> 
+                    <th>16类</th> 
+                    <th>17类</th> 
+                    <th>17类%</th>
                 </tr>
             </thead>
             <tbody>
@@ -68,21 +76,17 @@
                         ?>
                         <tr>
                             <td><?php echo $k+1; ?></td>
-                            <td><?php echo $v['dial_time']; ?></td>
-                            <td><?php echo $v['eno']; ?></td>
                             <td><?php echo $v['name']; ?></td>
-                            <td><?php echo $v['a9']; ?></td>
-                            <td><?php echo $v['a10']; ?></td>
-                            <td><?php echo $v['a11']; ?></td>
-                            <td><?php echo $v['a12']; ?></td>
-                            <td><?php echo $v['a13']; ?></td>
-                            <td><?php echo $v['a14']; ?></td>
-                            <td><?php echo $v['a15']; ?></td>
-                            <td><?php echo $v['a16']; ?></td>
+                            <td><?php echo $v['total']; ?></td>
+                            <td><?php echo $v['a10']; ?></td> 
+                            <td><?php echo $v['a11']; ?></td> 
+                            <td><?php echo $v['a12']; ?></td> 
+                            <td><?php echo $v['a13']; ?></td>  
+                            <td><?php echo $v['a14']; ?></td> 
+                            <td><?php echo $v['a15']; ?></td> 
+                            <td><?php echo $v['a16']; ?></td> 
                             <td><?php echo $v['a17']; ?></td>
-                            <td><?php echo $v['a18']; ?></td>
-                            <td><?php echo $v['a19']; ?></td>
-                            <td><?php echo $v['a20']; ?></td> 
+                            <td><?php echo $v['total17']==0?'0%':number_format(100*$v['a17']/$v['total17'],2).'%'; ?></td> 
                         </tr>
                         <?php
                     endforeach;
@@ -106,3 +110,4 @@
 </div> <!-- .row -->
 <div class="space-20"></div>
  
+ <script src="/static/js/secondlevel.js"></script>
