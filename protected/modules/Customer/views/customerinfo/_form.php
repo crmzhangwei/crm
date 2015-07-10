@@ -90,19 +90,19 @@
 		endif;?>
 		
 		<?php if($model->isNewRecord):?>
-		<select id="groupinfo" name="group" onchange="listuser(this)">
+		<select id="groupinfo3" name="group" onchange="listuser(this)">
 			<option value ="0">--请选择组--</option>
 		</select>
 		<?php else: 
-		    echo   CHtml::dropDownList('group', intval($user_info['group_id']), $user_info['group_arr'], array('id'=>"groupinfo",'onchange'=>"listuser(this)"));
+		    echo   CHtml::dropDownList('group', intval($user_info['group_id']), $user_info['group_arr'], array('id'=>"groupinfo3",'onchange'=>"listuser(this)"));
 		     endif;?>
 
 		<?php if($model->isNewRecord):?>
-		<select id='userinfo' name="users" onchange="enoval(this)">	
+		<select id='userinfo3' name="users" onchange="enoval(this)">	
 			<option value ="0">---请选择人员---</option>
 		</select>
 		<?php else: 
-		    echo   CHtml::dropDownList('users', $user_info['eno'], $user_info['user_arr'], array('id'=>"userinfo",'onchange'=>"enoval(this)"));
+		    echo   CHtml::dropDownList('users', $user_info['eno'], $user_info['user_arr'], array('id'=>"userinfo3",'onchange'=>"enoval(this)"));
 		endif;?>
 		</td>
 	</tr> 
@@ -127,12 +127,12 @@
       	var deptid = $(obj).val();
       	var groupStr = '<option value ="0">--请选择组--</option>';
       	if (deptid == 0) {
-            $('#groupinfo').html(groupStr);
-            $('#userinfo').html('<option value ="0">--请选择人员--</option>');
+            $('#groupinfo3').html(groupStr);
+            $('#userinfo3').html('<option value ="0">--请选择人员--</option>');
             $('#userid').val('');
       	}
         else{
-            $('#userinfo').html('<option value ="0">--请选择人员--</option>');
+            $('#userinfo3').html('<option value ="0">--请选择人员--</option>');
             $('#userid').val('');
         }
       	$.post("./index.php?r=Customer/customerinfo/getGroup",{'deptid':deptid},function(data)
@@ -142,7 +142,7 @@
 	        {
 	         	groupStr += '<option value ='+i+'>'+data[i]+'</option>';
 	        }
-	        $('#groupinfo').html(groupStr);
+	        $('#groupinfo3').html(groupStr);
 	    },'json')
     }
 
@@ -152,7 +152,7 @@
         var deptid = $('#dept').val();
     	var optStr = '<option value ="0">---请选择人员---</option>';
     	if (gid == 0) {
-            $('#userinfo').html(optStr);
+            $('#userinfo3').html(optStr);
             $('#userid').val('');
       	}
         else{
@@ -165,7 +165,7 @@
 	        {
 	         	optStr += '<option value ='+i+'>'+data[i]+'</option>';
 	        }
-	        $('#userinfo').html(optStr);
+	        $('#userinfo3').html(optStr);
 	    },'json')
 	    
     }

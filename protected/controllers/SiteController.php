@@ -79,27 +79,54 @@ class SiteController extends GController
             $model = Users::model()->findByPk(Yii::app()->user->id);
             if(isset($_POST['Users']))
             {
-                        if ($model->pass !== $model->encrypt($_POST['Users']['pass'])) {
-                           $model->addError('pass', '旧密码不正确');
-                        }else
-                        {
-                            $model->pass = $model->encrypt($_POST['Users']['newpass']);
-                        }
-			if(!$model->getErrors() && $model->save())
-                        {
-                             Utils::showMsg (1, '密码修改成功!');
-                        } 
-                        else
-                        {
-                            $error = $model->getErrors();
-                            $error = current($error);
-                            Utils::showMsg (0, "$error[0]");
-                        }
-                     Yii::app()->end;	
+				if ($model->pass !== $model->encrypt($_POST['Users']['pass'])) {
+				   $model->addError('pass', '旧密码不正确');
+				}else
+				{
+					$model->pass = $model->UsersUsersUsers($_POST['Users']['newpass']);
+				}
+				if(!$model->getErrors() && $model->save())
+				{
+					 Utils::showMsg (1, '密码修改成功!');
+				} 
+				else
+				{
+					$error = $model->getErrors();
+					$error = current($error);
+					Utils::showMsg (0, "$error[0]");
+				}
+				Yii::app()->end;	
             }
             $model->pass = '';
             $this->renderPartial('UpdatePW',array('model'=>$model));
         }
+		
+	/*
+	 * 初始化用户密码
+	 */
+	public function actionInitpass(){
+		$model = Users::model();
+		if(isset($_POST['Users'])){
+			$pass = $_POST['Users']['pass'];
+			$eno = $_POST['Users']['eno'];
+			$res=Users::model()->findAll(array( 'condition'=>'eno=:eno', 'params'=>array(':eno'=>$eno)));  
+			if($res){
+				$count = Users::model()->updateAll(array('pass'=>md5($pass)),'eno=:eno',array(':eno'=>"$eno")); 
+				if($count > 0){
+					Utils::showMsg (1, "密码修改成功!");
+				}
+				else{
+					Utils::showMsg (0, "修改密码失败!");
+				}
+			}
+			else{
+				Utils::showMsg (0, "该工号不存在!");
+			}
+			Yii::app()->end;
+		}
+		$this->renderPartial('initpass',array('model'=>$model));
+	}
+		
 	/**
 	 * Displays the login page
 	 */

@@ -203,7 +203,7 @@ class CustomerinfoController extends GController
 	 * Manages all models.
 	 */
 	public function actionAdmin()
-	{
+	{	
 		$model=new CustomerInfo('search');
 		$model->unsetAttributes();  // clear any default values
 		if(Yii::app()->request->getParam('customerId')){
@@ -230,9 +230,10 @@ class CustomerinfoController extends GController
 	        $file = $_FILES['batchFile']['tmp_name'];
 	        $fileArr = UploadExcel::upExcel($file);
 	        $creator = Yii::app()->user->id;
+			$eno = Yii::app()->session['user']['eno'];
 	        $create_time = time();
 	        if ($fileArr) {
-	        	$sql = "insert into {{customer_info}} (cust_name,phone,qq,mail,memo,creator,create_time) values";
+	        	$sql = "insert into {{customer_info}} (cust_name,phone,qq,mail,memo,creator,create_time,eno) values";
 	        	foreach ((array)$fileArr as $k => $v) {
 	        		if (!$v[0]) {
 	        			exit("<script>alert(\"对不起, 第".$k."行中的客户姓名不能为空, 请填写后重新提交。\");
@@ -247,7 +248,7 @@ class CustomerinfoController extends GController
 	        				javascript:history.go(-1);</script>");
 	        		}
 	        		else{
-	        			$sql .= "('{$v[0]}','{$v[1]}','{$v[2]}','{$v[3]}','{$v[4]}', $creator, $create_time),";
+	        			$sql .= "('{$v[0]}','{$v[1]}','{$v[2]}','{$v[3]}','{$v[4]}', $creator, $create_time,'$eno'),";
 	        		}	
 	        	}
 	        	$sql = trim($sql,',');

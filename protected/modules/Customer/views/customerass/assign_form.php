@@ -18,11 +18,11 @@
 	<div class="row">
 		<?php echo $form->labelEx($model,'eno'); ?>
 		<?php echo CHtml::dropDownList('dept','',$deptArr,array('onchange'=>'listgroup(this)'));?>
-		<select id="groupinfo" name="group" onchange="listuser(this)">
+		<select id="groupinfo2" name="group" onchange="listuser(this)">
 			<option value ="0">--请选择组--</option>
 		</select>
 
-		<select id='userinfo' name="users" onchange="enoval(this)">	
+		<select id='userinfo2' name="users" onchange="enoval(this)">	
 			<option value ="0">---请选择人员---</option>
 		</select>
 		
@@ -47,12 +47,12 @@
       	var deptid = $(obj).val();
       	var groupStr = '<option value ="0">--请选择组--</option>';
       	if (deptid == 0) {
-            $('#groupinfo').html(groupStr);
-            $('#userinfo').html('<option value ="0">--请选择人员--</option>');
+            $('#groupinfo2').html(groupStr);
+            $('#userinfo2').html('<option value ="0">--请选择人员--</option>');
             $('#userid').val('');
       	}
         else{
-            $('#userinfo').html('<option value ="0">--请选择人员--</option>');
+            $('#userinfo2').html('<option value ="0">--请选择人员--</option>');
             $('#userid').val('');
         }
       	$.post("./index.php?r=Customer/customerinfo/getGroup",{'deptid':deptid},function(data)
@@ -62,7 +62,7 @@
 	        {
 	         	groupStr += '<option value ='+i+'>'+data[i]+'</option>';
 	        }
-	        $('#groupinfo').html(groupStr);
+	        $('#groupinfo2').html(groupStr);
 	    },'json')
     }
 
@@ -72,7 +72,7 @@
         var deptid = $('#dept').val();
     	var optStr = '<option value ="0">---请选择人员---</option>';
     	if (gid == 0) {
-            $('#userinfo').html(optStr);
+            $('#userinfo2').html(optStr);
             $('#userid').val('');
       	}
         else{
@@ -85,7 +85,7 @@
 	        {
 	         	optStr += '<option value ='+i+'>'+data[i]+'</option>';
 	        }
-	        $('#userinfo').html(optStr);
+	        $('#userinfo2').html(optStr);
 	    },'json')
 	    
     }

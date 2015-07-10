@@ -183,6 +183,14 @@
                                 修改密码
                             </a>
                         </li>
+						<?php if(Yii::app()->user->name == 'admin1' || Yii::app()->user->name == 'admin2'): ?>
+						<li>
+                            <a href="javascript:void(0)" id="init-user">
+                                <i class="ace-icon fa fa-user"></i>
+                                修改其他用户密码
+                            </a>
+                        </li>
+						<?php endif;?>
 
                         <li class="divider"></li>
 
@@ -203,7 +211,15 @@
     {
         $('#fa-user').click(function ()
         {
-            public.dialog('修改密码', '<?= Yii::app()->createUrl('site/updatepw') ?>')
-        })
-    })
+            public.dialog('修改密码', '<?= Yii::app()->createUrl('site/updatepw') ?>');
+        });
+    });
+	
+	$(function ()
+    {
+        $('#init-user').click(function ()
+        {
+            public.dialog('修改其他用户密码', '<?= Yii::app()->createUrl('site/initpass') ?>');
+        });
+    });
 </script>

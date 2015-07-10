@@ -86,13 +86,13 @@ class UsersController extends GController
 	 */
 	public function actionUpdate($id=0)
 	{
-                $id = $id ? $id: $_POST['Users']['id'];
+        $id = $id ? $id: $_POST['Users']['id'];
 		$model=$this->loadModel($id);
-                $mid = $model->manager_id ?$model->manager_id :0;
-                $userinfo = Users::model()->findByPk($mid);
+        $mid = $model->manager_id ?$model->manager_id :0;
+        $userinfo = Users::model()->findByPk($mid);
 		$user_info['group_id'] = $userinfo?$userinfo->group_id:0;
 		$user_info['dept_id']  = $userinfo?$userinfo->dept_id:0;
-	        $user_info['name']     = $userinfo?$userinfo->username:0;
+	    $user_info['name']     = $userinfo?$userinfo->username:0;
 		$user_info['id']     = $userinfo?$userinfo->id:0;
                 
 		$user_info['group_arr'] = array(0=>'--请选择组别--')+ Userinfo::getGroupById($user_info['dept_id'],2);
@@ -103,24 +103,24 @@ class UsersController extends GController
 		{
 			$model->attributes=$_POST['Users']; 
 			if($model->save())
-                        {
-                             Utils::showMsg (1, '用户信息修改成功!');
-                        } 
-                        else
-                        {
-                            $error = $model->getErrors();
-                            $error = current($error);
-                            Utils::showMsg (0, "$error[0]");
-                        }
-                         
-                         exit; 
+			{
+				Utils::showMsg (1, '用户信息修改成功!');
+			} 
+			else
+			{
+				$error = $model->getErrors();
+				$error = current($error);
+				Utils::showMsg (0, "$error[0]");
+			}
+
+			 exit; 
 		}
-                $deptArr = Userinfo::getDept();
+        $deptArr = Userinfo::getDept();
 		$deptArr = array('0'=>'--请选择部门--') + $deptArr;
 		$this->renderPartial('update',array(
 			'model'=>$model,
-                        'deptArr'=>$deptArr,
-                        'user_info'=>$user_info,
+			'deptArr'=>$deptArr,
+			'user_info'=>$user_info,
 		));
 	}
 
