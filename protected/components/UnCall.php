@@ -12,20 +12,20 @@ class UnCall {
     public static function getZone($phonenumber){
         $uncall = Yii::app()->params['UNCALL'];
         if(!$uncall['enable_zone']){
-            return 0;
+            return false;
         }
         $current_city = $uncall['city'];
-        $ret=0;
+        $ret=false;
         $url = $uncall['zoneservice']; 
         $url = $url.$phonenumber;
         $result = file_get_contents($url); 
         $xml = simplexml_load_string($result); 
         if($xml){
             $msg = (string)$xml->retmsg;
-            if($msg=='OK'){
+            if(trim($msg)=='OK'){
                 $city = (string)$xml->city;
-                if($current_city!=$city){
-                    $ret=1;
+                if($current_city!=trim($city)){
+                    $ret=true;
                 }
             }
         }
@@ -66,7 +66,7 @@ class UnCall {
         if(UnCall::getZone($phonenumber)&&substr($phonenumber,0,1)=="1"){
             $phonenumber="0".$phonenumber;
         }
-        $result = $client->OnClickCall($user->extend_no, $cust->phone, "");
+        $result = $client->OnClickCall($user->extend_no, $phonenumber, ""); 
         $xml = simplexml_load_string($result);
         if ($xml&&((string) $xml->OnClickCall->Response) == 'success') {
             $dialdetail = new DialDetail();

@@ -258,9 +258,7 @@ class ServiceController extends GController {
      * @param type $cust_id
      */
     public function actionDial($cust_id) {
-        //$ret = UnCall::dial($cust_id);
-
-        $result = array('status' => 0, 'dial_id' => 123, 'message' => 'dial ok');
+        $result = UnCall::dial($cust_id); 
         echo json_encode($result);
     }
 
