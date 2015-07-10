@@ -1,6 +1,6 @@
 <?php
 class ResourceController extends GController { 
-    private $pageSize = 2; 
+    private $pageSize = 10; 
     /**
      * 资源录入统计
      */

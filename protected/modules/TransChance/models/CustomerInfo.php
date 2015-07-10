@@ -214,8 +214,7 @@ class CustomerInfo extends CActiveRecord {
             $itime = time();
             $itime = $itime - 86400*7;
             $criteria->addCondition("last_time>=$itime");
-        }
-        echo $this->iskey;
+        } 
         if ($this->iskey>-1) {
             $criteria->compare('iskey', $this->iskey);
         }
