@@ -19,13 +19,11 @@
         ));
         ?>  
 	    <div class="form-group"> 
-                <?php echo CHtml::dropDownList( 'search[dept]', '', $this->getDeptArr(), array('onchange'=>'listgroup(this)')); ?>
+                <?php echo CHtml::dropDownList( 'search[dept]', $search['dept'], $this->getDeptArr(), array('onchange'=>'listgroup(this)')); ?>
             </div>
-	    <div class="form-group"> 
-		<select id="groupinfo" name="search[group]">
-			<option value ="0">--请选择组--</option>
-		</select>
-            </div> 
+	    <div class="form-group">  
+                <?php echo CHtml::dropDownList( 'search[group]', $search['group'], $this->getGroupArr($search['dept']), array('onchange'=>'listgroup(this)','id'=>'groupinfo')); ?>
+            </div>
             <div class="form-group"> 
                 <button type="submit" class="btn btn-info form-control">
                     <i class="icon-search"></i>

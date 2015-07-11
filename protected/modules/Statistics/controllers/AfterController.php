@@ -91,6 +91,15 @@ EOF;
         $deptarr = array_merge(array($dept_empty), $deptarr);
         return CHtml::listData($deptarr, "id", "name");
     }
+    public function getGroupArr($deptid){
+        $sql = "select t.group_id,g.name as group_name from {{dept_group}} t left join {{group_info}} g on t.group_id=g.id where t.dept_id=:dept_id";
+            $grouparr = DeptGroup::model()->findAllBySql($sql, array(':dept_id' => $deptid));
+            $group_empty = new DeptGroup();
+            $group_empty->group_id = 0;
+            $group_empty->group_name = '--请选择组别--';
+            $grouparr = array_merge(array($group_empty), $grouparr);
+            return CHtml::listData($grouparr, 'group_id', 'group_name');
+    }
     /**
      * 售后新分资源统计报表 
      */

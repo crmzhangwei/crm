@@ -11,7 +11,7 @@
         $form = $this->beginWidget('CActiveForm', array(
             'id' => 'user-form',
             'method' => 'post',
-            'action' => $this->createUrl('after/newResource'),
+            'action' => $this->createUrl('trace/newresource'),
             'htmlOptions' => array(
                 'class' => 'form-inline',
                 'role' => 'form'
