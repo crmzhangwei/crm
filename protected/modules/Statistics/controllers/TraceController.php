@@ -46,7 +46,7 @@ case when cust_type_1='N' then 1 else 0 end as a17,
   case when cust_type_1<>'N' then 1 else 0 end as num
    from (
 SELECT 
-    distinct c.cust_id, c.cust_type_1,cust_type_2, u.name, u.dept_id , c.convt_time,u.eno
+    distinct c.cust_id, c.cust_type_1,cust_type_2, u.name, u.dept_id,u.group_id, c.convt_time,u.eno
 FROM
     c_cust_convt_detail c,
     c_users u 
@@ -55,7 +55,7 @@ WHERE
         AND  c.cust_type_2 =$ctype
 union all 
 SELECT 
-     distinct c.cust_id,'N' cust_type_1,cust_type_2, u.name, u.dept_id , c.convt_time,u.eno
+     distinct c.cust_id,'N' cust_type_1,cust_type_2, u.name, u.dept_id,u.group_id, c.convt_time,u.eno
 FROM
     c_cust_convt_detail c,
     c_users u 
@@ -95,6 +95,15 @@ EOF;
         $dept_empty->name = '--请选择部门--';
         $deptarr = array_merge(array($dept_empty), $deptarr);
         return CHtml::listData($deptarr, "id", "name");
+    }
+    public function getGroupArr($deptid){
+        $sql = "select t.group_id,g.name as group_name from {{dept_group}} t left join {{group_info}} g on t.group_id=g.id where t.dept_id=:dept_id";
+            $grouparr = DeptGroup::model()->findAllBySql($sql, array(':dept_id' => $deptid));
+            $group_empty = new DeptGroup();
+            $group_empty->group_id = 0;
+            $group_empty->group_name = '--请选择组别--';
+            $grouparr = array_merge(array($group_empty), $grouparr);
+            return CHtml::listData($grouparr, 'group_id', 'group_name');
     }
     /**
      * 新分资源跟踪报表 
@@ -230,7 +239,8 @@ SELECT DISTINCT
     c.cust_type_2,
     c.convt_time,
     u.dept_id,
-    u.name AS group_name
+    u.group_id,
+    g.name AS group_name
 FROM
     c_cust_convt_detail c,
     c_users u,
