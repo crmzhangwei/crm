@@ -3,12 +3,10 @@
 /* @var $dataProvider CActiveDataProvider */
 
 $this->breadcrumbs=array(
-	'Dics',
+	'字典数据',
 );
 
-$this->menu=array(
-	array('label'=>'Create Dic', 'url'=>array('create')),
-	array('label'=>'Manage Dic', 'url'=>array('admin')),
+$this->menu=array( 
 );
 ?>
 

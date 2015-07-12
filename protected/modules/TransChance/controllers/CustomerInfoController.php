@@ -581,7 +581,7 @@ class CustomerInfoController extends GController {
         }
         if (!isset($_POST['select'])) {
             //没有选择记录的情况
-            $this->redirect($this->createUrl("customerinfo/admin"));
+            $this->redirect($this->createUrl("customerInfo/admin"));
             return;
         }
         //选择了记录，跳转到分配页面

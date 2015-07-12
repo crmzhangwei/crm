@@ -8,11 +8,7 @@ $this->breadcrumbs=array(
 );
 
 $this->menu=array(
-	array('label'=>'List CustType', 'url'=>array('index')),
-	array('label'=>'Create CustType', 'url'=>array('create')),
-	array('label'=>'Update CustType', 'url'=>array('update', 'id'=>$model->id)),
-	array('label'=>'Delete CustType', 'url'=>'#', 'linkOptions'=>array('submit'=>array('delete','id'=>$model->id),'confirm'=>'Are you sure you want to delete this item?')),
-	array('label'=>'Manage CustType', 'url'=>array('admin')),
+	 
 );
 ?>
 

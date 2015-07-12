@@ -15,7 +15,7 @@ $this->menu=array(
 <h1>操作成功</h1>
 
 <?php 
-$url = Yii::app()->createUrl("Chance/customerinfo/admin");
+$url = Yii::app()->createUrl("Chance/customerInfo/admin");
 echo "<p><a href='$url'>返回列表</a></p>";
 
 ?> 

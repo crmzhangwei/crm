@@ -4,7 +4,7 @@ Yii::app()->clientScript->registerScript('buttonA', "
        
         $('#btn_cancel').click(
             function(){
-                $('#finance-form').attr('action','index.php?r=Chance/customerinfo/admin');
+                $('#finance-form').attr('action','index.php?r=Chance/customerInfo/admin');
                 $('#finance-form').submit();
             }
         );
