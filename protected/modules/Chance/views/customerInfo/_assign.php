@@ -4,7 +4,7 @@ Yii::app()->clientScript->registerScript('buttonA', "
        
         $('#btn_cancel').click(
             function(){
-                $('#finance-form').attr('action','index.php?r=Chance/customerinfo/admin');
+                $('#finance-form').attr('action','index.php?r=Chance/customerInfo/admin');
                 $('#finance-form').submit();
             }
         );
@@ -20,7 +20,7 @@ Yii::app()->clientScript->registerScript('buttonA', "
 	// There is a call to performAjaxValidation() commented in generated controller code.
 	// See class documentation of CActiveForm for details on this.
 	'enableAjaxValidation'=>false,
-        'action'=>Yii::app()->createUrl('/Chance/customerinfo/assignNextTime')
+        'action'=>Yii::app()->createUrl('/Chance/customerInfo/assignNextTime')
 )); ?>
 
 	<p class="note"><span class="required">*</span>字段为必填项.</p>

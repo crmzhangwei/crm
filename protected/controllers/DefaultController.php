@@ -1,6 +1,6 @@
 <?php
 
-class DefaultController extends Gcontroller
+class DefaultController extends GController
 {
 	public function actionIndex()
 	{

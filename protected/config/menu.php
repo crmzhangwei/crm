@@ -16,17 +16,17 @@ return array(
     'Chance' => array(
         'label' => '机会管理', 'icon' => 'menu-icon fa fa-stack-exchange','url' => array('/Chance/'),
          'items' => array(
-			array('label' => '安排联系机会', 'url' => array('/Chance/customerinfo/admin')),
-			array('label' => '我的机会', 'url' => array('/Chance/customerinfo/todaylist')),
-			array('label' => '未联系机会', 'url' => array('/Chance/customerinfo/oldList')),
+			array('label' => '安排联系机会', 'url' => array('/Chance/customerInfo/admin')),
+			array('label' => '我的机会', 'url' => array('/Chance/customerInfo/todaylist')),
+			array('label' => '未联系机会', 'url' => array('/Chance/customerInfo/oldList')),
            ),
     ),
     'TransChance' => array(
         'label' => '成交师-机会管理', 'icon' => 'menu-icon fa fa-stack-exchange','url' => array('/TransChance/'),
          'items' => array(
-			array('label' => '安排联系机会', 'url' => array('/TransChance/customerinfo/admin')),
-			array('label' => '我的机会', 'url' => array('/TransChance/customerinfo/todaylist')),
-			array('label' => '未联系机会', 'url' => array('/TransChance/customerinfo/oldList')),
+			array('label' => '安排联系机会', 'url' => array('/TransChance/customerInfo/admin')),
+			array('label' => '我的机会', 'url' => array('/TransChance/customerInfo/todaylist')),
+			array('label' => '未联系机会', 'url' => array('/TransChance/customerInfo/oldList')),
            ),
     ),
 

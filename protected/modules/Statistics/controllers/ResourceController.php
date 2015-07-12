@@ -33,9 +33,8 @@ FROM
     c_customer_info c,
     c_users u
 WHERE
-    c.creator = u.id
-GROUP BY u.name
-        $wherestr
+    c.creator = u.id $wherestr
+GROUP BY u.name 
 EOF;
         $criteria = new CDbCriteria();
         $result1 = Yii::app()->db->createCommand($sql)->query();

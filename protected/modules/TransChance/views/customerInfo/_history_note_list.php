@@ -56,7 +56,7 @@ $this->widget('GGridView', array(
     <div class="col-sm-6 no-padding-right">
         <?php
         $pg = $dataProvider->getPagination();
-        $pg->route = 'customerinfo/historyNoteList';
+        $pg->route = 'customerInfo/historyNoteList';
         $pg->params = array('cust_id' => $custmodel->id);
         $this->widget('GLinkPager', array('pages' => $pg, 'isajax' => 1));
         ?>

@@ -3,16 +3,15 @@
 /* @var $dataProvider CActiveDataProvider */
 
 $this->breadcrumbs=array(
-	'Cust Types',
+	'客户分类',
 );
 
 $this->menu=array(
-	array('label'=>'Create CustType', 'url'=>array('create')),
-	array('label'=>'Manage CustType', 'url'=>array('admin')),
+	 
 );
 ?>
 
-<h1>Cust Types</h1>
+<h1>客户分类</h1>
 
 <?php $this->widget('zii.widgets.CListView', array(
 	'dataProvider'=>$dataProvider,

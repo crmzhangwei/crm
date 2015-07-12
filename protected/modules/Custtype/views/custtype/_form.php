@@ -42,7 +42,7 @@
             </tr>
          </table> 
 	<div class="row buttons">
-		<?php echo CHtml::submitButton($model->isNewRecord ? '创建' : 'Save',array('class' => 'btn btn-sm btn-primary')); ?>
+		<?php echo CHtml::submitButton($model->isNewRecord ? '创建' : '保存',array('class' => 'btn btn-sm btn-primary')); ?>
 	</div>
 
 <?php $this->endWidget(); ?>

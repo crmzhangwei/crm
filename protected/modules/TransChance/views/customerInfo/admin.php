@@ -69,7 +69,7 @@ $form = $this->beginWidget('CActiveForm', array(
 <?php $this->endWidget(); ?>
 <?php
 $form = $this->beginWidget('CActiveForm', array(
-    'action' => Yii::app()->createUrl('TransChance/customerinfo/assignNextTime'),
+    'action' => Yii::app()->createUrl('TransChance/customerInfo/assignNextTime'),
     'method' => 'post',
         ));
 ?>

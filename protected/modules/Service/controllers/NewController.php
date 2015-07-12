@@ -1,6 +1,6 @@
 <?php
 
-class oldController extends GController {
+class NewController extends GController {
 
     /**
      * @var string the default layout for the views. Defaults to '//layouts/column2', meaning
@@ -16,6 +16,7 @@ class oldController extends GController {
             'model' => $this->loadModel($id),
         ));
     }
+    
     /**
      * 进入客户详情页面
      * @param type $id 客户id
@@ -41,7 +42,7 @@ class oldController extends GController {
         $aftermodel->setAttribute("next_time", date("Y-m-d H:i:s", $aftermodel->getAttribute("next_time"))); 
         $aftermodel->setAttribute("create_time", date("Y-m-d H:i:s", $aftermodel->getAttribute("create_time"))); 
         $creator = Users::model()->findByPk($aftermodel->creator);
-        $aftermodel->creator = $creator->getAttribute('eno'); 
+        $aftermodel->creator = $creator->getAttribute('name'); 
         $contractmodel->setAttribute("create_time", date("Y-m-d H:i:s", $contractmodel->getAttribute("create_time")));
         $contractmodel->setAttribute("comm_pay_time", date("Y-m-d H:i:s", $contractmodel->getAttribute("comm_pay_time")));
         $contractmodel->setAttribute("pay_time", date("Y-m-d H:i:s", $contractmodel->getAttribute("pay_time")));
@@ -62,12 +63,13 @@ class oldController extends GController {
             'loginuser' => $user,
         )); 
     }
+
     /**
      * Updates a particular model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id the ID of the model to be updated
      */
-    public function actionUpdate($id) {
+    public function actionUpdate($id) { 
         $noteinfo = new NoteInfo();
         $noteinfo->setAttribute("iskey", 0);
         $noteinfo->setAttribute("isvalid", 1);
@@ -101,21 +103,21 @@ class oldController extends GController {
                 $convt->setAttribute('convt_time', time());
                 $convt->setAttribute('user_id', Yii::app()->user->id);
                 $convt->save();
-            }
+            } 
             //保存合同信息
             $contractmodel->save(); 
             //保存小记信息
-            if (Utils::isNeedSaveNoteInfo($_POST['NoteInfo'])) {
+            if (Utils::isNeedSaveNoteInfo($_POST['NoteInfo'])){
                 //保存小记 
                 $noteinfo->attributes = $_POST['NoteInfo'];
                 if ($model->iskey != $noteinfo->iskey) {
                     $model->iskey = $noteinfo->iskey;
                 }
-                $noteinfo->cust_type=$newCustType;
-                $noteinfo->lib_type="3";
                 $noteinfo->next_contact = strtotime($noteinfo->next_contact);
                 $aftermodel->next_time = $noteinfo->next_contact;
-                $model->next_time=$noteinfo->next_contact;  
+                $model->next_time=$noteinfo->next_contact; 
+                $noteinfo->cust_type=$newCustType;
+                $noteinfo->lib_type="3";
                 $noteinfo->setAttribute("eno", Yii::app()->user->id);
                 $noteinfo->setAttribute("create_time", time());
                 $noteinfo->save();
@@ -131,7 +133,7 @@ class oldController extends GController {
                         $dialdetail->record_path=$record_path;
                         $dialdetail->save();
                 }
-            }
+            } 
             if ($newCustType == 8) {
                 //客户分类转成8，生成公海资源数据
                 $blackinfo = new BlackInfo();
@@ -140,7 +142,7 @@ class oldController extends GController {
                 $blackinfo->setAttribute('old_cust_type', $aftermodel->cust_type);
                 $blackinfo->setAttribute('create_time', time());
                 $blackinfo->setAttribute('creator', Yii::app()->user->id);
-                $blackinfo->save();
+                $blackinfo->save(); 
                 $aftermodel->delete();//删除售后库
                 $model->status="1";
                 //售后员已分配资源数减1
@@ -152,13 +154,12 @@ class oldController extends GController {
                 $aftermodel->save();
             }
             //更新类目或备注 
-            $model->last_time=time();//最后联系时间等于今天
+            $model->memo = $_POST['CustomerInfo']['memo'];
             $model->qq =  $_POST['CustomerInfo']['qq'];
             $model->mail =  $_POST['CustomerInfo']['mail'];
-            $model->memo = $_POST['CustomerInfo']['memo'];
             $model->category = $newCategory;
-            $model->save(); 
-             
+            $model->last_time=time();
+            $model->save();
             //加载页面数据
             if (!$noteinfo->hasErrors()&&!$contractmodel->hasErrors()&&!$aftermodel->hasErrors()&&!$model->hasErrors()) {
                 $transaction->commit();
@@ -166,15 +167,14 @@ class oldController extends GController {
                     //转入成功页面
                     $this->render("result");
                     return;
-                } else {
-                    //保存成功，没有错误，跳转到编辑页面
-                    $this->redirect($this->createUrl("old/Edit",array('id'=>$id)));
-                }
+                }else{
+                    $this->redirect($this->createUrl("new/Edit",array('id'=>$id)));
+                } 
             } else {
-                $transaction->rollback();
+                $transaction->rollback(); 
                 $noteinfo->setAttribute("next_contact", '');
             }
-        }
+        } 
         $model->setAttribute("create_time", date("Y-m-d H:i:s", $model->getAttribute("create_time")));
         $model->setAttribute("assign_time", date("Y-m-d H:i:s", $model->getAttribute("assign_time")));
         $model->setAttribute("next_time", date("Y-m-d H:i:s", $model->getAttribute("next_time"))); 
@@ -247,20 +247,20 @@ class oldController extends GController {
     }
 
     /**
-     * 遗留数据
+     * 新分客户
      */
     public function actionList() {
-        $model = new AftermarketCustInfo('search');
+        $model = new AftermarketCustInfo('searchNewList');
         $model->unsetAttributes();  // clear any default values
         if (isset($_GET['AftermarketCustInfo'])) {
             $model->attributes = $_GET['AftermarketCustInfo'];
-            $model->cust_name = $_GET['AftermarketCustInfo']['cust_name'];
-            $model->qq = $_GET['AftermarketCustInfo']['qq'];
             $model->dept = $_GET['AftermarketCustInfo']['dept'];
             $model->group = $_GET['AftermarketCustInfo']['group'];
             $model->category = $_GET['AftermarketCustInfo']['category'];
+            $model->searchtype = $_GET['AftermarketCustInfo']['searchtype'];
+            $model->keyword = $_GET['AftermarketCustInfo']['keyword'];
         }
-        $this->render('oldlist', array(
+        $this->render('newlist', array(
             'model' => $model,
         ));
     }
@@ -298,7 +298,9 @@ class oldController extends GController {
     public function getCategoryArr() {
         $sql = "select code,name from {{dic}} where ctype='cust_category'";
         $category = Dic::model()->findAllBySql($sql);
-        $empty = array('code' => '0', 'name' => '请选择类目');
+        $empty = new Dic();
+        $empty->code = "";
+        $empty->name = "请选择类目";
         $category = array_merge(array($empty), $category);
         return CHtml::listData($category, 'code', 'name');
     }
