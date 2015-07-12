@@ -116,7 +116,7 @@ class SiteController extends GController
 					Utils::showMsg (1, "密码修改成功!");
 				}
 				else{
-					Utils::showMsg (0, "修改密码失败!");
+					Utils::showMsg (0, "新密码不能跟原密码重复!");
 				}
 			}
 			else{

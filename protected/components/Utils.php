@@ -237,9 +237,11 @@ class Utils {
         foreach ($where as $k => $v) {
             if ($v && !strpos($whereStr, 'where')) {
                 if ($k == 'stime') {
+					$k = 'f.acct_time';
                     $v = strtotime($v);
                     $whereStr .= " where $k>='$v' and";
                 } elseif ($k == 'ftime') {
+					$k = 'f.acct_time';
                     $v = strtotime($v);
                     $whereStr .= " where $k<='$v' and";
                 } elseif ($k == 'dept') {
@@ -249,18 +251,29 @@ class Utils {
                     $k = 'u.group_id';
                     $whereStr .= " where $k='$v' and";
                 }
+				elseif ($k == 'users') {
+                    $k = 'u.eno';
+                    $whereStr .= " where $k='$v' and";
+                }
+				
             } elseif ($v && strpos($whereStr, 'where')) {
                 if ($k == 'stime') {
+					$k = 'f.acct_time';
                     $v = strtotime($v);
-                    $whereStr .= " $k='$v' and";
+                    $whereStr .= " $k>='$v' and";
                 } elseif ($k == 'ftime') {
+					$k = 'f.acct_time';
                     $v = strtotime($v);
-                    $whereStr .= " $k='$v' and";
+                    $whereStr .= " $k<='$v' and";
                 } elseif ($k == 'dept') {
                     $k = 'u.dept_id';
                     $whereStr .= " $k='$v' and";
                 } elseif ($k == 'group') {
                     $k = 'u.group_id';
+                    $whereStr .= " $k='$v' and";
+                }
+				elseif ($k == 'users') {
+                    $k = 'u.eno';
                     $whereStr .= " $k='$v' and";
                 }
             }

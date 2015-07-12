@@ -1,7 +1,7 @@
 
 function listgroup(obj){
     var deptid = $(obj).val();
-    var groupStr = '<option value ="0">--请选择组--</option>';
+    var groupStr = '';
     if (deptid == 0) {
         $('#groupinfo').html(groupStr);
         $('#userinfo').html('<option value ="0">--请选择人员--</option>');
@@ -26,7 +26,7 @@ function listgroup(obj){
     {
       	var gid = $(obj).val();
         var deptid = $('#search_dept').val();
-    	var optStr = '<option value ="0">---请选择人员---</option>';
+    	var optStr = '';
     	if (gid == 0) {
             $('#userinfo').html(optStr);
             $('#userid').val('');

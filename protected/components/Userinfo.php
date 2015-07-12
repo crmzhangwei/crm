@@ -21,13 +21,13 @@ class Userinfo
 
 	public static function getUserbygid($gid, $deptid)
 	{
-            $where = $gid=='-1' ? "ismaster=1 and dept_id=$deptid and username<>'admin'" : " dept_id=:deptid and group_id=:id and ismaster<>1 and username<>'admin'";//-1为精英组
+            $where = $gid=='-1' ? "ismaster=1 and dept_id=$deptid and username not like 'admin%'" : " dept_id=:deptid and group_id=:id and ismaster<>1 and username not like 'admin%'";//-1为精英组
             $modelgroup = Yii::app()->db->createCommand()
                 ->select('eno, name, cust_num')
                 ->from('{{users}}')
                 ->where($where, array(':deptid'=>$deptid,':id'=>$gid))
                 ->queryAll();
-	    $Users = array();
+	    $Users = array(0=>'--请选择人员--');
 	    foreach ($modelgroup as $key => $value) {
 	    	$Users[$value['eno']] = $value['name'].' (已分配'."$value[cust_num]".')' ;
 	    }
@@ -69,7 +69,7 @@ class Userinfo
 		
 		$allData = Yii::app()->db->createCommand("select g.`group_id`,i.`name` from `c_dept_group` as g left join `c_group_info` as i 
 			on g.`group_id`=i.`id` where dept_id = :deptid")->queryAll(TRUE,array(":deptid"=>$deptid));
-		$groupArr = array();
+		$groupArr = array(0=>'--请选择组--');
 		foreach ($allData as $k => $v) {
 			$groupArr[$v['group_id']] = $v['name'];
 		}
@@ -209,9 +209,9 @@ class Userinfo
 		$infoArr = array();
 		$user_info = array();
 		if(Yii::app()->request->getParam( 'search' )){
-			$infoArr['dept'] = $_GET['search']['dept'];
-			$infoArr['group'] = $_GET['search']['group'];
-			$infoArr['users'] = $_GET['search']['users'];
+			$infoArr['dept'] = isset($_GET['search']['dept']) ? $_GET['search']['dept'] : 0;
+			$infoArr['group'] = isset($_GET['search']['group']) ? $_GET['search']['group'] : 0;
+			$infoArr['users'] = isset($_GET['search']['users']) ? $_GET['search']['users'] : 0;
 			$user_info['group_arr'] = Userinfo::getGroupById($infoArr['dept']);
 			$user_info['user_arr'] = Userinfo::getUserbygid($infoArr['group'],$infoArr['dept']);	
 		}
