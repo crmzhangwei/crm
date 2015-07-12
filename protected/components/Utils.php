@@ -232,16 +232,16 @@ class Utils {
         return false;
     }
 
-    public static function addWhere($where) {
+    public static function addWhere($where, $flag=0) {
         $whereStr = '';
         foreach ($where as $k => $v) {
             if ($v && !strpos($whereStr, 'where')) {
                 if ($k == 'stime') {
-					$k = 'f.acct_time';
+					$k = $flag ? 'di.dial_time': 'f.acct_time';
                     $v = strtotime($v);
                     $whereStr .= " where $k>='$v' and";
                 } elseif ($k == 'ftime') {
-					$k = 'f.acct_time';
+					$k = $flag ? 'di.dial_time':'f.acct_time';
                     $v = strtotime($v);
                     $whereStr .= " where $k<='$v' and";
                 } elseif ($k == 'dept') {
@@ -258,11 +258,11 @@ class Utils {
 				
             } elseif ($v && strpos($whereStr, 'where')) {
                 if ($k == 'stime') {
-					$k = 'f.acct_time';
+					$k = $flag ? 'di.dial_time':'f.acct_time';
                     $v = strtotime($v);
                     $whereStr .= " $k>='$v' and";
                 } elseif ($k == 'ftime') {
-					$k = 'f.acct_time';
+					$k = $flag ? 'di.dial_time':'f.acct_time';
                     $v = strtotime($v);
                     $whereStr .= " $k<='$v' and";
                 } elseif ($k == 'dept') {

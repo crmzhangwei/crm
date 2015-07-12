@@ -207,6 +207,113 @@ class CountController extends GController
 		$this->render("everyday",$ret);
 	}
 	
+	public function actionContact(){
+		$search = Yii::app()->request->getParam("search");
+		if($search){
+			$where  = Utils::addWhere($search, 1);
+		}
+		else{
+			$where = '';
+		}
+		
+		$sql = "select d.name as dname,g.name as gname, u.name as uname, SUM(dial_long) as longs,COUNT(*)as num, FROM_UNIXTIME(dial_time,'%H') as times 
+			from `c_dial_detail` as di left join `c_users` as u on di.eno=u.eno left join `c_dept_info` as d on u.dept_id=d.id 
+			left join `c_group_info` as g on u.group_id=g.id $where group by FROM_UNIXTIME(dial_time,'%H') order by longs desc";
+		$result = Yii::app()->db->createCommand($sql)->queryAll();
+		$total = 0;
+		$resArr = array();
+		$timeArr = array('09','10','11','12','13','14','15','16','17','18','19','20','21');
+		if($result){	
+			if($search['dept'] && $search['group'] && $search['users']){
+				$dgUser = array();
+				foreach ($result as $k=>$v){
+					$dgUser[] = $v['dname'].$v['gname'].$v['uname'];
+				}
+				$dgUser = array_unique($dgUser);
+				
+				foreach ($dgUser as $k1 => $v1) {
+					foreach($timeArr as $t1){
+						$str = $v1.$t1;
+						$resArr[$v1][$t1]['num'] = 0;
+						$resArr[$v1][$t1]['longs'] = 0;
+						foreach ($result as $k2 => $v2) {
+							$str2 = $v2['dname'].$v2['gname'].$v2['uname'].$v2['times'];
+							if($str === $str2){
+								$resArr[$v1]['dname'] = $v2['dname'];
+								$resArr[$v1]['gname'] = $v2['gname'];
+								$resArr[$v1]['uname'] = $v2['uname'];
+								$resArr[$v1][$t1]['num'] += $v2['num'];
+								$resArr[$v1][$t1]['longs'] += $v2['longs'];
+							}
+						}
+					}	
+				}
+				$total = count($resArr);
+			}
+			elseif($search['dept'] && $search['group']){
+				$dgUser = array();
+				foreach ($result as $k=>$v){
+					$dgUser[] = $v['dname'].$v['gname'];
+				}
+				$dgUser = array_unique($dgUser);
+				
+				foreach ($dgUser as $k1 => $v1) {
+					foreach($timeArr as $t1){
+						$str = $v1.$t1;
+						$resArr[$v1][$t1]['num'] = 0;
+						$resArr[$v1][$t1]['longs'] = 0;
+						foreach ($result as $k2 => $v2) {
+							$str2 = $v2['dname'].$v2['gname'].$v2['times'];
+							if($str === $str2){
+								$resArr[$v1]['dname'] = $v2['dname'];
+								$resArr[$v1]['gname'] = $v2['gname'];
+								$resArr[$v1][$t1]['num'] += $v2['num'];
+								$resArr[$v1][$t1]['longs'] += $v2['longs'];
+							}
+						}
+					}	
+				}
+				$total = count($resArr);
+			}
+			else{
+				$dgUser = array();
+				foreach ($result as $k=>$v){
+					$dgUser[] = $v['dname'];
+				}
+				$dgUser = array_unique($dgUser);
+				
+				foreach ($dgUser as $k1 => $v1) {
+					foreach($timeArr as $t1){
+						$str = $v1.$t1;
+						$resArr[$v1][$t1]['num'] = 0;
+						$resArr[$v1][$t1]['longs'] = 0;
+						foreach ($result as $k2 => $v2) {
+							$str2 = $v2['dname'].$v2['times'];
+							if($str === $str2){
+								$resArr[$v1]['dname'] = $v2['dname'];
+								$resArr[$v1][$t1]['num'] += $v2['num'];
+								$resArr[$v1][$t1]['longs'] += $v2['longs'];
+							}
+						}
+					}	
+				}
+				$total = count($resArr);
+			}
+		}
+		//部门组别人员三级联动
+		$uInfo = Userinfo::secondlevel();
+		$data = array(
+			'total' => $total,
+			'search' => $search,
+			'deptArr' => $uInfo['deptArr'],
+			//'user' => $uInfo['groupArr'],
+			'infoArr'=>$uInfo['infoArr'],
+			'user_info'=>$uInfo['user_info'],
+			'resArr' => $resArr,
+		);
+		$this->render("contact", $data);
+	}
+	
 	function getCurMonthFirstDay($date) {//获取本月第一天
 		return date('Y-m-01', strtotime($date));
 	}
@@ -218,5 +325,5 @@ class CountController extends GController
 	function getNextMonthFirstDay($date) {//获取下月第一天
 		return date('Y-m-d', strtotime(date('Y-m-01', strtotime($date)) . ' +1 month'));
 	}
-
+	
 }
