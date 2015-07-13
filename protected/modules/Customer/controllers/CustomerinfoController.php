@@ -231,9 +231,11 @@ class CustomerinfoController extends GController
 	        $fileArr = UploadExcel::upExcel($file);
 	        $creator = Yii::app()->user->id;
 			$eno = Yii::app()->session['user']['eno'];
+			$assign_eno = Yii::app()->session['user']['eno'];//分配人
+			$assign_time = time();
 	        $create_time = time();
 	        if ($fileArr) {
-	        	$sql = "insert into {{customer_info}} (cust_name,phone,qq,mail,memo,creator,create_time,eno) values";
+	        	$sql = "insert into {{customer_info}} (cust_name,phone,qq,mail,memo,creator,create_time,eno,assign_eno,assign_time) values";
 	        	foreach ((array)$fileArr as $k => $v) {
 	        		if (!$v[0]) {
 	        			exit("<script>alert(\"对不起, 第".$k."行中的客户姓名不能为空, 请填写后重新提交。\");
@@ -248,12 +250,16 @@ class CustomerinfoController extends GController
 	        				javascript:history.go(-1);</script>");
 	        		}
 	        		else{
-	        			$sql .= "('{$v[0]}','{$v[1]}','{$v[2]}','{$v[3]}','{$v[4]}', $creator, $create_time,'$eno'),";
+	        			$sql .= "('{$v[0]}','{$v[1]}','{$v[2]}','{$v[3]}','{$v[4]}', $creator, $create_time,'$eno','$assign_eno',$assign_time),";
 	        		}	
 	        	}
 	        	$sql = trim($sql,',');
 	        	$command=yii::app()->db->createCommand($sql);
 	        	$num = $command->execute();
+				if($num>0){
+					$sql2 = "update {{users}} set cust_num=cust_num+$num where eno='$eno'";
+					yii::app()->db->createCommand($sql2)->execute();
+				}
 	        	exit("<script>alert(\"恭喜你, 成功导入".$num."条数据。\");javascript:history.go(-1);</script>");	
 	        }
 		}
