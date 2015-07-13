@@ -73,7 +73,7 @@ $this->widget('GGridView', array(
     {
         $('#create_role').click(function ()
         {
-            public.dialog('增加角色', '<?= Yii::app()->createUrl('User/roleinfo/create') ?>')
+            public.dialog('增加角色', '<?= Yii::app()->createUrl('User/roleInfo/create') ?>')
         })
     })
     
@@ -84,7 +84,7 @@ $this->widget('GGridView', array(
          console.log(trindex);
          var id = $('#select_'+trindex).val();
          var url;
-         <?php $a = Yii::app()->createurl('User/roleinfo/update/'); echo 'url='."'$a'"; ?> 
+         <?php $a = Yii::app()->createurl('User/roleInfo/update/'); echo 'url='."'$a'"; ?> 
          public.dialog('修改角色名',url+'&id='+id);
      }
 </script>

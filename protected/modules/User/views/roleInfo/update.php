@@ -60,7 +60,7 @@
 
             public.AjaxSaveForm({
                 obj: $("#createUserBtn"),
-                url: '<?php echo $model->isNewRecord ?$this->createUrl("/User/roleinfo/create") :$this->createUrl("/User/roleinfo/update"); ?>',
+                url: '<?php echo $model->isNewRecord ?$this->createUrl("/User/roleInfo/create") :$this->createUrl("/User/roleInfo/update"); ?>',
                 data: $("#roleinfo-form").serialize(),
                 callback: function (result) {
                     bootbox.alert(result.msg, function () {

@@ -102,7 +102,7 @@ $this->widget('GGridView', array(
         var extnum = $('#select_' + trindex).val();
         var url;
 <?php
-$a = Yii::app()->createurl('User/extnumber/listen');
+$a = Yii::app()->createurl('User/extNumber/listen');
 echo 'url=' . "'$a';";
 ?>
         url = url + "&ext=" + extnum;

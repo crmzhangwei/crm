@@ -2,7 +2,7 @@
 
 $this->pageTitle = '部门-组别管理页面';
 $this->breadcrumbs = array(
-    '部门组别管理' => array('/User/deptgroup/admin'),
+    '部门组别管理' => array('/User/deptGroup/admin'),
     '部门-组别管理页面',
 );
 ?>
@@ -12,7 +12,7 @@ $this->breadcrumbs = array(
             <ul class="nav nav-tabs padding-12 tab-color-blue" id="myTab4">
                 
                 <li class="active">
-                    <a href="<?php echo Yii::app()->createUrl('/User/deptgroup/admin'); ?>">部门组别分配</a>
+                    <a href="<?php echo Yii::app()->createUrl('/User/deptGroup/admin'); ?>">部门组别分配</a>
                 </li>
                
             </ul>
@@ -144,7 +144,7 @@ $this->breadcrumbs = array(
             tree.jstree(true).close_all();
             tree.jstree(true).uncheck_all();
             $.ajax({
-                url: '<?php echo $this->createUrl('/User/deptgroup/selectRolePermission');?>',
+                url: '<?php echo $this->createUrl('/User/deptGroup/selectRolePermission');?>',
                 type: 'post',
                 data: {roleid: roleid},
                 dataType: 'json',
@@ -169,7 +169,7 @@ $this->breadcrumbs = array(
                 return;
             }                
            public.Ajax({
-                url: '<?php echo $this->createUrl('/User/deptgroup/assignRolePermission');?>',
+                url: '<?php echo $this->createUrl('/User/deptGroup/assignRolePermission');?>',
                 data: {roleid: roleid, pids: nodes},
                 callback: function(result){
                     bootbox.alert( result.msg );

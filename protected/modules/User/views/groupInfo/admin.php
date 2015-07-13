@@ -73,7 +73,7 @@ $this->widget('GGridView', array(
     {
         $('#create_group').click(function ()
         {
-            public.dialog('增加组别', '<?= Yii::app()->createUrl('User/groupinfo/create') ?>')
+            public.dialog('增加组别', '<?= Yii::app()->createUrl('User/groupInfo/create') ?>')
         })
     })
     
@@ -83,7 +83,7 @@ $this->widget('GGridView', array(
          var trindex = $(obj).parents('tr').index();
          var id = $('#select_'+trindex).val();
          var url;
-         <?php $a = Yii::app()->createurl('User/groupinfo/update/'); echo 'url='."'$a'"; ?> 
+         <?php $a = Yii::app()->createurl('User/groupInfo/update/'); echo 'url='."'$a'"; ?> 
          public.dialog('修改组别',url+'&id='+id);
      }
 </script>

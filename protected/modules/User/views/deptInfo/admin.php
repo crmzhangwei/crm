@@ -73,7 +73,7 @@ $this->widget('GGridView', array(
     {
         $('#create_dept').click(function ()
         {
-            public.dialog('增加部门', '<?= Yii::app()->createUrl('User/deptinfo/create') ?>')
+            public.dialog('增加部门', '<?= Yii::app()->createUrl('User/deptInfo/create') ?>')
         })
     })
     
@@ -84,7 +84,7 @@ $this->widget('GGridView', array(
          console.log(trindex);
          var id = $('#select_'+trindex).val();
          var url;
-         <?php $a = Yii::app()->createurl('User/deptinfo/update/'); echo 'url='."'$a'"; ?> 
+         <?php $a = Yii::app()->createurl('User/deptInfo/update/'); echo 'url='."'$a'"; ?> 
          public.dialog('修改部门',url+'&id='+id);
      }
 </script>

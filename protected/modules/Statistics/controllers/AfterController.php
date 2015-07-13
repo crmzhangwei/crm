@@ -26,7 +26,7 @@ class AfterController extends GController {
             $wherestr = $wherestr . " and d.dial_time>$istime";
         }
         if (!empty($param['etime'])) {
-            $istime = strtotime($param['etime']);
+            $ietime = strtotime($param['etime']);
             $wherestr = $wherestr . " and d.dial_time<$ietime";
         }
         $sql = <<<EOF
