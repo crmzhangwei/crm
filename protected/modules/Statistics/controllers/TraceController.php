@@ -1,7 +1,11 @@
 <?php
 
-class TraceController extends GController { 
-    private $pageSize = 10; 
+class TraceController extends GController {
+
+    private $pageSize = 10;
+    private $cat34_titles = "序号,组别,合计,0类,1类,2类,3类,4类,5类,6类\n";
+    private $cat34_title_keys = array('group_name','total','a0','a1','a2','a3','a4','a5','a6');
+
     /**
      * 成交师开14,15,17类跟踪分析 
      */
@@ -16,7 +20,7 @@ class TraceController extends GController {
             $search['group'] = '';
         }
         $ctype = $search['ctype'];
-        $offset = ($page - 1) * $this->pageSize; 
+        $offset = ($page - 1) * $this->pageSize;
         $wherestr = "";
         if (!empty($search['stime'])) {
             $istime = strtotime($search['stime']);
@@ -26,11 +30,11 @@ class TraceController extends GController {
             $istime = strtotime($search['etime']);
             $wherestr = $wherestr . " and t.convt_time<=$ietime";
         }
-        if (!empty($search['dept'])) { 
-            $wherestr = $wherestr . " and t.dept_id=".$search['dept'];
+        if (!empty($search['dept'])) {
+            $wherestr = $wherestr . " and t.dept_id=" . $search['dept'];
         }
-        if (!empty($search['group'])) { 
-            $wherestr = $wherestr . " and t.group_id=".$search['group'];
+        if (!empty($search['group'])) {
+            $wherestr = $wherestr . " and t.group_id=" . $search['group'];
         }
         $sql = <<<EOF
 select tb.name,sum(a10) a10,sum(a11) a11,sum(a12) a12,sum(a13) a13,sum(a14) a14,sum(a15) a15,sum(a16) a16,sum(a17) a17,sum(num) as total, (select count(*) from c_trans_cust_info where eno=tb.eno and cust_type=17) as total17 from ( 
@@ -66,12 +70,12 @@ WHERE
         ) t where 1=1 $wherestr
 ) tb where 1=1 group by  tb.name
 EOF;
-        
+
         $result1 = Yii::app()->db->createCommand($sql)->query();
         $pages = new CPagination($result1->rowCount);
 
         //获取查询的条数
-        $pages->pageSize = $this->pageSize; 
+        $pages->pageSize = $this->pageSize;
         $result = Yii::app()->db->createCommand($sql . " LIMIT :offset,:limit");
         $result->bindValue(':offset', $offset);
         $result->bindValue(':limit', $pages->pageSize);
@@ -85,6 +89,7 @@ EOF;
         );
         $this->render("trans", $data);
     }
+
     /**
      * 获取部门数组 
      */
@@ -96,15 +101,17 @@ EOF;
         $deptarr = array_merge(array($dept_empty), $deptarr);
         return CHtml::listData($deptarr, "id", "name");
     }
-    public function getGroupArr($deptid){
+
+    public function getGroupArr($deptid) {
         $sql = "select t.group_id,g.name as group_name from {{dept_group}} t left join {{group_info}} g on t.group_id=g.id where t.dept_id=:dept_id";
-            $grouparr = DeptGroup::model()->findAllBySql($sql, array(':dept_id' => $deptid));
-            $group_empty = new DeptGroup();
-            $group_empty->group_id = 0;
-            $group_empty->group_name = '--请选择组别--';
-            $grouparr = array_merge(array($group_empty), $grouparr);
-            return CHtml::listData($grouparr, 'group_id', 'group_name');
+        $grouparr = DeptGroup::model()->findAllBySql($sql, array(':dept_id' => $deptid));
+        $group_empty = new DeptGroup();
+        $group_empty->group_id = 0;
+        $group_empty->group_name = '--请选择组别--';
+        $grouparr = array_merge(array($group_empty), $grouparr);
+        return CHtml::listData($grouparr, 'group_id', 'group_name');
     }
+
     /**
      * 新分资源跟踪报表 
      */
@@ -133,9 +140,9 @@ EOF;
             $istime = strtotime($param['etime']);
             $wherestr = $wherestr . " and t.assign_time<$ietime";
         }
-        if (!empty($param['dept'])) { 
-            $wherestr = $wherestr . " and t.dept_id=".$param['dept'];
-        } 
+        if (!empty($param['dept'])) {
+            $wherestr = $wherestr . " and t.dept_id=" . $param['dept'];
+        }
         $sql = <<<EOF
 select d.name as dept_name,sum(a) a,sum(b) b,sum(c) c,sum(a0)
 a0,sum(a1) a1,sum(a2) a2,sum(a3) a3,sum(a4) a4,sum(a5) a5,sum(a6)
@@ -192,12 +199,15 @@ EOF;
         );
         $this->render("newresource", $data);
     }
+
     /**
      * 开3，开4跟踪分析
      */
-    public function actionCat34(){
+    public function actionCat34() {
         $page = max(Yii::app()->request->getParam('page'), 1);
         $search = Yii::app()->request->getParam("search");
+        $isexcel = Yii::app()->request->getParam("isexcel");
+
         if (empty($search)) {
             $search['stime'] = '';
             $search['etime'] = '';
@@ -206,7 +216,7 @@ EOF;
             $search['group'] = '';
         }
         $ctype = $search['ctype'];
-        $offset = ($page - 1) * $this->pageSize; 
+        $offset = ($page - 1) * $this->pageSize;
         $wherestr = "";
         if (!empty($search['stime'])) {
             $istime = strtotime($search['stime']);
@@ -216,11 +226,11 @@ EOF;
             $istime = strtotime($search['etime']);
             $wherestr = $wherestr . " and t.convt_time<=$ietime";
         }
-        if (!empty($search['dept'])) { 
-            $wherestr = $wherestr . " and t.dept_id=".$search['dept'];
+        if (!empty($search['dept'])) {
+            $wherestr = $wherestr . " and t.dept_id=" . $search['dept'];
         }
-        if (!empty($search['group'])) { 
-            $wherestr = $wherestr . " and t.group_id=".$search['group'];
+        if (!empty($search['group'])) {
+            $wherestr = $wherestr . " and t.group_id=" . $search['group'];
         }
         $sql = <<<EOF
 select tb.group_name,sum(a0) as a0,sum(a1) as a1,sum(a2) as a2,sum(a3) as a3,sum(a4) as a4,sum(a5) as a5,sum(a6) as a6,sum(num) as total from (
@@ -259,42 +269,53 @@ EOF;
         //获取查询的条数
         $pages->pageSize = $this->pageSize;
         $pages->applyLimit($criteria);
-        $result = Yii::app()->db->createCommand($sql . " LIMIT :offset,:limit");
-        $result->bindValue(':offset', $pages->currentPage * $pages->pageSize);
-        $result->bindValue(':limit', $pages->pageSize);
-        $res = $result->queryAll();
-
-
-        $data = array(
-            'pages' => $pages,
-            'total' => $result1->rowCount,
-            'list' => $res,
-            'search' => $search,
-        );
-        $this->render("cat34", $data);
+        if ($isexcel) {
+            $result = Yii::app()->db->createCommand($sql);
+            $res = $result->queryAll();
+            $filename = "开3-开4跟踪分析.csv";
+            header("Content-type:text/csv");
+            header("Content-Disposition:attachment;filename=" . $filename); 
+            echo iconv('utf-8','gb2312',$this->cat34_titles);
+            foreach($res as $record){
+                echo iconv('utf-8','gb2312',Utils::array_to_string($this->cat34_title_keys,$record));
+            } 
+        } else {
+            $result = Yii::app()->db->createCommand($sql . " LIMIT :offset,:limit");
+            $result->bindValue(':offset', $pages->currentPage * $pages->pageSize);
+            $result->bindValue(':limit', $pages->pageSize);
+            $res = $result->queryAll();
+            $data = array(
+                'pages' => $pages,
+                'total' => $result1->rowCount,
+                'list' => $res,
+                'search' => $search,
+            );
+            $this->render("cat34", $data);
+        }
     }
+
     /**
      * 安排时间分布
      */
-    public function actionTimeanalyse(){
+    public function actionTimeanalyse() {
         $search = Yii::app()->request->getParam("search");
-        if (empty($search)) { 
+        if (empty($search)) {
             $search['dept'] = '';
             $search['group'] = '';
-        } 
+        }
         $wherestr = "";
         $curTime = date('Y-m-d');
-        $BeginDate=date('Y-m-01', strtotime(date("Y-m-d")));
+        $BeginDate = date('Y-m-01', strtotime(date("Y-m-d")));
         $endDate = date('Y-m-d', strtotime("$BeginDate +1 month -1 day"));
         $stime = strtotime($curTime);
-        $etime = strtotime($endDate); 
-        $wherestr=$wherestr." and next_time>=$stime";
-        $wherestr=$wherestr." and next_time<=$etime";
-        if (!empty($search['dept'])) { 
-            $wherestr = $wherestr . " and dept_id=".$search['dept'];
+        $etime = strtotime($endDate);
+        $wherestr = $wherestr . " and next_time>=$stime";
+        $wherestr = $wherestr . " and next_time<=$etime";
+        if (!empty($search['dept'])) {
+            $wherestr = $wherestr . " and dept_id=" . $search['dept'];
         }
-        if (!empty($search['group'])) { 
-            $wherestr = $wherestr . " and group_id=".$search['group'];
+        if (!empty($search['group'])) {
+            $wherestr = $wherestr . " and group_id=" . $search['group'];
         }
         $sql = <<<EOF
 select from_unixtime(tb.next_time,'%Y-%m-%d') as next_time,sum(a0) as a0,sum(a1) as a1,sum(a2) as a2,sum(a3) as a3,sum(a4) as a4,sum(a5) as a5,sum(a6) as a6
@@ -348,31 +369,32 @@ select '各成熟度人均库存' as next_time, (select count(*) from c_customer
 1 as total
 from c_customer_info where id =1
 EOF;
-         
-        
-        $result = Yii::app()->db->createCommand($sql); 
-        $res = $result->queryAll(); 
+
+
+        $result = Yii::app()->db->createCommand($sql);
+        $res = $result->queryAll();
         $days = count($res);
-        $data = array(  
+        $data = array(
             'list' => $res,
             'search' => $search,
-            'days'=>$days
+            'days' => $days
         );
         $this->render("timeanalyse", $data);
     }
+
     /**
      * 话务员工作统计
      */
-    public function actionWorkanalyse(){
+    public function actionWorkanalyse() {
         $page = max(Yii::app()->request->getParam('page'), 1);
         $search = Yii::app()->request->getParam("search");
         if (empty($search)) {
             $search['stime'] = '';
-            $search['etime'] = ''; 
+            $search['etime'] = '';
             $search['dept'] = '';
             $search['group'] = '';
-        } 
-        $offset = ($page - 1) * $this->pageSize; 
+        }
+        $offset = ($page - 1) * $this->pageSize;
         $wherestr = "";
         if (!empty($search['stime'])) {
             $istime = strtotime($search['stime']);
@@ -382,11 +404,11 @@ EOF;
             $istime = strtotime($search['etime']);
             $wherestr = $wherestr . " and t.dial_time<=$ietime";
         }
-        if (!empty($search['dept'])) { 
-            $wherestr = $wherestr . " and t.dept_id=".$search['dept'];
+        if (!empty($search['dept'])) {
+            $wherestr = $wherestr . " and t.dept_id=" . $search['dept'];
         }
-        if (!empty($search['group'])) { 
-            $wherestr = $wherestr . " and t.group_id=".$search['group'];
+        if (!empty($search['group'])) {
+            $wherestr = $wherestr . " and t.group_id=" . $search['group'];
         }
         $sql = <<<EOF
 SELECT 
@@ -412,12 +434,12 @@ WHERE
     1 = 1 $wherestr
 GROUP BY t.eno , t.name
 EOF;
-        
+
         $result1 = Yii::app()->db->createCommand($sql)->query();
         $pages = new CPagination($result1->rowCount);
 
         //获取查询的条数
-        $pages->pageSize = $this->pageSize; 
+        $pages->pageSize = $this->pageSize;
         $result = Yii::app()->db->createCommand($sql . " LIMIT :offset,:limit");
         $result->bindValue(':offset', $offset);
         $result->bindValue(':limit', $pages->pageSize);
@@ -431,10 +453,11 @@ EOF;
         );
         $this->render("workanalyse", $data);
     }
-    public function actionTest(){
-        echo date('Y-m-d H:i:s','1434703757');
+
+    public function actionTest() {
+        echo date('Y-m-d H:i:s', '1434703757');
         echo "<br>";
-        echo date('Y-m-d H:i:s','1436357700');
-                    
+        echo date('Y-m-d H:i:s', '1436357700');
     }
+
 }

@@ -232,16 +232,16 @@ class Utils {
         return false;
     }
 
-    public static function addWhere($where, $flag=0) {
+    public static function addWhere($where, $flag = 0) {
         $whereStr = '';
         foreach ($where as $k => $v) {
             if ($v && !strpos($whereStr, 'where')) {
                 if ($k == 'stime') {
-					$k = $flag ? 'di.dial_time': 'f.acct_time';
+                    $k = $flag ? 'di.dial_time' : 'f.acct_time';
                     $v = strtotime($v);
                     $whereStr .= " where $k>='$v' and";
                 } elseif ($k == 'ftime') {
-					$k = $flag ? 'di.dial_time':'f.acct_time';
+                    $k = $flag ? 'di.dial_time' : 'f.acct_time';
                     $v = strtotime($v);
                     $whereStr .= " where $k<='$v' and";
                 } elseif ($k == 'dept') {
@@ -250,19 +250,17 @@ class Utils {
                 } elseif ($k == 'group') {
                     $k = 'u.group_id';
                     $whereStr .= " where $k='$v' and";
-                }
-				elseif ($k == 'users') {
+                } elseif ($k == 'users') {
                     $k = 'u.eno';
                     $whereStr .= " where $k='$v' and";
                 }
-				
             } elseif ($v && strpos($whereStr, 'where')) {
                 if ($k == 'stime') {
-					$k = $flag ? 'di.dial_time':'f.acct_time';
+                    $k = $flag ? 'di.dial_time' : 'f.acct_time';
                     $v = strtotime($v);
                     $whereStr .= " $k>='$v' and";
                 } elseif ($k == 'ftime') {
-					$k = $flag ? 'di.dial_time':'f.acct_time';
+                    $k = $flag ? 'di.dial_time' : 'f.acct_time';
                     $v = strtotime($v);
                     $whereStr .= " $k<='$v' and";
                 } elseif ($k == 'dept') {
@@ -271,8 +269,7 @@ class Utils {
                 } elseif ($k == 'group') {
                     $k = 'u.group_id';
                     $whereStr .= " $k='$v' and";
-                }
-				elseif ($k == 'users') {
+                } elseif ($k == 'users') {
                     $k = 'u.eno';
                     $whereStr .= " $k='$v' and";
                 }
@@ -282,21 +279,43 @@ class Utils {
         return $whereStr;
     }
 
-    public static function genUserCondition($user_arr) { 
+    public static function genUserCondition($user_arr) {
         $wherestr = "";
-        if(empty($user_arr)){
+        if (empty($user_arr)) {
             return '';
-        } 
+        }
         $user_chunks = array_chunk($user_arr, 50);
         $wherestr = "";
         foreach ($user_chunks as $arr) {
             $instr = implode(",", $arr);
             $wherestr = $wherestr . " or id in( " . $instr . ")";
         }
-        if(is_array($user_chunks)&&count($user_chunks)>0){
-             $wherestr = substr($wherestr, 3);
+        if (is_array($user_chunks) && count($user_chunks) > 0) {
+            $wherestr = substr($wherestr, 3);
         }
         return $wherestr;
+    }
+    /**
+     * 带序号将数组记录转成字符串
+     * @param type $record
+     * @return string
+     */
+    public static function array_to_string($keys,$record) {
+        if (empty($record)) {
+            return "";
+        }
+        $data="";     
+        $i=1;
+        foreach($keys as $k=>$v){
+            if($i==1){
+                $data=$i.",".$record[$v];
+            }else{
+                $data=$data.",".$record[$v];
+            } 
+            $i++;
+        }
+        $data=$data."\n";
+        return $data;
     }
 
 }

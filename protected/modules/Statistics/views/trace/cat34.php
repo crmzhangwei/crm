@@ -20,6 +20,7 @@
         ?> <div class="form-group">
             开3<input type="radio" name="search[ctype]" value="3" <?php echo $search['ctype']==3?'checked':'';?>/>
             开4<input type="radio" name="search[ctype]" value="4" <?php echo $search['ctype']==4?'checked':'';?>/> 
+            <input type="hidden" name="isexcel" value="0" id="isexcel"/>
             </div>
 	    <div class="form-group"> 
                 <?php echo CHtml::dropDownList( 'search[dept]', $search['dept'], $this->getDeptArr(), array('onchange'=>'listgroup(this)')); ?>
@@ -38,13 +39,20 @@
                     <i class="icon-search"></i>
                     查询
                 </button>
-            </div> 
+            </div>
+            <div class="form-group" > 
+                <button type="button" class="btn btn-info form-control" onclick="exportToExcel()">
+                    <i class="icon-search"></i>
+                    导出excel
+                </button>
+            </div>
             <div class="form-group" style="padding-left: 10px; padding-top: 10px;"> 
                 <a href="<?php echo $this->createUrl('cat34'); ?>">
                     <i class="icon-undo"></i>
                     取消筛选
                 </a>
             </div> 
+             
         <?php $this->endWidget(); ?>
         <div class="space-10"></div>
     </div>
@@ -104,3 +112,9 @@
 <div class="space-20"></div>
  
  <script src="/static/js/secondlevel.js"></script>
+ <script>
+     function exportToExcel(){
+         $("#isexcel").val(1);
+         $("#user-form").submit();
+     }
+  </script>
