@@ -35,7 +35,7 @@
                 <input type="text" class="form-control" name="search[etime]" value="<?php echo $search['etime'];?>" placeholder="" onClick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})">
             </div>
             <div class="form-group"> 
-                <button type="submit" class="btn btn-info form-control">
+                <button type="button" class="btn btn-info form-control" onclick="sub();">
                     <i class="icon-search"></i>
                     查询
                 </button>
@@ -115,6 +115,10 @@
  <script>
      function exportToExcel(){
          $("#isexcel").val(1);
+         $("#user-form").submit();
+     }
+     function sub(){
+         $("#isexcel").val(0);
          $("#user-form").submit();
      }
   </script>

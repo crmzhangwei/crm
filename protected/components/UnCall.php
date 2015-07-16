@@ -68,7 +68,7 @@ class UnCall {
         }
         $result = $client->OnClickCall($user->extend_no, $phonenumber, ""); 
         $xml = simplexml_load_string($result);
-        if ($xml&&((string) $xml->OnClickCall->Response) == 'success') {
+        if ($xml&&((string) $xml->OnClickCall->Response) == 'Success') {
             $dialdetail = new DialDetail();
             $dialdetail->eno = $user->eno;
             $dialdetail->cust_id = $cust_id;
