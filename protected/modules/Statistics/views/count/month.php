@@ -1,16 +1,11 @@
 <?php
 	$this->breadcrumbs = array(
-		'报表分析' => array('yeji'),
+		'报表分析' => array('month'),
 		'月份明细',
 	);
 ?>
 
 <div class="row">
-	<div class="form-group">
-		选择月份:
-		<input type="text" class="form-control" name="search[stime]" value="<?php echo $search['stime'];?>" placeholder="" onClick="WdatePicker({dateFmt:'yyyy-MM'})">
-		</div>
-    <div class="col-xs-12">
 		<table class="table table-bordered table-hover table-striped table-projects">
 			<thead>
 				<tr>

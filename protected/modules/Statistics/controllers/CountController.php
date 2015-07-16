@@ -169,9 +169,11 @@ class CountController extends GController
 	}
 
 	public function actionMonth(){
+		
 		$sql = "select FROM_UNIXTIME(acct_time,'%Y年%m月') as acct_time,SUM(acct_amount) as amount,SUM(acct_number) as number from `c_finance` 
-					where FROM_UNIXTIME(acct_time,'%Y')='2015' group by FROM_UNIXTIME(acct_time,'%Y%m')";
+				 group by FROM_UNIXTIME(acct_time,'%Y%m')";
 		$result = Yii::app()->db->createCommand($sql)->queryAll();
+		
 		$total = 0;
 		if($result){
 			$amount = array();
