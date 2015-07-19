@@ -29,11 +29,11 @@
 <div class="row">
     <form class="form-horizontal" id="createUserForm" role="form" method="post" action="">
         <div class="form-group">
-            <label class="col-sm-2 control-label no-padding-right"><?php echo $model->getAttributeLabel('username'); ?>:</label>
+            <label class="col-sm-2 control-label no-padding-right"><?php echo $model->getAttributeLabel('username'); ?>*:</label>
             <div class="col-sm-3">
-                <?php echo $form->textField($model, 'username', array( 'maxlength' => 20, 'id' => "form-field-1", 'placeholder' => "", 'class' => "form-control")); ?>
+                <?php echo $form->textField($model, 'username', array( 'maxlength' => 20, 'id' => "form-field-1", 'placeholder' => "", 'class' => "form-control"));?>
             </div>
-            <label class="col-sm-2 control-label no-padding-right"><?php echo $model->getAttributeLabel('name'); ?>:</label>
+            <label class="col-sm-2 control-label no-padding-right"><?php echo $model->getAttributeLabel('name'); ?>:*</label>
             <div class="col-sm-3">
                 <?php echo $form->textField($model, 'name', array( 'maxlength' =>12, 'id' => "form-field-1", 'placeholder' => "", 'class' => "form-control")); ?>
             </div>
@@ -53,12 +53,12 @@
   
         <div class="form-group">
             <?php if($model->isNewRecord):?>
-            <label class="col-sm-2 control-label no-padding-right">初始密码：</label>
+            <label class="col-sm-2 control-label no-padding-right">初始密码*：</label>
             <div class="col-sm-3">
                <?php echo $form->textField($model, 'pass', array( 'maxlength' =>14, 'id' => "form-field-1", 'placeholder' => "", 'class' => "form-control")); ?>
             </div>
             <?php endif;?>
-            <label class="col-sm-2 control-label no-padding-right"><?php echo $model->getAttributeLabel('tel'); ?>：</label>
+            <label class="col-sm-2 control-label no-padding-right"><?php echo $model->getAttributeLabel('tel'); ?>*：</label>
             <div class="col-sm-3">
                 <?php echo $form->textField($model, 'tel', array( 'maxlength' =>14, 'id' => "form-field-1", 'placeholder' => "", 'class' => "form-control")); ?>
             </div>
@@ -69,7 +69,7 @@
         <div class="form-group">
             <label class="col-sm-2 control-label no-padding-right">部门：</label>
             <div class="col-sm-3">
-                   <?php echo $form->dropDownList($model, 'dept_id', $this->getDeptArr(),array('onchange'=>'getgroup(this)')); ?>
+                   <?php echo $form->dropDownList($model, 'dept_id', $deptArr,array('onchange'=>'getgroup(this)')); ?>
             </div>
              <label class="col-sm-2 control-label no-padding-right">组别：</label>
             <div class="col-sm-3">
@@ -132,7 +132,7 @@
             </div>
         </div>
          <div class="form-group">
-            <label class="col-sm-2 control-label no-padding-right"><?php echo $model->getAttributeLabel('extend_no'); ?>：</label>
+            <label class="col-sm-2 control-label no-padding-right"><?php echo $model->getAttributeLabel('extend_no'); ?>*：</label>
             <div class="col-sm-3">
                 <?php echo $form->textField($model, 'extend_no', array('maxlength' => 10, 'id' => "form-field-1", 'placeholder' => "", 'class' => "form-control")); ?>
             </div>
@@ -150,7 +150,7 @@
         var deptid = $(obj).val(),groupStr;
         $.post("<?php echo $this->createUrl("/User/users/getGroup")?>",{'deptid':deptid,type:2},function(data)
 	    {
-                groupStr='<option value ="0">--请选择组别--</option>';
+            groupStr='';
 	    	for(i in data)
 	        {
 	         	groupStr += '<option value ='+i+'>'+data[i]+'</option>';
@@ -221,7 +221,7 @@
      function listgroup(obj)
     {
       	var deptid = $(obj).val();
-      	var groupStr = '<option value ="0">--请选择组--</option>';
+      	var groupStr = '';
       	if (deptid == 0) {
             $('#groupinfo2').html(groupStr);
             $('#userinfo').html('<option value ="0">--请选择人员--</option>');
@@ -239,7 +239,7 @@
 	         	groupStr += '<option value ='+i+'>'+data[i]+'</option>';
 	        }
 	        $('#groupinfo2').html(groupStr);
-                listuser($('#groupinfo2'));
+                //listuser($('#groupinfo2'));
 	    },'json')
     };
 

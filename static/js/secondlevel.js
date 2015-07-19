@@ -57,3 +57,14 @@ function listgroup(obj){
                 $('#usereno').val(eno);
     	}
     }
+    
+    
+     function exportToExcel(){
+         $("#isexcel").val(1);
+         $("#user-form").submit();
+     }
+     function sub(){
+         $("#isexcel").val(0);
+         $("#user-form").submit();
+     }
+    

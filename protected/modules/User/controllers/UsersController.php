@@ -30,17 +30,19 @@ class UsersController extends GController
 
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
-                $userinfo =  array();
+        $userinfo =  array();
 		$user_info['group_id'] = $userinfo?$userinfo->group_id:0;
 		$user_info['dept_id']  = $userinfo?$userinfo->dept_id:0;
-	        $user_info['name']     = $userinfo?$userinfo->username:0;
+	    $user_info['name']     = $userinfo?$userinfo->username:0;
 		$user_info['id']     = $userinfo?$userinfo->id:0;
 		$user_info['group_arr'] = Userinfo::getGroupById($user_info['dept_id']);
 		$user_info['user_arr'] = Userinfo::getUserbygidanddid($user_info['group_id'],$user_info['dept_id']);	
-                $deptArr = Userinfo::getDept();
-		$deptArr = array_merge(array('0'=>'--请选择部门--'), $deptArr);
+       
+		$deptArr = Userinfo::getDept();
+		$deptArr = array('0'=>'--请选择部门--') + $deptArr;
 		if(isset($_POST['Users']))
 		{
+			$_POST['Users']['birth'] = $_POST['Users']['birth'] ? $_POST['Users']['birth'] : Null;
 			$model->attributes=$_POST['Users']; 
                         $validate = json_decode(CActiveForm::validate($model)) ;
                         if($validate)
@@ -64,7 +66,7 @@ class UsersController extends GController
 
 		$this->renderPartial('create',array(
 			'model'=>$model,
-                         'deptArr'=>$deptArr,
+                        'deptArr'=>$deptArr,
                         'user_info'=>$user_info,
 		));
 	}
@@ -101,6 +103,7 @@ class UsersController extends GController
        
 		if(isset($_POST['Users']))
 		{
+			$_POST['Users']['birth'] = $_POST['Users']['birth'] ? $_POST['Users']['birth'] : Null;
 			$model->attributes=$_POST['Users']; 
 			if($model->save())
 			{

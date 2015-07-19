@@ -83,7 +83,7 @@ class SiteController extends GController
 				   $model->addError('pass', '旧密码不正确');
 				}else
 				{
-					$model->pass = $model->UsersUsersUsers($_POST['Users']['newpass']);
+					$model->pass = $model->encrypt($_POST['Users']['newpass']);
 				}
 				if(!$model->getErrors() && $model->save())
 				{
