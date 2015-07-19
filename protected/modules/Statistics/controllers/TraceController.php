@@ -276,8 +276,10 @@ EOF;
             header("Content-type:text/csv");
             header("Content-Disposition:attachment;filename=" . $filename); 
             echo iconv('utf-8','gb2312',$this->cat34_titles);
+            $c=1;
             foreach($res as $record){
-                echo iconv('utf-8','gb2312',Utils::array_to_string($this->cat34_title_keys,$record));
+                echo $c.",".iconv('utf-8','gb2312',Utils::array_to_string($this->cat34_title_keys,$record));
+                $c++;
             } 
         } else {
             $result = Yii::app()->db->createCommand($sql . " LIMIT :offset,:limit");

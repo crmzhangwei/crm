@@ -308,7 +308,7 @@ class Utils {
         $i=1;
         foreach($keys as $k=>$v){
             if($i==1){
-                $data=$i.",".$record[$v];
+                $data=",".$record[$v];
             }else{
                 $data=$data.",".$record[$v];
             } 
@@ -317,5 +317,24 @@ class Utils {
         $data=$data."\n";
         return $data;
     }
-
+    /**
+     * 生成小记显示记录,need to do
+     * @param type $record
+     */
+    public static function genNoteDisplayRecord($row,$record){
+        $str = ($row+1)."、".date("Y-m-d H:i:s",$record->create_time)." ".$record['cust_id']." ".UserInfo::getNameById($record['eno'])." ".$record['cust_type'];
+        $dial_detail = DialDetail::model()->findByPk($record['dial_id']);
+        $custtype = CustType::findByTypeAndNo($record['lib_type'], $record['cust_type']);
+        if($record['dial_id']>0){
+            $str=$str." 已拔打电话"; 
+            if($dial_detail['dial_long']>0){
+                $str=$str." <a href='#' onclick='javascript:playAndDown()'>播放和下载</a>";
+            }
+        }
+        $str=$str."<br/>";
+        
+        $str=$str.$record['cust_type'].":".$custtype['type_name']."->下次联系时间：".date("Y-m-d H:i:s",$record->next_contact)."<br/>";
+        $str=$str."电话接通状态->";
+    }
+    
 }

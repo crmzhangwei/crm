@@ -2,6 +2,7 @@
 
 <?php 
 $dataProvider = $model->searchHistoryNote($custmodel->id);
+
 $this->widget('GGridView', array(
     'id' => 'historynote-grid',
     'dataProvider' => $dataProvider,
@@ -24,7 +25,7 @@ $this->widget('GGridView', array(
         array('name' => 'next_contact', 'value' => 'date("Y-m-d H:i:s",$data->next_contact)'),
         array('name' => 'create_time', 'value' => 'date("Y-m-d H:i:s",$data->create_time)'),
         array(
-            'class' => 'CButtonColumn',
+            'class' => 'CButtonColumn', 
             'template' => '{play} {view}',
             'header' => '操作',
             'buttons' => array(
@@ -48,8 +49,7 @@ $this->widget('GGridView', array(
         ),
     ),
 ));
-?>
-
+?>    
 <div class="table-page"> 
     <div class="col-sm-6">
         共<span class="orange"><?= $dataProvider->totalItemCount ?></span>条记录 

@@ -14,13 +14,7 @@
         </li> 
         <li class="ui-state-default ui-corner-top" role="tab" tabindex="-1" aria-controls="tabs-2" aria-labelledby="ui-id-30" aria-selected="false" aria-expanded="false">
             <a href="#tabs-2" class="ui-tabs-anchor" role="presentation" tabindex="-1" id="ui-id-30">合同信息</a>
-        </li>
-        <li class="ui-state-default ui-corner-top" role="tab" tabindex="-1" aria-controls="tabs-3" aria-labelledby="ui-id-31" aria-selected="false" aria-expanded="false">
-            <a href="#tabs-3" class="ui-tabs-anchor" role="presentation" tabindex="-1" id="ui-id-31">小记录入</a>
-        </li>
-        <li class="ui-state-default ui-corner-top" role="tab" tabindex="-1" aria-controls="tabs-4" aria-labelledby="ui-id-32" aria-selected="false" aria-expanded="false">
-            <a href="#tabs-4" class="ui-tabs-anchor" role="presentation" tabindex="-1" id="ui-id-32">历史小记</a>
-        </li>
+        </li> 
         <li class="ui-state-default ui-corner-top" role="tab" tabindex="-1" aria-controls="tabs-5" aria-labelledby="ui-id-33" aria-selected="false" aria-expanded="false">
             <a href="#tabs-5" class="ui-tabs-anchor" role="presentation" tabindex="-1" id="ui-id-33">共享小记</a>
         </li>  
@@ -36,17 +30,15 @@
 )); ?>
     <div id="tabs-1" aria-labelledby="ui-id-29" class="ui-tabs-panel ui-widget-content ui-corner-bottom" role="tabpanel" aria-hidden="false" style="display: block;">
 	<?php $this->renderPartial('_baseinfo', array('model'=>$model,'form'=>$form,'note'=>$noteinfo,'after'=>$after,'contract'=>$contract)); ?> 
+        <br/>
+        <?php $this->renderPartial('_noteinfo_form', array('model'=>$noteinfo,'form'=>$form,'loginuser'=>$loginuser)); ?>
+        <br/>
+        <?php $this->endWidget(); ?>
+        <?php $this->renderPartial('history_note', array('model'=>$historyNote)); ?>
     </div>
     <div id="tabs-2" aria-labelledby="ui-id-30" class="ui-tabs-panel ui-widget-content ui-corner-bottom" role="tabpanel" aria-hidden="true" style="display: none;">
         <?php $this->renderPartial('_contractinfo_form', array('model'=>$model,'form'=>$form,'contract'=>$contract)); ?>
-    </div> 
-    <div id="tabs-3" aria-labelledby="ui-id-31" class="ui-tabs-panel ui-widget-content ui-corner-bottom" role="tabpanel" aria-hidden="true" style="display: none;">
-       <?php $this->renderPartial('_noteinfo_form', array('model'=>$noteinfo,'form'=>$form,'loginuser'=>$loginuser)); ?>
-    </div> 
-    <?php $this->endWidget(); ?>
-    <div id="tabs-4" aria-labelledby="ui-id-32" class="ui-tabs-panel ui-widget-content ui-corner-bottom" role="tabpanel" aria-hidden="true" style="display: none;">
-        <?php $this->renderPartial('history_note', array('model'=>$historyNote)); ?>
-    </div>
+    </div>  
     <div id="tabs-5" aria-labelledby="ui-id-33" class="ui-tabs-panel ui-widget-content ui-corner-bottom" role="tabpanel" aria-hidden="true" style="display: none;">
         <?php $this->renderPartial('shared_note', array('model'=>$sharedNote)); ?>
     </div>

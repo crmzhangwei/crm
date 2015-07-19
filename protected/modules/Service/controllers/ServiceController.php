@@ -387,7 +387,7 @@ class ServiceController extends GController {
                 $playurl = $uncall["playurl"].$dialdetail->record_path;  
             }
         } 
-        $this->renderPartial("playAndDown", array('playurl' => $playurl)); 
+        $this->renderPartial("play2", array('playurl' => $playurl)); 
     }
 
     /**

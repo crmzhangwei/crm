@@ -78,7 +78,7 @@ class UnCall {
             $dialdetail->dial_long = 0;
             $dialdetail->dial_num = 1;
             $dialdetail->record_path = '';
-            $dialdetail->isok = 0;
+            $dialdetail->isok = 1;
             $dialdetail->uid = '';
             $dialdetail->save();
             $ret['status'] = 1;
@@ -116,8 +116,8 @@ class UnCall {
         $result = $client->listenCall($targetExtend, $srcExtend);
         $xml = simplexml_load_string($result);
         if($xml&&(string)$xml->result == '1'){
-            $temp=(string)$xml->monitorExten->Response;
-            if($temp=='success'){
+            $temp=(string)$xml->listenCall->Response;
+            if($temp=='Success'){
                 $ret['result']=true;
             }else{
                 $ret['message']='监听失败'; 
