@@ -40,19 +40,18 @@
                     查询
                 </button>
             </div>
-            <div class="form-group" > 
-                <button type="button" class="btn btn-info form-control" onclick="exportToExcel()">
-                    <i class="icon-search"></i>
-                    导出excel
-                </button>
-            </div>
             <div class="form-group" style="padding-left: 10px; padding-top: 10px;"> 
                 <a href="<?php echo $this->createUrl('cat34'); ?>">
                     <i class="icon-undo"></i>
                     取消筛选
                 </a>
             </div> 
-             
+            <div class="form-group" style="float:right;"> 
+                <button type="button" class="btn btn-info form-control" onclick="exportToExcel()">
+                    <i class="icon-search"></i>
+                    导出excel
+                </button>
+            </div>
         <?php $this->endWidget(); ?>
         <div class="space-10"></div>
     </div>
@@ -112,13 +111,4 @@
 <div class="space-20"></div>
  
  <script src="/static/js/secondlevel.js"></script>
- <script>
-     function exportToExcel(){
-         $("#isexcel").val(1);
-         $("#user-form").submit();
-     }
-     function sub(){
-         $("#isexcel").val(0);
-         $("#user-form").submit();
-     }
-  </script>
+ 
