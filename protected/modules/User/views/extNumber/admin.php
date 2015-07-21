@@ -60,6 +60,7 @@ $this->widget('GGridView', array(
         ),
         //'id',
         'extension',
+		array('name' => 'uname', 'value'=>array($this, 'get_uname')),
         'status',
         array(
             'class' => 'CButtonColumn',

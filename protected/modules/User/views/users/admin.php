@@ -73,7 +73,7 @@ $this->widget('GGridView', array(
         ),
         //'group_id',
         //'ismaster',
-        //'status',
+        'extend_no',
         array(
             'name' => 'status',
             'value' => array($this, 'get_status_text'),

@@ -67,6 +67,7 @@ $('.search-form form').submit(function(){
 <?php 
         $dataProvider = $model->search();
 		$dataProvider->pagination->pageVar = 'page';
+		$dataProvider->pagination->pageSize = $aPageSize;
         $this->widget('GGridView', array(
 			'id'=>'CustomerAss-grid',
 			'dataProvider'=>$dataProvider,
@@ -113,9 +114,11 @@ $('.search-form form').submit(function(){
 
 <div class="table-page"> 
     <div class="col-sm-6">
-        共<span class="orange"><?=$dataProvider->totalItemCount ?></span>条记录
 		<a href="javascript:void(0);" js_type="publish"  col='0' class="btn  btn-minier btn-sm btn-success publish"><i class=" icon-ok icon-large"></i>分配资源</a> 
-    </div>
+        共<span class="orange"><?=$dataProvider->totalItemCount ?></span>条记录, 每页显示
+			<?php echo CHtml::dropDownList('psize', $psizeid, Utils::selectPageSize(), array('onchange' => 'rePagesize(this)','style'=>"height:25px;"));?>
+		条
+		</div>
     <div class="col-sm-6 no-padding-right">
         <?php
         $dataProvider->pagination->pageVar = 'page';
@@ -153,3 +156,10 @@ Yii::app()->clientScript->registerScript('topicjss', $jss);
 ?>
 
 <script src="/static/js/secondlevel.js"></script>
+
+<script>
+	function rePagesize(obj){
+		var psizeid = $(obj).val();
+		window.location = "./index.php?r=Customer/customerass/admin&psizeid="+psizeid;
+	};
+</script>

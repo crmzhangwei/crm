@@ -28,6 +28,7 @@ class ExtNumber extends CActiveRecord
 {
 	public $keyword;
 	public $searchtype;
+	public $uname;
 	/**
 	 * @return string the associated database table name
 	 */
@@ -50,7 +51,7 @@ class ExtNumber extends CActiveRecord
 			array('noanswer', 'length', 'max'=>100),
 			array('noanswer_dest, busy_dest, chanunavail_dest', 'length', 'max'=>255),
 			array('mohclass', 'length', 'max'=>80),
-			array('update_times,searchtype,keyword', 'safe'),
+			array('update_times,searchtype,keyword,uname', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
 			array('extension, password, name, voicemail, ringtimer, noanswer, recording, outboundcid, sipname, noanswer_cid, busy_cid, chanunavail_cid, noanswer_dest, busy_dest, chanunavail_dest, mohclass, status, dnd, update_times', 'safe', 'on'=>'search'),
@@ -93,6 +94,7 @@ class ExtNumber extends CActiveRecord
 			'status' => '分机状态',
 			'dnd' => '是否示忙',
 			'update_times' => 'CURRENT_TIMESTAMP',
+			'uname' => '姓名',
 		);
 	}
 
@@ -142,8 +144,17 @@ class ExtNumber extends CActiveRecord
 				case 2:
 					$criteria->compare('status', $this->keyword, true);
 					break;
+				case 3:
+					$uInfo = Users::model()->findAll('username=:username', array(':username'=>$this->keyword));
+					if($uInfo){
+						$criteria->addCondition("extension='{$uInfo[0]['extend_no']}'");
+					}
+					else{
+						$criteria->addCondition("extension='-1'");
+					}
+					break;
 			}
-		 }
+		}
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
 		));
@@ -173,6 +184,7 @@ class ExtNumber extends CActiveRecord
         return array(
             1=>'分机号',
             2=>'分机状态',
+			3=>'姓名',
         );
     }
 }

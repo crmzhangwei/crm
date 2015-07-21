@@ -337,4 +337,13 @@ class Utils {
         $str=$str."电话接通状态->";
     }
     
+	/**
+	 * 自定义每页显示的条数(下拉列表)
+	 */
+	public static function selectPageSize(){
+		$seletes = array(1=>10, 2=>50, 3=>100,4=>200);
+		return $seletes;
+	}
+	
+	
 }

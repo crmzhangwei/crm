@@ -178,6 +178,24 @@ class CustomerassController extends GController
 	 */
 	public function actionAdmin()
 	{
+		$aPageSize = 10;
+		$psizeid = Yii::app()->request->getparam('psizeid');
+		if($psizeid){
+			switch ($psizeid) {
+				case 2:
+					$aPageSize = 50;
+					break;
+				case 3:
+					$aPageSize = 100;
+					break;
+				case 4:
+					$aPageSize = 200;
+					break;
+				default:
+					$aPageSize = 10;
+					break;
+			}
+		}
 		$model=new CustomerAss('search');
 		$model->unsetAttributes();  // clear any default values
 		$custtype = Userinfo::genCustTypeArray();
@@ -193,6 +211,8 @@ class CustomerassController extends GController
 			'groupArr'=>$uInfo['groupArr'],
 			'infoArr'=>$uInfo['infoArr'],
 			'user_info'=>$uInfo['user_info'],
+			'aPageSize' => $aPageSize,
+			'psizeid' => $psizeid,
 		));
 	}
     

@@ -47,4 +47,10 @@ class ExtNumberController extends GController
             $ret = UnCall::listen($srcExt, $ext);
             echo json_encode($ret);
         }
+		
+	public function get_uname($data){
+		$val = $data->extension;
+		$uArr = Users::model()->findAll('extend_no=:extend_no', array(':extend_no'=>$val));
+		return $uArr ? $uArr[0]['username'] : '未使用';
+	}
 }
