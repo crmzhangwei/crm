@@ -119,6 +119,10 @@ CREATE TABLE `c_customer_info` (
   `shop_url` varchar(100) DEFAULT '' COMMENT '店铺网址',
   `shop_addr` varchar(100) DEFAULT '' COMMENT '店铺地址',
   `phone` varchar(20) DEFAULT '' COMMENT '电话',
+  `phone2` varchar(20) DEFAULT '' COMMENT '电话2',
+  `phone3` varchar(20) DEFAULT '' COMMENT '电话3',
+  `phone4` varchar(20) DEFAULT '' COMMENT '电话4',
+  `phone5` varchar(20) DEFAULT '' COMMENT '电话5',
   `qq` varchar(20) DEFAULT '' COMMENT 'QQ',
   `mail` varchar(50) DEFAULT '' COMMENT '邮箱',
   `datafrom` varchar(100) DEFAULT '' COMMENT '数据来源',
@@ -293,3 +297,10 @@ create table `c_tip_info` (
   `id` int(11) not null comment '客户id',
   `eno` varchar(10) not null comment '所属工号'
 ) engine=innodb default charset=utf8;
+
+CREATE TABLE c_note_template(
+  `id` TINYINT UNSIGNED AUTO_INCREMENT ,
+  `tname` VARCHAR(25) NOT NULL COMMENT '短信模板名称',
+  `content` VARCHAR(200) NOT NULL COMMENT '短信内容',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;

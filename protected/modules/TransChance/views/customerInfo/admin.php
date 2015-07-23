@@ -71,11 +71,13 @@ $form = $this->beginWidget('CActiveForm', array(
 $form = $this->beginWidget('CActiveForm', array(
     'action' => Yii::app()->createUrl('TransChance/customerInfo/assignNextTime'),
     'method' => 'post',
+    'id' =>'form_1'
         ));
 ?>
 <div class="form-group">
     <div class="btn-group">
-<?php echo CHtml::submitButton('批量安排联系时间', array('class' => 'btn btn-sm btn-primary')); ?>
+        <?php echo CHtml::button('批量安排联系时间', array('class' => 'btn btn-sm btn-primary','onclick'=>'subNextTime();')); ?>
+        <?php echo CHtml::button('合并客户', array('class' => 'btn btn-sm btn-primary','onclick'=>'subMerge();')); ?>
     </div>  
 </div>
 <?php
@@ -166,3 +168,16 @@ $this->widget('GLinkPager', array('pages' => $dataProvider->getPagination(),));
     </div>
 </div>
 <script src="/static/js/secondlevel.js"></script>
+<script>
+    function subNextTime(){
+        var url = "<?php echo Yii::app()->controller->createUrl('customerInfo/assignNextTime');?>";
+        $("#form_1").attr('action',url);
+        $("#form_1").submit();
+    }
+    
+    function subMerge(){
+         var url = "<?php echo Yii::app()->controller->createUrl('customerInfo/merge');?>";
+         $("#form_1").attr('action',url);
+         $("#form_1").submit();
+    }
+</script>    

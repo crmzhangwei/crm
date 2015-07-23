@@ -13,7 +13,7 @@ class ResourceController extends GController {
             $search['eno'] = '';
         }
         $offset = ($page - 1) * $this->pageSize;
-         
+        $priv=UserInfo::getPrivCondiForReport();
         $wherestr = "";
         if (!empty($search['stime'])) { 
              $istime = strtotime($search['stime']);
@@ -33,7 +33,7 @@ FROM
     c_customer_info c,
     c_users u
 WHERE
-    c.creator = u.id $wherestr
+    c.creator = u.id $priv $wherestr
 GROUP BY u.name     
 EOF;
         $criteria = new CDbCriteria();
@@ -71,7 +71,7 @@ EOF;
             $search['phone'] = '';
         }
         $offset = ($page - 1) * $this->pageSize;
-         
+        $priv=UserInfo::getPrivCondiForReport();
         $wherestr = "";
         if (!empty($search['stime'])) { 
              $istime = strtotime($search['stime']);
@@ -110,6 +110,7 @@ WHERE
     c.category = d.code
     AND d.ctype = 'cust_category'
     AND c.creator=u.id
+        $priv 
         $wherestr
 EOF;
         $criteria = new CDbCriteria();

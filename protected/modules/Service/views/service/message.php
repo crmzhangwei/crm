@@ -18,8 +18,16 @@
 	<?php echo $form->errorSummary($model); ?> 
 	<div class="row">
             <?php echo $form->hiddenField($model,'cust_id'); ?>
+            <?php 
+                if(!empty($contents)){ 
+                    foreach($contents as $k=>$v){
+                        echo '<input type="hidden" name="content_'.$v["id"].'" value="'.$v["content"].'" id="content_'.$v["id"].'"/>';
+                    }
+                }
+            ?>
+            短信模板:  <?php echo  $form->dropDownList($model, "message_template", $titles, array('onchange'=>'changeTemplate(this)')) ?><br/><br/>
             短信内容:   
-                <?php echo $form->textArea($model,'message',array('rows'=>3,'cols'=>30)); ?>
+                <?php echo $form->textArea($model,'message',array('rows'=>3,'cols'=>30,'id'=>'message_id')); ?>
 	</div>
 
 	<div class="row buttons" style="margin-top:40px">
@@ -31,7 +39,10 @@
 </div><!-- form -->
 
 <script type="text/javascript"> 
- 
+ function changeTemplate(obj){
+     var title_id = obj.value;
+     $('#message_id').val($('#content_'+title_id).val());
+ }
  public.validate({
             form: $('#message-form'),
             type: 2,
@@ -48,7 +59,7 @@
             submitHandler: function (form) {  
                 public.AjaxSaveForm({
                     obj: $("#createUserBtn"),
-                    url: '<?php echo $this->createUrl("/Service/service/message",array('cust_id'=>$model->cust_id)); ?>',
+                    url: '<?php echo $this->createUrl("/Service/service/message",array('cust_id'=>$model->cust_id,'seq'=>$seq)); ?>',
                     data: $("#message-form").serialize(),
                     callback: function(result) {
                         bootbox.alert(result.data.memo, function(){

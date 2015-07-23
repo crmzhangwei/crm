@@ -50,7 +50,7 @@ class UnCall {
       </uncall>
      * @param type $cust_id 客户id
      */
-    public static function dial($cust_id) {
+    public static function dial($cust_id,$seq) {
         $cust = CustomerInfo::model()->findByPk($cust_id);
         if (empty($cust)) {
             return "客户不存在";
@@ -63,6 +63,13 @@ class UnCall {
         $uncall = Yii::app()->params['UNCALL'];
         $client = new SoapClient($uncall['webservice']);
         $phonenumber = $cust->phone;
+        switch($seq){
+            case 1:break;
+            case 2: $phonenumber=$cust->phone2;break;
+            case 3: $phonenumber=$cust->phone3;break;
+            case 4: $phonenumber=$cust->phone4;break;
+            case 5: $phonenumber=$cust->phone5;break;
+        }
         if(UnCall::getZone($phonenumber)&&substr($phonenumber,0,1)=="1"){
             $phonenumber="0".$phonenumber;
         }

@@ -73,7 +73,7 @@ class CustomerInfoController extends GController {
         ));
     }
 
-    private function validCustomerInfo($custtype,$model, $contract) { 
+    private function validCustomerInfo($custtype, $model, $contract) {
         $ret = true;
         if ($custtype == 17) {
             //已签合同  
@@ -113,17 +113,17 @@ class CustomerInfoController extends GController {
             // $sql = "select * from {{aftermarket_cust_info}} where cust_id=:cust_id";
             //$aftermodel = AftermarketCustInfo::model()->findBySql($sql, array(':cust_id' => $id));  
             $newCustType = $_POST['TransCustInfo']['cust_type'];
-            $oldCustType = $trans_info->getAttribute("cust_type"); 
+            $oldCustType = $trans_info->getAttribute("cust_type");
             //$contract->unsetAttributes();
             $contract->attributes = $_POST['ContractInfo'];
             $contract->cust_id = $id;
-            $contract->pay_time=  strtotime($contract->pay_time);
-            $contract->comm_pay_time=strtotime($contract->comm_pay_time);
+            $contract->pay_time = strtotime($contract->pay_time);
+            $contract->comm_pay_time = strtotime($contract->comm_pay_time);
             $model->attributes = $_POST['CustomerInfo'];
-            $trans_info->cust_type=$newCustType;
-            $transaction = Yii::app()->db->beginTransaction();  
-            if ($this->validCustomerInfo($newCustType,$model, $contract)) {
-                if ($oldCustType != $newCustType) { 
+            $trans_info->cust_type = $newCustType;
+            $transaction = Yii::app()->db->beginTransaction();
+            if ($this->validCustomerInfo($newCustType, $model, $contract)) {
+                if ($oldCustType != $newCustType) {
                     //客户分类调整，生成转换明细数据
                     $convt = new CustConvtDetail();
                     $convt->setAttribute('lib_type', 2);
@@ -136,22 +136,27 @@ class CustomerInfoController extends GController {
                 }
                 if ($oldCustType != $newCustType && $newCustType == 17) {
                     //到店 生成售后库
-                    $after = new AftermarketCustInfo();
-                    $after->eno = '';
-                    $after->cust_id = $id;
-                    $after->cust_type = 0; //初始0类，新分
-                    $after->webchat = '';
-                    $after->ww = '';
-                    $after->assign_eno = $loginuser->eno;
-                    $after->assign_time = time();
-                    $after->next_time = 0;
-                    $after->memo = '';
-                    $after->creator = $loginuser->id;
-                    $after->create_time = time();
-                    $after->save();
+                    $temp = BlackInfo::model()->findBySql("select * from {{aftermarket_cust_info}} where cust_id=$id");
+                    if (empty($temp)) {
+                        $after = new AftermarketCustInfo();
+                        $after->eno = '';
+                        $after->cust_id = $id;
+                        $after->cust_type = 0; //初始0类，新分
+                        $after->webchat = '';
+                        $after->ww = '';
+                        $after->assign_eno = $loginuser->eno;
+                        $after->assign_time = time();
+                        if (isset($_POST['NoteInfo']) && !empty($noteinfo->next_contact)) {
+                            $after->next_time = strtotime($noteinfo->next_contact);
+                        }
+                        $after->memo = '';
+                        $after->creator = $loginuser->id;
+                        $after->create_time = time();
+                        $after->save();
+                    }
                     //当前成交师已分配资源数减1
                     $sql = "update {{users}} set cust_num=cust_num-1 where id={$loginuser->id}";
-                    Yii::app()->db->createCommand($sql)->execute(); 
+                    Yii::app()->db->createCommand($sql)->execute();
                 }
                 if ($newCustType == 17) {
                     //已签合同,生成合同信息表
@@ -160,38 +165,49 @@ class CustomerInfoController extends GController {
                     //$contract->pay_time = strtotime($contract->pay_time);
                     //$contract->comm_pay_time = strtotime($contract->comm_pay_time);
                     $contract->save();
-                } 
-                if (isset($_POST['NoteInfo'])&&$_POST['NoteInfo']['next_contact']!='') {
+                }
+                if (Utils::isNeedSaveNoteInfo($_POST['NoteInfo'])) {
                     //保存小记 
                     $noteinfo->attributes = $_POST['NoteInfo'];
                     if ($model->iskey != $noteinfo->iskey) {
                         $model->iskey = $noteinfo->iskey;
                     }
-                    $noteinfo->cust_type=$newCustType;
-                    $noteinfo->lib_type="2";
+                    $noteinfo->cust_type = $newCustType;
+                    $noteinfo->lib_type = "2";
                     $noteinfo->next_contact = strtotime($noteinfo->next_contact);
-                    $model->last_time=time();//最后联系时间等于今天
+                    $model->last_time = time(); //最后联系时间等于今天
                     $noteinfo->setAttribute("eno", Yii::app()->user->id);
                     $noteinfo->setAttribute("create_time", time());
                     if ($noteinfo->save()) {
                         //保存销售库下次联系时间
-                        $trans_info->next_time = $noteinfo->next_contact; 
+                        $trans_info->next_time = $noteinfo->next_contact;
                     } else {
                         $noteinfo->addError("memo", "请录入小记信息");
-                    } 
-                }  
+                    }
+                }
                 if ($newCustType == 18) {
                     //客户分类转成9（公海），生成公海资源数据
-                    $blackinfo = new BlackInfo();
-                    $blackinfo->setAttribute("cust_id", $id);
-                    $blackinfo->setAttribute('lib_type', 1);
-                    $blackinfo->setAttribute('old_cust_type', $oldCustType);
-                    $blackinfo->setAttribute('create_time', time());
-                    $blackinfo->setAttribute('creator', Yii::app()->user->id);
-                    $blackinfo->save(); 
-                    $trans_info->delete();//删除成交师库记录
-                    $model->status='1';
-                }else{
+                    $temp = BlackInfo::model()->findBySql("select * from {{black_info}} where cust_id=$id");
+                    if (empty($temp)) {
+                        $blackinfo = new BlackInfo();
+                        $blackinfo->setAttribute("cust_id", $id);
+                        $blackinfo->setAttribute('lib_type', 1);
+                        $blackinfo->setAttribute('old_cust_type', $oldCustType);
+                        $blackinfo->setAttribute('create_time', time());
+                        $blackinfo->setAttribute('creator', Yii::app()->user->id);
+                        $blackinfo->save();
+                    }else{
+                        Yii::app()->db->createCommand()->update('{{black_info}}', 
+                                array('lib_type' => 1,
+                                      'old_cust_type'=>$oldCustType,
+                                      'create_time'=>time(),
+                                      'creator'=>Yii::app()->user->id
+                            ),"cust_id=$id");
+                    }
+
+                    $trans_info->delete(); //删除成交师库记录
+                    $model->status = '1';
+                } else {
                     $trans_info->save();
                 }
                 $model->save();
@@ -199,13 +215,13 @@ class CustomerInfoController extends GController {
                 if ($noteinfo->dial_id > 0) {
                     $dialdetail = DialDetail::model()->findByPk($noteinfo->dial_id);
                     //获取通知录音路径，通知时长 
-                        $uid = UnCall::getUid($dialdetail->extend_no);
-                        $dial_long = UnCall::getDialLength($uid);
-                        $record_path = UnCall::getRecord($uid);
-                        $dialdetail->uid=$uid;
-                        $dialdetail->dial_long=$dial_long;
-                        $dialdetail->record_path=$record_path;
-                        $dialdetail->save();
+                    $uid = UnCall::getUid($dialdetail->extend_no);
+                    $dial_long = UnCall::getDialLength($uid);
+                    $record_path = UnCall::getRecord($uid);
+                    $dialdetail->uid = $uid;
+                    $dialdetail->dial_long = $dial_long;
+                    $dialdetail->record_path = $record_path;
+                    $dialdetail->save();
                 }
             }
             //加载页面数据
@@ -236,23 +252,23 @@ class CustomerInfoController extends GController {
 
         $model->setAttribute("create_time", date("Y-m-d H:i:s", intval($model->getAttribute("create_time"))));
         $model->setAttribute("assign_time", date("Y-m-d H:i:s", intval($model->getAttribute("assign_time"))));
-        if(intval($model->next_time)<100){
+        if (intval($model->next_time) < 100) {
             $model->setAttribute("next_time", '无');
-        }else{
+        } else {
             $model->setAttribute("next_time", date("Y-m-d H:i:s", intval($model->getAttribute("next_time"))));
         }
-        if(intval($model->last_time)<100){
+        if (intval($model->last_time) < 100) {
             $model->setAttribute("last_time", '无');
-        }else{
+        } else {
             $model->setAttribute("last_time", date("Y-m-d H:i:s", intval($model->getAttribute("last_time"))));
         }
-         
+
         $sharedNote = NoteInfo::model();
         $sharedNote->setAttribute("cust_id", $model->id);
         $historyNote = NoteInfo::model();
         $historyNote->setAttribute("cust_id", $model->id);
-        $user = Users::model()->findByPk($model->creator); 
-        
+        $user = Users::model()->findByPk($model->creator);
+
         $this->render('update', array(
             'model' => $model,
             'trans_model' => $trans_info,
@@ -402,22 +418,22 @@ class CustomerInfoController extends GController {
 
         $model = new CustomerInfo('search');
         $model->unsetAttributes();  // clear any default values
-        if (isset($_GET['CustomerInfo'])){
+        if (isset($_GET['CustomerInfo'])) {
             $model->attributes = $_GET['CustomerInfo'];
-            $model->cust_type_from=$_GET['CustomerInfo']['cust_type_from'];
-            $model->cust_type_to=$_GET['CustomerInfo']['cust_type_to'];
-            $model->contact_7_day=$_GET['CustomerInfo']['contact_7_day'];
+            $model->cust_type_from = $_GET['CustomerInfo']['cust_type_from'];
+            $model->cust_type_to = $_GET['CustomerInfo']['cust_type_to'];
+            $model->contact_7_day = $_GET['CustomerInfo']['contact_7_day'];
         }
-		
-		//部门组别人员三级联动
-		$uInfo = Userinfo::secondlevel();
-		$this->render('admin',array(
-			'model'=>$model,	
-			'deptArr'=>$uInfo['deptArr'],
-			'groupArr'=>$uInfo['groupArr'],
-			'infoArr'=>$uInfo['infoArr'],
-			'user_info'=>$uInfo['user_info'],
-		));
+
+        //部门组别人员三级联动
+        $uInfo = Userinfo::secondlevel();
+        $this->render('admin', array(
+            'model' => $model,
+            'deptArr' => $uInfo['deptArr'],
+            'groupArr' => $uInfo['groupArr'],
+            'infoArr' => $uInfo['infoArr'],
+            'user_info' => $uInfo['user_info'],
+        ));
     }
 
     /**
@@ -431,21 +447,21 @@ class CustomerInfoController extends GController {
         $endtime = $begintime + 86400;
         $model->begintime = $begintime;
         $model->endtime = $endtime;
-        if (isset($_GET['CustomerInfo'])){
+        if (isset($_GET['CustomerInfo'])) {
             $model->attributes = $_GET['CustomerInfo'];
-            $model->cust_type_from=$_GET['CustomerInfo']['cust_type_from'];
-            $model->cust_type_to=$_GET['CustomerInfo']['cust_type_to'];
-            $model->contact_7_day=$_GET['CustomerInfo']['contact_7_day'];
+            $model->cust_type_from = $_GET['CustomerInfo']['cust_type_from'];
+            $model->cust_type_to = $_GET['CustomerInfo']['cust_type_to'];
+            $model->contact_7_day = $_GET['CustomerInfo']['contact_7_day'];
         }
-		
-		//部门组别人员三级联动
-		$uInfo = Userinfo::secondlevel();
+
+        //部门组别人员三级联动
+        $uInfo = Userinfo::secondlevel();
         $this->render('mylist', array(
             'model' => $model,
-			'deptArr'=>$uInfo['deptArr'],
-			'groupArr'=>$uInfo['groupArr'],
-			'infoArr'=>$uInfo['infoArr'],
-			'user_info'=>$uInfo['user_info'],
+            'deptArr' => $uInfo['deptArr'],
+            'groupArr' => $uInfo['groupArr'],
+            'infoArr' => $uInfo['infoArr'],
+            'user_info' => $uInfo['user_info'],
         ));
     }
 
@@ -456,20 +472,20 @@ class CustomerInfoController extends GController {
 
         $model = new CustomerInfo('search');
         $model->unsetAttributes();  // clear any default values
-        if (isset($_GET['CustomerInfo'])){
+        if (isset($_GET['CustomerInfo'])) {
             $model->attributes = $_GET['CustomerInfo'];
-            $model->cust_type_from=$_GET['CustomerInfo']['cust_type_from'];
-            $model->cust_type_to=$_GET['CustomerInfo']['cust_type_to'];
-            $model->contact_7_day=$_GET['CustomerInfo']['contact_7_day'];
+            $model->cust_type_from = $_GET['CustomerInfo']['cust_type_from'];
+            $model->cust_type_to = $_GET['CustomerInfo']['cust_type_to'];
+            $model->contact_7_day = $_GET['CustomerInfo']['contact_7_day'];
         }
-		//部门组别人员三级联动
-		$uInfo = Userinfo::secondlevel();
+        //部门组别人员三级联动
+        $uInfo = Userinfo::secondlevel();
         $this->render('oldlist', array(
             'model' => $model,
-			'deptArr'=>$uInfo['deptArr'],
-			'groupArr'=>$uInfo['groupArr'],
-			'infoArr'=>$uInfo['infoArr'],
-			'user_info'=>$uInfo['user_info'],
+            'deptArr' => $uInfo['deptArr'],
+            'groupArr' => $uInfo['groupArr'],
+            'infoArr' => $uInfo['infoArr'],
+            'user_info' => $uInfo['user_info'],
         ));
     }
 
@@ -596,7 +612,8 @@ class CustomerInfoController extends GController {
         $list = $model->findAllBySql($sql);
         $this->render('assign', array('model' => $model, 'custlist' => $list));
     }
-     public function get_user_text($data) {
+
+    public function get_user_text($data) {
         $val = $data->eno;
         $enoArr = $this->getUserArr($val);
         $res = isset($enoArr[$val]) ? $enoArr[$val] : $val;
@@ -606,37 +623,169 @@ class CustomerInfoController extends GController {
     public function getUserArr($id) {
         return CHtml::listData(Users::model()->findAll('id=:id', array(':id' => $id)), 'id', 'name');
     }
+
     public function get_eno_text($data) {
         $val = $data->eno;
         $enoArr = $this->getEnoArr($val);
         $res = isset($enoArr[$val]) ? $enoArr[$val] : $val;
         return $res;
     }
+
     public function get_assign_eno_text($data) {
         $val = $data->assign_eno;
         $enoArr = $this->getEnoArr($val);
         $res = isset($enoArr[$val]) ? $enoArr[$val] : $val;
         return $res;
     }
+
     public function getEnoArr($eno) {
         return CHtml::listData(Users::model()->findAll('eno=:eno', array(':eno' => $eno)), 'eno', 'name');
     }
+
     public function get_trans_type_text($data) {
         $val = $data->cust_type;
         $lib_type = 2;
-        $typeArr = $this->gettypeArr($val,$lib_type);
-        $res = isset($typeArr[$val]) ? "【".$val."类】".$typeArr[$val] : $val;
-        return $res;
-    }
-    public function get_type_text($data) {
-        $val = $data->cust_type;
-        $lib_type = $data->lib_type;
-        $typeArr = $this->gettypeArr($val,$lib_type);
-        $res = isset($typeArr[$val]) ? "【".$val."类】".$typeArr[$val] : $val;
+        $typeArr = $this->gettypeArr($val, $lib_type);
+        $res = isset($typeArr[$val]) ? "【" . $val . "类】" . $typeArr[$val] : $val;
         return $res;
     }
 
-    public function gettypeArr($type_no,$lib_type) {
-        return CHtml::listData(CustType::model()->findAll('lib_type=:lib_type and type_no=:type_no', array(':type_no' => $type_no,'lib_type'=>$lib_type)), 'type_no', 'type_name');
+    public function get_type_text($data) {
+        $val = $data->cust_type;
+        $lib_type = $data->lib_type;
+        $typeArr = $this->gettypeArr($val, $lib_type);
+        $res = isset($typeArr[$val]) ? "【" . $val . "类】" . $typeArr[$val] : $val;
+        return $res;
     }
+
+    public function gettypeArr($type_no, $lib_type) {
+        return CHtml::listData(CustType::model()->findAll('lib_type=:lib_type and type_no=:type_no', array(':type_no' => $type_no, 'lib_type' => $lib_type)), 'type_no', 'type_name');
+    }
+
+    /**
+     * 合并客户
+     */
+    public function actionMerge() {
+        if (isset($_POST['CustomerInfo'])) {
+            //合并
+            $cust_ids = $_POST['cust_id'];
+            $model = $this->loadModel($_POST['CustomerInfo']['id']);
+            $model->attributes = $_POST['CustomerInfo'];
+            $id = $model->id;
+            $transaction = Yii::app()->db->beginTransaction();
+            $loginuser = Users::model()->findByPk(Yii::app()->user->id);
+            foreach ($cust_ids as $cust_id) {
+                if ($cust_id != $model->id) {
+                    //删除客户
+                    $sql = "delete from {{customer_info}} where id=$cust_id";
+                    Yii::app()->db->createCommand($sql)->execute();
+                    //删除成交师库
+                    $sql = "delete from {{trans_cust_info}} where cust_id=$cust_id";
+                    Yii::app()->db->createCommand($sql)->execute();
+                    //删除售后库
+                    $sql = "delete from {{aftermarket_cust_info}} where cust_id=$cust_id";
+                    Yii::app()->db->createCommand($sql)->execute();
+                    //删除合同信息表
+                    $sql = "delete from {{contract_info}} where cust_id=$cust_id";
+                    Yii::app()->db->createCommand($sql)->execute();
+                    //删除转换明细
+                    $sql = "delete from {{cust_convt_detail}} where cust_id=$cust_id";
+                    Yii::app()->db->createCommand($sql)->execute();
+                    //合并小记
+                    $sql = "update {{note_info}} set cust_id=$id where cust_id=$cust_id";
+                    Yii::app()->db->createCommand($sql)->execute();
+                    //合并电放拔打记录
+                    $sql = "update {{dial_detail}} set cust_id=$id where cust_id=$cust_id";
+                    Yii::app()->db->createCommand($sql)->execute();
+                    //合并短信记录
+                    $sql = "update {{message}} set cust_id=$id where cust_id=$cust_id";
+                    Yii::app()->db->createCommand($sql)->execute();
+                    //合并财务记录
+                    $sql = "update {{finance}} set cust_id=$id where cust_id=$cust_id";
+                    Yii::app()->db->createCommand($sql)->execute();
+                }
+            }
+            $model->eno = $loginuser->eno;
+            $model->create_time = time();
+            $model->next_time = strtotime($model->next_time);
+            $model->last_time = strtotime($model->last_time);
+            $model->creator = Yii::app()->user->id;
+            $model->save();
+            Yii::app()->db->createCommand()->update('{{trans_cust_info}}', array('eno' => $loginuser->eno,
+                'assign_eno' => $loginuser->eno,
+                'assign_time' => time(),
+                'next_time' => $model->next_time,
+                'creator' => $loginuser->id,
+                'create_time' => time()
+                    ), "cust_id =$id");
+            if ($model->hasErrors()) {
+                $transaction->rollback();
+                $this->render("error", array("model" => $model));
+                return;
+            } else {
+                $transaction->commit();
+                $this->render("result", array("model" => $model));
+                return;
+            }
+        }
+        if (!isset($_POST['select'])) {
+            //没有选择记录的情况
+            $this->redirect($this->createUrl("customerinfo/admin"));
+            return;
+        }
+        //跳转到合并页面
+        $ids = $_POST['select'];
+        $model = CustomerInfo::model();
+        $sql = "";
+        if (is_array($ids)) {
+            $sql = "select c.id,c.cust_name,c.shop_name,c.corp_name,c.shop_url,c.shop_addr,c.phone,c.phone2,c.phone3,c.phone4,c.phone5,"
+                    . "    c.qq,c.mail,c.datafrom,c.category,t.cust_type,c.eno,c.iskey,c.visit_date,c.abandon_reason,c.assign_eno,c.assign_time,"
+                    . "    c.next_time,c.last_time,c.memo,c.status,c.create_time,c.creator,t.cust_type as trans_cust_type "
+                    . " from {{customer_info}} c,{{trans_cust_info}} t where c.id=t.cust_id and c.id in (" . implode(",", $ids) . ")";
+        } else {
+            $this->redirect($this->createUrl("customerinfo/admin"));
+            return;
+        }
+        $list = $model->findAllBySql($sql);
+
+        $cust_name = CHtml::listData($list, "id", "cust_name");
+        $shop_name = CHtml::listData($list, "shop_name", "shop_name");
+        $corp_name = CHtml::listData($list, "corp_name", "corp_name");
+        $shop_url = CHtml::listData($list, "shop_url", "shop_url");
+        $shop_addr = CHtml::listData($list, "shop_addr", "shop_addr");
+        $phone = CHtml::listData($list, "phone", "phone");
+        $phone2 = CHtml::listData($list, "phone2", "phone2");
+        $phone3 = CHtml::listData($list, "phone3", "phone3");
+        $phone4 = CHtml::listData($list, "phone4", "phone4");
+        $phone5 = CHtml::listData($list, "phone5", "phone5");
+        $qq = CHtml::listData($list, "qq", "qq");
+        $mail = CHtml::listData($list, "mail", "mail");
+        $datafrom = CHtml::listData($list, "datafrom", "datafrom");
+        $category = CHtml::listData($list, "category", "category");
+        $cust_type = CHtml::listData($list, "cust_type", "cust_type");
+        $abandon_reason = CHtml::listData($list, "abandon_reason", "abandon_reason");
+        $memo = CHtml::listData($list, "memo", "memo");
+
+        $this->render('merge', array('model' => $model,
+            'cust_name' => $cust_name,
+            'shop_name' => $shop_name,
+            'corp_name' => $corp_name,
+            'shop_url' => $shop_url,
+            'shop_addr' => $shop_addr,
+            'phone' => $phone,
+            'phone2' => $phone2,
+            'phone3' => $phone3,
+            'phone4' => $phone4,
+            'phone5' => $phone5,
+            'qq' => $qq,
+            'mail' => $mail,
+            'datafrom' => $datafrom,
+            'category' => $category,
+            'cust_type' => $cust_type,
+            'abandon_reason' => $abandon_reason,
+            'memo' => $memo,
+            'custlist' => $list)
+        );
+    }
+
 }

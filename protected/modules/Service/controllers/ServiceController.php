@@ -257,8 +257,8 @@ class ServiceController extends GController {
      * 拔打电话
      * @param type $cust_id
      */
-    public function actionDial($cust_id) {
-        $result = UnCall::dial($cust_id); 
+    public function actionDial($cust_id,$seq) {
+        $result = UnCall::dial($cust_id,$seq); 
         echo json_encode($result);
     }
 
@@ -266,21 +266,30 @@ class ServiceController extends GController {
      * 发短信
      * @param type $cust_id
      */
-    public function actionMessage($cust_id) {
+    public function actionMessage($cust_id,$seq) {
         $model = new AftermarketCustInfo();
         $model->cust_id = $cust_id;
         if (isset($_POST['AftermarketCustInfo'])) {
             $model->attributes = $_POST['AftermarketCustInfo'];
             $model->message = $_POST['AftermarketCustInfo']['message'];
-            $message = Utils::sendMessageByCust($model->cust_id, $model->message, 'post');
+            $message = Utils::sendMessageByCust($model->cust_id,$seq, $model->message, 'post');
             Utils::showMsg(1, $message->memo, $message->attributes);
             Yii::app()->end;
             exit();
         }
+        $temparr = NoteTemplate::model()->findAll();
+        if(!empty($temparr)){
+            $model->message=$temparr[0]->content;
+        }
+        $titles = CHtml::listData($temparr, 'id', 'tname');  
         $this->renderPartial('message', array(
             'model' => $model,
+            'seq'=>$seq,
+            'titles'=>$titles,
+            'contents'=>$temparr
         ));
     }
+     
 
     /**
      * 发邮件
@@ -389,6 +398,21 @@ class ServiceController extends GController {
         } 
         $this->renderPartial("play2", array('playurl' => $playurl)); 
     }
+    /**
+     * 播放下载
+     * @param type $id
+     */
+    public function actionPlay3($id){ 
+        $playurl='';
+        if($id>0){
+           $dialdetail = DialDetail::model()->findByPk($id);
+           if (!empty($dialdetail->record_path)) {
+                $uncall = Yii::app()->params['UNCALL'];
+                $playurl = $uncall["playurl"].$dialdetail->record_path;  
+            }
+        } 
+        $this->renderPartial("play2", array('playurl' => $playurl)); 
+    }
 
     /**
      * 查看小记
@@ -423,5 +447,129 @@ class ServiceController extends GController {
     public function gettypeArr($type_no,$lib_type) {
         return CHtml::listData(CustType::model()->findAll('lib_type=:lib_type and type_no=:type_no', array(':type_no' => $type_no,'lib_type'=>$lib_type)), 'type_no', 'type_name');
     }
+    /**
+     * 合并客户
+     */
+    public function actionMerge() {
+        if (isset($_POST['CustomerInfo'])) {
+            //合并
+            $cust_ids = $_POST['cust_id'];
+            $model = $this->loadModel($_POST['CustomerInfo']['id']);
+            $model->attributes = $_POST['CustomerInfo']; 
+            $id = $model->id;
+            $transaction = Yii::app()->db->beginTransaction();  
+            $loginuser =  Users::model()->findByPk(Yii::app()->user->id);
+            foreach ($cust_ids as $cust_id) {
+                if ($cust_id != $model->id) {
+                    //删除客户
+                    $sql = "delete from {{customer_info}} where id=$cust_id";
+                    Yii::app()->db->createCommand($sql)->execute();
+                    //删除成交师库
+                    $sql = "delete from {{trans_cust_info}} where cust_id=$cust_id";
+                    Yii::app()->db->createCommand($sql)->execute();
+                    //删除售后库
+                    $sql = "delete from {{aftermarket_cust_info}} where cust_id=$cust_id";
+                    Yii::app()->db->createCommand($sql)->execute();
+                    //删除合同信息表
+                    $sql = "delete from {{contract_info}} where cust_id=$cust_id";
+                    Yii::app()->db->createCommand($sql)->execute();
+                    //删除转换明细
+                    $sql = "delete from {{cust_convt_detail}} where cust_id=$cust_id";
+                    Yii::app()->db->createCommand($sql)->execute();
+                    //合并小记
+                    $sql = "update {{note_info}} set cust_id=$id where cust_id=$cust_id";
+                    Yii::app()->db->createCommand($sql)->execute();
+                    //合并电放拔打记录
+                    $sql = "update {{dial_detail}} set cust_id=$id where cust_id=$cust_id";
+                    Yii::app()->db->createCommand($sql)->execute();
+                    //合并短信记录
+                    $sql = "update {{message}} set cust_id=$id where cust_id=$cust_id";
+                    Yii::app()->db->createCommand($sql)->execute();
+                    //合并财务记录
+                    $sql = "update {{finance}} set cust_id=$id where cust_id=$cust_id";
+                    Yii::app()->db->createCommand($sql)->execute();
+                }
+            } 
+            $model->eno=$loginuser->eno;
+            $model->create_time=time(); 
+            $model->next_time=strtotime($model->next_time);
+            $model->last_time=strtotime($model->last_time);
+            $model->creator=Yii::app()->user->id;
+            $model->save();  
+            Yii::app()->db->createCommand()->update('{{aftermarket_cust_info}}', 
+                    array(  'eno' => $loginuser->eno,
+                            'assign_eno'=>$loginuser->eno,
+                            'assign_time'=>time(),
+                            'next_time'=>$model->next_time,
+                            'creator'=>$loginuser->id,
+                            'create_time'=>time()
+                        ), "cust_id =$id");
+            if($model->hasErrors()){
+                $transaction->rollback();
+                $this->render("error",array("model"=>$model));
+                return;
+            }else{
+                $transaction->commit();
+                $this->render("result",array("model"=>$model));
+                return;
+            }
+        }
+        if (!isset($_POST['select'])) {
+            //没有选择记录的情况
+            $this->redirect($this->createUrl("customerinfo/admin"));
+            return;
+        }
+        //跳转到合并页面
+        $ids = $_POST['select'];
+        $model = CustomerInfo::model();
+        $sql = "";
+        if (is_array($ids)) {
+            $sql = "select c.id,c.cust_name,c.shop_name,c.corp_name,c.shop_url,c.shop_addr,c.phone,c.phone2,c.phone3,c.phone4,c.phone5,"
+                    . "    c.qq,c.mail,c.datafrom,c.category,t.cust_type,c.eno,c.iskey,c.visit_date,c.abandon_reason,c.assign_eno,c.assign_time,"
+                    . "    c.next_time,c.last_time,c.memo,c.status,c.create_time,c.creator,t.webchat,t.ww "
+                    . " from {{customer_info}} c,{{aftermarket_cust_info}} t where c.id=t.cust_id and c.id in (" . implode(",", $ids) . ")";
+        } else {
+            $this->redirect($this->createUrl("customerinfo/admin"));
+            return;
+        }
+        $list = $model->findAllBySql($sql);
+        $cust_name = CHtml::listData($list, "id", "cust_name");
+        $shop_name = CHtml::listData($list, "shop_name", "shop_name");
+        $corp_name = CHtml::listData($list, "corp_name", "corp_name");
+        $shop_url = CHtml::listData($list, "shop_url", "shop_url");
+        $shop_addr = CHtml::listData($list, "shop_addr", "shop_addr");
+        $phone = CHtml::listData($list, "phone", "phone");
+        $phone2 = CHtml::listData($list, "phone2", "phone2");
+        $phone3 = CHtml::listData($list, "phone3", "phone3");
+        $phone4 = CHtml::listData($list, "phone4", "phone4");
+        $phone5 = CHtml::listData($list, "phone5", "phone5");
+        $qq = CHtml::listData($list, "qq", "qq");
+        $mail = CHtml::listData($list, "mail", "mail");
+        $datafrom = CHtml::listData($list, "datafrom", "datafrom");
+        $category = CHtml::listData($list, "category", "category");
+        $cust_type = CHtml::listData($list, "cust_type", "cust_type");
+        $abandon_reason = CHtml::listData($list, "abandon_reason", "abandon_reason");
+        $memo = CHtml::listData($list, "memo", "memo");
 
+        $this->render('merge', array('model' => $model,
+            'cust_name' => $cust_name,
+            'shop_name' => $shop_name,
+            'corp_name' => $corp_name,
+            'shop_url' => $shop_url,
+            'shop_addr' => $shop_addr,
+            'phone' => $phone,
+            'phone2' => $phone2,
+            'phone3' => $phone3,
+            'phone4' => $phone4,
+            'phone5' => $phone5,
+            'qq' => $qq,
+            'mail' => $mail,
+            'datafrom' => $datafrom,
+            'category' => $category,
+            'cust_type' => $cust_type,
+            'abandon_reason' => $abandon_reason,
+            'memo' => $memo,
+            'custlist' => $list)
+        );
+    }
 }
