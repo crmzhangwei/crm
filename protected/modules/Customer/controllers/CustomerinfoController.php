@@ -230,13 +230,25 @@ class CustomerinfoController extends GController
 	        $file = $_FILES['batchFile']['tmp_name'];
 	        $fileArr = UploadExcel::upExcel($file);
 	        $creator = Yii::app()->user->id;
-			$eno = Yii::app()->session['user']['eno'];
+			
 			$assign_eno = Yii::app()->session['user']['eno'];//分配人
 			$assign_time = time();
 	        $create_time = time();
+			$userArr = array();
+ 			$allUser = Users::model()->findAll( array('select'=>array('eno','username'),));
+			foreach ($allUser as $key => $value) {
+				$userArr[$value['username']] = $value['eno'];
+			}
+
 	        if ($fileArr) {
+				if(count($fileArr) > 600){
+					exit("<script>alert(\"对不起, 为防止一次提交的数据太多消耗大量的服务器资源而影响到其他用户的使用, 一次提交的数据不能超过600条, 请修改后重新提交。\");
+	        				javascript:history.go(-1);</script>");
+				}
 	        	$sql = "insert into {{customer_info}} (cust_name,phone,qq,mail,memo,creator,create_time,eno,assign_eno,assign_time) values";
-	        	foreach ((array)$fileArr as $k => $v) {
+	        	$usql = '';
+				$eno = '';
+				foreach ((array)$fileArr as $k => $v) {
 	        		if (!$v[0]) {
 	        			exit("<script>alert(\"对不起, 第".$k."行中的客户姓名不能为空, 请填写后重新提交。\");
 	        				javascript:history.go(-1);</script>");
@@ -249,18 +261,50 @@ class CustomerinfoController extends GController
 	        			exit("<script>alert(\"对不起, 第".$k."行中的邮箱格式不正确, 请填写后重新提交。\");
 	        				javascript:history.go(-1);</script>");
 	        		}
+					elseif (!$v[5] || !array_key_exists($v[5], $userArr)) {
+	        			exit("<script>alert(\"对不起, 第".$k."行中的 所属人员 不能为空或不存在, 请填写后重新提交。\");
+	        				javascript:history.go(-1);</script>");
+	        		}
 	        		else{
+						$eno = $userArr[$v[5]];
 	        			$sql .= "('{$v[0]}','{$v[1]}','{$v[2]}','{$v[3]}','{$v[4]}', $creator, $create_time,'$eno','$assign_eno',$assign_time),";
-	        		}	
+						$usql .= "update {{users}} set cust_num=cust_num+1 where eno='$eno';";	
+					}	
 	        	}
-	        	$sql = trim($sql,',');
-	        	$command=yii::app()->db->createCommand($sql);
+				$sql = trim($sql, ',');
+				///////////////////开启事务///////////////////
+				$transaction = Yii::app()->db->beginTransaction();
+				try {
+					$num = Yii::app()->db->createCommand($sql)->execute();
+					$res2 = Yii::app()->db->createCommand($usql)->execute();
+					$tip_info = CustomerInfo::model()->findAll( array('select'=>array('id','eno'),
+																		'condition' => 'create_time=:create_time', 
+																		'params' => array(':create_time'=>$create_time)
+																	)
+																);
+					$tipSql = "insert into {{tip_info}} value ";
+					$sqlstr = '';
+					foreach($tip_info as $k2=>$v2){
+						$sqlstr .= '('."$v2[id]".','."'$v2[eno]'".')'.',';
+					}
+					$sqlstr = trim($sqlstr, ',');
+					$tsql = $tipSql.$sqlstr;
+					Yii::app()->db->createCommand($tsql)->execute();/////新分资源弹窗提示用户
+					$transaction->commit();
+					exit("<script>alert(\"恭喜你, 成功导入".$num."条数据。\");javascript:history.go(-1);</script>");	
+				} catch (Exception $exc) {
+					$transaction->rollBack();//事务回滚
+					exit("<script>alert(\"对不起, 由于未知的错误, 本次操作失败, 请重新操作。\");javascript:history.go(-1);</script>");
+				}
+				//////////////////////////////////////////
+				
+	        	/*$command=yii::app()->db->createCommand($sql);
 	        	$num = $command->execute();
 				if($num>0){
 					$sql2 = "update {{users}} set cust_num=cust_num+$num where eno='$eno'";
 					yii::app()->db->createCommand($sql2)->execute();
 				}
-	        	exit("<script>alert(\"恭喜你, 成功导入".$num."条数据。\");javascript:history.go(-1);</script>");	
+	        	exit("<script>alert(\"恭喜你, 成功导入".$num."条数据。\");javascript:history.go(-1);</script>");	*/
 	        }
 		}
 		$this->renderPartial('batchCustomer', array('model'=>$model));
