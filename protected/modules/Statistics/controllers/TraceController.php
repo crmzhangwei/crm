@@ -22,6 +22,8 @@ class TraceController extends GController {
         $ctype = $search['ctype'];
         $offset = ($page - 1) * $this->pageSize;
         $wherestr = "";
+        $priv=UserInfo::getPrivCondiForReport();
+         
         if (!empty($search['stime'])) {
             $istime = strtotime($search['stime']);
             $wherestr = $wherestr . " and t.convt_time>=$istime";
@@ -56,7 +58,7 @@ FROM
     c_users u 
 WHERE
     c.user_id = u.id AND c.lib_type = 2
-        AND  c.cust_type_2 =$ctype
+        AND  c.cust_type_2 =$ctype and $priv
 union all 
 SELECT 
      distinct c.cust_id,'N' cust_type_1,cust_type_2, u.name, u.dept_id,u.group_id, c.convt_time,u.eno
@@ -65,7 +67,7 @@ FROM
     c_users u 
 WHERE
     c.user_id = u.id AND c.lib_type = 2
-        AND  c.cust_type_2 =17        
+        AND  c.cust_type_2 =17 and $priv       
         
         ) t where 1=1 $wherestr
 ) tb where 1=1 group by  tb.name
@@ -132,6 +134,7 @@ EOF;
         if (!empty($search['dept']))
             $param['dept'] = $search['dept'];
         $wherestr = "";
+        $priv=UserInfo::getPrivCondiForReport();
         if (!empty($param['stime'])) {
             $istime = strtotime($param['stime']);
             $wherestr = $wherestr . " and t.assign_time>$istime";
@@ -166,7 +169,7 @@ FROM
     c_customer_info a,
     c_users u
 WHERE
-    a.eno = u.eno AND cust_type = 0 
+    a.eno = u.eno AND cust_type = 0 $priv
 UNION ALL SELECT 
      c.cust_type_2, u.name, u.dept_id ,c.convt_time as assign_time
 FROM
@@ -174,7 +177,7 @@ FROM
     c_users u
 WHERE
     c.user_id = u.id AND c.lib_type = 1
-        AND c.cust_type_1 = 0
+        AND c.cust_type_1 = 0 $priv
 ) t where 1=1 $wherestr
 ) tb,c_dept_info d where tb.dept_id=d.id group by d.name
 EOF;
@@ -218,6 +221,7 @@ EOF;
         $ctype = $search['ctype'];
         $offset = ($page - 1) * $this->pageSize;
         $wherestr = "";
+        $priv=UserInfo::getPrivCondiForReport();
         if (!empty($search['stime'])) {
             $istime = strtotime($search['stime']);
             $wherestr = $wherestr . " and t.convt_time>=$istime";
@@ -258,7 +262,7 @@ FROM
 WHERE
     c.user_id = u.id AND u.group_id = g.id
         AND c.cust_type_2 = $ctype
-        AND c.lib_type = 1
+        AND c.lib_type = 1 $priv
 ) t where 1=1 $wherestr
 ) tb where 1=1 group by tb.group_name
 EOF;
@@ -311,6 +315,7 @@ EOF;
         $endDate = date('Y-m-d', strtotime("$BeginDate +1 month -1 day"));
         $stime = strtotime($curTime);
         $etime = strtotime($endDate);
+        $priv=UserInfo::getPrivCondiForReport();
         $wherestr = $wherestr . " and next_time>=$stime";
         $wherestr = $wherestr . " and next_time<=$etime";
         if (!empty($search['dept'])) {
@@ -340,34 +345,34 @@ FROM
     c_customer_info c,
     c_users u
 WHERE
-    c.eno = u.eno
+    c.eno = u.eno $priv
 ) t where 1=1 $wherestr
 
 ) tb where 1=1 group by tb.next_time  
 union all 
-select '各成熟度资源占比' as next_time, (select count(*) from c_customer_info c,c_users u where c.eno=u.eno and c.cust_type=0 $wherestr) as a0,
-(select count(*) from c_customer_info c,c_users u where c.eno=u.eno and c.cust_type=1 $wherestr) as a1,
-(select count(*) from c_customer_info c,c_users u where c.eno=u.eno and c.cust_type=2 $wherestr) as a1,
-(select count(*) from c_customer_info c,c_users u where c.eno=u.eno and c.cust_type=3 $wherestr) as a1,
-(select count(*) from c_customer_info c,c_users u where c.eno=u.eno and c.cust_type=4 $wherestr) as a1,
-(select count(*) from c_customer_info c,c_users u where c.eno=u.eno and c.cust_type=5 $wherestr) as a1,
-(select count(*) from c_customer_info c,c_users u where c.eno=u.eno and c.cust_type=6 $wherestr) as a1,
-(select count(*) from c_customer_info c,c_users u where c.eno=u.eno and c.cust_type=7 $wherestr) as a1,
-(select count(*) from c_customer_info c,c_users u where c.eno=u.eno and c.cust_type=8 $wherestr) as a1,
-(select count(*) from c_customer_info c,c_users u where c.eno=u.eno and c.cust_type=9 $wherestr) as a1,
-(select count(*) from c_customer_info c,c_users u where c.eno=u.eno $wherestr) as total
+select '各成熟度资源占比' as next_time, (select count(*) from c_customer_info c,c_users u where c.eno=u.eno and c.cust_type=0 $priv $wherestr) as a0,
+(select count(*) from c_customer_info c,c_users u where c.eno=u.eno and c.cust_type=1 $priv $wherestr) as a1,
+(select count(*) from c_customer_info c,c_users u where c.eno=u.eno and c.cust_type=2 $priv $wherestr) as a1,
+(select count(*) from c_customer_info c,c_users u where c.eno=u.eno and c.cust_type=3 $priv $wherestr) as a1,
+(select count(*) from c_customer_info c,c_users u where c.eno=u.eno and c.cust_type=4 $priv $wherestr) as a1,
+(select count(*) from c_customer_info c,c_users u where c.eno=u.eno and c.cust_type=5 $priv $wherestr) as a1,
+(select count(*) from c_customer_info c,c_users u where c.eno=u.eno and c.cust_type=6 $priv $wherestr) as a1,
+(select count(*) from c_customer_info c,c_users u where c.eno=u.eno and c.cust_type=7 $priv $wherestr) as a1,
+(select count(*) from c_customer_info c,c_users u where c.eno=u.eno and c.cust_type=8 $priv $wherestr) as a1,
+(select count(*) from c_customer_info c,c_users u where c.eno=u.eno and c.cust_type=9 $priv $wherestr) as a1,
+(select count(*) from c_customer_info c,c_users u where c.eno=u.eno $priv $wherestr) as total
 from c_customer_info where id =1 
 union all 
 select '各成熟度人均库存' as next_time, (select count(*) from c_customer_info c,c_users u where c.eno=u.eno and c.cust_type=0 $wherestr) as a0,
-(select count(*) from c_customer_info c,c_users u where c.eno=u.eno and c.cust_type=1 $wherestr) as a1,
-(select count(*) from c_customer_info c,c_users u where c.eno=u.eno and c.cust_type=2 $wherestr) as a2,
-(select count(*) from c_customer_info c,c_users u where c.eno=u.eno and c.cust_type=3 $wherestr) as a3,
-(select count(*) from c_customer_info c,c_users u where c.eno=u.eno and c.cust_type=4 $wherestr) as a4,
-(select count(*) from c_customer_info c,c_users u where c.eno=u.eno and c.cust_type=5 $wherestr) as a5,
-(select count(*) from c_customer_info c,c_users u where c.eno=u.eno and c.cust_type=6 $wherestr) as a6,
-(select count(*) from c_customer_info c,c_users u where c.eno=u.eno and c.cust_type=7 $wherestr) as a7,
-(select count(*) from c_customer_info c,c_users u where c.eno=u.eno and c.cust_type=8 $wherestr) as a8,
-(select count(*) from c_customer_info c,c_users u where c.eno=u.eno and c.cust_type=9 $wherestr) as a9,
+(select count(*) from c_customer_info c,c_users u where c.eno=u.eno and c.cust_type=1 $priv $wherestr) as a1,
+(select count(*) from c_customer_info c,c_users u where c.eno=u.eno and c.cust_type=2 $priv $wherestr) as a2,
+(select count(*) from c_customer_info c,c_users u where c.eno=u.eno and c.cust_type=3 $priv $wherestr) as a3,
+(select count(*) from c_customer_info c,c_users u where c.eno=u.eno and c.cust_type=4 $priv $wherestr) as a4,
+(select count(*) from c_customer_info c,c_users u where c.eno=u.eno and c.cust_type=5 $priv $wherestr) as a5,
+(select count(*) from c_customer_info c,c_users u where c.eno=u.eno and c.cust_type=6 $priv $wherestr) as a6,
+(select count(*) from c_customer_info c,c_users u where c.eno=u.eno and c.cust_type=7 $priv $wherestr) as a7,
+(select count(*) from c_customer_info c,c_users u where c.eno=u.eno and c.cust_type=8 $priv $wherestr) as a8,
+(select count(*) from c_customer_info c,c_users u where c.eno=u.eno and c.cust_type=9 $priv $wherestr) as a9,
 1 as total
 from c_customer_info where id =1
 EOF;
@@ -397,6 +402,8 @@ EOF;
             $search['group'] = '';
         }
         $offset = ($page - 1) * $this->pageSize;
+        $priv=UserInfo::getPrivCondiForReport();
+        
         $wherestr = "";
         if (!empty($search['stime'])) {
             $istime = strtotime($search['stime']);
@@ -431,7 +438,7 @@ FROM
     FROM
         crm.c_dial_detail d, c_users u
     WHERE
-        d.eno = u.eno) t
+        d.eno = u.eno $priv ) t
 WHERE
     1 = 1 $wherestr
 GROUP BY t.eno , t.name

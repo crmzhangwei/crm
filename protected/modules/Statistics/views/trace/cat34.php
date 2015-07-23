@@ -26,7 +26,7 @@
                 <?php echo CHtml::dropDownList( 'search[dept]', $search['dept'], $this->getDeptArr(), array('onchange'=>'listgroup(this)')); ?>
             </div>
 	    <div class="form-group">  
-                <?php echo CHtml::dropDownList( 'search[group]', $search['group'], $this->getGroupArr($search['dept']), array('onchange'=>'listgroup(this)','id'=>'groupinfo')); ?>
+                <?php echo CHtml::dropDownList( 'search[group]', $search['group'], $this->getGroupArr($search['dept']), array('id'=>'groupinfo')); ?>
             </div>
             <div class="form-group">
 				&nbsp;&nbsp;时间段: 

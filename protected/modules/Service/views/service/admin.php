@@ -32,11 +32,13 @@ $('.search-form form').submit(function(){
 $form = $this->beginWidget('CActiveForm', array(
     'action' => Yii::app()->createUrl('Service/service/assignMulti'),
     'method' => 'post',
+    'id' =>'form_1'
         ));
 ?>
 <div class="form-group">
     <div class="btn-group">
-<?php echo CHtml::submitButton('分配', array('class' => 'btn btn-sm btn-primary')); ?>
+        <?php echo CHtml::submitButton('分配', array('class' => 'btn btn-sm btn-primary','onclick'=>'subAssign();')); ?>
+        <?php echo CHtml::button('合并客户', array('class' => 'btn btn-sm btn-primary','onclick'=>'subMerge();')); ?>
     </div>  
 </div>
 
@@ -83,3 +85,16 @@ $this->widget('GLinkPager', array('pages' => $dataProvider->getPagination(),));
 ?>
     </div>
 </div>
+<script>
+    function subAssign(){
+        var url = "<?php echo Yii::app()->controller->createUrl('service/assignMulti');?>";
+        $("#form_1").attr('action',url);
+        $("#form_1").submit();
+    }
+    
+    function subMerge(){
+         var url = "<?php echo Yii::app()->controller->createUrl('service/merge');?>";
+         $("#form_1").attr('action',url);
+         $("#form_1").submit();
+    }
+</script>    

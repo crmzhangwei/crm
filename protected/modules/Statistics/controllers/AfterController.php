@@ -19,7 +19,7 @@ class AfterController extends GController {
             $param['stime'] = $search['stime'];
         if (!empty($search['etime']))
             $param['etime'] = $search['etime'];
-
+        $priv=UserInfo::getPrivCondiForReport();
         $wherestr = "";
         if (!empty($param['stime'])) {
             $istime = strtotime($param['stime']);
@@ -57,6 +57,7 @@ FROM
     c_users u
 WHERE
     d.eno = u.eno 
+    $priv
     $wherestr            
     ) t 
     ) d where 1=1 group by d.eno,d.name,d.dial_time  
@@ -131,6 +132,7 @@ EOF;
         if (!empty($param['dept'])) { 
             $wherestr = $wherestr . " and t.dept_id=".$param['dept'];
         } 
+        $priv=UserInfo::getPrivCondiForReport();
         $sql = <<<EOF
 select d.name as dept_name,sum(a) a,sum(b) b,sum(a0)
 a0,sum(a1) a1,sum(a2) a2,sum(a3) a3,sum(a4) a4,sum(a5) a5,sum(a6)
@@ -153,7 +155,7 @@ FROM
     c_aftermarket_cust_info a,
     c_users u
 WHERE
-    a.eno = u.eno AND cust_type = 0 
+    a.eno = u.eno AND cust_type = 0 $priv
 UNION ALL SELECT 
     c.cust_id, c.cust_type_2, u.name, u.dept_id ,c.convt_time as assign_time
 FROM
@@ -161,7 +163,7 @@ FROM
     c_users u
 WHERE
     c.user_id = u.id AND c.lib_type = 3
-        AND c.cust_type_1 = 0
+        AND c.cust_type_1 = 0 $priv
 ) t where 1=1 $wherestr
 ) tb,c_dept_info d where tb.dept_id=d.id group by d.name
 EOF;
@@ -200,7 +202,7 @@ EOF;
             $param['dept'] = $search['dept'];
         if (!empty($search['group']))
             $param['group'] = $search['group'];
-
+        $priv=UserInfo::getPrivCondiForReport();
         $wherestr = "";
         if (!empty($param['dept'])) { 
             $wherestr = $wherestr . " and u.dept_id=".$param['dept'];
@@ -227,6 +229,7 @@ WHERE
         AND d.lib_type = 3
         AND d.cust_type_1 = 4
         AND d.cust_type_2 = 3 
+        $priv
         $wherestr
 EOF;
         $criteria = new CDbCriteria();

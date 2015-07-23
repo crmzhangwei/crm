@@ -11,6 +11,10 @@
  * @property string $shop_url
  * @property string $shop_addr
  * @property string $phone
+ * @property string $phone2
+ * @property string $phone3
+ * @property string $phone4
+ * @property string $phone5
  * @property string $qq
  * @property string $mail
  * @property string $datafrom
@@ -57,7 +61,7 @@ class CustomerInfo extends CActiveRecord {
             array('category, cust_type, iskey, status, creator', 'numerical', 'integerOnly' => true),
             array('cust_name, shop_name, corp_name, shop_url, shop_addr, datafrom, memo', 'length', 'max' => 100),
             array('phone, qq', 'length', 'max' => 20),
-            array('visit_date, assign_time, next_time, create_time', 'safe'),
+            array('visit_date, assign_time, next_time,last_time, create_time', 'safe'),
             array('mail', 'length', 'max' => 50),
             array('eno, assign_eno', 'length', 'max' => 10),
             array('abandon_reason', 'length', 'max' => 200),
@@ -90,6 +94,10 @@ class CustomerInfo extends CActiveRecord {
             'shop_url' => '店铺网址',
             'shop_addr' => '店铺地址',
             'phone' => '电话',
+            'phone2' => '电话2',
+            'phone3' => '电话3',
+            'phone4' => '电话4',
+            'phone5' => '电话5',
             'qq' => 'QQ',
             'mail' => '邮箱',
             'datafrom' => '数据来源',
@@ -143,7 +151,7 @@ class CustomerInfo extends CActiveRecord {
         $criteria->join="join {{trans_cust_info}} tci ";
         $criteria->addInCondition("tci.cust_type", array(10,11,12,13,14,15,16));
         $criteria->addInCondition("t.status", array(0,3));
-        $criteria->select="t.id,tci.eno,t.cust_name,t.shop_name,t.corp_name,t.category,t.iskey,t.shop_addr,tci.cust_type,tci.assign_time,tci.assign_eno,tci.next_time";
+        $criteria->select="t.id,tci.eno,t.cust_name,t.shop_name,t.corp_name,t.category,t.last_time,t.iskey,t.shop_addr,tci.cust_type,tci.assign_time,tci.assign_eno,tci.next_time";
         $criteria->addCondition("t.id=tci.cust_id"); 
         //只看到自己的客户,及下属客户
         $user_arr = Userinfo::getAllChildUsersId(Yii::app()->user->id);

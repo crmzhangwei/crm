@@ -265,7 +265,16 @@ class CustomerinfoController extends GController
 		}
 		$this->renderPartial('batchCustomer', array('model'=>$model));
 	}
-
+        public function actionContact(){
+            $model = new DialDetail('search');
+            $model->unsetAttributes();
+            if(isset($_GET['DialDetail'])){
+                $model->attributes= $_GET['DialDetail'];
+                $model->searchtype= $_GET['DialDetail']['searchtype'];
+                $model->keyword= $_GET['DialDetail']['keyword'];
+            }
+            $this->render("contact",array('model'=>$model));
+        }
 	/**
 	 * Returns the data model based on the primary key given in the GET variable.
 	 * If the data model is not found, an HTTP exception will be raised.

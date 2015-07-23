@@ -35,6 +35,7 @@ class AftermarketCustInfo extends CActiveRecord {
     public $keyword;
     public $last_time;
     public $iskey;
+    public $message_template;
 
     /**
      * @return string the associated database table name
@@ -339,15 +340,8 @@ class AftermarketCustInfo extends CActiveRecord {
                 " left join {{dic}} d on c.category=d.code and d.ctype='cust_category' " .
                 " left join {{contract_info}} ci on t.cust_id=ci.cust_id ";
         //$criteria->addCondition("t.eno =''");
-        //只看到自己的客户,及下属客户
-        $user_arr = Userinfo::getAllChildUsersId(Yii::app()->user->id);
-        $user_arr[] = Yii::app()->user->id;
-        if (!empty($user_arr) && count($user_arr) > 0) {
-            $wherestr = Utils::genUserCondition($user_arr);
-            if (!empty($wherestr)) {
-                $criteria->addCondition(" exists (select 1 from {{users}} where eno=t.eno and $wherestr)");
-            }
-        }
+            
+        
         $sort = new CSort();
         $sort->attributes = array(
             'defaultOrder' => 'id desc',

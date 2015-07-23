@@ -87,12 +87,23 @@ class Utils {
      * @param type $method get/post
      * @return type 发送短信记录
      */
-    public static function sendMessageByCust($cust_id, $msg, $method = 'get') {
+    public static function sendMessageByCust($cust_id, $seq, $msg, $method = 'get') {
         $cust = CustomerInfo::model()->findByPk($cust_id);
         if (empty($cust)) {
             return "客户不存在";
         }
         $phone = $cust->getAttribute("phone");
+        switch ($seq) {
+            case 1: break;
+            case 2: $phone = $cust->getAttribute("phone2");
+                break;
+            case 3: $phone = $cust->getAttribute("phone3");
+                break;
+            case 4: $phone = $cust->getAttribute("phone4");
+                break;
+            case 5: $phone = $cust->getAttribute("phone5");
+                break;
+        }
         if (empty($phone)) {
             return "客户电话不存在";
         }
@@ -295,55 +306,86 @@ class Utils {
         }
         return $wherestr;
     }
+
+    public static function genUserConditionForReport($user_arr) {
+        $wherestr = "";
+        if (empty($user_arr)) {
+            return '';
+        }
+        $user_chunks = array_chunk($user_arr, 50);
+        $wherestr = "";
+        foreach ($user_chunks as $arr) {
+            $instr = implode(",", $arr);
+            $wherestr = $wherestr . " or u.id in( " . $instr . ")";
+        }
+        if (is_array($user_chunks) && count($user_chunks) > 0) {
+            $wherestr = substr($wherestr, 3);
+        }
+        return $wherestr;
+    }
+
     /**
      * 带序号将数组记录转成字符串
      * @param type $record
      * @return string
      */
-    public static function array_to_string($keys,$record) {
+    public static function array_to_string($keys, $record) {
         if (empty($record)) {
             return "";
         }
-        $data="";     
-        $i=1;
-        foreach($keys as $k=>$v){
-            if($i==1){
-                $data=",".$record[$v];
-            }else{
-                $data=$data.",".$record[$v];
-            } 
+        $data = "";
+        $i = 1;
+        foreach ($keys as $k => $v) {
+            if ($i == 1) {
+                $data = "," . $record[$v];
+            } else {
+                $data = $data . "," . $record[$v];
+            }
             $i++;
         }
-        $data=$data."\n";
+        $data = $data . "\n";
         return $data;
     }
+
     /**
      * 生成小记显示记录,need to do
      * @param type $record
      */
-    public static function genNoteDisplayRecord($row,$record){
-        $str = ($row+1)."、".date("Y-m-d H:i:s",$record->create_time)." ".$record['cust_id']." ".UserInfo::getNameById($record['eno'])." ".$record['cust_type'];
+    public static function genNoteDisplayRecord($row, $record) {
+        $str = ($row + 1) . "、" . date("Y-m-d H:i:s", $record->create_time) . " " . $record['cust_id'] . " " . UserInfo::getNameById($record['eno']) . " " . $record['cust_type'];
         $dial_detail = DialDetail::model()->findByPk($record['dial_id']);
         $custtype = CustType::findByTypeAndNo($record['lib_type'], $record['cust_type']);
-        if($record['dial_id']>0){
-            $str=$str." 已拔打电话"; 
-            if($dial_detail['dial_long']>0){
-                $str=$str." <a href='#' onclick='javascript:playAndDown()'>播放和下载</a>";
+        if ($record['dial_id'] > 0) {
+            $str = $str . " 已拔打电话";
+            if ($dial_detail['dial_long'] > 0) {
+                $str = $str . " <a href='#' onclick='javascript:playAndDown()'>播放和下载</a>";
             }
         }
-        $str=$str."<br/>";
-        
-        $str=$str.$record['cust_type'].":".$custtype['type_name']."->下次联系时间：".date("Y-m-d H:i:s",$record->next_contact)."<br/>";
-        $str=$str."电话接通状态->";
+        $str = $str . "<br/>";
+
+        $str = $str . $record['cust_type'] . ":" . $custtype['type_name'] . "->下次联系时间：" . date("Y-m-d H:i:s", $record->next_contact) . "<br/>";
+        $str = $str . "电话接通状态->";
     }
-    
-	/**
-	 * 自定义每页显示的条数(下拉列表)
-	 */
-	public static function selectPageSize(){
-		$seletes = array(1=>10, 2=>50, 3=>100,4=>200);
-		return $seletes;
-	}
-	
-	
+
+    /**
+     * 自定义每页显示的条数(下拉列表)
+     */
+    public static function selectPageSize() {
+        $seletes = array(1 => 10, 2 => 50, 3 => 100, 4 => 200);
+        return $seletes;
+    }
+
+    public static function listData($list, $valueField, $textField) {
+        $arr = array();
+        if (!empty($list)) {
+            foreach ($list as $record) {
+                echo $record[$textField];
+                if(!empty($record[$valueField])&&!empty($record[$textField])){ 
+                    $arr[]=array($record[$valueField]=>$record[$textField]);
+                }
+            }
+        }
+        return $arr;
+    }
+
 }
