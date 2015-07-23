@@ -42,8 +42,9 @@
 				to  
 				<input type="text" class="form-control" name="search[ftime]" value="<?php echo $search['ftime'];?>" placeholder="" onClick="WdatePicker()">
 			</div>
+			<input type="hidden" name="isexcel" value="0" id="isexcel"/>
             <div class="form-group"> 
-                <button type="submit" class="btn btn-info form-control">
+                <button type="submit" class="btn btn-info form-control" onclick="sub()">
                     <i class="icon-search"></i>
                     查询
                 </button>
@@ -54,6 +55,12 @@
                     取消筛选
                 </a>
             </div> 
+			<div class="form-group" style="float:right;"> 
+                <button type="button" class="btn btn-info form-control" onclick="exportToExcel()">
+                    <i class="icon-search"></i>
+                    导出excel
+                </button>
+            </div>
         <?php $this->endWidget(); ?>
         <div class="space-10"></div>
     </div>

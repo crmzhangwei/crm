@@ -3,6 +3,8 @@
 class CountController extends GController
 {
     private $pageSize = 10;
+	private $cat34_titles = "排名,部门,组别,金额,到单数\n";
+    private $cat34_title_keys = array('dname','gname','amount','number');
 	public function actionIndex()
 	{
             
@@ -60,6 +62,7 @@ class CountController extends GController
 	public function actionYeji(){
 		//$page = max(Yii::app()->request->getParam('page'), 1);
 		//$offset = ($page-1)*$this->pageSize;
+		$isexcel = Yii::app()->request->getParam("isexcel");
 		$search = Yii::app()->request->getParam("search");
 		if($search){
 			$where  = Utils::addWhere($search);
@@ -165,7 +168,19 @@ class CountController extends GController
 			'user_info'=>$uInfo['user_info'],
 			'resArr' => $resArr,
 		);
-		$this->render("yeji", $data);
+		if ($isexcel) {
+            
+            $filename = "业绩报表.csv";
+            header("Content-type:text/csv");
+            header("Content-Disposition:attachment;filename=" . $filename); 
+            echo iconv('utf-8','gb2312',$this->cat34_titles);
+            foreach($resArr as $record){
+                echo iconv('utf-8','gb2312',Utils::array_to_string($this->cat34_title_keys,$record));
+            } 
+        }
+		else{
+			$this->render("yeji", $data);
+		}
 	}
 
 	public function actionMonth(){
