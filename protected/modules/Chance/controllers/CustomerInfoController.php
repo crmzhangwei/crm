@@ -323,7 +323,7 @@ class CustomerInfoController extends GController {
         if ($model->cust_type == "6") {
             $sql = "select * from {{trans_cust_info}} where cust_id=:cust_id";
             $transmodel = TransCustInfo::model()->findBySql($sql, array(':cust_id' => $id));
-            $model->trans_user = UserInfo::getNameByEno($transmodel->eno);
+            $model->trans_user = Userinfo::getNameByEno($transmodel->eno);
             //电销查看6类，进入只读页面
             $this->render('view', array(
                 'model' => $model,

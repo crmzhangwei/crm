@@ -352,7 +352,7 @@ class Utils {
      * @param type $record
      */
     public static function genNoteDisplayRecord($row, $record) {
-        $str = ($row + 1) . "、" . date("Y-m-d H:i:s", $record->create_time) . " " . $record['cust_id'] . " " . UserInfo::getNameById($record['eno']) . " " . $record['cust_type'];
+        $str = ($row + 1) . "、" . date("Y-m-d H:i:s", $record->create_time) . " " . $record['cust_id'] . " " . Userinfo::getNameById($record['eno']) . " " . $record['cust_type'];
         $dial_detail = DialDetail::model()->findByPk($record['dial_id']);
         $custtype = CustType::findByTypeAndNo($record['lib_type'], $record['cust_type']);
         if ($record['dial_id'] > 0) {

@@ -13,7 +13,7 @@ class ResourceController extends GController {
             $search['eno'] = '';
         }
         $offset = ($page - 1) * $this->pageSize;
-        $priv=UserInfo::getPrivCondiForReport();
+        $priv=Userinfo::getPrivCondiForReport();
         $wherestr = "";
         if (!empty($search['stime'])) { 
              $istime = strtotime($search['stime']);
@@ -71,7 +71,7 @@ EOF;
             $search['phone'] = '';
         }
         $offset = ($page - 1) * $this->pageSize;
-        $priv=UserInfo::getPrivCondiForReport();
+        $priv=Userinfo::getPrivCondiForReport();
         $wherestr = "";
         if (!empty($search['stime'])) { 
              $istime = strtotime($search['stime']);
