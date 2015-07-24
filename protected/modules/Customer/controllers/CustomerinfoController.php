@@ -181,7 +181,7 @@ class CustomerinfoController extends GController
 			$transaction->rollBack();//事务回滚
 			$errors = $model->getErrors();
 			$error = current($errors) ;
-			exit("<script>alert(\"对不起, 本次操作失败, 请重新操作1。\");javascript:history.go(-2);</script>");	
+			exit("<script>alert(\"对不起, 本次操作失败, 请重新操作。\");javascript:history.go(-2);</script>");	
 		}
 		// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
 		//if(!isset($_GET['ajax']))

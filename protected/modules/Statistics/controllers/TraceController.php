@@ -400,6 +400,8 @@ EOF;
             $search['etime'] = '';
             $search['dept'] = '';
             $search['group'] = '';
+			$search['mintimes'] = '';
+			$search['maxtimes'] = '';
         }
         $offset = ($page - 1) * $this->pageSize;
         $priv=UserInfo::getPrivCondiForReport();
@@ -419,6 +421,13 @@ EOF;
         if (!empty($search['group'])) {
             $wherestr = $wherestr . " and t.group_id=" . $search['group'];
         }
+		if (!empty($search['mintimes'])) {
+            $wherestr = $wherestr . " and t.dial_long>={$search['mintimes']}";
+        }
+		if (!empty($search['maxtimes'])) {
+            $wherestr = $wherestr . " and t.dial_long<={$search['maxtimes']}";
+        }
+		
         $sql = <<<EOF
 SELECT 
     t.eno,
