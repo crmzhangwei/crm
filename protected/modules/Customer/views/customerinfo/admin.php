@@ -86,7 +86,7 @@ $('.search-form form').submit(function(){
 			array('class' => 'CCheckBoxColumn',
 				'name' => 'id',
 				'id' => 'select',
-				'selectableRows' => 0,
+				'selectableRows' => 2,
 				'headerTemplate' => '{item}',
 				'htmlOptions' => array(
 					'width' => '20',
@@ -139,6 +139,7 @@ $('.search-form form').submit(function(){
 
 <div class="table-page"> 
     <div class="col-sm-6">
+		<a href="javascript:void(0);" col='0' class="btn  btn-minier btn-sm btn-success publish" onclick="batch_del()">批量删除</a> 
         共<span class="orange"><?=$dataProvider->totalItemCount ?></span>条记录
     </div>
     <div class="col-sm-6 no-padding-right">
@@ -172,5 +173,45 @@ $('.search-form form').submit(function(){
 		<?php $a = Yii::app()->createurl('Customer/customerinfo/update'); echo 'url='."'$a'"; ?> 
 		public.dialog('修改客户信息',url+'&id='+id);
 	}
-</script>  		
+	
+	function getIds(dom){
+        var ids = '';
+        dom.each(function (index, element) {
+                ids += ',' + $(this).val();
+        });
+        return  ids.substring(1);
+    }
+	
+	function batch_del(){
+		var ids = getIds($('input[name="select[]"]:checked'));
+		if (!ids) {
+			bootbox.alert('请选择需要删除的资源！');
+			return;
+		}
+		else{
+			if(confirm("确认删除选中的客户资源吗?")){
+				$.ajax({
+					url: '<?php echo $this->createUrl('/Customer/customerinfo/batchDel');?>',
+					type: 'post',
+					data: {ids: ids},
+					dataType: 'json',
+					success: function(result){
+						if(result){
+							alert('恭喜你, 删除成功!');
+						}
+						else{
+							alert('对不起, 删除失败, 请重新操作一次!');
+						}
+					}
+				});
+			}
+			else{
+				return;
+			}
+			history.go(0);
+		}
+	}
+	
+</script>  	
 <script src="/static/js/secondlevel.js"></script>
+

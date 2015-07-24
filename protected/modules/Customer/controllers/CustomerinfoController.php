@@ -423,4 +423,25 @@ class CustomerinfoController extends GController
 		$custId = Yii::app()->request->getParam('custId');
 		Yii::app()->db->createCommand()->delete('{{tip_info}}',"id in( $custId )"); 
 	}
+	
+	public function actionBatchDel(){
+		$ids = Yii::app()->request->getParam('ids');
+		$enoArr =  CustomerInfo::model()->findAll("id in($ids)");
+		$upsql = '';
+		foreach ($enoArr as $key => $value) {
+			$upsql .= "update {{users}} set cust_num=cust_num-1 where eno='$value[eno]';";
+		}
+		$sql = "update {{customer_info}} set `status`=2 where id in($ids)";
+		
+		$transaction = Yii::app()->db->beginTransaction();
+		try {
+			$res = Yii::app()->db->createCommand($sql)->execute();
+			$res2 = Yii::app()->db->createCommand($upsql)->execute();
+			$transaction->commit();
+			echo 1;
+		} catch (Exception $exc) {
+			$transaction->rollBack();//事务回滚
+			echo 0;
+		}
+	}
 }
