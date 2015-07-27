@@ -337,7 +337,7 @@ class Utils {
         $i = 1;
         foreach ($keys as $k => $v) {
             if ($i == 1) {
-                $data = "," . $record[$v];
+                $data = $record[$v];
             } else {
                 $data = $data . "," . $record[$v];
             }

@@ -58,7 +58,7 @@ FROM
     c_users u 
 WHERE
     c.user_id = u.id AND c.lib_type = 2
-        AND  c.cust_type_2 =$ctype and $priv
+        AND  c.cust_type_2 =$ctype $priv
 union all 
 SELECT 
      distinct c.cust_id,'N' cust_type_1,cust_type_2, u.name, u.dept_id,u.group_id, c.convt_time,u.eno
@@ -67,7 +67,7 @@ FROM
     c_users u 
 WHERE
     c.user_id = u.id AND c.lib_type = 2
-        AND  c.cust_type_2 =17 and $priv       
+        AND  c.cust_type_2 =17  $priv       
         
         ) t where 1=1 $wherestr
 ) tb where 1=1 group by  tb.name
