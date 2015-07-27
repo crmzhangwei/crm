@@ -106,7 +106,7 @@ class Userinfo {
         $allData = Yii::app()->db->createCommand("select id from `c_users` where manager_id = :manager_id")->queryAll(TRUE, array(":manager_id" => $managerid));
         foreach ($allData as $k => $v) {
             $ret[] = $v['id'];
-            $temps = UserInfo::getAllChildUsersId($v['id']);
+            $temps = Userinfo::getAllChildUsersId($v['id']);
             if ($temps != null && !empty($temps)) {
                 $ret = array_merge($ret, $temps);
             }
@@ -128,7 +128,7 @@ class Userinfo {
         $allData = Yii::app()->db->createCommand("select id from `c_dept_info` where parent_id = :parent_id")->queryAll(TRUE, array(":parent_id" => $deptid));
         foreach ($allData as $k => $v) {
             $ret[] = $v['id'];
-            $temps = UserInfo::getAllChildDeptId($v['id']);
+            $temps = Userinfo::getAllChildDeptId($v['id']);
             if ($temps != null && !empty($temps)) {
                 $ret = array_merge($ret, $temps);
             }
@@ -150,7 +150,7 @@ class Userinfo {
         $allData = Yii::app()->db->createCommand("select id,eno from `c_users` where manager_id = :manager_id")->queryAll(TRUE, array(":manager_id" => $managerid));
         foreach ($allData as $k => $v) {
             $ret[] = $v['eno'];
-            $temps = UserInfo::getAllChildUsersEno($v['id']);
+            $temps = Userinfo::getAllChildUsersEno($v['id']);
             if ($temps != null && !empty($temps)) {
                 $ret = array_merge($ret, $temps);
             }

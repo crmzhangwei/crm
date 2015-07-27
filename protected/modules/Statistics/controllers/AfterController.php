@@ -19,7 +19,7 @@ class AfterController extends GController {
             $param['stime'] = $search['stime'];
         if (!empty($search['etime']))
             $param['etime'] = $search['etime'];
-        $priv=UserInfo::getPrivCondiForReport();
+        $priv=Userinfo::getPrivCondiForReport();
         $wherestr = "";
         if (!empty($param['stime'])) {
             $istime = strtotime($param['stime']);
@@ -126,13 +126,13 @@ EOF;
             $wherestr = $wherestr . " and t.assign_time>$istime";
         }
         if (!empty($param['etime'])) {
-            $istime = strtotime($param['etime']);
+            $ietime = strtotime($param['etime']);
             $wherestr = $wherestr . " and t.assign_time<$ietime";
         }
         if (!empty($param['dept'])) { 
             $wherestr = $wherestr . " and t.dept_id=".$param['dept'];
         } 
-        $priv=UserInfo::getPrivCondiForReport();
+        $priv=Userinfo::getPrivCondiForReport();
         $sql = <<<EOF
 select d.name as dept_name,sum(a) a,sum(b) b,sum(a0)
 a0,sum(a1) a1,sum(a2) a2,sum(a3) a3,sum(a4) a4,sum(a5) a5,sum(a6)
@@ -202,7 +202,7 @@ EOF;
             $param['dept'] = $search['dept'];
         if (!empty($search['group']))
             $param['group'] = $search['group'];
-        $priv=UserInfo::getPrivCondiForReport();
+        $priv=Userinfo::getPrivCondiForReport();
         $wherestr = "";
         if (!empty($param['dept'])) { 
             $wherestr = $wherestr . " and u.dept_id=".$param['dept'];

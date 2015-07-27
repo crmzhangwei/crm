@@ -25,10 +25,16 @@
 		<?php echo CHtml::dropDownList( 'search[group]', $search['group'], $this->getGroupArr($search['dept']), array('id'=>'groupinfo')); ?>
             </div>
             <div class="form-group">
-				&nbsp;&nbsp;时间段: 
-                                <input type="text" class="form-control" name="search[stime]" value="<?php echo $search['stime'];?>" placeholder="" onClick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})">
+				&nbsp;&nbsp;拨打时间段: 
+                <input type="text" class="form-control" name="search[stime]" value="<?php echo $search['stime'];?>" placeholder="" onClick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})">
 		to  
                 <input type="text" class="form-control" name="search[etime]" value="<?php echo $search['etime'];?>" placeholder="" onClick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})">
+            </div>
+			<div class="form-group">
+				&nbsp;&nbsp;通话时长: 
+                <input type="text" class="form-control" size="7px"  name="search[mintimes]" value="<?php echo $search['mintimes'];?>" placeholder="" >
+		至  
+				<input type="text" class="form-control" size="7px"  name="search[maxtimes]" value="<?php echo $search['maxtimes'];?>" placeholder="" >
             </div>
             <div class="form-group"> 
                 <button type="submit" class="btn btn-info form-control">

@@ -49,6 +49,27 @@
 		<td><?php echo $form->textField($model,'phone',array('size'=>30,'maxlength'=>20)); ?>
 		<?php echo $form->error($model,'phone'); ?></td>
 	</tr>
+	
+	<tr>
+		<td><?php echo $form->labelEx($model,'phone2'); ?></td>
+		<td><?php echo $form->textField($model,'phone2',array('size'=>30,'maxlength'=>20)); ?>
+		<?php echo $form->error($model,'phone2'); ?></td>
+	</tr>
+	<tr>
+		<td><?php echo $form->labelEx($model,'phone3'); ?></td>
+		<td><?php echo $form->textField($model,'phone3',array('size'=>30,'maxlength'=>20)); ?>
+		<?php echo $form->error($model,'phone3'); ?></td>
+	</tr>
+	<tr>
+		<td><?php echo $form->labelEx($model,'phone4'); ?></td>
+		<td><?php echo $form->textField($model,'phone4',array('size'=>30,'maxlength'=>20)); ?>
+		<?php echo $form->error($model,'phone4'); ?></td>
+	</tr>
+	<tr>
+		<td><?php echo $form->labelEx($model,'phone5'); ?></td>
+		<td><?php echo $form->textField($model,'phone5',array('size'=>30,'maxlength'=>20)); ?>
+		<?php echo $form->error($model,'phone5'); ?></td>
+	</tr>
 	<tr>
 		<td><?php echo $form->labelEx($model,'qq'); ?></td>
 		<td><?php echo $form->textField($model,'qq',array('size'=>30,'maxlength'=>20)); ?>

@@ -22,14 +22,14 @@ class TraceController extends GController {
         $ctype = $search['ctype'];
         $offset = ($page - 1) * $this->pageSize;
         $wherestr = "";
-        $priv=UserInfo::getPrivCondiForReport();
+        $priv=Userinfo::getPrivCondiForReport();
          
         if (!empty($search['stime'])) {
             $istime = strtotime($search['stime']);
             $wherestr = $wherestr . " and t.convt_time>=$istime";
         }
         if (!empty($search['etime'])) {
-            $istime = strtotime($search['etime']);
+            $ietime = strtotime($search['etime']);
             $wherestr = $wherestr . " and t.convt_time<=$ietime";
         }
         if (!empty($search['dept'])) {
@@ -134,13 +134,13 @@ EOF;
         if (!empty($search['dept']))
             $param['dept'] = $search['dept'];
         $wherestr = "";
-        $priv=UserInfo::getPrivCondiForReport();
+        $priv=Userinfo::getPrivCondiForReport();
         if (!empty($param['stime'])) {
             $istime = strtotime($param['stime']);
             $wherestr = $wherestr . " and t.assign_time>$istime";
         }
         if (!empty($param['etime'])) {
-            $istime = strtotime($param['etime']);
+            $ietime = strtotime($param['etime']);
             $wherestr = $wherestr . " and t.assign_time<$ietime";
         }
         if (!empty($param['dept'])) {
@@ -221,13 +221,13 @@ EOF;
         $ctype = $search['ctype'];
         $offset = ($page - 1) * $this->pageSize;
         $wherestr = "";
-        $priv=UserInfo::getPrivCondiForReport();
+        $priv=Userinfo::getPrivCondiForReport();
         if (!empty($search['stime'])) {
             $istime = strtotime($search['stime']);
             $wherestr = $wherestr . " and t.convt_time>=$istime";
         }
         if (!empty($search['etime'])) {
-            $istime = strtotime($search['etime']);
+            $ietime = strtotime($search['etime']);
             $wherestr = $wherestr . " and t.convt_time<=$ietime";
         }
         if (!empty($search['dept'])) {
@@ -315,7 +315,7 @@ EOF;
         $endDate = date('Y-m-d', strtotime("$BeginDate +1 month -1 day"));
         $stime = strtotime($curTime);
         $etime = strtotime($endDate);
-        $priv=UserInfo::getPrivCondiForReport();
+        $priv=Userinfo::getPrivCondiForReport();
         $wherestr = $wherestr . " and next_time>=$stime";
         $wherestr = $wherestr . " and next_time<=$etime";
         if (!empty($search['dept'])) {
@@ -400,9 +400,11 @@ EOF;
             $search['etime'] = '';
             $search['dept'] = '';
             $search['group'] = '';
+			$search['mintimes'] = '';
+			$search['maxtimes'] = '';
         }
         $offset = ($page - 1) * $this->pageSize;
-        $priv=UserInfo::getPrivCondiForReport();
+        $priv=Userinfo::getPrivCondiForReport();
         
         $wherestr = "";
         if (!empty($search['stime'])) {
@@ -410,7 +412,7 @@ EOF;
             $wherestr = $wherestr . " and t.dial_time>=$istime";
         }
         if (!empty($search['etime'])) {
-            $istime = strtotime($search['etime']);
+            $ietime = strtotime($search['etime']);
             $wherestr = $wherestr . " and t.dial_time<=$ietime";
         }
         if (!empty($search['dept'])) {
@@ -419,14 +421,21 @@ EOF;
         if (!empty($search['group'])) {
             $wherestr = $wherestr . " and t.group_id=" . $search['group'];
         }
+		if (!empty($search['mintimes'])) {
+            $wherestr = $wherestr . " and t.dial_long>={$search['mintimes']}";
+        }
+		if (!empty($search['maxtimes'])) {
+            $wherestr = $wherestr . " and t.dial_long<={$search['maxtimes']}";
+        }
+		
         $sql = <<<EOF
 SELECT 
     t.eno,
     t.name,
-    FROM_UNIXTIME(t.dial_time, '%Y-%m-%d') AS dial_time,
+    FROM_UNIXTIME(t.dial_time, '%Y-%m-%d %H:%i:%s') AS dial_time,
     COUNT(*) AS dial_num,
     SUM(t.dial_long) AS dial_long,
-    FROM_UNIXTIME(MIN(t.dial_time), '%Y-%m-%d') AS min_time
+    FROM_UNIXTIME(MIN(t.dial_time), '%Y-%m-%d %H:%i:%s') AS min_time
 FROM
     (SELECT 
         u.eno,
