@@ -249,23 +249,26 @@ class CustomerinfoController extends GController
 	        	$usql = '';
 				$eno = '';
 				foreach ((array)$fileArr as $k => $v) {
-	        		if (!$v[0]) {
+	        		/*if (!$v[0]) {
 	        			exit("<script>alert(\"对不起, 第".$k."行中的客户姓名不能为空, 请填写后重新提交。\");
-	        				javascript:history.go(-1);</script>");
-	        		}
-	        		elseif (!$v[1] && !$v[2]) {
+	        				javascript:history.go(-1);</script>");	
+	        		}*/
+	        		if (!$v[1] && !$v[2]) {
 	        			exit("<script>alert(\"对不起, 第".$k."行中的电话和QQ二选一必填, 请填写后重新提交。\");
 	        				javascript:history.go(-1);</script>");
 	        		}
-	        		elseif ($v[3] && !preg_match('/^[\w\_\.]+@[\w\_]+[\.\w+]+$/', $v[3])) {//邮箱匹配, 非必填项
+	        		/*elseif ($v[3] && !preg_match('/^[\w\_\.]+@[\w\_]+[\.\w+]+$/', $v[3])) {//邮箱匹配, 非必填项
 	        			exit("<script>alert(\"对不起, 第".$k."行中的邮箱格式不正确, 请填写后重新提交。\");
 	        				javascript:history.go(-1);</script>");
-	        		}
+	        		}*/
 					elseif (!$v[5] || !array_key_exists($v[5], $userArr)) {
 	        			exit("<script>alert(\"对不起, 第".$k."行中的 所属人员 不能为空或不存在, 请填写后重新提交。\");
 	        				javascript:history.go(-1);</script>");
 	        		}
 	        		else{
+						if(empty($v[0])){
+							$v[0] = date('Y-m-d', $create_time);
+						}
 						$eno = $userArr[$v[5]];
 	        			$sql .= "('{$v[0]}','{$v[1]}','{$v[2]}','{$v[3]}','{$v[4]}', $creator, $create_time,'$eno','$assign_eno',$assign_time),";
 						$usql .= "update {{users}} set cust_num=cust_num+1 where eno='$eno';";	
@@ -374,7 +377,7 @@ class CustomerinfoController extends GController
 		$val = $data->category;
 		$categoryArr = $this->getCategory();
 		$res = isset($categoryArr[$val]) ? $categoryArr[$val] : $val;
-		return $res;
+		return $res ? $res : '未分类';
 	}
 	
 	public function getCategory(){

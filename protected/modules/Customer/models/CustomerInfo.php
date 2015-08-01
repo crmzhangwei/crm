@@ -48,10 +48,10 @@ class CustomerInfo extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('cust_name', 'unique', 'message'=>'客户名称已经存在'),
-			array('cust_name, eno', 'required'),
+			//array('cust_name', 'unique', 'message'=>'客户名称已经存在'),
+			array('eno', 'required'),
 			array('phone, phone2, phone3, phone4, phone5, qq, category, cust_type, iskey', 'numerical', 'integerOnly'=>true),
-			array('mail', 'email', 'allowEmpty'=>true, 'message'=>'邮箱不正确'),
+			//array('mail', 'email', 'allowEmpty'=>true, 'message'=>'邮箱不正确'),
 			array('phone, qq', 'check_contact'),
 			array('mail', 'length', 'max'=>50),
 			array('oldEno, keyword, shop_name, corp_name, shop_url, shop_addr, datafrom, memo, searchtype, customerId', 'safe'),
