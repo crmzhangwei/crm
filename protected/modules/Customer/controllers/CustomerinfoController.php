@@ -257,15 +257,7 @@ class CustomerinfoController extends GController
 	        			exit("<script>alert(\"对不起, 第".$k."行中的电话和QQ二选一必填, 请填写后重新提交。\");
 	        				javascript:history.go(-1);</script>");
 	        		}
-					elseif ($v[1]){
-						$phone = $v[1];
-						$phoneSQL = "select cust_name from c_customer_info where phone='$phone' or phone2='$phone' or phone3='$phone' or phone4='$phone' or phone5='$phone'";
-						$ret = Yii::app()->db->createCommand($phoneSQL)->execute();
-						if($ret){
-							exit("<script>alert(\"对不起, 第".$k."行中的电话号码已存在, 请填写后重新提交。\");
-	        				javascript:history.go(-1);</script>");
-						}
-					}
+					
 	        		/*elseif ($v[3] && !preg_match('/^[\w\_\.]+@[\w\_]+[\.\w+]+$/', $v[3])) {//邮箱匹配, 非必填项
 	        			exit("<script>alert(\"对不起, 第".$k."行中的邮箱格式不正确, 请填写后重新提交。\");
 	        				javascript:history.go(-1);</script>");
@@ -278,12 +270,22 @@ class CustomerinfoController extends GController
 						if(empty($v[0])){
 							$v[0] = date('Y-m-d', $create_time);
 						}
+						if ($v[1]){
+							$phone = $v[1];
+							$phoneSQL = "select cust_name from c_customer_info where phone='$phone' or phone2='$phone' or phone3='$phone' or phone4='$phone' or phone5='$phone'";
+							$ret = Yii::app()->db->createCommand($phoneSQL)->execute();
+							if($ret){
+								exit("<script>alert(\"对不起, 第".$k."行中的电话号码已存在, 请填写后重新提交。\");
+								javascript:history.go(-1);</script>");
+							}
+						}
 						$eno = $userArr[$v[5]];
 	        			$sql .= "('{$v[0]}','{$v[1]}','{$v[2]}','{$v[3]}','{$v[4]}', $creator, $create_time,'$eno','$assign_eno',$assign_time),";
 						$usql .= "update {{users}} set cust_num=cust_num+1 where eno='$eno';";	
 					}	
 	        	}
 				$sql = trim($sql, ',');
+				
 				///////////////////开启事务///////////////////
 				$transaction = Yii::app()->db->beginTransaction();
 				try {

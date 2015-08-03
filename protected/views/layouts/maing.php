@@ -134,7 +134,7 @@
         <script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/js/jquery-ui.min.js"></script>
 		<script type="text/javascript">
 			customerIds = "<?php echo Userinfo::newResource(Yii::app()->session["user"]['eno']) ;?>";
-			window.setInterval(up_winpop, 3000); 
+			window.setInterval(up_winpop, 60000); 
 			function up_winpop(){
 				if(customerIds){
 					var idArr = new Array(); //定义一数组 
