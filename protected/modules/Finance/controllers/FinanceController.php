@@ -391,15 +391,14 @@ class FinanceController extends GController {
         echo "</pre>";
         echo $ret['duration'];
     }
-    
+    */
     public function actionTest7(){
         $this->render("test");
     }
      public function actionTest8(){
-        $str = "0123";
-        echo substr($str,1,1);
-    }*/
-     public function actionTest8(){
+         echo UnCall::getPhoneZone("18589075189");
+    }
+     public function actionTest9(){
         echo "<pre>"; 
         $result  = Userinfo::getAllChildUsersId(2);
         $result[]='2';

@@ -122,6 +122,7 @@ return array(
                     'webservice'=>'http://192.168.1.200/uncall_api/index.php?wsdl',
                     'playurl'=>'http://192.168.1.200/outbound/index.php/RecordingAction/index.php?m=Public&a=record&uniqueid=',
                     'zoneservice'=>'http://life.tenpay.com/cgi-bin/mobile/MobileQueryAttribution.cgi?chgmobile=',
+                    'phone_online'=>'http://v.showji.com/Locating/showji.com20150416273007.aspx?m=',
                     'city'=>'深圳',
                     'enable_zone'=>true,
                 ),

@@ -60,7 +60,7 @@ $('.search-form form').submit(function(){
 				),
 			),
 		'cust_name',
-		array('name'=>'old_custtype', 'value'=>array($this, 'get_cust_type')),
+		array('name'=>'old_custtype', 'value'=>array($this, 'get_old_cust_type')),
 		'corp_name',
 		'shop_name',
 		'shop_url',

@@ -175,6 +175,16 @@ class CustomerblackController extends GController
 		$res = $this->getCust($val);
 		return $res;
 	}
+        public function get_old_cust_type($data){
+            $libtype = $data->lib_type;
+            $typeno = $data->old_cust_type;
+            $res =  Yii::app()->db->createCommand()
+				->select('type_name')
+				->from('{{cust_type}}')
+				->where("lib_type = $libtype and type_no=$typeno")
+				->queryRow();
+            return $res ? current($res) : '';
+        }
 	/**
 	 *领取公海资源
 	 */
@@ -184,6 +194,7 @@ class CustomerblackController extends GController
 		$ids = Yii::app()->request->getParam('ids');
 		$sql = "update {{customer_info}} set `status`=3,cust_type=0,eno='$eno' where id in ($ids)";
 		$sql2 = "delete from {{black_info}} where cust_id in ($ids)";
+               
 		$transaction = Yii::app()->db->beginTransaction();
 		try {
 			$res = Yii::app()->db->createCommand($sql)->execute();

@@ -165,7 +165,9 @@ class CustomerInfo extends CActiveRecord {
         if ($this->phone) {
             $criteria->compare('phone', $this->phone, true);
         }
-        
+        if ($this->eno) {
+            $criteria->compare('tci.eno', $this->eno, true);
+        }
         if ($this->cust_type_from>0 && $this->cust_type_to>0) {
             $criteria->addBetweenCondition('tci.cust_type', intval($this->cust_type_from), intval($this->cust_type_to));
         }
@@ -212,6 +214,9 @@ class CustomerInfo extends CActiveRecord {
         }
         if ($this->qq) {
             $criteria->compare('qq', $this->qq, true);
+        }
+        if ($this->eno) {
+            $criteria->compare('tci.eno', $this->eno, true);
         }
         if ($this->cust_type_from>0 && $this->cust_type_to>0) {
             $criteria->addBetweenCondition('tci.cust_type', intval($this->cust_type_from), intval($this->cust_type_to));
@@ -261,6 +266,9 @@ class CustomerInfo extends CActiveRecord {
             $itime = time();
             $itime = $itime - 86400*7;
             $criteria->addCondition("last_time>=$itime");
+        }
+        if ($this->eno) {
+            $criteria->compare('tci.eno', $this->eno, true);
         }
         if ($this->iskey>-1) {
             $criteria->compare('iskey', $this->iskey);

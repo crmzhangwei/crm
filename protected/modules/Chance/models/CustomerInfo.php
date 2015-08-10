@@ -163,7 +163,7 @@ class CustomerInfo extends CActiveRecord {
         if ($this->phone) {
             $criteria->compare('phone', $this->phone, true);
         } 
-		if ($this->eno) {
+	if ($this->eno) {
             $criteria->compare('eno', $this->eno, true);
         } 
         if ($this->cust_type_from>-1 && $this->cust_type_to>-1) {
@@ -211,6 +211,9 @@ class CustomerInfo extends CActiveRecord {
         if ($this->qq) {
             $criteria->compare('qq', $this->qq, true);
         }
+        if ($this->eno) {
+            $criteria->compare('eno', $this->eno, true);
+        }
         if ($this->cust_type_from>-1 && $this->cust_type_to >-1) {
             $criteria->addBetweenCondition('cust_type', intval($this->cust_type_from), intval($this->cust_type_to));
         }
@@ -250,6 +253,9 @@ class CustomerInfo extends CActiveRecord {
         }
         if ($this->cust_type_from>-1 && $this->cust_type_to>-1) {
             $criteria->addBetweenCondition('cust_type', intval($this->cust_type_from), intval($this->cust_type_to));
+        }
+        if ($this->eno) {
+            $criteria->compare('eno', $this->eno, true);
         }
         if ($this->contact_7_day) {
             $itime = time();

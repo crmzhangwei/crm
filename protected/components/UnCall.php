@@ -31,6 +31,30 @@ class UnCall {
         }
         return $ret;
     }
+    public static function getPhoneZone($phonenumber){
+        $uncall = Yii::app()->params['UNCALL'];
+        if(!$uncall['enable_zone']){
+            return false;
+        }
+        $current_city = $uncall['city'];
+        $ret=false;
+        $url = $uncall['phone_online']; 
+        $url = trim($url.$phonenumber);
+        $url = $url."&output=json";
+        $result = file_get_contents($url); 
+        
+        if($result){
+            $jsonobj = json_decode($result);
+            
+            if($jsonobj){
+                $city = trim($jsonobj->City); 
+                if($current_city!=trim($city)){ 
+                    $ret=true; 
+                }
+            }
+        }
+       return $ret;  
+    }
     /**
      * 根据客户id 拔打客户电话
      * 1.根据客户id，取客户信息
@@ -62,7 +86,7 @@ class UnCall {
         $ret = array('status' => 0, 'dial_id' => 0, 'message' => '');
         $uncall = Yii::app()->params['UNCALL'];
         $client = new SoapClient($uncall['webservice']);
-        $phonenumber = $cust->phone;
+        $phonenumber = trim($cust->phone);
         switch($seq){
             case 1:break;
             case 2: $phonenumber=$cust->phone2;break;
@@ -70,7 +94,7 @@ class UnCall {
             case 4: $phonenumber=$cust->phone4;break;
             case 5: $phonenumber=$cust->phone5;break;
         }
-        if(UnCall::getZone($phonenumber)&&substr($phonenumber,0,1)=="1"){
+        if(substr($phonenumber,0,1)=="1"&&UnCall::getPhoneZone($phonenumber)){
             $phonenumber="0".$phonenumber;
         }
         $result = $client->OnClickCall($user->extend_no, $phonenumber, ""); 

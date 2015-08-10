@@ -232,7 +232,7 @@ class CustomerInfoController extends GController {
 
                     $model->status = "1"; //将客户状态改为1(无效）
                     //成交师已分配资源数减1
-                    $sql = "update {{users}} set cust_num=cust_num-1 where id={$model->trans_user}";
+                    $sql = "update {{users}} set cust_num=cust_num-1 where eno='{$model->eno}'";
                     Yii::app()->db->createCommand($sql)->execute();
                 }
                 if (Utils::isNeedSaveNoteInfo($_POST['NoteInfo'])) {
@@ -271,7 +271,7 @@ class CustomerInfoController extends GController {
                     $dialdetail->uid = $uid;
                     $dialdetail->dial_long = $dial_long;
                     $dialdetail->record_path = $record_path;
-                    $dialdetail->save();
+                    $dialdetail->save(); 
                 }
             }
             //加载页面数据
@@ -321,9 +321,13 @@ class CustomerInfoController extends GController {
         $historyNote->setAttribute("cust_id", $model->id);
         $user = Users::model()->findByPk($model->creator);
         if ($model->cust_type == "6") {
-            $sql = "select * from {{trans_cust_info}} where cust_id=:cust_id";
-            $transmodel = TransCustInfo::model()->findBySql($sql, array(':cust_id' => $id));
-            $model->trans_user = Userinfo::getNameByEno($transmodel->eno);
+            if(empty($model->trans_user)){
+              $sql = "select * from {{trans_cust_info}} where cust_id=:cust_id";
+                $transmodel = TransCustInfo::model()->findBySql($sql, array(':cust_id' => $id));
+                if(!empty($transmodel)){
+                    $model->trans_user = Userinfo::getNameByEno($transmodel->eno);  
+                }
+            } 
             //电销查看6类，进入只读页面
             $this->render('view', array(
                 'model' => $model,

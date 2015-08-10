@@ -30,6 +30,8 @@ class CustomerBlack extends CActiveRecord
 	//public $keyword;
 	//public $searchtype;
 	public $old_custtype;//原客户类别
+        public $lib_type;
+        public $old_cust_type;
 	/**
 	 * @return string the associated database table name
 	 */
@@ -128,47 +130,14 @@ class CustomerBlack extends CActiveRecord
 	{
 		// @todo Please modify the following code to remove attributes that should not be searched.
 
-		$criteria=new CDbCriteria;
-
-		$criteria->compare('id',$this->id,true);
-		$criteria->compare('cust_name',$this->cust_name,true);
-		$criteria->compare('shop_name',$this->shop_name,true);
-		$criteria->compare('corp_name',$this->corp_name,true);
-		$criteria->compare('shop_url',$this->shop_url,true);
-		$criteria->compare('shop_addr',$this->shop_addr,true);
-		$criteria->compare('phone',$this->phone,true);
-		$criteria->compare('qq',$this->qq,true);
-		$criteria->compare('mail',$this->mail,true);
-		$criteria->compare('datafrom',$this->datafrom,true);
-		$criteria->compare('category',$this->category);
+		$criteria=new CDbCriteria; 
 		if($this->cust_type != -1){
 			$criteria->join = 'left join {{black_info}} as b on b.cust_id =t.id';
 			//$criteria->addCondition(b.cust_type = ')
-			$criteria->compare('b.cust_type',$this->cust_type);
-		}
-		$criteria->compare('eno',$this->eno,true);
-		$criteria->compare('iskey',$this->iskey,true);
-		$criteria->compare('assign_eno',$this->assign_eno,true);
-		$criteria->compare('assign_time',$this->assign_time);
-		$criteria->compare('next_time',$this->next_time);
-		$criteria->compare('memo',$this->memo,true);
-		$criteria->compare('create_time',$this->create_time);
-		$criteria->compare('creator',$this->creator);
-		$criteria->addCondition("status=1"); //查询条件 
-
-		/*if(isset($this->keyword))
-        {
-            switch ($this->searchtype)
-           {
-               case 1:
-				   //$criteria->select = 't.*';
-				   $criteria->join = 'left join {{black_info}}  b on t.id = b.cust_id';
-                   $criteria->compare('b.cust_type', $this->keyword);
-                   break;
-           }
-        }*/
-
-
+			$criteria->compare('b.old_cust_type',$this->cust_type);
+		} 
+		$criteria->addCondition("status=1"); //查询条件  
+                $criteria->select="t.id,t.cust_name,t.shop_name,t.corp_name,t.shop_url,t.shop_addr,t.phone,t.qq,t.mail,t.assign_time,t.next_time,b.old_cust_type,b.lib_type";
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
 		));

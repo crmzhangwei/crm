@@ -142,7 +142,7 @@ class ExtNumber extends CActiveRecord
 					$criteria->compare('extension', $this->keyword, true);
 					break;
 				case 2:
-					$criteria->compare('status', $this->keyword, true);
+					$criteria->compare('status', $this->keyword);
 					break;
 				case 3:
 					$uInfo = Users::model()->findAll('username=:username', array(':username'=>$this->keyword));
