@@ -248,6 +248,8 @@ class CustomerinfoController extends GController
 	        	$sql = "insert into {{customer_info}} (cust_name,phone,qq,mail,memo,creator,create_time,eno,assign_eno,assign_time) values";
 	        	$usql = '';
 				$eno = '';
+				$repetaInfo = '';
+				$i=0;
 				foreach ((array)$fileArr as $k => $v) {
 	        		/*if (!$v[0]) {
 	        			exit("<script>alert(\"对不起, 第".$k."行中的客户姓名不能为空, 请填写后重新提交。\");
@@ -272,18 +274,24 @@ class CustomerinfoController extends GController
 						}
 						if ($v[1]){
 							$phone = $v[1];
-							$phoneSQL = "select cust_name from c_customer_info where phone='$phone' or phone2='$phone' or phone3='$phone' or phone4='$phone' or phone5='$phone'";
+							$phoneSQL = "select cust_name from c_customer_info where (phone='$phone' or phone2='$phone' or phone3='$phone' or phone4='$phone' or phone5='$phone') and status<>2";
 							$ret = Yii::app()->db->createCommand($phoneSQL)->execute();
 							if($ret){
-								exit("<script>alert(\"对不起, 第".$k."行中的电话号码已存在, 请填写后重新提交。\");
-								javascript:history.go(-1);</script>");
+								/*exit("<script>alert(\"对不起, 第".$k."行中的电话号码已存在, 请填写后重新提交。\");
+								javascript:history.go(-1);</script>");*/
+								$repetaInfo .= $k.', ';
+								continue;
 							}
 						}
 						$eno = $userArr[$v[5]];
 	        			$sql .= "('{$v[0]}','{$v[1]}','{$v[2]}','{$v[3]}','{$v[4]}', $creator, $create_time,'$eno','$assign_eno',$assign_time),";
 						$usql .= "update {{users}} set cust_num=cust_num+1 where eno='$eno';";	
+						$i++;
 					}	
 	        	}
+				if(!$i){
+					exit("<script>alert(\"表格中的数据已存在，请勿重复导入（电话号码已存在）。\");javascript:history.go(-1);</script>");
+				}
 				$sql = trim($sql, ',');
 				
 				///////////////////开启事务///////////////////
@@ -305,7 +313,7 @@ class CustomerinfoController extends GController
 					$tsql = $tipSql.$sqlstr;
 					Yii::app()->db->createCommand($tsql)->execute();/////新分资源弹窗提示用户
 					$transaction->commit();
-					exit("<script>alert(\"恭喜你, 成功导入".$num."条数据。\");javascript:history.go(-1);</script>");	
+					exit("<script>alert(\"恭喜你, 成功导入".$num."条数据。未导入的数据行号：".$repetaInfo."\");javascript:history.go(-1);</script>");	
 				} catch (Exception $exc) {
 					$transaction->rollBack();//事务回滚
 					exit("<script>alert(\"对不起, 由于未知的错误, 本次操作失败, 请重新操作。\");javascript:history.go(-1);</script>");
