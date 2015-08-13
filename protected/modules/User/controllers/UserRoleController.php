@@ -11,12 +11,19 @@ class UserRoleController extends GController
 	{
 		$model=new UserRole('search');
 		$model->unsetAttributes();  // clear any default values
-		if(isset($_GET['UserRole']))
-			$model->attributes=$_GET['UserRole'];
+                $criteria = new CDbCriteria;
+		if(isset($_POST['UserRole'])){
+			$model->attributes=$_POST['UserRole'];
+                        $model->username=$_POST['UserRole']['username'];
+                }
+                if($model->username){
+                   $criteria->compare('name', $model->username,true);
+                }
                 $permission = $this->getPriv();
 		$this->render('admin',array(
 			'model'=>$model,
                        'permission'=>json_encode($permission),
+                        'criteria'=>$criteria
 		));
 	}
         

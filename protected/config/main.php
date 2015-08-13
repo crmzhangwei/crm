@@ -68,7 +68,7 @@ return array(
 			// use 'site/error' action to display errors
 			//'errorAction'=>'site/error',
 		),
-               
+               /*
 		'log'=>array(
 			'class'=>'CLogRouter',
 			'routes'=>array(
@@ -83,7 +83,7 @@ return array(
 				),
 				
 			),
-		), 
+		), */
 
 	),
 
@@ -120,7 +120,7 @@ return array(
                 ),
                 'UNCALL'=>array(
                     'webservice'=>'http://192.168.1.200/uncall_api/index.php?wsdl',
-                    'playurl'=>'http://192.168.1.200/outbound/index.php/RecordingAction/index.php?m=Public&a=record&uniqueid=',
+                    'playurl'=>'http://192.168.1.200/outbound/index.php/Call/index.php?m=Public&a=recording&uniqueid=',
                     'zoneservice'=>'http://life.tenpay.com/cgi-bin/mobile/MobileQueryAttribution.cgi?chgmobile=',
                     'phone_online'=>'http://v.showji.com/Locating/showji.com20150416273007.aspx?m=',
                     'city'=>'深圳',

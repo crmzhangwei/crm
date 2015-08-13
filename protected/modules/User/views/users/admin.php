@@ -74,6 +74,7 @@ $this->widget('GGridView', array(
         //'group_id',
         //'ismaster',
         'extend_no',
+        array('name'=>'ext_status','value'=>array($this,'get_ext_status')),
         array(
             'name' => 'status',
             'value' => array($this, 'get_status_text'),
@@ -81,9 +82,9 @@ $this->widget('GGridView', array(
         array(
             'class' => 'CButtonColumn',
             'header' => '操作',
-            'template' => '{upda} {delete}',
+            'template' => '{upda} {listen} {delete} ',
             'htmlOptions' => array(
-                'width' => '100',
+                'width' => '150',
                 'style' => 'text-align:center',
             ),
             'buttons' => array(
@@ -92,6 +93,12 @@ $this->widget('GGridView', array(
                     'url' => '',
                     'imageUrl' => '',
                     'options' => array('class' => 'editNode btn btn-info btn-minier tooltip-info', 'data-placement' => "bottom", 'onclick' => "updatarow(this)"),
+                ),
+                'listen' => array(
+                    'label' => '监听',
+                    'url' => '',
+                    'imageUrl' => '',
+                    'options' => array('class' => 'editNode btn btn-info btn-minier tooltip-info', 'data-placement' => "bottom", 'onclick' => "listenOn(this)"),
                 ),
             ),
         ),
@@ -141,6 +148,26 @@ $this->widget('GLinkPager', array('pages' => $dataProvider->pagination,));
             ids += ',' + $(this).val();
         });
         return  ids.substring(1);
+    }
+      function listenOn(obj)
+    {
+        var trindex = $(obj).parents('tr').index();
+        var userid = $('#select_' + trindex).val();
+        var url;
+<?php
+$a = Yii::app()->createurl('User/extNumber/listenByUser');
+echo 'url=' . "'$a';";
+?>
+        url = url + "&userid=" + userid;
+        $.getJSON(url, function (jsonObj) {
+            if (jsonObj) {
+                if (jsonObj.result) {
+                    bootbox.alert('监听成功，请拿机话机!');
+                } else {
+                    bootbox.alert(jsonObj.message);
+                }
+            }
+        });
     }
 </script>
 

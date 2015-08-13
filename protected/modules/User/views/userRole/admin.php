@@ -22,7 +22,20 @@ $this->breadcrumbs = array(
                     <div class="row">
                         <div class="row">
                             <div class="col-xs-7" style="padding-left:50px;">
-
+                                   <?php
+        $form = $this->beginWidget('CActiveForm', array(
+            'id' => 'customer-info-form',
+            // Please note: When you enable ajax validation, make sure the corresponding
+            // controller action is handling ajax validation correctly.
+            // There is a call to performAjaxValidation() commented in generated controller code.
+            // See class documentation of CActiveForm for details on this.
+            'action' => Yii::app()->controller->createUrl('admin'),
+            'enableAjaxValidation' => false,
+        ));
+        ?>
+                                <?php echo $form->textField($model,'username',array('maxlength'=>100,'size'=>30))?>
+                                <?php echo CHtml::submitButton('搜索',array('class' => 'btn btn-sm btn-primary')); ?> 
+                                <?php $this->endWidget(); ?> 
                             </div> 
                             <div class="col-xs-5" style="padding-right:50px;">
                                 <!-- .右侧保存按钮 -->
@@ -67,7 +80,7 @@ $this->breadcrumbs = array(
                                             <tbody>
                                                 <?php 
                                                  
-                                                 $dataProvider=new CActiveDataProvider('Users');
+                                                 $dataProvider=new CActiveDataProvider('Users',array('criteria'=>$criteria)); 
                                                  $dataProvider->pagination->pageVar = 'page';
                                                  $dept_list = $dataProvider->getData();
                                                  if($dept_list):

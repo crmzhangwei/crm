@@ -22,7 +22,12 @@ class DialDetail extends CActiveRecord {
     public $cust_name;
     public $searchtype;
     public $keyword;
-
+    private $priv_users = array(
+        'admin',
+        '谭玥',
+        '牛祥莉',
+        '罗香',
+    );
     /**
      * @return string the associated database table name
      */
@@ -101,13 +106,23 @@ class DialDetail extends CActiveRecord {
         $criteria->compare('dial_num', $this->dial_num);
         $criteria->compare('record_path', $this->record_path, true);
         $criteria->compare('isok', $this->isok);
-        //只看到自己的客户,及下属客户
-        $user_arr = Userinfo::getAllChildUsersId(Yii::app()->user->id);
-        $user_arr[] = Yii::app()->user->id;
-        if (!empty($user_arr) && count($user_arr) > 0) {
-            $wherestr = Utils::genUserCondition($user_arr);
-            if (!empty($wherestr)) {
-                $criteria->addCondition(" exists (select 1 from {{users}} where eno=t.eno and $wherestr)");
+        //只看到自己的客户,及下属客户 
+        $loginuser = Users::model()->findByPk(Yii::app()->user->id);
+        if (in_array($loginuser->name, $this->priv_users)) {
+            $dept_arr = Userinfo::getAllChildDeptId($loginuser->dept_id);
+            $dept_arr[] = $loginuser->dept_id;
+            if (!empty($dept_arr) && count($dept_arr) > 0) {
+                $wherestr = " t.eno in(select eno from {{users}} where dept_id in(" . implode(",", $dept_arr) . ") )";
+                $criteria->addCondition($wherestr);
+            }
+        } else {
+            $user_arr = Userinfo::getAllChildUsersId(Yii::app()->user->id);
+            $user_arr[] = Yii::app()->user->id;
+            if (!empty($user_arr) && count($user_arr) > 0) {
+                $wherestr = Utils::genUserCondition($user_arr);
+                if (!empty($wherestr)) {
+                   $criteria->addCondition(" exists (select 1 from {{users}} where eno=t.eno and $wherestr)") ; 
+                }
             }
         }
         switch($this->searchtype){

@@ -47,6 +47,14 @@ class ExtNumberController extends GController
             $ret = UnCall::listen($srcExt, $ext);
             echo json_encode($ret);
         }
+        public function actionListenByUser($userid){
+            $user = Users::model()->findByPk(Yii::app()->user->id);
+            $touser = Users::model()->findByPk($userid);
+            $srcExt = $user->extend_no; 
+            $toExt = $touser->extend_no;
+            $ret = UnCall::listen($srcExt, $toExt);
+            echo json_encode($ret);
+        }
 		
 	public function get_uname($data){
 		$val = $data->extension;

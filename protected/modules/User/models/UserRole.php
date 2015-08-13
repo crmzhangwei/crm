@@ -17,7 +17,7 @@ class UserRole extends CActiveRecord
 	{
 		return '{{user_role}}';
 	}
-
+        public $username;
 	/**
 	 * @return array validation rules for model attributes.
 	 */
@@ -54,6 +54,7 @@ class UserRole extends CActiveRecord
 			'id' => '主键',
 			'user_id' => '用户id',
 			'role_id' => '角色id',
+                        'username'=>'用户名',
 		);
 	}
 

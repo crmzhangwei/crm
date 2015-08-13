@@ -309,5 +309,14 @@ class UsersController extends GController
 			$res = $userinfo ? $userinfo->name : '暂无上级';
 			return $res;
 		}
-          
+        public function get_ext_status($data){
+            $ext = $data->extend_no;
+            $sql = "select status from users where extension=:ext";
+            $status = 0;
+            /*$extnumber = ExtNumber::model()->findBySql($sql,array(":ext"=>$ext)); 
+            if($extnumber){
+                $status=$extnumber->status;
+            }*/
+            return $status;
+        }  
 }

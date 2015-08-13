@@ -1,0 +1,53 @@
+.dlg {
+	z-index: 1;
+	width: 400px;
+	height: 70px;
+	display: none;
+}
+
+.dlg_tile {
+	background: #0687B6;
+	color: white;
+	padding: 10px 10px 10px 10px;
+	font-weight: bold;
+	text-align: right;
+	height: 18px;
+}
+
+.title_name {
+	color: white;
+	float: left;
+}
+
+.title_close {
+	float: right;
+}
+
+.title_close a {
+	color: red;
+}
+
+.dlg_content {
+	margin: 1px 1px 20px 1px;
+}
+
+.dlg_ctr {
+    margin-top: 20px;
+	text-align: center;
+	height: 35px;
+}
+
+.q_table {
+	width: 100%;
+	border-collapse: collapse;
+}
+
+.q_div {
+	margin: 0 1% 0 1%;
+	width: 98%;
+}
+.baInfo{
+ background-color: #E5E5E5;
+ margin-right: 20px;
+ height: 25px;
+}
