@@ -228,9 +228,10 @@ class CountController extends GController
 		$search = Yii::app()->request->getParam("search");
 		if($search){
 			$where  = Utils::addWhere($search, 1);
+			$where .= ' and d.name is not null and g.name is not null and u.name is not null';
 		}
 		else{
-			$where = '';
+			$where = ' where d.name is not null and g.name is not null and u.name is not null';
 		}
 		
 		$sql = "select d.name as dname,g.name as gname, u.name as uname, dial_long AS longs,FROM_UNIXTIME(dial_time,'%H') as times 
