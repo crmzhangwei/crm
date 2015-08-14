@@ -228,14 +228,15 @@ class CountController extends GController
 		$search = Yii::app()->request->getParam("search");
 		if($search){
 			$where  = Utils::addWhere($search, 1);
+			$where .= ' and d.name is not null and g.name is not null and u.name is not null';
 		}
 		else{
-			$where = '';
+			$where = ' where d.name is not null and g.name is not null and u.name is not null';
 		}
 		
-		$sql = "select d.name as dname,g.name as gname, u.name as uname, SUM(dial_long) as longs,COUNT(*)as num, FROM_UNIXTIME(dial_time,'%H') as times 
+		$sql = "select d.name as dname,g.name as gname, u.name as uname, dial_long AS longs,FROM_UNIXTIME(dial_time,'%H') as times 
 			from `c_dial_detail` as di left join `c_users` as u on di.eno=u.eno left join `c_dept_info` as d on u.dept_id=d.id 
-			left join `c_group_info` as g on u.group_id=g.id $where group by FROM_UNIXTIME(dial_time,'%H') order by longs desc";
+			left join `c_group_info` as g on u.group_id=g.id $where";
 		$result = Yii::app()->db->createCommand($sql)->queryAll();
 		$total = 0;
 		$resArr = array();
@@ -298,7 +299,6 @@ class CountController extends GController
 					$dgUser[] = $v['dname'];
 				}
 				$dgUser = array_unique($dgUser);
-				
 				foreach ($dgUser as $k1 => $v1) {
 					foreach($timeArr as $t1){
 						$str = $v1.$t1;
@@ -308,7 +308,7 @@ class CountController extends GController
 							$str2 = $v2['dname'].$v2['times'];
 							if($str === $str2){
 								$resArr[$v1]['dname'] = $v2['dname'];
-								$resArr[$v1][$t1]['num'] += $v2['num'];
+								$resArr[$v1][$t1]['num'] += 1;
 								$resArr[$v1][$t1]['longs'] += $v2['longs'];
 							}
 						}
@@ -317,6 +317,7 @@ class CountController extends GController
 				$total = count($resArr);
 			}
 		}
+	
 		//部门组别人员三级联动
 		$uInfo = Userinfo::secondlevel();
 		$data = array(
