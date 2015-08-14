@@ -152,6 +152,7 @@ class CustomerInfoController extends GController {
         $noteinfo->setAttribute("next_contact", '');
         $noteinfo->cust_id = $id;
         $model = $this->loadModel($id);
+        $oldcusttype = $model->cust_type;
         $loginuser = Users::model()->findByPk(Yii::app()->user->id);
         if (isset($_POST['CustomerInfo'])) {
             //保存  
@@ -265,10 +266,14 @@ class CustomerInfoController extends GController {
                 if ($noteinfo->dial_id > 0) {
                     $dialdetail = DialDetail::model()->findByPk($noteinfo->dial_id);
                     //获取通知录音路径，通知时长 
-                    $uid = UnCall::getUid($dialdetail->extend_no);
+                    $uid = $dialdetail->uid;
+                    if($uid==null||empty(trim($uid))){
+                        $uid = UnCall::getUid2($dialdetail);
+                        $dialdetail->uid=$uid;
+                    }
                     $dial_long = UnCall::getDialLength($uid);
                     $record_path = UnCall::getRecord($uid);
-                    $dialdetail->uid = $uid;
+                    $dialdetail->isok = 1;
                     $dialdetail->dial_long = $dial_long;
                     $dialdetail->record_path = $record_path;
                     $dialdetail->save(); 
@@ -320,7 +325,7 @@ class CustomerInfoController extends GController {
         $historyNote = NoteInfo::model();
         $historyNote->setAttribute("cust_id", $model->id);
         $user = Users::model()->findByPk($model->creator);
-        if ($model->cust_type == "6") {
+        if ($oldcusttype == "6") {
             if(empty($model->trans_user)){
               $sql = "select * from {{trans_cust_info}} where cust_id=:cust_id";
                 $transmodel = TransCustInfo::model()->findBySql($sql, array(':cust_id' => $id));

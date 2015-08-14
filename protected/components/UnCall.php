@@ -87,6 +87,10 @@ class UnCall {
         $uncall = Yii::app()->params['UNCALL'];
         $client = new SoapClient($uncall['webservice']);
         $phonenumber = trim($cust->phone);
+        $field="phone";
+        if($seq>1){
+            $field=$field.$seq;
+        }
         switch($seq){
             case 1:break;
             case 2: $phonenumber=$cust->phone2;break;
@@ -96,6 +100,8 @@ class UnCall {
         }
         if(substr($phonenumber,0,1)=="1"&&UnCall::getPhoneZone($phonenumber)){
             $phonenumber="0".$phonenumber;
+            $sql = "update {{customer_info}} set $field='$phonenumber' where id=$cust_id";
+            Yii::app()->db->createCommand($sql)->execute();
         }
         $result = $client->OnClickCall($user->extend_no, $phonenumber, ""); 
         $xml = simplexml_load_string($result);
@@ -104,13 +110,13 @@ class UnCall {
             $dialdetail->eno = $user->eno;
             $dialdetail->cust_id = $cust_id;
             $dialdetail->extend_no = $user->extend_no;
-            $dialdetail->phone = $cust->phone;
+            $dialdetail->phone = $phonenumber;
             $dialdetail->dial_time = time();
             $dialdetail->dial_long = 0;
             $dialdetail->dial_num = 1;
             $dialdetail->record_path = '';
-            $dialdetail->isok = 1;
-            $dialdetail->uid = '';
+            $dialdetail->isok = 0; 
+            $dialdetail->uid = UnCall::getUid2($dialdetail);
             $dialdetail->save();
             $ret['status'] = 1;
             $ret['dial_id'] = $dialdetail->primaryKey;
@@ -222,6 +228,17 @@ class UnCall {
         $xml = simplexml_load_string($result);
         if($xml&&(string)$xml->result == '1'){
             $uid=(string)$xml->popEvent->uid;
+        }
+        return $uid;
+    }
+    
+    public static function getUid2($dialdetail) {
+        $uid = '';  
+        $sql = "select uid from {{pop}} where calla=:ext and callb=:phone order by activation desc limit 1";
+        $result = Yii::app()->db3->createCommand($sql)->queryRow(TRUE, 
+                                                array(":ext" => $dialdetail->extend_no,":phone"=>$dialdetail->phone)); 
+        if (!empty($result) && is_array($result)) {
+            $uid = $result['uid'];
         }
         return $uid;
     }

@@ -395,6 +395,7 @@ EOF;
     public function actionWorkanalyse() {
         $page = max(Yii::app()->request->getParam('page'), 1);
         $search = Yii::app()->request->getParam("search");
+        $param = array();
         if (empty($search)) {
             $search['stime'] = '';
             $search['etime'] = '';
@@ -402,6 +403,13 @@ EOF;
             $search['group'] = '';
 			$search['mintimes'] = '';
 			$search['maxtimes'] = '';
+        }else{
+            $param["search[stime]"]=$search['stime'];
+            $param["search[etime]"]=$search['etime'];
+            $param["search[dept]"]=$search['dept'];
+            $param["search[group]"]=$search['group'];
+            $param["search[mintimes]"]=$search['mintimes'];
+            $param["search[maxtimes]"]=$search['maxtimes'];
         }
         $offset = ($page - 1) * $this->pageSize;
         $priv=Userinfo::getPrivCondiForReport();
@@ -455,7 +463,7 @@ EOF;
 
         $result1 = Yii::app()->db->createCommand($sql)->query();
         $pages = new CPagination($result1->rowCount);
-
+        $pages->params=$param;
         //获取查询的条数
         $pages->pageSize = $this->pageSize;
         $result = Yii::app()->db->createCommand($sql . " LIMIT :offset,:limit");
