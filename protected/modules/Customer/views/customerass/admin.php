@@ -115,9 +115,7 @@ $('.search-form form').submit(function(){
 <div class="table-page"> 
     <div class="col-sm-6">
 		<a href="javascript:void(0);" js_type="publish"  col='0' class="btn  btn-minier btn-sm btn-success publish"><i class=" icon-ok icon-large"></i>分配资源</a> 
-        共<span class="orange"><?=$dataProvider->totalItemCount ?></span>条记录, 每页显示
-			<?php echo CHtml::dropDownList('psize', $psizeid, Utils::selectPageSize(), array('onchange' => 'rePagesize(this)','style'=>"height:25px;"));?>
-		条
+        共<span class="orange"><?=$dataProvider->totalItemCount ?></span>条记录。
 		</div>
     <div class="col-sm-6 no-padding-right">
         <?php
@@ -157,9 +155,3 @@ Yii::app()->clientScript->registerScript('topicjss', $jss);
 
 <script src="/static/js/secondlevel.js"></script>
 
-<script>
-	function rePagesize(obj){
-		var psizeid = $(obj).val();
-		window.location = "./index.php?r=Customer/customerass/admin&psizeid="+psizeid;
-	};
-</script>
