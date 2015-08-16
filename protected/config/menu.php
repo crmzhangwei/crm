@@ -11,6 +11,7 @@ return array(
 			array('label' => '客户资源分配', 'url' => array('/Customer/customerass/admin')),
 			array('label' => '公海资源', 'url' => array('/Customer/customerblack/admin')),
 			array('label' => '联系记录', 'url' => array('/Customer/customerinfo/contact')),
+			array('label' => '短信记录', 'url' => array('/Customer/message/admin')),
 		),
     ),
    

@@ -167,6 +167,15 @@ class Userinfo {
         return $res;
     }
 
+	/**
+     * 根据name查工号(id)
+     */
+    public static function getIdByName($name) {
+        //return Users::model()->find('name like :name', array(':name'=>"%".$name."%"));
+        $res = Yii::app()->db->createCommand("select id from `{{users}}` where name like :name")->queryAll(TRUE, array(":name" => "%" . $name . "%"));
+        return $res;
+    }
+	
     public static function getNameByEno($eno) {
         $ret = "";
         $user = Users::model()->find('eno=:eno', array(':eno' => $eno));
