@@ -260,7 +260,7 @@ class CountController extends GController
 								$resArr[$v1]['dname'] = $v2['dname'];
 								$resArr[$v1]['gname'] = $v2['gname'];
 								$resArr[$v1]['uname'] = $v2['uname'];
-								$resArr[$v1][$t1]['num'] += $v2['num'];
+								$resArr[$v1][$t1]['num'] += 1;
 								$resArr[$v1][$t1]['longs'] += $v2['longs'];
 							}
 						}
@@ -285,7 +285,7 @@ class CountController extends GController
 							if($str === $str2){
 								$resArr[$v1]['dname'] = $v2['dname'];
 								$resArr[$v1]['gname'] = $v2['gname'];
-								$resArr[$v1][$t1]['num'] += $v2['num'];
+								$resArr[$v1][$t1]['num'] += 1;
 								$resArr[$v1][$t1]['longs'] += $v2['longs'];
 							}
 						}
