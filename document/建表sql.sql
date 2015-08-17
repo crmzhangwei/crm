@@ -304,3 +304,5 @@ CREATE TABLE c_note_template(
   `content` VARCHAR(200) NOT NULL COMMENT '短信内容',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+create unique index idx_black_info_01 on c_black_info(cust_id);

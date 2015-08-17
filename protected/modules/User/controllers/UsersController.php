@@ -317,10 +317,10 @@ class UsersController extends GController
             $ext = $data->extend_no;
             $sql = "select status from users where extension=:ext";
             $status = 0;
-            /*$extnumber = ExtNumber::model()->findBySql($sql,array(":ext"=>$ext)); 
+            $extnumber = ExtNumber::model()->findBySql($sql,array(":ext"=>$ext)); 
             if($extnumber){
                 $status=$extnumber->status;
-            }*/
+            }
             return $status;
         }  
 }

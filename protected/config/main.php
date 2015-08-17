@@ -66,7 +66,7 @@ return array(
         'db3'=>require(dirname(__FILE__).'/database3.php'),
 		'errorHandler'=>array(
 			// use 'site/error' action to display errors
-			//'errorAction'=>'site/error',
+			'errorAction'=>'site/error',
 		),
                /*
 		'log'=>array(
