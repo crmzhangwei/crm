@@ -162,6 +162,10 @@ class UsersController extends GController
 	 */
 	public function actionDelete($id)
 	{
+		$cust_num = Users::model()->findByPk($id);
+		if($cust_num['cust_num'] > 0){
+			exit("<script>alert(\"对不起， 请把该用户的资源分配给其他人再删除！\");javascript:history.go(-1);</script>");
+		}
 		$this->loadModel($id)->delete();
 
 		// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
