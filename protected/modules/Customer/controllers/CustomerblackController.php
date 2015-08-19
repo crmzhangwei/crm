@@ -122,6 +122,7 @@ class CustomerblackController extends GController
 	 */
 	public function actionAdmin()
 	{
+		$aPageSize = 200;
 		$model=new CustomerBlack('search');
 		$model->unsetAttributes();  // clear any default values
 		$custtype = Userinfo::genCustTypeArray();
@@ -130,7 +131,8 @@ class CustomerblackController extends GController
 
 		$this->render('admin',array(
 			'model'=>$model,
-			'custtype'=>$custtype
+			'custtype'=>$custtype,
+			'aPageSize' => $aPageSize,
 		));
 	}
     
