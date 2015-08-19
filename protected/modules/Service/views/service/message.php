@@ -62,10 +62,10 @@
                     url: '<?php echo $this->createUrl("/Service/service/message",array('cust_id'=>$model->cust_id,'seq'=>$seq)); ?>',
                     data: $("#message-form").serialize(),
                     callback: function(result) {
-                        bootbox.alert(result.data.memo, function(){
+                        bootbox.alert(result.msg, function(){
                             $('.modal-backdrop').hide();
                             $('.bootbox').hide();
-                            $('#NoteInfo_message_id').val(result.data.id);
+                            $('#NoteInfo_message_id').val(result.id);
                         });
                     }
                 });

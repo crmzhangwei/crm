@@ -273,8 +273,9 @@ class ServiceController extends GController {
             $model->attributes = $_POST['AftermarketCustInfo'];
             $model->message = $_POST['AftermarketCustInfo']['message'];
             $message = Utils::sendMessageByCust($model->cust_id,$seq, $model->message, 'post');
-            Utils::showMsg(1, $message->memo, $message->attributes);
-            Yii::app()->end;
+            //Utils::showMsg(1, $message->memo, $message->attributes);
+            $out = array('code' => 1, 'msg' => $message->memo,'id'=>$message->id);
+            echo json_encode($out);
             exit();
         }
         $temparr = NoteTemplate::model()->findAll();

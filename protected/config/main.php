@@ -95,8 +95,8 @@ return array(
                 'items'=>  require_once 'menu.php', 
                 'SMS'=>array(
                     'url'=>'http://210.5.158.31:9011/hy/',
-                    'uid'=>'50013',
-                    'auth'=>'b201fee180e200c342aadc639f2a0ee5',
+                    'uid'=>'50229',
+                    'auth'=>'3a516fecc88dcd8b677579d0f31017e4',
                     'encode'=>'UTF-8',
                     'expid'=>0, 
                 ),

@@ -131,23 +131,20 @@ class Utils {
     private static function sendMessage($phone, $msg, $method = 'get') {
         $content = urlencode($msg);
         $sms = Yii::app()->params['SMS'];
-        $result = "";
+        $result = ""; 
         switch ($method) {
             case 'get':
                 $sUrl = $sms['url'] . "?expid=0&uid=" . $sms['uid'] . "&auth=" . $sms['auth'] . "&encode=" . $sms['encode'] . "&mobile=" . $phone . "&msg=" . $content;
                 $result = file_get_contents($sUrl);
                 break;
             case 'post':
-                $ch = curl_init();
-                $timeout = 5;
-                $postdata = "expid=0&uid=" . $sms['uid'] . "&auth=" . $sms['auth'] . "&encode=" . $sms['encode'] . "&mobile=" . $phone . "&msg=" . $content;
-                curl_setopt($ch, CURLOPT_URL, $sms['url']);
-                curl_setopt($ch, CURLOPT_POST, 1);
+                $ch = curl_init(); 
+                $postdata = "expid=0&uid=" . $sms['uid'] . "&auth=" . $sms['auth'] . "&encode=" . $sms['encode'] . "&mobile=" . $phone . "&msg=" . $content; 
+                curl_setopt($ch, CURLOPT_URL, $sms['url']); 
                 $this_header = array("content-type: application/x-www-form-urlencoded;charset=UTF-8");
                 curl_setopt($ch, CURLOPT_HTTPHEADER, $this_header);
                 curl_setopt($ch, CURLOPT_POSTFIELDS, $postdata); // Post提交的数据包,好像不起作用,need to do  
-                curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-                curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true); 
                 $result = curl_exec($ch);
                 curl_close($ch);
                 break;
