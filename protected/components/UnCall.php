@@ -198,9 +198,11 @@ class UnCall {
      */
     public static function getDialLength($uid) {
         $duration = 0;
-        $result = Yii::app()->db3->createCommand("select duration from {{cdr}} where uniqueid=:uniqueid")->queryRow(TRUE, array(":uniqueid" => $uid));
+        $curdate = date("Y_n_j");
+        $table = "cdro_".$curdate;
+        $result = Yii::app()->db3->createCommand("select billsec from $table where uniqueid=:uniqueid")->queryRow(TRUE, array(":uniqueid" => $uid));
         if (!empty($result) && is_array($result)) {
-            $duration = $result['duration'];
+            $duration = $result['billsec'];
         }
         return $duration;
     }
@@ -234,11 +236,13 @@ class UnCall {
     
     public static function getUid2($dialdetail) {
         $uid = '';  
-        $sql = "select uid from {{pop}} where calla=:ext and callb=:phone order by activation desc limit 1";
+        $curdate = date("Y_n_j");
+        $table = "cdro_".$curdate;
+        $sql = "select uniqueid from $table where src=:ext and dst=:phone order by calldate desc limit 1";
         $result = Yii::app()->db3->createCommand($sql)->queryRow(TRUE, 
                                                 array(":ext" => $dialdetail->extend_no,":phone"=>$dialdetail->phone)); 
         if (!empty($result) && is_array($result)) {
-            $uid = $result['uid'];
+            $uid = $result['uniqueid'];
         }
         return $uid;
     }

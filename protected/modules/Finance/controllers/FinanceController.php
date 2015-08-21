@@ -393,7 +393,8 @@ class FinanceController extends GController {
     }
     */
     public function actionTest7(){
-        $this->render("test");
+         $curdate = date("Y_n_j");
+         echo $curdate;
     }
      public function actionTest8(){
          echo UnCall::getPhoneZone("18589075189");
