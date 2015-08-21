@@ -46,6 +46,7 @@ $('.search-form form').submit(function(){
 <?php 
 	$dataProvider = $model->search();
 	$dataProvider->pagination->pageVar = 'page';
+	$dataProvider->pagination->pageSize = $aPageSize;
 	$this->widget('GGridView', array(
 		'id'=>'CustomerBlack-grid',
 		'dataProvider'=>$dataProvider,
