@@ -75,6 +75,7 @@ $('.search-form form').submit(function(){
 <?php 
 	$dataProvider = $model->search();
 	$dataProvider->pagination->pageVar = 'page';
+	$dataProvider->pagination->pageSize = $aPageSize;
 	$this->widget('GGridView', array(
 		'id'=>'CustomerInfo-grid',
 		'dataProvider'=>$dataProvider,
@@ -119,7 +120,7 @@ $('.search-form form').submit(function(){
 			'deleteButtonOptions'=>array(),
 			'viewButtonOptions'=>array('style'=>'background-color:red'),
 			'header' => '操作', 
-			'template'=>'{upda} {delete}',
+			'template'=>'{upda}',
 			'htmlOptions' => array(
 				'width' => '50',
 				'style' => 'text-align:center',
@@ -139,8 +140,10 @@ $('.search-form form').submit(function(){
 
 <div class="table-page"> 
     <div class="col-sm-6">
-		<a href="javascript:void(0);" col='0' class="btn  btn-minier btn-sm btn-success publish" onclick="batch_del()">批量删除</a> 
-        共<span class="orange"><?=$dataProvider->totalItemCount ?></span>条记录
+		<?php if($isdel==1){ ?>
+		<a href="javascript:void(0);" col='0' class="btn  btn-minier btn-sm btn-success publish" onclick="batch_del()">批量删除</a>
+		<?php }?>
+		共<span class="orange"><?=$dataProvider->totalItemCount ?></span>条记录
     </div>
     <div class="col-sm-6 no-padding-right">
         <?php

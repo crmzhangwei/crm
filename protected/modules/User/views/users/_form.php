@@ -136,7 +136,10 @@
             <div class="col-sm-3">
                 <?php echo $form->textField($model, 'extend_no', array('maxlength' => 10, 'id' => "form-field-1", 'placeholder' => "", 'class' => "form-control")); ?>
             </div>
+			<label class="col-sm-2 control-label no-padding-right"><?php echo $model->getAttributeLabel('isdel'); ?>：</label>
+			<?php $model->isNewRecord ? $model->isdel = 2: '';echo $form->radioButtonList($model, 'isdel', array(2=>'否',1=> '是',), array('separator' => '<br/> ', 'class' => 'col-sm-2')); ?> 
         </div>
+		
         <div class="form-actions text-right">
             <button type="submit" id="createUserBtn" class="btn btn-sm btn-primary"><i class="icon-save"></i> <?php echo$model->isNewRecord ? '创建' : '更新';?></button>
             <button type="button" data-dismiss="modal" class="btn btn-sm"><i class="icon-remove"></i> 取消</button>

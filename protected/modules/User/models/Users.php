@@ -52,7 +52,7 @@ class Users extends CActiveRecord {
         // will receive user inputs.
         return array(
             array('pass, username, tel, dept_id', 'required'),
-            array('sex, dept_id, group_id, ismaster, status,extend_no,tel,manager_id', 'numerical', 'integerOnly' => true),
+            array('sex, dept_id, group_id, ismaster, isdel, status,extend_no,tel,manager_id', 'numerical', 'integerOnly' => true),
             //array('eno', 'length', 'max'=>10),
             array('pass', 'length', 'max' => 32, 'min' => 6),
             array('name', 'length', 'max' => 12),
@@ -101,7 +101,8 @@ class Users extends CActiveRecord {
             'pass_repeat' => '重复密码',
             'login_time' => '最后登录时间',
             'newpass' => '新密码',
-            'ext_status' => '分机状态'
+            'ext_status' => '分机状态',
+			'isdel' => '删除权限'
         );
     }
 

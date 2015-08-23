@@ -204,6 +204,7 @@ class CustomerinfoController extends GController
 	 */
 	public function actionAdmin()
 	{	
+		$aPageSize = 200;
 		$model=new CustomerInfo('search');
 		$model->unsetAttributes();  // clear any default values
 		if(Yii::app()->request->getParam('customerId')){
@@ -215,12 +216,19 @@ class CustomerinfoController extends GController
 		
 		//部门组别人员三级联动
 		$uInfo = Userinfo::secondlevel();
+		//是否有删除权限
+		$userid = Yii::app()->session['user']['id'];
+		$isdel = Users::model()->findByPk($userid);
+		$isdel = $isdel->isdel;
+		
 		$this->render('admin',array(
 			'model'=>$model,	
 			'deptArr'=>$uInfo['deptArr'],
 			'groupArr'=>$uInfo['groupArr'],
 			'infoArr'=>$uInfo['infoArr'],
 			'user_info'=>$uInfo['user_info'],
+			'aPageSize' => $aPageSize,
+			'isdel' => $isdel,
 		));
 	}
     
