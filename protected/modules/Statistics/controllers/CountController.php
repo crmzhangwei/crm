@@ -64,11 +64,16 @@ class CountController extends GController
 		//$offset = ($page-1)*$this->pageSize;
 		$isexcel = Yii::app()->request->getParam("isexcel");
 		$search = Yii::app()->request->getParam("search");
+		//只看到自己的客户,及下属客户
+        $user_arr = Userinfo::getAllChildUsersId(Yii::app()->user->id);
+        $user_arr[]=Yii::app()->user->id;
+		$userid = implode(',', $user_arr);
 		if($search){
 			$where  = Utils::addWhere($search);
+			$where = $where." and u.id in($userid)"; 
 		}
 		else{
-			$where = '';
+			$where = " where u.id in($userid)";
 		}
 		
 		$sql = "select d.name as dname,g.name as gname, u.name as uname, acct_amount as amount,acct_number as number "
@@ -226,12 +231,16 @@ class CountController extends GController
 	
 	public function actionContact(){
 		$search = Yii::app()->request->getParam("search");
+		//只看到自己的客户,及下属客户
+        $user_arr = Userinfo::getAllChildUsersId(Yii::app()->user->id);
+        $user_arr[]=Yii::app()->user->id;
+		$userid = implode(',', $user_arr);
 		if($search){
 			$where  = Utils::addWhere($search, 1);
-			$where .= ' and d.name is not null and g.name is not null and u.name is not null';
+			$where .= " and u.id in($userid) and d.name is not null and g.name is not null and u.name is not null";
 		}
 		else{
-			$where = ' where d.name is not null and g.name is not null and u.name is not null';
+			$where = " where u.id in($userid) and d.name is not null and g.name is not null and u.name is not null";
 		}
 		
 		$sql = "select d.name as dname,g.name as gname, u.name as uname, dial_long AS longs,FROM_UNIXTIME(dial_time,'%H') as times 
