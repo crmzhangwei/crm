@@ -307,3 +307,5 @@ CREATE TABLE c_note_template(
 
 create unique index idx_black_info_01 on c_black_info(cust_id);
 create index idx_customerinfo_01 on c_customer_info(eno);
+create index idx_dialdetail_01 on c_dial_detail(cust_id);
+create index idx_dialdetail_02 on c_dial_detail(eno);
