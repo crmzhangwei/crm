@@ -35,6 +35,8 @@ class Users extends CActiveRecord {
         '谭玥',
         '牛祥莉',
         '罗香',
+        '周秋娟',
+        '舒配英',
     );
 
     /**

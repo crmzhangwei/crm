@@ -342,13 +342,12 @@ case when t.cust_type=9 then 1 else 0 end as a9,
 SELECT 
     c.next_time, c.cust_type, u.dept_id, u.group_id 
 FROM
-    c_customer_info c,
-    c_users u
+    c_customer_info c left join c_users u on c.eno=u.eno  
 WHERE
-    c.eno = u.eno $priv
+    1=1 $priv
 ) t where 1=1 $wherestr
 
-) tb where 1=1 group by tb.next_time  
+) tb where 1=1 group by FROM_UNIXTIME(tb.next_time, '%Y-%m-%d')
 union all 
 select '各成熟度资源占比' as next_time, (select count(*) from c_customer_info c,c_users u where c.eno=u.eno and c.cust_type=0 $priv $wherestr) as a0,
 (select count(*) from c_customer_info c,c_users u where c.eno=u.eno and c.cust_type=1 $priv $wherestr) as a1,

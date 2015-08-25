@@ -128,10 +128,13 @@ class Utils {
      * @param type $method get/post
      * @return type $iReturnCode 状态码
      */
-    private static function sendMessage($phone, $msg, $method = 'get') {
+    public static function sendMessage($phone, $msg, $method = 'get') {
         $content = urlencode($msg);
         $sms = Yii::app()->params['SMS'];
         $result = ""; 
+        if(!empty($phone)&&substr($phone,0,1)=="0"){
+            $phone=substr($phone,1);
+        }
         switch ($method) {
             case 'get':
                 $sUrl = $sms['url'] . "?expid=0&uid=" . $sms['uid'] . "&auth=" . $sms['auth'] . "&encode=" . $sms['encode'] . "&mobile=" . $phone . "&msg=" . $content;

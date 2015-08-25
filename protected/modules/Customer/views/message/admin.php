@@ -20,7 +20,15 @@ $('.search-form form').submit(function(){
 });
 ");
 ?>
-
+<script type="text/javascript">
+function resend(obj){ 
+    var trindex = $(obj).parents('tr').index(); 
+    var id = $('#select_'+trindex).val();
+    $.getJSON('<?= Yii::app()->createUrl('Customer/message/resend') ?>',{'id':id},function(result){
+        alert(result.msg);
+    }); 
+}
+</script>
 <!-- search-form -->
 
 <?php
@@ -48,7 +56,15 @@ $this->widget('GGridView', array(
     'id' => 'Message-grid',
     'dataProvider' => $dataProvider,
     'columns' => array(
-        //'id',
+        array('class' => 'CCheckBoxColumn',
+				'name' => 'id',
+				'id' => 'select',
+				'selectableRows' => 2,
+				'headerTemplate' => '{item}',
+				'htmlOptions' => array(
+					'width' => '20',
+				),
+			),
         'phone',
         'content',
 		'memo',
@@ -56,6 +72,25 @@ $this->widget('GGridView', array(
 		array('name' => 'create_time', 'value' => 'date("Y-m-d H:i:s",$data->create_time)'),
 		//'creator',
 		array('name'=>'creator', 'value'=>array($this, 'get_creator_text')),
+        array(
+			'class'=>'CButtonColumn',
+			'deleteButtonOptions'=>array(),
+			'viewButtonOptions'=>array('style'=>'background-color:red'),
+			'header' => '操作', 
+			'template'=>'{upda}',
+			'htmlOptions' => array(
+				'width' => '50',
+				'style' => 'text-align:center',
+			),
+			'buttons'=>array(
+				'upda'=>array(
+					'label'=>'重新发送',
+					'url'=>'',
+					'imageUrl'=>'',
+					'options'=>array('class'=>'editNode btn btn-info btn-minier tooltip-info','data-placement'=>"bottom",'onclick'=>"resend(this)"),
+				),
+			)          
+		),
     ),
 ));
 ?>

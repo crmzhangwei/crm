@@ -306,3 +306,4 @@ CREATE TABLE c_note_template(
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 create unique index idx_black_info_01 on c_black_info(cust_id);
+create index idx_customerinfo_01 on c_customer_info(eno);

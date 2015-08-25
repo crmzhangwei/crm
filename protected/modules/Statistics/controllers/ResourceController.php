@@ -30,10 +30,9 @@ class ResourceController extends GController {
 SELECT 
     u.name, COUNT(*) AS total
 FROM
-    c_customer_info c,
-    c_users u
+    c_customer_info c left join c_users u on c.creator=u.id 
 WHERE
-    c.creator = u.id $priv $wherestr
+    1=1 $priv $wherestr
 GROUP BY u.name     
 EOF;
         $criteria = new CDbCriteria();
@@ -103,19 +102,17 @@ SELECT
     u.name as username,
     from_unixtime(c.create_time) as create_time
 FROM
-    c_customer_info c,
-    c_dic d,
-    c_users u
+    c_customer_info c
+        LEFT JOIN c_dic d ON c.category = d.code AND d.ctype = 'cust_category'
+        LEFT JOIN c_users u ON c.creator = u.id
 WHERE
-    c.category = d.code
-    AND d.ctype = 'cust_category'
-    AND c.creator=u.id
+    1=1 
         $priv 
         $wherestr
 EOF;
-        $criteria = new CDbCriteria();
-        $result1 = Yii::app()->db->createCommand($sql)->query();
-        $pages = new CPagination($result1->rowCount);
+        $criteria = new CDbCriteria(); 
+        $result1 = Yii::app()->db->createCommand("select count(*) as cnt from ( $sql ) tmp ")->queryRow(true);
+        $pages = new CPagination($result1['cnt']);
 
         //获取查询的条数
         $pages->pageSize = $this->pageSize;
@@ -128,7 +125,7 @@ EOF;
 
         $data = array(
             'pages' => $pages,
-            'total' => $result1->rowCount,
+            'total' => $result1['cnt'],
             'list' => $res,
             'search' => $search,
         );

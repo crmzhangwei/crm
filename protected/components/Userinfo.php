@@ -248,7 +248,7 @@ class Userinfo {
         $priv="";
         if (!empty($user_arr) && count($user_arr) > 0) {
             $priv = Utils::genUserConditionForReport($user_arr);
-            $priv = " and ".$priv;
+            $priv = " and (".$priv.")";
         }
         return $priv;
     }
