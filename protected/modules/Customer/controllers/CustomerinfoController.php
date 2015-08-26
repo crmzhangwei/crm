@@ -51,7 +51,7 @@ class CustomerinfoController extends GController
 			$model->creator = Yii::app()->user->id;
 			$model->cust_type = 0;	//客户分类默认为0
  		   if($model->save()){
-				Yii::app()->db->createCommand()->update('{{Users}}',array('cust_num' =>new CDbExpression('cust_num+1')),"eno='{$model->eno}'");
+				Yii::app()->db->createCommand()->update('{{users}}',array('cust_num' =>new CDbExpression('cust_num+1')),"eno='{$model->eno}'");
 				//Users::model()->updateAll(array('cust_num'=>'cust_num+1'),'eno=:eno',array(":eno"=>$model->eno)); 
 				//exit("<script>alert(\"恭喜你, 成功添加一条记录。\");javascript:history.go(-1);</script>");
 				Utils::showMsg (1, '增加成功!');
