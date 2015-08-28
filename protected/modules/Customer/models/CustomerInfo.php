@@ -72,42 +72,43 @@ class CustomerInfo extends CActiveRecord
 	 * @检查电话号码是否已存在
 	 */
 	public function unique_phone(){
-		
-		if($this->phone){
-			$phone = $this->phone;
-			$res = CustomerInfo::model()->findAll("(phone=$phone or phone2=$phone or phone3=$phone or phone4=$phone or phone5=$phone) and `status`<>2");
-			if($res){
-				$this->addError('phone', '电话1已经存在');
+		if($this->isNewRecord){
+			if($this->phone){
+				$phone = $this->phone;
+				$res = CustomerInfo::model()->findAll("(phone=$phone or phone2=$phone or phone3=$phone or phone4=$phone or phone5=$phone) and `status`<>2");
+				if($res){
+					$this->addError('phone', '电话1已经存在');
+				}
 			}
+			if($this->phone2){
+				$phone2 = $this->phone2;
+				$res = CustomerInfo::model()->findAll("(phone=$phone2 or phone2=$phone2 or phone3=$phone2 or phone4=$phone2 or phone5=$phone2) and `status`<>2");
+				if($res){
+					$this->addError('phone2', '电话2已经存在');
+				}
+			}
+			if($this->phone3){
+				$phone3 = $this->phone3;
+				$res = CustomerInfo::model()->findAll("(phone=$phone3 or phone2=$phone3 or phone3=$phone3 or phone4=$phone3 or phone5=$phone3) and `status`<>2");
+				if($res){
+					$this->addError('phone3', '电话3已经存在');
+				}
+			}
+			if($this->phone4){
+				$phone4 = $this->phone4;
+				$res = CustomerInfo::model()->findAll("(phone=$phone4 or phone2=$phone4 or phone3=$phone4 or phone4=$phone4 or phone5=$phone4) and `status`<>2");
+				if($res){
+					$this->addError('phone4', '电话4已经存在');
+				}
+			}
+			if($this->phone5){
+				$phone5 = $this->phone5;
+				$res = CustomerInfo::model()->findAll("(phone=$phone5 or phone2=$phone5 or phone3=$phone5 or phone4=$phone5 or phone5=$phone5) and `status`<>2");
+				if($res){
+					$this->addError('phone5', '电话5已经存在');
+				}
+			}	
 		}
-		if($this->phone2){
-			$phone2 = $this->phone2;
-			$res = CustomerInfo::model()->findAll("(phone=$phone2 or phone2=$phone2 or phone3=$phone2 or phone4=$phone2 or phone5=$phone2) and `status`<>2");
-			if($res){
-				$this->addError('phone2', '电话2已经存在');
-			}
-		}
-		if($this->phone3){
-			$phone3 = $this->phone3;
-			$res = CustomerInfo::model()->findAll("(phone=$phone3 or phone2=$phone3 or phone3=$phone3 or phone4=$phone3 or phone5=$phone3) and `status`<>2");
-			if($res){
-				$this->addError('phone3', '电话3已经存在');
-			}
-		}
-		if($this->phone4){
-			$phone4 = $this->phone4;
-			$res = CustomerInfo::model()->findAll("(phone=$phone4 or phone2=$phone4 or phone3=$phone4 or phone4=$phone4 or phone5=$phone4) and `status`<>2");
-			if($res){
-				$this->addError('phone4', '电话4已经存在');
-			}
-		}
-		if($this->phone5){
-			$phone5 = $this->phone5;
-			$res = CustomerInfo::model()->findAll("(phone=$phone5 or phone2=$phone5 or phone3=$phone5 or phone4=$phone5 or phone5=$phone5) and `status`<>2");
-			if($res){
-				$this->addError('phone5', '电话5已经存在');
-			}
-		}		
 	}
 	/**
 	 * @return array relational rules.

@@ -21,88 +21,82 @@
 	<table>
 	<tr>
 		<td width="95"><?php echo $form->labelEx($model,'cust_name'); ?></td>
-		<td><?php echo $form->textField($model,'cust_name',array('size'=>55,'maxlength'=>100)); ?>
+		<td colspan="3"><?php echo $form->textField($model,'cust_name',array('size'=>55,'maxlength'=>100)); ?>
 		<?php echo $form->error($model,'cust_name'); ?></td>
 	</tr>
 	<tr>
 		<td><?php echo $form->labelEx($model,'shop_name'); ?></td>
-		<td><?php echo $form->textField($model,'shop_name',array('size'=>55,'maxlength'=>100)); ?>
+		<td colspan="3"><?php echo $form->textField($model,'shop_name',array('size'=>55,'maxlength'=>100)); ?>
 		<?php echo $form->error($model,'shop_name'); ?></td>
 	</tr>
 	<tr>
 		<td><?php echo $form->labelEx($model,'corp_name'); ?></td>
-		<td><?php echo $form->textField($model,'corp_name',array('size'=>55,'maxlength'=>100)); ?>
+		<td colspan="3"><?php echo $form->textField($model,'corp_name',array('size'=>55,'maxlength'=>100)); ?>
 		<?php echo $form->error($model,'corp_name'); ?></td>
 	</tr>
 	<tr>
 		<td><?php echo $form->labelEx($model,'shop_url'); ?></td>
-		<td><?php echo $form->textField($model,'shop_url',array('size'=>55,'maxlength'=>100)); ?>
+		<td colspan="3"><?php echo $form->textField($model,'shop_url',array('size'=>55,'maxlength'=>100)); ?>
 		<?php echo $form->error($model,'shop_url'); ?></td>
 	</tr>
 	<tr>
 		<td><?php echo $form->labelEx($model,'shop_addr'); ?></td>
-		<td><?php echo $form->textField($model,'shop_addr',array('size'=>55,'maxlength'=>100)); ?>
+		<td colspan="3"><?php echo $form->textField($model,'shop_addr',array('size'=>55,'maxlength'=>100)); ?>
 		<?php echo $form->error($model,'shop_addr'); ?></td>
 	</tr>
 	<tr>
 		<td><?php echo $form->labelEx($model,'phone'); ?></td>
-		<td><?php echo $form->textField($model,'phone',array('size'=>30,'maxlength'=>20)); ?>
-		<?php echo $form->error($model,'phone'); ?></td>
-	</tr>
-	
-	<tr>
-		<td><?php echo $form->labelEx($model,'phone2'); ?></td>
-		<td><?php echo $form->textField($model,'phone2',array('size'=>30,'maxlength'=>20)); ?>
+		<td><?php echo $form->textField($model,'phone',array('size'=>20,'maxlength'=>20)); ?>
+		<?php echo $form->error($model,'phone'); ?>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+		<td><?php echo $form->labelEx($model,'phone2'); ?>&nbsp;&nbsp;</td>
+		<td colspan="3"><?php echo $form->textField($model,'phone2',array('size'=>20,'maxlength'=>20)); ?>
 		<?php echo $form->error($model,'phone2'); ?></td>
 	</tr>
 	<tr>
 		<td><?php echo $form->labelEx($model,'phone3'); ?></td>
-		<td><?php echo $form->textField($model,'phone3',array('size'=>30,'maxlength'=>20)); ?>
-		<?php echo $form->error($model,'phone3'); ?></td>
-	</tr>
-	<tr>
-		<td><?php echo $form->labelEx($model,'phone4'); ?></td>
-		<td><?php echo $form->textField($model,'phone4',array('size'=>30,'maxlength'=>20)); ?>
+		<td><?php echo $form->textField($model,'phone3',array('size'=>20,'maxlength'=>20)); ?>
+		<?php echo $form->error($model,'phone3'); ?>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+		<td><?php echo $form->labelEx($model,'phone4'); ?>&nbsp;&nbsp;</td>
+		<td><?php echo $form->textField($model,'phone4',array('size'=>20,'maxlength'=>20)); ?>
 		<?php echo $form->error($model,'phone4'); ?></td>
 	</tr>
 	<tr>
 		<td><?php echo $form->labelEx($model,'phone5'); ?></td>
-		<td><?php echo $form->textField($model,'phone5',array('size'=>30,'maxlength'=>20)); ?>
-		<?php echo $form->error($model,'phone5'); ?></td>
-	</tr>
-	<tr>
-		<td><?php echo $form->labelEx($model,'qq'); ?></td>
-		<td><?php echo $form->textField($model,'qq',array('size'=>30,'maxlength'=>20)); ?>
+		<td><?php echo $form->textField($model,'phone5',array('size'=>20,'maxlength'=>20)); ?>
+		<?php echo $form->error($model,'phone5'); ?>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+		<td><?php echo $form->labelEx($model,'qq'); ?>&nbsp;&nbsp;</td>
+		<td><?php echo $form->textField($model,'qq',array('size'=>20,'maxlength'=>20)); ?>
 		<?php echo $form->error($model,'qq'); ?></td>
 	</tr>
+	
 	<tr>
 		<td><?php echo $form->labelEx($model,'mail'); ?></td>
-		<td><?php echo $form->textField($model,'mail',array('size'=>55,'maxlength'=>50)); ?>
+		<td colspan="3"><?php echo $form->textField($model,'mail',array('size'=>55,'maxlength'=>50)); ?>
 		<?php echo $form->error($model,'mail'); ?></td>
 	</tr>
 	<tr>
 		<td><?php echo $form->labelEx($model,'datafrom'); ?></td>
-		<td><?php echo $form->textField($model,'datafrom',array('size'=>55,'maxlength'=>100)); ?>
+		<td colspan="3"><?php echo $form->textField($model,'datafrom',array('size'=>55,'maxlength'=>100)); ?>
 		<?php echo $form->error($model,'datafrom'); ?></td>
 	</tr>
 	<tr>
 		<td><?php echo $form->labelEx($model,'iskey'); ?></td>
-		<td><?php echo $form->textField($model,'iskey',array('size'=>15,'maxlength'=>30)); echo '<span class="red"> 填: 1重点 0非重点<span>';?>
+		<td colspan="3"><?php echo $form->textField($model,'iskey',array('size'=>15,'maxlength'=>30)); echo '<span class="red"> 填: 1重点 0非重点<span>';?>
 		<?php echo $form->error($model,'iskey'); ?></td>
 	</tr>
 	<tr>
 		<td><?php echo $form->labelEx($model,'category'); ?></td>
-		<td><?php echo $form->dropDownList($model, 'category' ,$category);?>
+		<td colspan="3"><?php echo $form->dropDownList($model, 'category' ,$category);?>
 		<?php echo $form->error($model,'category'); ?></td>
 	</tr>
 	<tr>
 		<td><?php echo $form->labelEx($model,'memo'); ?></td>
-		<td><?php echo $form->textField($model,'memo',array('size'=>55,'maxlength'=>100)); ?>
+		<td colspan="3"><?php echo $form->textField($model,'memo',array('size'=>55,'maxlength'=>100)); ?>
 		<?php echo $form->error($model,'memo'); ?></td>
 	</tr>
 	<tr>
 		<td><?php echo $form->labelEx($model,'eno'); ?></td>
-		<td>
+		<td colspan="3">
 		<?php if($model->isNewRecord):
 			echo CHtml::dropDownList('dept','',$deptArr,array('onchange'=>'listgroup(this)'));
 		?>
