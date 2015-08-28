@@ -23,6 +23,7 @@
                  <?php   
                  echo CHTML::dropDownList("search[dept]", $search['dept'], $this->getDeptArr()); ?>
             </div>
+            <input type="hidden" name="isexcel" value="0" id="isexcel"/>
             <div class="form-group">
 				&nbsp;&nbsp;时间段: 
                                 <input type="text" class="form-control" name="search[stime]" value="<?php echo $search['stime'];?>" placeholder="" onClick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})">
@@ -30,17 +31,23 @@
                 <input type="text" class="form-control" name="search[etime]" value="<?php echo $search['etime'];?>" placeholder="" onClick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})">
             </div>
             <div class="form-group"> 
-                <button type="submit" class="btn btn-info form-control">
+                <button type="button" class="btn btn-info form-control" onclick="sub();">
                     <i class="icon-search"></i>
                     查询
                 </button>
-            </div> 
+            </div>
             <div class="form-group" style="padding-left: 10px; padding-top: 10px;"> 
                 <a href="<?php echo $this->createUrl('newresource'); ?>">
                     <i class="icon-undo"></i>
                     取消筛选
                 </a>
             </div> 
+            <div class="form-group" style="float:right;"> 
+                <button type="button" class="btn btn-info form-control" onclick="exportToExcel()">
+                    <i class="icon-search"></i>
+                    导出excel
+                </button>
+            </div>
         <?php $this->endWidget(); ?>
         <div class="space-10"></div>
     </div>
@@ -125,3 +132,4 @@
 </div> <!-- .row -->
 <div class="space-20"></div>
  
+ <script src="/static/js/secondlevel.js"></script>

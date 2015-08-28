@@ -21,6 +21,7 @@
             开14<input type="radio" name="search[ctype]" value="14" <?php echo $search['ctype']==14?'checked':'';?>/>
             开15<input type="radio" name="search[ctype]" value="15" <?php echo $search['ctype']==15?'checked':'';?>/>
             开17<input type="radio" name="search[ctype]" value="17" <?php echo $search['ctype']==17?'checked':'';?>/>
+            <input type="hidden" name="isexcel" value="0" id="isexcel"/>
             </div>
 	    <div class="form-group"> 
                 <?php echo CHtml::dropDownList( 'search[dept]', $search['dept'], $this->getDeptArr(), array('onchange'=>'listgroup(this)')); ?>
@@ -35,7 +36,7 @@
                 <input type="text" class="form-control" name="search[etime]" value="<?php echo $search['etime'];?>" placeholder="" onClick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})">
             </div>
             <div class="form-group"> 
-                <button type="submit" class="btn btn-info form-control">
+                <button type="button" class="btn btn-info form-control" onclick="sub();">
                     <i class="icon-search"></i>
                     查询
                 </button>
@@ -46,6 +47,12 @@
                     取消筛选
                 </a>
             </div> 
+            <div class="form-group" style="float:right;"> 
+                <button type="button" class="btn btn-info form-control" onclick="exportToExcel()">
+                    <i class="icon-search"></i>
+                    导出excel
+                </button>
+            </div>
         <?php $this->endWidget(); ?>
         <div class="space-10"></div>
     </div>

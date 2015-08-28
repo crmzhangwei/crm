@@ -2,12 +2,19 @@
 
 class AfterController extends GController { 
     private $pageSize = 10; 
+    private $yeji_titles="序号,日期,工号,姓名,9至10,10至11,11至12,12至13,13至14,14至15,15至16,16至17,17至18,18至19,19至20,20至21\n";
+    private $yeji_title_keys = array('dial_time','eno','name','a9','a10','a11','a12','a13','a14','a15','a16','a17','a18','a19','a20');
+    private $newresource_titles = "序号,部门,合计,未处理的分类,未处理的分类%,3/4/5类,3/4/5类%,0类,0类%,1类,1类%,2类,2类%,3类,3类%,4类,4类%,5类,5类%,6类,6类%\n";
+    private $newresource_title_keys=array('dept_name','total','a','at','b','bt','a0','a0t','a1','a1t','a2','a2t','a3','a3t','a4','a4t','a5','a5t','a6','a6t');
+    private $renewals_titles="序号,客户名称,转换时间,金额\n";
+    private $renewals_title_keys=array("cust_name","convt_time","total_money");
     /**
      * 售后联系量统计报表 
      */
     public function actionYeji() {
         $page = max(Yii::app()->request->getParam('page'), 1);
         $search = Yii::app()->request->getParam("search");
+        $isexcel = Yii::app()->request->getParam("isexcel");
         if (empty($search)) {
             $search['stime'] = '';
             $search['etime'] = '';
@@ -53,33 +60,50 @@ SELECT
     DATE(FROM_UNIXTIME(d.dial_time)) dial_time,
     HOUR(FROM_UNIXTIME(d.dial_time)) AS hr
 FROM
-    c_dial_detail d,
-    c_users u
+    c_dial_detail d left join c_users u on d.eno = u.eno 
 WHERE
-    d.eno = u.eno 
+    1=1 
     $priv
     $wherestr            
     ) t 
     ) d where 1=1 group by d.eno,d.name,d.dial_time  
 EOF;
         
-        $result1 = Yii::app()->db->createCommand($sql)->query();
-        $pages = new CPagination($result1->rowCount);
+        $cnt = 0;
+        $result1 = Yii::app()->db->createCommand("select count(*) as cnt from ($sql) tmp")->queryRow(true);
+        if($result1&&  is_array($result1)){
+            $cnt = $result1['cnt'];
+        }
+        if ($isexcel) {
+            $result = Yii::app()->db->createCommand($sql);
+            $res = $result->queryAll();
+            $filename = "售后-联系量统计.csv";
+            header("Content-type:text/csv");
+            header("Content-Disposition:attachment;filename=" . $filename); 
+            echo iconv('utf-8','gb2312',$this->yeji_titles);
+            $c=1;
+            foreach($res as $record){
+                echo $c.",".iconv('utf-8','gb2312',Utils::array_to_string($this->yeji_title_keys,$record));
+                $c++;
+            } 
+        } else {
+            $pages = new CPagination($cnt);
+            $pages->params = $param;
+            //获取查询的条数
+            $pages->pageSize = $this->pageSize;
+            $result = Yii::app()->db->createCommand($sql . " LIMIT :offset,:limit");
+            $result->bindValue(':offset', $offset);
+            $result->bindValue(':limit', $pages->pageSize);
+            $res = $result->queryAll();
 
-        //获取查询的条数
-        $pages->pageSize = $this->pageSize; 
-        $result = Yii::app()->db->createCommand($sql . " LIMIT :offset,:limit");
-        $result->bindValue(':offset', $offset);
-        $result->bindValue(':limit', $pages->pageSize);
-        $res = $result->queryAll();
-
-        $data = array(
-            'pages' => $pages,
-            'total' => $result1->rowCount,
-            'list' => $res,
-            'search' => $search,
-        );
-        $this->render("yeji", $data);
+            $data = array(
+                'pages' => $pages,
+                'total' => $cnt,
+                'list' => $res,
+                'search' => $search,
+            );
+            $this->render("yeji", $data);
+        }
     }
     /**
      * 获取部门数组 
@@ -107,6 +131,7 @@ EOF;
     public function actionNewResource() {
         $page = max(Yii::app()->request->getParam('page'), 1);
         $search = Yii::app()->request->getParam("search");
+        $isexcel = Yii::app()->request->getParam("isexcel");
         if (empty($search)) {
             $search['stime'] = '';
             $search['etime'] = '';
@@ -152,46 +177,80 @@ from (
 SELECT 
     cust_id, 'N' AS cust_type_2, u.name, u.dept_id,a.assign_time  
 FROM
-    c_aftermarket_cust_info a,
-    c_users u
+    c_aftermarket_cust_info a left join c_users u on a.eno = u.eno
+    
 WHERE
-    a.eno = u.eno AND cust_type = 0 $priv
+    1=1 AND cust_type = 0 $priv
 UNION ALL SELECT 
     c.cust_id, c.cust_type_2, u.name, u.dept_id ,c.convt_time as assign_time
 FROM
-    c_cust_convt_detail c,
-    c_users u
+    c_cust_convt_detail c left join c_users u on c.user_id = u.id
+    
 WHERE
-    c.user_id = u.id AND c.lib_type = 3
+    1=1 AND c.lib_type = 3
         AND c.cust_type_1 = 0 $priv
 ) t where 1=1 $wherestr
 ) tb,c_dept_info d where tb.dept_id=d.id group by d.name
 EOF;
-        $criteria = new CDbCriteria();
-        $result1 = Yii::app()->db->createCommand($sql)->query();
-        $pages = new CPagination($result1->rowCount);
+        $criteria = new CDbCriteria(); 
+        $cnt = 0;
+        $result1 = Yii::app()->db->createCommand("select count(*) as cnt from ($sql) tmp")->queryRow(true);
+        if($result1&&  is_array($result1)){
+            $cnt = $result1['cnt'];
+        }
+        if ($isexcel) {
+            $result = Yii::app()->db->createCommand($sql);
+            $res = $result->queryAll();
+            $filename = "售后-新分资源跟踪分析.csv";
+            header("Content-type:text/csv");
+            header("Content-Disposition:attachment;filename=" . $filename); 
+            echo iconv('utf-8','gb2312',$this->newresource_titles);
+            $c=1;
+            foreach($res as $record){
+                echo $c.",".iconv('utf-8','gb2312',Utils::array_to_string($this->newresource_title_keys,$this->calNewResourceRecord($record)));
+                $c++;
+            } 
+        } else {
+            $pages = new CPagination($cnt);
+            $pages->params = $param;
+            //获取查询的条数
+            $pages->pageSize = $this->pageSize;
+            $pages->applyLimit($criteria);
+            $result = Yii::app()->db->createCommand($sql . " LIMIT :offset,:limit");
+            $result->bindValue(':offset', $pages->currentPage * $pages->pageSize);
+            $result->bindValue(':limit', $pages->pageSize);
+            $res = $result->queryAll();
 
-        //获取查询的条数
-        $pages->pageSize = $this->pageSize;
-        $pages->applyLimit($criteria);
-        $result = Yii::app()->db->createCommand($sql . " LIMIT :offset,:limit");
-        $result->bindValue(':offset', $pages->currentPage * $pages->pageSize);
-        $result->bindValue(':limit', $pages->pageSize);
-        $res = $result->queryAll();
 
-
-        $data = array(
-            'pages' => $pages,
-            'total' => $result1->rowCount,
-            'list' => $res,
-            'search' => $search,
-        );
-        $this->render("newResource", $data);
+            $data = array(
+                'pages' => $pages,
+                'total' => $cnt,
+                'list' => $res,
+                'search' => $search,
+            );
+            $this->render("newResource", $data);
+        }
     }
-    
+    private function calNewResourceRecord($v){
+        $newRecord = $v;
+        $newRecord['at']=$v['total']==0?'0%':number_format(100*$v['a']/$v['total'],2).'%';
+        $newRecord['bt']=$v['total']==0?'0%':number_format(100*$v['b']/$v['total'],2).'%'; 
+        $newRecord['a0t']=$v['total']==0?'0%':number_format(100*$v['a0']/$v['total'],2).'%';
+        $newRecord['a1t']=$v['total']==0?'0%':number_format(100*$v['a1']/$v['total'],2).'%';
+        $newRecord['a2t']=$v['total']==0?'0%':number_format(100*$v['a2']/$v['total'],2).'%';
+        $newRecord['a3t']=$v['total']==0?'0%':number_format(100*$v['a3']/$v['total'],2).'%';
+        $newRecord['a4t']=$v['total']==0?'0%':number_format(100*$v['a4']/$v['total'],2).'%';
+        $newRecord['a5t']=$v['total']==0?'0%':number_format(100*$v['a5']/$v['total'],2).'%';
+        $newRecord['a6t']=$v['total']==0?'0%':number_format(100*$v['a6']/$v['total'],2).'%'; 
+        return $newRecord;
+    }
+    /**
+     * 售后-续费会员分析
+     */
     public function actionRenewals(){
         $page = max(Yii::app()->request->getParam('page'), 1);
         $search = Yii::app()->request->getParam("search");
+        $isexcel = Yii::app()->request->getParam("isexcel");
         if (empty($search)) {
             $search['dept'] = '';
             $search['group'] = '';
@@ -233,25 +292,41 @@ WHERE
         $wherestr
 EOF;
         $criteria = new CDbCriteria();
-        $result1 = Yii::app()->db->createCommand($sql)->query();
-        $pages = new CPagination($result1->rowCount);
-
-        //获取查询的条数
-        $pages->pageSize = $this->pageSize;
-        $pages->applyLimit($criteria);
-        $result = Yii::app()->db->createCommand($sql . " LIMIT :offset,:limit");
-        $result->bindValue(':offset', $pages->currentPage * $pages->pageSize);
-        $result->bindValue(':limit', $pages->pageSize);
-        $res = $result->queryAll();
-
-
-        $data = array(
-            'pages' => $pages,
-            'total' => $result1->rowCount,
-            'list' => $res,
-            'search' => $search,
-        );
-        $this->render("renewals", $data);
+        $cnt=0;
+        $result1 = Yii::app()->db->createCommand("select count(*) as cnt from ($sql) tmp")->queryRow(true);
+        if($result1&&  is_array($result1)){
+            $cnt = $result1['cnt'];
+        }
+        if ($isexcel) {
+            $result = Yii::app()->db->createCommand($sql);
+            $res = $result->queryAll();
+            $filename = "售后-续费会员分析.csv";
+            header("Content-type:text/csv");
+            header("Content-Disposition:attachment;filename=" . $filename); 
+            echo iconv('utf-8','gb2312',$this->renewals_titles);
+            $c=1;
+            foreach($res as $record){
+                echo $c.",".iconv('utf-8','gb2312',Utils::array_to_string($this->renewals_title_keys,$record));
+                $c++;
+            } 
+        } else {
+            //获取查询的条数
+            $pages = new CPagination($cnt); 
+            $pages->pageSize = $this->pageSize;
+            $pages->params=$param;
+            $pages->applyLimit($criteria);
+            $result = Yii::app()->db->createCommand($sql . " LIMIT :offset,:limit");
+            $result->bindValue(':offset', $pages->currentPage * $pages->pageSize);
+            $result->bindValue(':limit', $pages->pageSize);
+            $res = $result->queryAll(); 
+            $data = array(
+                'pages' => $pages,
+                'total' => $cnt,
+                'list' => $res,
+                'search' => $search,
+            );
+            $this->render("renewals", $data);
+        }
     }
     public function actionTest(){
         echo date('Y-m-d H:i:s','1434703757');

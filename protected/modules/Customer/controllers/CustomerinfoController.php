@@ -474,4 +474,22 @@ class CustomerinfoController extends GController
 			echo 0;
 		}
 	}
+    public function get_diallong($data) {
+        $val = $data->dial_long;
+        /*
+        if ($val == 0&&!empty($data->uid)&&$data->isok==1) {
+            $dt = date("Y_n_j", $data->dial_time);
+            $table = "cdro_" . $dt;
+            $calldate = date("Y-m-d H", $data->dial_time);
+            $sql = "select uniqueid,billsec,userfield from $table where src=:ext and dst=:phone and DATE_FORMAT(calldate,'%Y-%m-%d %H')=:calldate order by calldate desc limit 1";
+            $result = Yii::app()->db3->createCommand($sql)->queryRow(true, array(":ext" => $data->extend_no, ":phone" => $data->phone, ":calldate" => $calldate));
+            if (!empty($result) && is_array($result)) {
+                $val = $result['billsec'];
+                $sql = "update {{dial_detail}} set dial_long=:dial_long,record_path=:path,uid=:uid where id=:id";
+                Yii::app()->db->createCommand($sql)->execute(array(":dial_long" => $result['billsec'], ":path" => $result['userfield'],":uid"=>$result['uniqueid'], ":id" => $data->id));
+            }
+        }*/ 
+        return $val;
+    }
+
 }

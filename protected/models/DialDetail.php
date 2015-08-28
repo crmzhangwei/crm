@@ -135,7 +135,7 @@ class DialDetail extends CActiveRecord {
         }
         $criteria->join = " left join {{customer_info}} c on t.cust_id=c.id" .
                 " left join {{users}} u on t.eno=u.eno";
-        $criteria->select = "t.id,u.name as user_name,c.cust_name,t.phone,t.dial_time,t.dial_long,t.record_path";
+        $criteria->select = "t.id,t.uid,t.extend_no,u.name as user_name,c.cust_name,t.phone,t.dial_time,t.dial_long,t.record_path";
         $sort = new CSort();
         $sort->attributes = array(
             'defaultOrder' => 't.id desc',

@@ -5,6 +5,14 @@ class TraceController extends GController {
     private $pageSize = 10;
     private $cat34_titles = "序号,组别,合计,0类,1类,2类,3类,4类,5类,6类\n";
     private $cat34_title_keys = array('group_name','total','a0','a1','a2','a3','a4','a5','a6');
+    private $timeanalyse_titles = "序号,下次联系时间,0类,1类,2类,3类,4类,5类,6类,7类,8类,9类\n";
+    private $timeanalyse_title_keys = array('next_time','a0','a1','a2','a3','a4','a5','a6','a7','a8','a9');
+    private $trans_titles = "序号,成交师,合计,10类,11类,12类,13类,14类,15类,16类,17类,17类%\n";
+    private $trans_title_keys = array('name','total','a10','a11','a12','a13','a14','a15','a16','a17','total17');
+    private $workanalyse_titles = "序号,日期,工号,姓名,呼出次数,呼出时长,首次通话时间\n";
+    private $workanalyse_title_keys = array('dial_time','eno','name','dial_num','dial_long','min_time');
+    private $newresource_titles = "序号,部门,合计,未处理的分类,未处理的分类%,3/4/5类,3/4/5类%,10类,10类%,0类,0类%,1类,1类%,2类,2类%,3类,3类%,4类,4类%,5类,5类%,6类,6类%\n";
+    private $newresource_title_keys = array('dept_name','total','a','at','b','bt','c','ct','a0','a0t','a1','a1t','a2','a2t','a3','a3t','a4','a4t','a5','a5t','a6','a6t');
 
     /**
      * 成交师开14,15,17类跟踪分析 
@@ -12,6 +20,7 @@ class TraceController extends GController {
     public function actionTrans() {
         $page = max(Yii::app()->request->getParam('page'), 1);
         $search = Yii::app()->request->getParam("search");
+        $isexcel = Yii::app()->request->getParam("isexcel");
         if (empty($search)) {
             $search['stime'] = '';
             $search['etime'] = '';
@@ -54,42 +63,61 @@ case when cust_type_1='N' then 1 else 0 end as a17,
 SELECT 
     distinct c.cust_id, c.cust_type_1,cust_type_2, u.name, u.dept_id,u.group_id, c.convt_time,u.eno
 FROM
-    c_cust_convt_detail c,
-    c_users u 
-WHERE
-    c.user_id = u.id AND c.lib_type = 2
+    c_cust_convt_detail c left join c_users u on c.user_id = u.id 
+WHERE  c.lib_type = 2
         AND  c.cust_type_2 =$ctype $priv
 union all 
 SELECT 
      distinct c.cust_id,'N' cust_type_1,cust_type_2, u.name, u.dept_id,u.group_id, c.convt_time,u.eno
 FROM
-    c_cust_convt_detail c,
-    c_users u 
+    c_cust_convt_detail c left join c_users u on c.user_id = u.id  
 WHERE
-    c.user_id = u.id AND c.lib_type = 2
+        c.lib_type = 2
         AND  c.cust_type_2 =17  $priv       
         
         ) t where 1=1 $wherestr
 ) tb where 1=1 group by  tb.name
 EOF;
 
-        $result1 = Yii::app()->db->createCommand($sql)->query();
-        $pages = new CPagination($result1->rowCount);
+        $cnt = 0;
+        $result1 = Yii::app()->db->createCommand("select count(*) as cnt from ($sql) tmp")->queryRow(true);
+        if($result1&&  is_array($result1)){
+            $cnt = $result1['cnt'];
+        }
+        if ($isexcel) {
+            $result = Yii::app()->db->createCommand($sql);
+            $res = $result->queryAll();
+            $filename = "成交师开14-15-17类跟踪分析.csv";
+            header("Content-type:text/csv");
+            header("Content-Disposition:attachment;filename=" . $filename); 
+            echo iconv('utf-8','gb2312',$this->trans_titles);
+            $c=1;
+            foreach($res as $record){
+                echo $c.",".iconv('utf-8','gb2312',Utils::array_to_string($this->trans_title_keys,$this->calTransRecord($record)));
+                $c++;
+            } 
+        } else {
+            $pages = new CPagination($cnt);
+            //获取查询的条数
+            $pages->pageSize = $this->pageSize;
+            $result = Yii::app()->db->createCommand($sql . " LIMIT :offset,:limit");
+            $result->bindValue(':offset', $offset);
+            $result->bindValue(':limit', $pages->pageSize);
+            $res = $result->queryAll();
 
-        //获取查询的条数
-        $pages->pageSize = $this->pageSize;
-        $result = Yii::app()->db->createCommand($sql . " LIMIT :offset,:limit");
-        $result->bindValue(':offset', $offset);
-        $result->bindValue(':limit', $pages->pageSize);
-        $res = $result->queryAll();
-
-        $data = array(
-            'pages' => $pages,
-            'total' => $result1->rowCount,
-            'list' => $res,
-            'search' => $search,
-        );
-        $this->render("trans", $data);
+            $data = array(
+                'pages' => $pages,
+                'total' => $cnt,
+                'list' => $res,
+                'search' => $search,
+            );
+            $this->render("trans", $data);
+        }
+    }
+    private function calTransRecord($v){
+        $newRecord = $v;
+        $newRecord['total17']=$v['total17']==0?'0%':number_format(100*$v['a17']/$v['total17'],2).'%';
+        return $newRecord;
     }
 
     /**
@@ -120,6 +148,7 @@ EOF;
     public function actionNewResource() {
         $page = max(Yii::app()->request->getParam('page'), 1);
         $search = Yii::app()->request->getParam("search");
+        $isexcel = Yii::app()->request->getParam("isexcel");
         if (empty($search)) {
             $search['stime'] = '';
             $search['etime'] = '';
@@ -166,43 +195,72 @@ from (
 SELECT 
      'N' AS cust_type_2, u.name, u.dept_id,a.assign_time  
 FROM
-    c_customer_info a,
-    c_users u
+    c_customer_info a left join c_users u on a.eno = u.eno
+    
 WHERE
-    a.eno = u.eno AND cust_type = 0 $priv
+    1=1 AND cust_type = 0 $priv
 UNION ALL SELECT 
      c.cust_type_2, u.name, u.dept_id ,c.convt_time as assign_time
 FROM
-    c_cust_convt_detail c,
-    c_users u
+    c_cust_convt_detail c left join c_users u on c.user_id = u.id
+    
 WHERE
-    c.user_id = u.id AND c.lib_type = 1
+    1=1 AND c.lib_type = 1
         AND c.cust_type_1 = 0 $priv
 ) t where 1=1 $wherestr
 ) tb,c_dept_info d where tb.dept_id=d.id group by d.name
 EOF;
         $criteria = new CDbCriteria();
-        $result1 = Yii::app()->db->createCommand($sql)->query();
-        $pages = new CPagination($result1->rowCount);
-
-        //获取查询的条数
-        $pages->pageSize = $this->pageSize;
-        $pages->applyLimit($criteria);
-        $result = Yii::app()->db->createCommand($sql . " LIMIT :offset,:limit");
-        $result->bindValue(':offset', $pages->currentPage * $pages->pageSize);
-        $result->bindValue(':limit', $pages->pageSize);
-        $res = $result->queryAll();
-
-
-        $data = array(
-            'pages' => $pages,
-            'total' => $result1->rowCount,
-            'list' => $res,
-            'search' => $search,
-        );
-        $this->render("newresource", $data);
+        $result1 = Yii::app()->db->createCommand("select count(*) as cnt from ($sql) tmp")->queryRow(true);
+        if($result1&&  is_array($result1)){
+            $cnt = $result1['cnt'];
+        }
+        
+        if ($isexcel) {
+            $result = Yii::app()->db->createCommand($sql);
+            $res = $result->queryAll();
+            $filename = "新分资源分析.csv";
+            header("Content-type:text/csv");
+            header("Content-Disposition:attachment;filename=" . $filename); 
+            echo iconv('utf-8','gb2312',$this->newresource_titles);
+            $c=1;
+            foreach($res as $record){
+                echo $c.",".iconv('utf-8','gb2312',Utils::array_to_string($this->newresource_title_keys,$this->calNewResourceRecord($record)));
+                $c++;
+            } 
+        } else { 
+            //获取查询的条数
+            $pages = new CPagination($cnt);
+            $pages->params = $param;
+            $pages->pageSize = $this->pageSize;
+            $pages->applyLimit($criteria);
+            $result = Yii::app()->db->createCommand($sql . " LIMIT :offset,:limit");
+            $result->bindValue(':offset', $pages->currentPage * $pages->pageSize);
+            $result->bindValue(':limit', $pages->pageSize);
+            $res = $result->queryAll(); 
+            $data = array(
+                'pages' => $pages,
+                'total' => $cnt,
+                'list' =>  $res,
+                'search' => $search,
+            );
+            $this->render("newresource", $data);
+        }
     }
-
+    private function calNewResourceRecord($v){
+        $newRecord = $v;
+        $newRecord['at']=$v['total']==0?'0%':number_format(100*$v['a']/$v['total'],2).'%';
+        $newRecord['bt']=$v['total']==0?'0%':number_format(100*$v['b']/$v['total'],2).'%';
+        $newRecord['ct']=$v['total']==0?'0%':number_format(100*$v['c']/$v['total'],2).'%';
+        $newRecord['a0t']=$v['total']==0?'0%':number_format(100*$v['a0']/$v['total'],2).'%';
+        $newRecord['a1t']=$v['total']==0?'0%':number_format(100*$v['a1']/$v['total'],2).'%';
+        $newRecord['a2t']=$v['total']==0?'0%':number_format(100*$v['a2']/$v['total'],2).'%';
+        $newRecord['a3t']=$v['total']==0?'0%':number_format(100*$v['a3']/$v['total'],2).'%';
+        $newRecord['a4t']=$v['total']==0?'0%':number_format(100*$v['a4']/$v['total'],2).'%';
+        $newRecord['a5t']=$v['total']==0?'0%':number_format(100*$v['a5']/$v['total'],2).'%';
+        $newRecord['a6t']=$v['total']==0?'0%':number_format(100*$v['a6']/$v['total'],2).'%'; 
+        return $newRecord;
+    }
     /**
      * 开3，开4跟踪分析
      */
@@ -305,6 +363,7 @@ EOF;
      */
     public function actionTimeanalyse() {
         $search = Yii::app()->request->getParam("search");
+        $isexcel = Yii::app()->request->getParam("isexcel");
         if (empty($search)) {
             $search['dept'] = '';
             $search['group'] = '';
@@ -380,12 +439,51 @@ EOF;
         $result = Yii::app()->db->createCommand($sql);
         $res = $result->queryAll();
         $days = count($res);
-        $data = array(
-            'list' => $res,
-            'search' => $search,
-            'days' => $days
-        );
-        $this->render("timeanalyse", $data);
+        if ($isexcel) { 
+            $filename = "安排时间分布.csv";
+            header("Content-type:text/csv");
+            header("Content-Disposition:attachment;filename=" . $filename); 
+            echo iconv('utf-8','gb2312',$this->timeanalyse_titles);
+            $c=1;
+            foreach($res as $record){
+                echo $c.",".iconv('utf-8','gb2312',Utils::array_to_string($this->timeanalyse_title_keys,$this->calRecordForTimeAnalyse($record,$days)));
+                $c++;
+            } 
+        } else {
+            $data = array(
+                'list' => $res,
+                'search' => $search,
+                'days' => $days
+            );
+            $this->render("timeanalyse", $data);
+        }
+    }
+    private function calRecordForTimeAnalyse($v,$days){
+        $newRecord = $v;
+        if($v['next_time']=='各成熟度资源占比'){
+            $newRecord['a0']=number_format($v['total']==0?'0':100*$v['a0']/$v['total'],2)."%";
+            $newRecord['a1']=number_format($v['total']==0?'0':100*$v['a1']/$v['total'],2)."%";
+            $newRecord['a2']=number_format($v['total']==0?'0':100*$v['a2']/$v['total'],2)."%";
+            $newRecord['a3']=number_format($v['total']==0?'0':100*$v['a3']/$v['total'],2)."%";
+            $newRecord['a4']=number_format($v['total']==0?'0':100*$v['a4']/$v['total'],2)."%";
+            $newRecord['a5']=number_format($v['total']==0?'0':100*$v['a5']/$v['total'],2)."%";
+            $newRecord['a6']=number_format($v['total']==0?'0':100*$v['a6']/$v['total'],2)."%";
+            $newRecord['a7']=number_format($v['total']==0?'0':100*$v['a7']/$v['total'],2)."%";
+            $newRecord['a8']=number_format($v['total']==0?'0':100*$v['a8']/$v['total'],2)."%";
+            $newRecord['a9']=number_format($v['total']==0?'0':100*$v['a9']/$v['total'],2)."%";
+        }else if($v['next_time']=='各成熟度人均库存'){
+            $newRecord['a0']=number_format($days==0?"0":$v['a0']/$days,2);
+            $newRecord['a1']=number_format($days==0?"0":$v['a0']/$days,2);
+            $newRecord['a2']=number_format($days==0?"0":$v['a0']/$days,2);
+            $newRecord['a3']=number_format($days==0?"0":$v['a0']/$days,2);
+            $newRecord['a4']=number_format($days==0?"0":$v['a0']/$days,2);
+            $newRecord['a5']=number_format($days==0?"0":$v['a0']/$days,2);
+            $newRecord['a6']=number_format($days==0?"0":$v['a0']/$days,2);
+            $newRecord['a7']=number_format($days==0?"0":$v['a0']/$days,2);
+            $newRecord['a8']=number_format($days==0?"0":$v['a0']/$days,2);
+            $newRecord['a9']=number_format($days==0?"0":$v['a0']/$days,2);
+        } 
+        return $newRecord;
     }
 
     /**
@@ -394,6 +492,7 @@ EOF;
     public function actionWorkanalyse() {
         $page = max(Yii::app()->request->getParam('page'), 1);
         $search = Yii::app()->request->getParam("search");
+        $isexcel = Yii::app()->request->getParam("isexcel");
         $param = array();
         if (empty($search)) {
             $search['stime'] = '';
@@ -452,31 +551,49 @@ FROM
             d.dial_time,
             d.dial_long
     FROM
-        crm.c_dial_detail d, c_users u
+        crm.c_dial_detail d left join c_users u on d.eno = u.eno
     WHERE
-        d.eno = u.eno $priv ) t
+        1=1 $priv ) t
 WHERE
     1 = 1 $wherestr
 GROUP BY t.eno , t.name
 EOF;
+        
+        $cnt=0;
+        $result1 = Yii::app()->db->createCommand("select count(*) as cnt from ($sql) tmp")->queryRow(true);
+        if($result1&&  is_array($result1)){
+            $cnt=$result1['cnt'];
+        }
+        if ($isexcel) {
+            $result = Yii::app()->db->createCommand($sql);
+            $res = $result->queryAll();
+            $filename = "话务员工作统计.csv";
+            header("Content-type:text/csv");
+            header("Content-Disposition:attachment;filename=" . $filename); 
+            echo iconv('utf-8','gb2312',$this->workanalyse_titles);
+            $c=1;
+            foreach($res as $record){
+                echo $c.",".iconv('utf-8','gb2312',Utils::array_to_string($this->workanalyse_title_keys,$record));
+                $c++;
+            } 
+        } else {
+            $pages = new CPagination($cnt);
+            $pages->params = $param;
+            //获取查询的条数
+            $pages->pageSize = $this->pageSize;
+            $result = Yii::app()->db->createCommand($sql . " LIMIT :offset,:limit");
+            $result->bindValue(':offset', $offset);
+            $result->bindValue(':limit', $pages->pageSize);
+            $res = $result->queryAll();
 
-        $result1 = Yii::app()->db->createCommand($sql)->query();
-        $pages = new CPagination($result1->rowCount);
-        $pages->params=$param;
-        //获取查询的条数
-        $pages->pageSize = $this->pageSize;
-        $result = Yii::app()->db->createCommand($sql . " LIMIT :offset,:limit");
-        $result->bindValue(':offset', $offset);
-        $result->bindValue(':limit', $pages->pageSize);
-        $res = $result->queryAll();
-
-        $data = array(
-            'pages' => $pages,
-            'total' => $result1->rowCount,
-            'list' => $res,
-            'search' => $search,
-        );
-        $this->render("workanalyse", $data);
+            $data = array(
+                'pages' => $pages,
+                'total' => $cnt,
+                'list' => $res,
+                'search' => $search,
+            );
+            $this->render("workanalyse", $data);
+        }
     }
 
     public function actionTest() {

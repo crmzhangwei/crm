@@ -18,6 +18,7 @@
             ),
         ));
         ?> 
+            <input type="hidden" name="isexcel" value="0" id="isexcel"/>
              <div class="form-group"> 
                 <?php echo CHtml::dropDownList( 'search[dept]', $search['dept'], $this->getDeptArr(), array('onchange'=>'listgroup(this)')); ?>
             </div>
@@ -25,7 +26,7 @@
                 <?php echo CHtml::dropDownList( 'search[group]', $search['group'], $this->getGroupArr($search['dept']), array('onchange'=>'listgroup(this)','id'=>'groupinfo')); ?>
             </div>
             <div class="form-group"> 
-                <button type="submit" class="btn btn-info form-control">
+                <button type="button" class="btn btn-info form-control" onclick="sub();">
                     <i class="icon-search"></i>
                     查询
                 </button>
@@ -36,6 +37,12 @@
                     取消筛选
                 </a>
             </div> 
+            <div class="form-group" style="float:right;"> 
+                <button type="button" class="btn btn-info form-control" onclick="exportToExcel()">
+                    <i class="icon-search"></i>
+                    导出excel
+                </button>
+            </div>
         <?php $this->endWidget(); ?>
         <div class="space-10"></div>
     </div>

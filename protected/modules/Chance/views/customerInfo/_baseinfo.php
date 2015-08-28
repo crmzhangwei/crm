@@ -87,7 +87,7 @@ function changeCustType(obj){
                         echo Utils::hidePhone($model->phone2);echo "&nbsp;";
                         echo CHtml::ajaxButton("拔打电话", Yii::app()->createUrl('Service/service/dial',array('cust_id'=>$model->id,'seq'=>'2')), array('success'=>'dial_ret'),array('class' => 'editNode btn btn-info btn-minier tooltip-info', 'data-placement' => "bottom"));
                         echo "&nbsp;";
-                        echo CHtml::button("发送短信", array('onclick'=>'javascript:sendMessage('.$model->id.',2)','class' => 'editNode btn btn-info btn-minier tooltip-info', 'data-placement' => "bottom"));
+                        //echo CHtml::button("发送短信", array('onclick'=>'javascript:sendMessage('.$model->id.',2)','class' => 'editNode btn btn-info btn-minier tooltip-info', 'data-placement' => "bottom"));
                     } 
                     ?> 
                     <?php 
