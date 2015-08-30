@@ -221,7 +221,9 @@ class CustomerInfo extends CActiveRecord
 					$criteria->params[':keyword'] = "%{$this->keyword}%";
 					break;
 				case 4:
-					$criteria->compare('phone', $this->keyword, true);
+					//$criteria->compare('phone', $this->keyword, true);
+					$phones = $this->keyword;
+					$criteria->addCondition(" phone='$phones' or phone2='$phones' or phone3='$phones' or phone4='$phones' or phone5='$phones'"); //查询条件 
 					break;
 				case 5:
 					$criteria->compare('qq', $this->keyword, true);

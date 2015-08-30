@@ -491,5 +491,20 @@ class CustomerinfoController extends GController
         }*/ 
         return $val;
     }
-
+	
+	public function actionUpdatenum(){
+		$userArr = array();
+		$u_info = Users::model()->findAll();
+		foreach ($u_info as $v) {
+			$userArr[$v->eno] = $v->cust_num;
+		}
+		foreach ($userArr as $k1 => $v1) {
+			$cust_num = CustomerInfo::model()->findAllBySql("select count(*) as id from c_customer_info where eno='$k1' and `status`<>2");
+			$num = $cust_num[0]['id'];
+			if($v1 != $num){
+				Users::model()->updateAll(array('cust_num'=>$num),'eno=:eno',array(':eno'=>"$k1"));
+			}
+		}	
+		echo '更新成功';
+	}
 }
