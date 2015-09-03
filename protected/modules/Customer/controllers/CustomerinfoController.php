@@ -50,10 +50,13 @@ class CustomerinfoController extends GController
 			$model->create_time = time();
 			$model->creator = Yii::app()->user->id;
 			$model->cust_type = 0;	//客户分类默认为0
+			$model->phone = trim($model->phone);
+			$model->phone2 = trim($model->phone2);
+			$model->phone3 = trim($model->phone3);
+			$model->phone4 = trim($model->phone4);
+			$model->phone5 = trim($model->phone5);
  		   if($model->save()){
 				Yii::app()->db->createCommand()->update('{{users}}',array('cust_num' =>new CDbExpression('cust_num+1')),"eno='{$model->eno}'");
-				//Users::model()->updateAll(array('cust_num'=>'cust_num+1'),'eno=:eno',array(":eno"=>$model->eno)); 
-				//exit("<script>alert(\"恭喜你, 成功添加一条记录。\");javascript:history.go(-1);</script>");
 				Utils::showMsg (1, '增加成功!');
 			}else{
 				$errors = $model->getErrors();
@@ -97,7 +100,6 @@ class CustomerinfoController extends GController
 		$model=$this->loadModel($id);
 		$eno = $model->eno ?$model->eno :0;
 		$param['eno'] = (string)$eno;
-		
 		$userinfo = Users::model()->findByAttributes($param);
 		$user_info['group_id'] = $userinfo?$userinfo->group_id:0;
 		$user_info['dept_id']  = $userinfo?$userinfo->dept_id:0;
@@ -281,7 +283,7 @@ class CustomerinfoController extends GController
 							$v[0] = date('Y-m-d', $create_time);
 						}
 						if ($v[1]){
-							$phone = $v[1];
+							$phone = trim($v[1]);
 							$phoneSQL = "select cust_name from c_customer_info where (phone='$phone' or phone2='$phone' or phone3='$phone' or phone4='$phone' or phone5='$phone') and status<>2";
 							$ret = Yii::app()->db->createCommand($phoneSQL)->execute();
 							if($ret){
@@ -292,7 +294,8 @@ class CustomerinfoController extends GController
 							}
 						}
 						$eno = $userArr[$v[5]];
-	        			$sql .= "('{$v[0]}','{$v[1]}','{$v[2]}','{$v[3]}','{$v[4]}', $creator, $create_time,'$eno','$assign_eno',$assign_time),";
+						$phones = trim($v[1]);
+	        			$sql .= "('{$v[0]}','$phones','{$v[2]}','{$v[3]}','{$v[4]}', $creator, $create_time,'$eno','$assign_eno',$assign_time),";
 						$usql .= "update {{users}} set cust_num=cust_num+1 where eno='$eno';";	
 						$i++;
 					}	

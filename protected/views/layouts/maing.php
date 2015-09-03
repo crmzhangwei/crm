@@ -142,7 +142,7 @@
 					var idLeng = idArr.length;
 					if(idLeng){
 						document.getElementById("winpop").style.display = "block";
-						document.getElementById("winpop_con").innerHTML = "你有"+idLeng+"个新分资源, 点击 <a onclick='close_pop(1)' target='_blank' href='./index.php?r=Customer/customerinfo/admin&customerId="+customerIds+"'>查看</a>";
+						document.getElementById("winpop_con").innerHTML = "你有新分资源, 点击 <a onclick='close_pop()' target='_blank' href='./index.php?r=Customer/customerinfo/admin&customerId="+customerIds+"'>查看</a>";
 					}
 				}
 			}
