@@ -417,6 +417,9 @@ class CustomerinfoController extends GController
 	public function get_assign_time($data){
 		return $data->assign_time ? date("Y-m-d H:i:s",$data->assign_time) : '未分配';
 	}
+	public function get_next_time($data){
+		return $data->next_time ? date("Y-m-d H:i:s",$data->next_time) : '未安排';
+	}
 	/**
 	 *批量导入EXCEL模板文件下载
 	 */
@@ -502,7 +505,7 @@ class CustomerinfoController extends GController
 			$userArr[$v->eno] = $v->cust_num;
 		}
 		foreach ($userArr as $k1 => $v1) {
-			$cust_num = CustomerInfo::model()->findAllBySql("select count(*) as id from c_customer_info where eno='$k1' and `status`<>2");
+			$cust_num = CustomerInfo::model()->findAllBySql("select count(*) as id from c_customer_info where eno='$k1' and `status`<>2 and `status`<>1");
 			$num = $cust_num[0]['id'];
 			if($v1 != $num){
 				Users::model()->updateAll(array('cust_num'=>$num),'eno=:eno',array(':eno'=>"$k1"));

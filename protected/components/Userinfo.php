@@ -207,7 +207,24 @@ class Userinfo {
             return $cusId ? trim($cusId, ',') : '';
         }
     }
-
+	
+	/***
+	 * 下次联系时间提醒contact_tip
+	 */
+	public static function contact_tip($eno) {
+        if ($eno) {
+			$ftime = time()+15*60;
+			$stime = time();
+            $nextTime = Yii::app()->db->createCommand("select id from `{{customer_info}}` where eno=:eno and next_time>=:stime and next_time<:ftime")
+									->queryAll(TRUE, array(":eno" => $eno, ":stime"=>$stime, ":ftime"=>$ftime));
+            $cusId = '';
+            foreach ($nextTime as $k2 => $v2) {
+                $cusId .= $v2['id'] . ',';
+            }
+            return $cusId ? trim($cusId, ',') : '';
+        }
+    }
+	
     /**
      * 部门组别人员三级联动
      */

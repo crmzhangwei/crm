@@ -193,7 +193,7 @@ class CustomerInfo extends CActiveRecord
 		$criteria->compare('memo',$this->memo,true);
 		$criteria->compare('create_time',$this->create_time);
 		$criteria->compare('creator',$this->creator);
-		$criteria->addCondition("`status` <>'2'");  
+		$criteria->addCondition("`status` <>'2' and `status` <>'1'");  
 		if($this->customerId){
 			$criteria->addCondition("id in({$this->customerId})"); //查询条件 
 		}

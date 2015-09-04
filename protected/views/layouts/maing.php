@@ -20,10 +20,15 @@
         <![endif]-->
         <!-- ace settings handler -->
         <style type="text/css">
-			#winpop { width:200px; height:100px; position:fixed; right:0; bottom:0; border:1px solid #666; margin:0;  overflow:hidden; display:none}
+			#winpop { width:200px; height:75px; position:fixed; right:0; bottom:0; border:1px solid #666; margin:0;  overflow:hidden; display:none}
 			#winpop .title { width:100%; height:25px; line-height:20px; background:#FFCC00; font-weight:bold; text-align:center; font-size:12px;}
-			#winpop .con { width:100%; height:75px; line-height:80px; background:#F6F8FC; font-weight:bold; font-size:12px; color:#FF0000; text-align:center}
+			#winpop .con { width:100%; height:50px; line-height:50px; background:#F6F8FC; font-weight:bold; font-size:12px; color:#FF0000; text-align:center}
 			.close { position:absolute; right:4px; top:-1px; color:#053603; cursor:pointer}
+			
+			#winpop2 { width:200px; height:75px; position:fixed; right:0; bottom:77px; border:1px solid #666; margin:0;  overflow:hidden; display:none}
+			#winpop2 .title { width:100%; height:25px; line-height:20px; background:#FFCC00; font-weight:bold; text-align:center; font-size:12px;}
+			#winpop2 .con { width:100%; height:50px; line-height:50px; background:#F6F8FC; font-weight:bold; font-size:12px; color:#FF0000; text-align:center}
+			.close2 { position:absolute; right:4px; top:-1px; color:#053603; cursor:pointer}
 		</style>
         <script type="text/javascript">
             window.jQuery || document.write('<script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/js/jquery.min.js">'+'<'+"/script>");
@@ -96,8 +101,14 @@
                         </div>
                     </div>
 					<div id="winpop">
-						<div class="title">您有新的短消息！<span class="close" onclick="close_pop()">×</span></div>
+						<div class="title">新分资源提醒！<span class="close" onclick="close_pop()">×</span></div>
 						<div class="con" id="winpop_con">
+						</div>
+					</div>
+					
+					<div id="winpop2">
+						<div class="title">下次联系提醒！<span class="close2" onclick="close_pops()">×</span></div>
+						<div class="con" id="winpop_con2">
 						</div>
 					</div>
                 </div>
@@ -133,9 +144,10 @@
 
         <script src="<?php echo Yii::app()->request->baseUrl; ?>/assets/js/jquery-ui.min.js"></script>
 		<script type="text/javascript">
-			customerIds = "<?php echo Userinfo::newResource(Yii::app()->session["user"]['eno']) ;?>";
-			window.setInterval(up_winpop, 60000); 
+			
+			window.setInterval(up_winpop, 300000);
 			function up_winpop(){
+				customerIds = "<?php echo Userinfo::newResource(Yii::app()->session["user"]['eno']) ;?>";
 				if(customerIds){
 					var idArr = new Array(); //定义一数组 
 					idArr = customerIds.split(","); //字符分割 
@@ -163,6 +175,27 @@
 				}
 				customerIds = undefined;
 				return true;
+			}
+			
+			////////下次联系时间提醒(提前十五分钟提醒)
+			window.setInterval(contact_tip,900000);
+			function contact_tip(){
+				customer_id = "<?php echo Userinfo::contact_tip(Yii::app()->session["user"]['eno']) ;?>";
+				if(customer_id){
+					var id_Arr = new Array(); //定义一数组 
+					id_Arr = customer_id.split(","); //字符分割 
+					var idLeng = id_Arr.length;
+					if(idLeng){
+						document.getElementById("winpop2").style.display = "block";
+						document.getElementById("winpop_con2").innerHTML = "需15分钟内联系的资源, 点击 <a onclick='close_pops()' target='_blank' href='./index.php?r=Customer/customerinfo/admin&customerId="+customer_id+"'>查看</a>";
+					}
+				}
+			}
+			
+			function close_pops(obj){
+				if(!obj){
+					$("#winpop2").css("display","none");
+				}
 			}
 		</script>
         </body>
