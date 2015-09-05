@@ -490,15 +490,33 @@ class CustomerInfoController extends GController {
 
         $model = new CustomerInfo('search');
         $model->unsetAttributes();  // clear any default values
+        $userid = Yii::app()->user->id;
         if (isset($_GET['CustomerInfo'])) {
             $model->attributes = $_GET['CustomerInfo'];
             $model->cust_type_from = $_GET['CustomerInfo']['cust_type_from'];
             $model->cust_type_to = $_GET['CustomerInfo']['cust_type_to'];
             $model->contact_7_day = $_GET['CustomerInfo']['contact_7_day'];
+            $model->next_time_from = $_GET['CustomerInfo']['next_time_from'];
+            $model->next_time_to = $_GET['CustomerInfo']['next_time_to']; 
+            $_SESSION['_chance_search_condi_'.$userid]=$model; 
+        }else{ 
+            if(!empty($_SESSION['_chance_search_condi_'.$userid])){
+                $model = $_SESSION['_chance_search_condi_'.$userid];  
+            } 
         }
 
         //部门组别人员三级联动
-        $uInfo = Userinfo::secondlevel();
+        $info=array();
+        if(isset($_SESSION['_chance_search_condi_level_'.$userid])){
+                $info = $_SESSION['_chance_search_condi_level_'.$userid];  
+        } 
+        $uInfo = Userinfo::secondlevel($info);
+        $info=$uInfo['infoArr'];
+        if(!empty($info['dept'])||!empty($info['group'])||!empty($info['users'])){
+            unset($_SESSION['_chance_search_condi_level_'.$userid]);
+            $_SESSION['_chance_search_condi_level_'.$userid]=$info;  
+            
+        } 
         $this->render('admin', array(
             'model' => $model,
             'deptArr' => $uInfo['deptArr'],
