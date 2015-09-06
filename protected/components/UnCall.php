@@ -102,7 +102,7 @@ class UnCall {
             $phonenumber="0".$phonenumber;
             $sql = "update {{customer_info}} set $field='$phonenumber' where id=$cust_id";
             Yii::app()->db->createCommand($sql)->execute();
-        }
+        } 
         $result = $client->OnClickCall($user->extend_no, $phonenumber, ""); 
         $xml = simplexml_load_string($result);
         if ($xml&&((string) $xml->OnClickCall->Response) == 'Success') {
@@ -228,12 +228,21 @@ class UnCall {
         $client = new SoapClient($uncall['webservice']);
         $result = $client->popEvent($extend_no);
         $xml = simplexml_load_string($result);
-        if($xml&&(string)$xml->result == '1'){
+        if($xml&&(string)$xml->result == '1'&&(string)$xml->popEvent->status == 'callout'){
             $uid=(string)$xml->popEvent->uid;
-        }
+        } 
         return $uid;
     }
-    
+    public static function getUidByPop($dialdetail){
+        $uid="";
+        $sql = "select uid from {{pop}} where calla=:ext and callb=:phone order by activiation desc limit 1";
+        $result = Yii::app()->db3->createCommand($sql)->queryRow(TRUE, 
+                                                array(":ext" => $dialdetail->extend_no,":phone"=>$dialdetail->phone)); 
+        if (!empty($result) && is_array($result)) {
+            $uid = $result['uid'];
+        } 
+        return $uid;
+    }
     public static function getUid2($dialdetail) {
         $uid = '';  
         $curdate = date("Y_n_j");
