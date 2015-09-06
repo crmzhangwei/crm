@@ -82,7 +82,7 @@
                             <td><?php echo $v['eno']; ?></td>
                             <td><?php echo $v['name']; ?></td> 
                             <td><?php echo $v['dial_num']; ?></td> 
-                            <td><?php echo $v['dial_long']; ?></td> 
+                            <td><?php echo gmstrftime('%H:%M:%S',$v['dial_long']); ?></td> 
                             <td><?php echo $v['min_time']; ?></td>  
                         </tr>
                         <?php

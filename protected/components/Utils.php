@@ -387,5 +387,34 @@ class Utils {
         }
         return $arr;
     }
+    
+    public static function paraseSeconds($seconds){
+        $time="00:00:00";
+        if($seconds>0){
+            $second=$seconds%60;
+            $minute = intval(($seconds-$second)/60);
+            $hour=0;
+            if($minute>60){
+                $hour=intval($minute/60);
+                $minute=$minute%60;
+            } 
+           if($hour<10){
+               $time="0".$hour.":";
+           }else{
+               $time=$hour.":";
+           }
+           if($minute<10){
+               $time=$time."0".$minute.":";
+           }else{
+               $time=$time.$minute.":";
+           }
+           if($second<10){
+               $time=$time."0".$second;
+           }else{
+               $time=$time.$second;
+           }
+        }
+        return $time;
+    }
 
 }

@@ -228,19 +228,25 @@ class Userinfo {
     /**
      * 部门组别人员三级联动
      */
-    public static function secondlevel() {
+    public static function secondlevel($info=array()) {
         //部门 组别 二组联动
         $deptArr = Userinfo::getDept();
         $deptArr = array('0' => '--请选择部门--') + $deptArr;
         $groupArr = Userinfo::getGroupById(1);
         $groupArr = array('0' => '--请选择组别--') + $groupArr;
-
+        $userid = Yii::app()->user->id;
         $infoArr = array();
         $user_info = array();
         if (Yii::app()->request->getParam('search')) {
             $infoArr['dept'] = isset($_GET['search']['dept']) ? $_GET['search']['dept'] : 0;
             $infoArr['group'] = isset($_GET['search']['group']) ? $_GET['search']['group'] : 0;
             $infoArr['users'] = isset($_GET['search']['users']) ? $_GET['search']['users'] : 0;
+            $user_info['group_arr'] = Userinfo::getGroupById($infoArr['dept']);
+            $user_info['user_arr'] = Userinfo::getUserbygid($infoArr['group'], $infoArr['dept']);
+        } else if (!empty($info)) {
+            $infoArr['dept'] = isset($info['dept']) ? $info['dept'] : 0;
+            $infoArr['group'] = isset($info['group']) ? $info['group'] : 0;
+            $infoArr['users'] = isset($info['users']) ? $info['users'] : 0;
             $user_info['group_arr'] = Userinfo::getGroupById($infoArr['dept']);
             $user_info['user_arr'] = Userinfo::getUserbygid($infoArr['group'], $infoArr['dept']);
         } else {

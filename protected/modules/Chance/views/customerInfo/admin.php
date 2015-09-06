@@ -59,8 +59,10 @@ $form = $this->beginWidget('CActiveForm', array(
     <?php echo $form->label($model, 'cust_type'); ?>
     <?php echo $form->dropDownList($model, 'cust_type_from',$this->genCustTypeArray(), array('style' => "height:34px;")); ?>至
     <?php echo $form->dropDownList($model, 'cust_type_to', $this->genCustTypeArray(), array('style' => "height:34px;")); ?>
+    <br/>
     安排联系时间:
-    <?php echo $form->textField($model,'next_time',array('class'=>"Wdate", 'onClick'=>"WdatePicker({dateFmt:'yyyy-MM-dd'})",'style'=>'height:30px;')); ?>
+    <?php echo $form->textField($model,'next_time_from',array('class'=>"Wdate", 'onClick'=>"WdatePicker({dateFmt:'yyyy-MM-dd'})",'style'=>'height:30px;')); ?>至
+    <?php echo $form->textField($model,'next_time_to',array('class'=>"Wdate", 'onClick'=>"WdatePicker({dateFmt:'yyyy-MM-dd'})",'style'=>'height:30px;')); ?>
     <button class="btn btn-sm btn-primary" type="submit">
         <i class="icon-search"></i>
         搜 索
