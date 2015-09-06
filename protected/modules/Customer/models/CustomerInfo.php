@@ -179,7 +179,7 @@ class CustomerInfo extends CActiveRecord
 		$criteria->compare('corp_name',$this->corp_name,true);
 		$criteria->compare('shop_url',$this->shop_url,true);
 		$criteria->compare('shop_addr',$this->shop_addr,true);
-		$criteria->compare('phone',$this->phone,true);
+		//$criteria->compare('phone',$this->phone,true);
 		$criteria->compare('qq',$this->qq,true);
 		$criteria->compare('mail',$this->mail,true);
 		$criteria->compare('datafrom',$this->datafrom,true);
@@ -223,7 +223,7 @@ class CustomerInfo extends CActiveRecord
 				case 4:
 					//$criteria->compare('phone', $this->keyword, true);
 					$phones = $this->keyword;
-					$criteria->addCondition(" phone='$phones' or phone2='$phones' or phone3='$phones' or phone4='$phones' or phone5='$phones'"); //查询条件 
+					$criteria->addCondition(" phone like '%$phones%' or phone2 like '%$phones%' or phone3 like '%$phones%' or phone4 like '%$phones%' or phone5 like '%$phones%'"); //查询条件 
 					break;
 				case 5:
 					$criteria->compare('qq', $this->keyword, true);
