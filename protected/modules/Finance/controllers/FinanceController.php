@@ -393,8 +393,9 @@ class FinanceController extends GController {
     }
     */
     public function actionTest7(){
-         $curdate = date("Y_n_j");
-         echo $curdate;
+         echo Utils::paraseSeconds("6235");
+         echo "<br/>";
+         echo gmstrftime('%H:%M:%S',6235);
     }
      public function actionTest8(){
          echo UnCall::getPhoneZone("18589075189");

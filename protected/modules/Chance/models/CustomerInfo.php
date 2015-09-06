@@ -42,6 +42,8 @@ class CustomerInfo extends CActiveRecord {
     public $begintime;
     public $endtime;
     public $trans_user;
+    public $next_time_from;
+    public $next_time_to;
 
     /**
      * @return string the associated database table name
@@ -177,14 +179,33 @@ class CustomerInfo extends CActiveRecord {
         if ($this->iskey>-1) {
             $criteria->compare('iskey', $this->iskey);
         }
-        if ($this->next_time) {
-            $istartTime = strtotime($this->next_time);
-            $iendTime = $istartTime+86400; 
-            $criteria->addBetweenCondition('next_time', $istartTime, $iendTime); 
+        if ($this->next_time_from) {
+            $istartTime = strtotime($this->next_time_from); 
+            $criteria->addCondition("next_time>=$istartTime"); 
+        }
+        if($this->next_time_to){
+            $iendTime = strtotime($this->next_time_to); 
+            $criteria->addCondition("next_time<=$iendTime"); 
         }
         // $criteria->addCondition("eno = '".Yii::app()->user->identity->eno."'");
+        $sort = new CSort();
+        $sort->attributes=array(
+            'id' => array('asc' => 'id asc', 'desc' => 'id desc','default'=>'desc'),
+            'eno' => array('asc' => 'eno asc', 'desc' => 'eno desc'),
+            'cust_type' => array('asc' => 'cust_type asc', 'desc' => 'cust_type desc'),
+            'cust_name' => array('asc' => 'cust_name asc', 'desc' => 'cust_name desc'),
+            'shop_name' => array('asc' => 'shop_name asc', 'desc' => 'shop_name desc'),
+            'corp_name' => array('asc' => 'corp_name asc', 'desc' => 'corp_name desc'),
+            'category' => array('asc' => 'category asc', 'desc' => 'category desc'),
+            'assign_time' => array('asc' => 'assign_time asc', 'desc' => 'assign_time desc','default'=>'desc'),
+            'next_time' => array('asc' => 'next_time asc', 'desc' => 'next_time desc','default'=>'desc'),
+            'last_time' => array('asc' => 'last_time asc', 'desc' => 'last_time desc','default'=>'desc'),
+            'shop_addr' => array('asc' => 'shop_addr asc', 'desc' => 'shop_addr desc'),
+        );
+        $sort->defaultOrder=array("next_time"=>"desc");
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
+            'sort'=>$sort,
         ));
     }
 
