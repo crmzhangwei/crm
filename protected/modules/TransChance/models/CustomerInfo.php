@@ -41,6 +41,8 @@ class CustomerInfo extends CActiveRecord {
     public $begintime;
     public $endtime;
     public $trans_user;
+    public $next_time_from;
+    public $next_time_to;
 
     /**
      * @return string the associated database table name
@@ -184,8 +186,24 @@ class CustomerInfo extends CActiveRecord {
             $iendTime = $istartTime+86400;
             $criteria->addBetweenCondition('next_time', $istartTime, $iendTime); 
         }
+        $sort = new CSort();
+        $sort->attributes=array(
+            'id' => array('asc' => 't.id asc', 'desc' => 't.id desc','default'=>'desc'),
+            'eno' => array('asc' => 'tci.eno asc', 'desc' => 'tci.eno desc'),
+            'cust_type' => array('asc' => 'tci.cust_type asc', 'desc' => 'tci.cust_type desc'),
+            'cust_name' => array('asc' => 't.cust_name asc', 'desc' => 't.cust_name desc'),
+            'shop_name' => array('asc' => 't.shop_name asc', 'desc' => 't.shop_name desc'),
+            'corp_name' => array('asc' => 't.corp_name asc', 'desc' => 't.corp_name desc'),
+            'category' => array('asc' => 't.category asc', 'desc' => 't.category desc'),
+            'assign_time' => array('asc' => 'tci.assign_time asc', 'desc' => 'tci.assign_time desc','default'=>'desc'),
+            'next_time' => array('asc' => 'tci.next_time asc', 'desc' => 'tci.next_time desc','default'=>'desc'),
+            'last_time' => array('asc' => 't.last_time asc', 'desc' => 't.last_time desc','default'=>'desc'),
+            'shop_addr' => array('asc' => 't.shop_addr asc', 'desc' => 't.shop_addr desc'),
+        );
+        $sort->defaultOrder=array("next_time"=>"desc");
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
+            'sort'=>$sort,
         ));
     }
 

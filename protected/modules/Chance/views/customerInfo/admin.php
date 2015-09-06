@@ -82,6 +82,7 @@ $form = $this->beginWidget('CActiveForm', array(
         
         <?php echo CHtml::button('批量安排联系时间', array('class' => 'btn btn-sm btn-primary','onclick'=>'subNextTime();')); ?>
         <?php echo CHtml::button('合并客户', array('class' => 'btn btn-sm btn-primary','onclick'=>'subMerge();')); ?>
+        <?php echo CHtml::button('清除查询条件', array('class' => 'btn btn-sm btn-primary','onclick'=>'clearCondi();')); ?>
     </div>  
 </div>
 
@@ -182,6 +183,11 @@ $this->widget('GLinkPager', array('pages' => $dataProvider->getPagination(),));
     
     function subMerge(){
          var url = "<?php echo Yii::app()->controller->createUrl('customerInfo/merge');?>";
+         $("#form_1").attr('action',url);
+         $("#form_1").submit();
+    }
+    function clearCondi(){
+         var url = "<?php echo Yii::app()->controller->createUrl('customerInfo/clearcondi');?>";
          $("#form_1").attr('action',url);
          $("#form_1").submit();
     }

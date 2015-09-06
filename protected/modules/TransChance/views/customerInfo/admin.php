@@ -58,12 +58,14 @@ $form = $this->beginWidget('CActiveForm', array(
     <?php echo $form->label($model, 'cust_type'); ?>
     <?php echo $form->dropDownList($model, 'cust_type_from',$this->genCustTypeArray(), array('style' => "height:34px;")); ?>至
     <?php echo $form->dropDownList($model, 'cust_type_to', $this->genCustTypeArray(), array('style' => "height:34px;")); ?>
+    <br/>
     安排联系时间:
-    <?php echo $form->textField($model,'next_time',array('class'=>"Wdate", 'onClick'=>"WdatePicker({dateFmt:'yyyy-MM-dd'})",'style'=>'height:30px;')); ?>
+    <?php echo $form->textField($model,'next_time_from',array('class'=>"Wdate", 'onClick'=>"WdatePicker({dateFmt:'yyyy-MM-dd'})",'style'=>'height:30px;')); ?>至
+    <?php echo $form->textField($model,'next_time_to',array('class'=>"Wdate", 'onClick'=>"WdatePicker({dateFmt:'yyyy-MM-dd'})",'style'=>'height:30px;')); ?>
     <button class="btn btn-sm btn-primary" type="submit">
         <i class="icon-search"></i>
         搜 索
-    </button>
+    </button> 
 </div>
 
 <?php $this->endWidget(); ?>
@@ -78,6 +80,7 @@ $form = $this->beginWidget('CActiveForm', array(
     <div class="btn-group">
         <?php echo CHtml::button('批量安排联系时间', array('class' => 'btn btn-sm btn-primary','onclick'=>'subNextTime();')); ?>
         <?php echo CHtml::button('合并客户', array('class' => 'btn btn-sm btn-primary','onclick'=>'subMerge();')); ?>
+        <?php echo CHtml::button('清除查询条件', array('class' => 'btn btn-sm btn-primary','onclick'=>'clearCondi();')); ?>
     </div>  
 </div>
 <?php
@@ -168,15 +171,20 @@ $this->widget('GLinkPager', array('pages' => $dataProvider->getPagination(),));
     </div>
 </div>
 <script src="/static/js/secondlevel.js"></script>
-<script>
+<script> 
     function subNextTime(){
         var url = "<?php echo Yii::app()->controller->createUrl('customerInfo/assignNextTime');?>";
         $("#form_1").attr('action',url);
-        $("#form_1").submit();
+        $("#form_1").submit(); 
     }
     
     function subMerge(){
          var url = "<?php echo Yii::app()->controller->createUrl('customerInfo/merge');?>";
+         $("#form_1").attr('action',url);
+         $("#form_1").submit(); 
+    }
+    function clearCondi(){
+         var url = "<?php echo Yii::app()->controller->createUrl('customerInfo/clearcondi');?>";
          $("#form_1").attr('action',url);
          $("#form_1").submit();
     }

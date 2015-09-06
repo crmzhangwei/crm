@@ -498,9 +498,12 @@ class CustomerInfoController extends GController {
             $model->contact_7_day = $_GET['CustomerInfo']['contact_7_day'];
             $model->next_time_from = $_GET['CustomerInfo']['next_time_from'];
             $model->next_time_to = $_GET['CustomerInfo']['next_time_to']; 
+            if(isset($_SESSION['_chance_search_condi_'.$userid])){
+                unset($_SESSION['_chance_search_condi_'.$userid]);
+            }
             $_SESSION['_chance_search_condi_'.$userid]=$model; 
         }else{ 
-            if(!empty($_SESSION['_chance_search_condi_'.$userid])){
+            if(isset($_SESSION['_chance_search_condi_'.$userid])){
                 $model = $_SESSION['_chance_search_condi_'.$userid];  
             } 
         }
@@ -896,6 +899,13 @@ class CustomerInfoController extends GController {
 
     public function get_last_time($data) {
         return $data->last_time ? date("Y-m-d H:i:s", $data->last_time) : '';
+    }
+    
+    public function actionClearcondi(){
+        $userid = Yii::app()->user->id;
+        unset($_SESSION['_chance_search_condi_'.$userid]);
+        unset($_SESSION['_chance_search_condi_level_'.$userid]);
+        return $this->redirect($this->createAbsoluteUrl("admin"));
     }
 
 }
