@@ -106,6 +106,7 @@ $('.search-form form').submit(function(){
 		array('name'=>'eno', 'value'=>array($this, 'get_eno_text')),
 		array('name'=>'assign_eno', 'value'=>array($this, 'get_assign_text')),
 		array('name'=>'assign_time', 'value'=>array($this, 'get_assign_time'),),
+		array('name'=>'next_time', 'value'=>array($this, 'get_next_time'),),
 		/*array(
 			'class'=>'CButtonColumn',
 				//'deleteButtonOptions'=>array('style'=>'display:none'),
