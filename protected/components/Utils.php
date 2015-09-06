@@ -110,10 +110,12 @@ class Utils {
         $result = Utils::sendMessage($phone, $msg, $method);
         $xml = simplexml_load_string($result);
         $memo="";
+        $status=0;
         if ($xml && ((string) $xml->message) == 'ok') {
             $memo = "发送成功";
         } else {
             $memo = $xml->message;
+            $status=1;
         }
         $message = new Message();
         $message->setAttribute('cust_id', $cust_id);
@@ -121,7 +123,7 @@ class Utils {
         $message->setAttribute('content', $msg);
         $message->setAttribute('creator', Yii::app()->user->id);
         $message->setAttribute('create_time', time());
-        $message->setAttribute('status', $iret);
+        $message->setAttribute('status', $status);
         $message->setAttribute('memo', $memo);
         $message->save();
         return $message;
