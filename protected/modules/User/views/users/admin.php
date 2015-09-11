@@ -82,7 +82,7 @@ $this->widget('GGridView', array(
         array(
             'class' => 'CButtonColumn',
             'header' => '操作',
-            'template' => '{upda} {listen} {delete} ',
+            'template' => '{upda} {listen} ',
             'htmlOptions' => array(
                 'width' => '150',
                 'style' => 'text-align:center',
