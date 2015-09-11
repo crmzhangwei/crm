@@ -107,18 +107,107 @@ class Utils {
         if (empty($phone)) {
             return "客户电话不存在";
         }
-        $iret = Utils::sendMessage($phone, $msg, $method);
-
+        $result = Utils::sendMessage($phone, $msg, $method);
+        $xml = simplexml_load_string($result);
+        $memo="";
+        $status=0;
+        if ($xml && ((string) $xml->message) == 'ok') {
+            $memo = "发送成功";
+        } else {
+            $memo = $xml->message;
+            $status=1;
+        }
         $message = new Message();
         $message->setAttribute('cust_id', $cust_id);
         $message->setAttribute('phone', $phone);
         $message->setAttribute('content', $msg);
         $message->setAttribute('creator', Yii::app()->user->id);
         $message->setAttribute('create_time', time());
-        $message->setAttribute('status', $iret);
-        $message->setAttribute('memo', Yii::app()->params['SMS_RETURN_CODE'][$iret]);
+        $message->setAttribute('status', $status);
+        $message->setAttribute('memo', $memo);
         $message->save();
         return $message;
+    }
+
+    public static function sendMessage($phone, $msg) {
+        $sms = Yii::app()->params['SMS'];
+        $content = $msg . $sms['signature'];
+        $result = "";
+        if (!empty($phone) && substr($phone, 0, 1) == "0") {
+            $phone = substr($phone, 1);
+        }
+        $data = array(
+            'action' => 'send', 
+            'userid' => $sms['uid'], 
+            'account' => $sms['account'],
+            'password' => $sms['auth'],
+            'mobile' => $phone,
+            'content' => $content, 
+            'time' => '',
+            'extno' => ''    
+        );
+        return Utils::postSMS($sms['url'], $data);   //POST方式提交 
+    }
+
+    /**
+     * 
+     * @param type $url
+     * @param type $data
+     * @return 
+     * <returnsms>
+        <returnstatus>Success</returnstatus>
+        <message>ok</message>
+        <remainpoint>4977</remainpoint>
+        <taskid>8236763</taskid>
+        <successcounts>1</successcounts>
+     * </returnsms>
+     */
+    private static function postSMS($url, $data = '') {
+        $row = parse_url($url);
+        $host = $row['host'];
+        $port = isset($row['port']) ? $row['port'] : 80;
+        $file = $row['path'];
+        $post = "";
+        while (list($k, $v) = each($data)) {
+            $post .= rawurlencode($k) . "=" . rawurlencode($v) . "&"; //转URL标准码
+        }
+        $post = substr($post, 0, -1);
+        $len = strlen($post);
+        $fp = @fsockopen($host, $port, $errno, $errstr, 10);
+        if (!$fp) {
+            return "$errstr ($errno)\n";
+        } else {
+            $receive = '';
+            $out = "POST $file HTTP/1.1\r\n";
+            $out .= "Host: $host\r\n";
+            $out .= "Content-type: application/x-www-form-urlencoded\r\n";
+            $out .= "Connection: Close\r\n";
+            $out .= "Content-Length: $len\r\n\r\n";
+            $out .= $post;
+            fwrite($fp, $out);
+            while (!feof($fp)) {
+                $receive .= fgets($fp, 128);
+            }
+            fclose($fp);
+            $receive = explode("\r\n\r\n", $receive);
+            unset($receive[0]);
+            return implode("", $receive);
+        }
+    }
+
+    public static function sendMessage3($phone, $msg, $method = 'get') {
+        $sms = Yii::app()->params['SMS'];
+        if (!empty($phone) && substr($phone, 0, 1) == "0") {
+            $phone = substr($phone, 1);
+        }
+        $msg = $msg . $sms['signature'];
+        try {
+            $client = new soapclient($sms['url'], array('encoding' => 'utf-8'));
+            $result = $client->Submit($sms['uid'], $sms['auth'], $sms['accessCode'], $msg, $phone);
+            var_dump($result);
+        } catch (SoapFault $fault) {
+            echo "Error: ", $fault->faultcode, ", string: ", $fault->faultstring;
+        }
     }
 
     /**
@@ -128,12 +217,12 @@ class Utils {
      * @param type $method get/post
      * @return type $iReturnCode 状态码
      */
-    public static function sendMessage($phone, $msg, $method = 'get') {
+    public static function sendMessage2($phone, $msg, $method = 'get') {
         $content = urlencode($msg);
         $sms = Yii::app()->params['SMS'];
-        $result = ""; 
-        if(!empty($phone)&&substr($phone,0,1)=="0"){
-            $phone=substr($phone,1);
+        $result = "";
+        if (!empty($phone) && substr($phone, 0, 1) == "0") {
+            $phone = substr($phone, 1);
         }
         switch ($method) {
             case 'get':
@@ -141,13 +230,13 @@ class Utils {
                 $result = file_get_contents($sUrl);
                 break;
             case 'post':
-                $ch = curl_init(); 
-                $postdata = "expid=0&uid=" . $sms['uid'] . "&auth=" . $sms['auth'] . "&encode=" . $sms['encode'] . "&mobile=" . $phone . "&msg=" . $content; 
-                curl_setopt($ch, CURLOPT_URL, $sms['url']); 
+                $ch = curl_init();
+                $postdata = "expid=0&uid=" . $sms['uid'] . "&auth=" . $sms['auth'] . "&encode=" . $sms['encode'] . "&mobile=" . $phone . "&msg=" . $content;
+                curl_setopt($ch, CURLOPT_URL, $sms['url']);
                 $this_header = array("content-type: application/x-www-form-urlencoded;charset=UTF-8");
                 curl_setopt($ch, CURLOPT_HTTPHEADER, $this_header);
                 curl_setopt($ch, CURLOPT_POSTFIELDS, $postdata); // Post提交的数据包,好像不起作用,need to do  
-                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true); 
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
                 $result = curl_exec($ch);
                 curl_close($ch);
                 break;
@@ -380,8 +469,8 @@ class Utils {
         if (!empty($list)) {
             foreach ($list as $record) {
                 echo $record[$textField];
-                if(!empty($record[$valueField])&&!empty($record[$textField])){ 
-                    $arr[]=array($record[$valueField]=>$record[$textField]);
+                if (!empty($record[$valueField]) && !empty($record[$textField])) {
+                    $arr[] = array($record[$valueField] => $record[$textField]);
                 }
             }
         }

@@ -27,6 +27,7 @@ class DialDetail extends CActiveRecord {
         '谭玥',
         '牛祥莉',
         '罗香',
+        'jerry',
     );
     /**
      * @return string the associated database table name

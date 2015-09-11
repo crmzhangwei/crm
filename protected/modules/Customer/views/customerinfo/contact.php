@@ -63,7 +63,7 @@ $this->widget('GGridView', array(
         array('name' => 'phone', 'value' => 'substr_replace($data->phone,"****",3,4)'),
         array('name' => 'dial_time', 'value' => 'date("Y-m-d H:i:s",$data->dial_time)'),
         //'dial_long',
-        array('name'=>'dial_long', 'value'=>array($this, 'get_diallong')),
+        array('name'=>'dial_long', 'value'=>'gmstrftime("%H:%M:%S",$data->dial_long)'),
         array(
             'class' => 'CButtonColumn',
             'deleteButtonOptions' => array(),

@@ -27,10 +27,11 @@
             // controller action is handling ajax validation correctly.
             // There is a call to performAjaxValidation() commented in generated controller code.
             // See class documentation of CActiveForm for details on this.
-            'action' => Yii::app()->controller->createUrl('update', array('id' => $model->id)),
+            'action' => Yii::app()->controller->createUrl('update', array('id' => $model->id,'module'=>$module)),
             'enableAjaxValidation' => false,
         ));
         ?>
+        
         <div id="tabs-1" aria-labelledby="ui-id-29" class="ui-tabs-panel ui-widget-content ui-corner-bottom" role="tabpanel" aria-hidden="false" style="display: block;">
             <?php $this->renderPartial('_baseinfo', array('model' => $model, 'user' => $user, 'form' => $form)); ?>
             <br/>

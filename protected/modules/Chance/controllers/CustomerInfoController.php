@@ -49,11 +49,11 @@ class CustomerInfoController extends GController {
     }
 
     /**
-     * Updates a particular model.
-     * If update is successful, the browser will be redirected to the 'view' page.
+     *  
+     *  
      * @param integer $id the ID of the model to be updated
      */
-    public function actionUpdate2($id) {
+    public function actionUpdate2($id,$module) {
         $model = $this->loadModel($id);
 
         // Uncomment the following line if AJAX validation is needed
@@ -112,7 +112,7 @@ class CustomerInfoController extends GController {
                     'user' => $user,));
             } else {
                 $transaction->commit();
-                $this->render("result");
+                $this->redirect($this->createAbsoluteUrl($module));
                 return;
             }
         }
@@ -143,7 +143,7 @@ class CustomerInfoController extends GController {
         return $ret;
     }
 
-    public function actionUpdate($id) {
+    public function actionUpdate($id,$module) {
         $noteinfo = new NoteInfo();
         $noteinfo->setAttribute("iskey", 0);
         $noteinfo->setAttribute("isvalid", 1);
@@ -283,6 +283,7 @@ class CustomerInfoController extends GController {
             if (!$noteinfo->hasErrors() && !$model->hasErrors()) {
                 //提交事务
                 $transaction->commit();
+                /*
                 if ($newCustType == 6 || $newCustType == 9) {
                     //客户已经转入到成交师库或进入公海资源，跳转到成功页面
                     $this->render("result");
@@ -296,7 +297,9 @@ class CustomerInfoController extends GController {
                     $noteinfo->setAttribute("message_id", 0);
                     $noteinfo->setAttribute("next_contact", '');
                     $noteinfo->cust_id = $id;
-                }
+                    $this->redirect($this->createAbsoluteUrl("admin"));
+                }*/
+                $this->redirect($this->createAbsoluteUrl($module));
             } else {
                 //回滚事务
                 $transaction->rollback();
@@ -340,6 +343,7 @@ class CustomerInfoController extends GController {
                 'historyNote' => $historyNote,
                 'noteinfo' => $noteinfo,
                 'user' => $user,
+                'module'=>$module,
             ));
         } else {
             $this->render('update', array(
@@ -348,6 +352,7 @@ class CustomerInfoController extends GController {
                 'historyNote' => $historyNote,
                 'noteinfo' => $noteinfo,
                 'user' => $user,
+                'module'=>$module,
             ));
         }
     }
@@ -498,9 +503,12 @@ class CustomerInfoController extends GController {
             $model->contact_7_day = $_GET['CustomerInfo']['contact_7_day'];
             $model->next_time_from = $_GET['CustomerInfo']['next_time_from'];
             $model->next_time_to = $_GET['CustomerInfo']['next_time_to']; 
+            if(isset($_SESSION['_chance_search_condi_'.$userid])){
+                unset($_SESSION['_chance_search_condi_'.$userid]);
+            }
             $_SESSION['_chance_search_condi_'.$userid]=$model; 
         }else{ 
-            if(!empty($_SESSION['_chance_search_condi_'.$userid])){
+            if(isset($_SESSION['_chance_search_condi_'.$userid])){
                 $model = $_SESSION['_chance_search_condi_'.$userid];  
             } 
         }
@@ -537,14 +545,32 @@ class CustomerInfoController extends GController {
         $endtime = $begintime + 86400;
         $model->begintime = $begintime;
         $model->endtime = $endtime;
+        $userid = Yii::app()->user->id;
         if (isset($_GET['CustomerInfo'])) {
             $model->attributes = $_GET['CustomerInfo'];
             $model->cust_type_from = $_GET['CustomerInfo']['cust_type_from'];
             $model->cust_type_to = $_GET['CustomerInfo']['cust_type_to'];
             $model->contact_7_day = $_GET['CustomerInfo']['contact_7_day'];
+            if(isset($_SESSION['_chance_search_mylist_condi_'.$userid])){
+                unset($_SESSION['_chance_search_mylist_condi_'.$userid]);
+            }
+            $_SESSION['_chance_search_mylist_condi_'.$userid]=$model; 
+        }else{
+            if(isset($_SESSION['_chance_search_mylist_condi_'.$userid])){
+                $model = $_SESSION['_chance_search_mylist_condi_'.$userid];  
+            } 
         }
         //部门组别人员三级联动
-        $uInfo = Userinfo::secondlevel();
+        $info=array();
+        if(isset($_SESSION['_chance_search_mylist_condi_level_'.$userid])){
+                $info = $_SESSION['_chance_search_mylist_condi_level_'.$userid];  
+        } 
+        $uInfo = Userinfo::secondlevel($info);
+        $info=$uInfo['infoArr'];
+        if(!empty($info['dept'])||!empty($info['group'])||!empty($info['users'])){
+            unset($_SESSION['_chance_search_mylist_condi_level_'.$userid]);
+            $_SESSION['_chance_search_mylist_condi_level_'.$userid]=$info; 
+        }  
         $this->render('mylist', array(
             'model' => $model,
             'deptArr' => $uInfo['deptArr'],
@@ -561,14 +587,32 @@ class CustomerInfoController extends GController {
 
         $model = new CustomerInfo('search');
         $model->unsetAttributes();  // clear any default values
+        $userid = Yii::app()->user->id;
         if (isset($_GET['CustomerInfo'])) {
             $model->attributes = $_GET['CustomerInfo'];
             $model->cust_type_from = $_GET['CustomerInfo']['cust_type_from'];
             $model->cust_type_to = $_GET['CustomerInfo']['cust_type_to'];
             $model->contact_7_day = $_GET['CustomerInfo']['contact_7_day'];
+            if(isset($_SESSION['_chance_search_oldlist_condi_'.$userid])){
+                unset($_SESSION['_chance_search_oldlist_condi_'.$userid]);
+            }
+            $_SESSION['_chance_search_oldlist_condi_'.$userid]=$model; 
+        }else{
+            if(isset($_SESSION['_chance_search_oldlist_condi_'.$userid])){
+                $model = $_SESSION['_chance_search_oldlist_condi_'.$userid];  
+            } 
         }
         //部门组别人员三级联动
-        $uInfo = Userinfo::secondlevel();
+       $info=array();
+        if(isset($_SESSION['_chance_search_oldlist_condi_level_'.$userid])){
+                $info = $_SESSION['_chance_search_oldlist_condi_level_'.$userid];  
+        } 
+        $uInfo = Userinfo::secondlevel($info);
+        $info=$uInfo['infoArr'];
+        if(!empty($info['dept'])||!empty($info['group'])||!empty($info['users'])){
+            unset($_SESSION['_chance_search_oldlist_condi_level_'.$userid]);
+            $_SESSION['_chance_search_oldlist_condi_level_'.$userid]=$info; 
+        }  
         $this->render('oldlist', array(
             'model' => $model,
             'deptArr' => $uInfo['deptArr'],
@@ -897,5 +941,23 @@ class CustomerInfoController extends GController {
     public function get_last_time($data) {
         return $data->last_time ? date("Y-m-d H:i:s", $data->last_time) : '';
     }
-
+    
+    public function actionClearcondi(){
+        $userid = Yii::app()->user->id;
+        unset($_SESSION['_chance_search_condi_'.$userid]);
+        unset($_SESSION['_chance_search_condi_level_'.$userid]);
+        return $this->redirect($this->createAbsoluteUrl("admin"));
+    }
+    public function actionClearcondiForMyList(){
+        $userid = Yii::app()->user->id;
+        unset($_SESSION['_chance_search_mylist_condi_'.$userid]);
+        unset($_SESSION['_chance_search_mylist_condi_level_'.$userid]);
+        return $this->redirect($this->createAbsoluteUrl("todayList"));
+    }
+    public function actionClearcondiForOldList(){
+        $userid = Yii::app()->user->id;
+        unset($_SESSION['_chance_search_oldlist_condi_'.$userid]);
+        unset($_SESSION['_chance_search_oldlist_condi_level_'.$userid]);
+        return $this->redirect($this->createAbsoluteUrl("oldList"));
+    }
 }

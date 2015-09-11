@@ -92,7 +92,7 @@ class CustomerInfoController extends GController {
         return $ret;
     }
 
-    public function actionUpdate($id) {
+    public function actionUpdate($id,$module) {
         $noteinfo = new NoteInfo();
         $noteinfo->setAttribute("iskey", 0);
         $noteinfo->setAttribute("isvalid", 1);
@@ -232,7 +232,7 @@ class CustomerInfoController extends GController {
             if (!$noteinfo->hasErrors() && !$model->hasErrors()) {
                 //提交事务
                 $transaction->commit();
-                if ($newCustType == 17 || $newCustType == 18) {
+                /*if ($newCustType == 17 || $newCustType == 18) {
                     //客户已经转入到售后库或进入公海资源，跳转到成功页面
                     $this->render("result");
                     return;
@@ -245,7 +245,8 @@ class CustomerInfoController extends GController {
                     $noteinfo->setAttribute("message_id", 0);
                     $noteinfo->setAttribute("next_contact", '');
                     $noteinfo->cust_id = $id;
-                }
+                }*/
+                $this->redirect($this->createAbsoluteUrl($module));
             } else {
                 //回滚事务
                 $transaction->rollback();
@@ -281,6 +282,7 @@ class CustomerInfoController extends GController {
             'noteinfo' => $noteinfo,
             'contract' => $contract,
             'user' => $user,
+            'module'=>$module,
         ));
     }
 
@@ -422,15 +424,35 @@ class CustomerInfoController extends GController {
 
         $model = new CustomerInfo('search');
         $model->unsetAttributes();  // clear any default values
+        $userid = Yii::app()->user->id;
         if (isset($_GET['CustomerInfo'])) {
             $model->attributes = $_GET['CustomerInfo'];
             $model->cust_type_from = $_GET['CustomerInfo']['cust_type_from'];
             $model->cust_type_to = $_GET['CustomerInfo']['cust_type_to'];
             $model->contact_7_day = $_GET['CustomerInfo']['contact_7_day'];
+            $model->next_time_from = $_GET['CustomerInfo']['next_time_from'];
+            $model->next_time_to = $_GET['CustomerInfo']['next_time_to']; 
+            if(isset($_SESSION['_transchance_search_condi_'.$userid])){
+                unset($_SESSION['_transchance_search_condi_'.$userid]);
+            }
+            $_SESSION['_transchance_search_condi_'.$userid]=$model; 
+        }else{ 
+            if(isset($_SESSION['_transchance_search_condi_'.$userid])){
+                $model = $_SESSION['_transchance_search_condi_'.$userid];  
+            } 
         }
-
         //部门组别人员三级联动
-        $uInfo = Userinfo::secondlevel();
+        $info=array();
+        if(isset($_SESSION['_transchance_search_condi_level_'.$userid])){
+                $info = $_SESSION['_transchance_search_condi_level_'.$userid];  
+        } 
+        $uInfo = Userinfo::secondlevel($info);
+        $info=$uInfo['infoArr'];
+        if(!empty($info['dept'])||!empty($info['group'])||!empty($info['users'])){
+            unset($_SESSION['_transchance_search_condi_level_'.$userid]);
+            $_SESSION['_transchance_search_condi_level_'.$userid]=$info;  
+            
+        } 
         $this->render('admin', array(
             'model' => $model,
             'deptArr' => $uInfo['deptArr'],
@@ -451,15 +473,34 @@ class CustomerInfoController extends GController {
         $endtime = $begintime + 86400;
         $model->begintime = $begintime;
         $model->endtime = $endtime;
+        $userid = Yii::app()->user->id;
         if (isset($_GET['CustomerInfo'])) {
             $model->attributes = $_GET['CustomerInfo'];
             $model->cust_type_from = $_GET['CustomerInfo']['cust_type_from'];
             $model->cust_type_to = $_GET['CustomerInfo']['cust_type_to'];
             $model->contact_7_day = $_GET['CustomerInfo']['contact_7_day'];
+            if(isset($_SESSION['_transchance_search_mylist_condi_'.$userid])){
+                unset($_SESSION['_transchance_search_mylist_condi_'.$userid]);
+            }
+            $_SESSION['_transchance_search_mylist_condi_'.$userid]=$model; 
+        }else{ 
+            if(isset($_SESSION['_transchance_search_mylist_condi_'.$userid])){
+                $model = $_SESSION['_transchance_search_mylist_condi_'.$userid];  
+            } 
         }
 
         //部门组别人员三级联动
-        $uInfo = Userinfo::secondlevel();
+        $info=array();
+        if(isset($_SESSION['_transchance_search_mylist_condi_level_'.$userid])){
+                $info = $_SESSION['_transchance_search_mylist_condi_level_'.$userid];  
+        } 
+        $uInfo = Userinfo::secondlevel($info);
+        $info=$uInfo['infoArr'];
+        if(!empty($info['dept'])||!empty($info['group'])||!empty($info['users'])){
+            unset($_SESSION['_transchance_search_mylist_condi_level_'.$userid]);
+            $_SESSION['_transchance_search_mylist_condi_level_'.$userid]=$info;  
+            
+        } 
         $this->render('mylist', array(
             'model' => $model,
             'deptArr' => $uInfo['deptArr'],
@@ -476,14 +517,33 @@ class CustomerInfoController extends GController {
 
         $model = new CustomerInfo('search');
         $model->unsetAttributes();  // clear any default values
+        $userid = Yii::app()->user->id;
         if (isset($_GET['CustomerInfo'])) {
             $model->attributes = $_GET['CustomerInfo'];
             $model->cust_type_from = $_GET['CustomerInfo']['cust_type_from'];
             $model->cust_type_to = $_GET['CustomerInfo']['cust_type_to'];
             $model->contact_7_day = $_GET['CustomerInfo']['contact_7_day'];
+            if(isset($_SESSION['_transchance_search_oldlist_condi_'.$userid])){
+                unset($_SESSION['_transchance_search_oldlist_condi_'.$userid]);
+            }
+            $_SESSION['_transchance_search_oldlist_condi_'.$userid]=$model; 
+        }else{ 
+            if(isset($_SESSION['_transchance_search_oldlist_condi_'.$userid])){
+                $model = $_SESSION['_transchance_search_oldlist_condi_'.$userid];  
+            } 
         }
         //部门组别人员三级联动
-        $uInfo = Userinfo::secondlevel();
+        $info=array();
+        if(isset($_SESSION['_transchance_search_oldlist_condi_level_'.$userid])){
+                $info = $_SESSION['_transchance_search_oldlist_condi_level_'.$userid];  
+        } 
+        $uInfo = Userinfo::secondlevel($info);
+        $info=$uInfo['infoArr'];
+        if(!empty($info['dept'])||!empty($info['group'])||!empty($info['users'])){
+            unset($_SESSION['_transchance_search_oldlist_condi_level_'.$userid]);
+            $_SESSION['_transchance_search_oldlist_condi_level_'.$userid]=$info;  
+            
+        } 
         $this->render('oldlist', array(
             'model' => $model,
             'deptArr' => $uInfo['deptArr'],
@@ -791,5 +851,23 @@ class CustomerInfoController extends GController {
             'custlist' => $list)
         );
     }
-
+    public function actionClearcondi(){
+        $userid = Yii::app()->user->id;
+        unset($_SESSION['_transchance_search_condi_'.$userid]);
+        unset($_SESSION['_transchance_search_condi_level_'.$userid]);
+        return $this->redirect($this->createAbsoluteUrl("admin"));
+    }
+    
+    public function actionClearcondiForMyList(){
+        $userid = Yii::app()->user->id;
+        unset($_SESSION['_transchance_search_mylist_condi_'.$userid]);
+        unset($_SESSION['_transchance_search_mylist_condi_level_'.$userid]);
+        return $this->redirect($this->createAbsoluteUrl("todayList"));
+    }
+    public function actionClearcondiForOldList(){
+        $userid = Yii::app()->user->id;
+        unset($_SESSION['_transchance_search_oldlist_condi_'.$userid]);
+        unset($_SESSION['_transchance_search_oldlist_condi_level_'.$userid]);
+        return $this->redirect($this->createAbsoluteUrl("oldList"));
+    }
 }

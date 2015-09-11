@@ -71,7 +71,7 @@ $form = $this->beginWidget('CActiveForm', array(
 
 <?php $this->endWidget(); ?>
 <?php
-$form = $this->beginWidget('CActiveForm', array(
+$form1 = $this->beginWidget('CActiveForm', array(
     'action' => Yii::app()->createUrl('Chance/customerInfo/assignNextTime'),
     'method' => 'post',
     'id' =>'form_1'
@@ -82,6 +82,7 @@ $form = $this->beginWidget('CActiveForm', array(
         
         <?php echo CHtml::button('批量安排联系时间', array('class' => 'btn btn-sm btn-primary','onclick'=>'subNextTime();')); ?>
         <?php echo CHtml::button('合并客户', array('class' => 'btn btn-sm btn-primary','onclick'=>'subMerge();')); ?>
+        <?php echo CHtml::button('清除查询条件', array('class' => 'btn btn-sm btn-primary','onclick'=>'clearCondi();')); ?>
     </div>  
 </div>
 
@@ -151,7 +152,7 @@ $this->widget('GGridView', array(
             'buttons' => array(
                 'upda' => array(
                     'label' => '查看客户详情',
-                    'url' => 'Yii::app()->controller->createUrl("update",array("id"=>$data->primaryKey))',
+                    'url' => 'Yii::app()->controller->createUrl("update",array("id"=>$data->primaryKey,"module"=>"admin"))',
                     'imageUrl' => '',
                     'options' => array('class' => 'editNode btn btn-info btn-minier tooltip-info', 'data-placement' => "bottom"),
                 ),
@@ -182,6 +183,11 @@ $this->widget('GLinkPager', array('pages' => $dataProvider->getPagination(),));
     
     function subMerge(){
          var url = "<?php echo Yii::app()->controller->createUrl('customerInfo/merge');?>";
+         $("#form_1").attr('action',url);
+         $("#form_1").submit();
+    }
+    function clearCondi(){
+         var url = "<?php echo Yii::app()->controller->createUrl('customerInfo/clearcondi');?>";
          $("#form_1").attr('action',url);
          $("#form_1").submit();
     }
