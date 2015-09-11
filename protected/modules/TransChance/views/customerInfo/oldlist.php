@@ -66,6 +66,19 @@ $form = $this->beginWidget('CActiveForm', array(
 
 <?php $this->endWidget(); ?>
 <?php
+$form1 = $this->beginWidget('CActiveForm', array(
+    'action' => Yii::app()->createUrl('TransChance/customerInfo/clearcondiForOldList'),
+    'method' => 'post',
+    'id' =>'form_1'
+        ));
+?>
+<div class="form-group">
+    <div class="btn-group"> 
+        <?php echo CHtml::submitButton('清除查询条件', array('class' => 'btn btn-sm btn-primary')); ?>
+    </div>  
+</div>
+<?php $this->endWidget(); ?>
+<?php
 $dataProvider=$model->searchOldList();
 $this->widget('GGridView', array(
     'id' => 'customer-info-grid',
@@ -132,7 +145,7 @@ $this->widget('GGridView', array(
             'buttons' => array(
                 'upda' => array(
                     'label' => '查看客户详情',
-                    'url' => 'Yii::app()->controller->createUrl("update",array("id"=>$data->primaryKey))',
+                    'url' => 'Yii::app()->controller->createUrl("update",array("id"=>$data->primaryKey,"module"=>"oldlist"))',
                     'imageUrl' => '',
                     'options' => array('class' => 'editNode btn btn-info btn-minier tooltip-info', 'data-placement' => "bottom"),
                 ),

@@ -47,7 +47,7 @@ class NoteInfo extends CActiveRecord
 			array('cust_id, eno, create_time,next_contact', 'required'),
                         //array('next_contact','compare','on'=>array('insert','update'),'compareAttribute'=>'last_time','operator'=>'>'),
 			array('cust_id, isvalid, iskey, next_contact, dial_id, eno, create_time', 'numerical', 'integerOnly'=>true),
-			array('cust_info, requirement, service, dissent, next_followup, memo', 'length', 'max'=>200), 
+			array('cust_info, requirement, service, dissent, next_followup, memo', 'length', 'max'=>500), 
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
 			array('id, cust_id, cust_info, requirement, service, dissent, next_followup, memo, isvalid, iskey, next_contact, dial_id, eno, create_time', 'safe', 'on'=>'search'),

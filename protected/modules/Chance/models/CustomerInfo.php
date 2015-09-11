@@ -60,7 +60,7 @@ class CustomerInfo extends CActiveRecord {
         // will receive user inputs.
         return array( 
             array('category, cust_type, iskey, status, creator', 'numerical', 'integerOnly' => true),
-            array('cust_name, shop_name, corp_name, shop_url, shop_addr, datafrom, memo', 'length', 'max' => 100),
+            array('cust_name, shop_name, corp_name, shop_url, shop_addr, datafrom, memo', 'length', 'max' => 100), 
             array('phone, qq', 'length', 'max' => 20),
             array('visit_date, assign_time, next_time,last_time, create_time', 'safe'),
             array('mail', 'length', 'max' => 50),
@@ -180,11 +180,13 @@ class CustomerInfo extends CActiveRecord {
             $criteria->compare('iskey', $this->iskey);
         }
         if ($this->next_time_from) {
-            $istartTime = strtotime($this->next_time_from); 
+            $starttime = $this->next_time_from." 00:00:00";
+            $istartTime = strtotime($starttime); 
             $criteria->addCondition("next_time>=$istartTime"); 
         }
-        if($this->next_time_to){
-            $iendTime = strtotime($this->next_time_to); 
+        if($this->next_time_to){ 
+            $endtime = $this->next_time_to." 23:59:59";
+            $iendTime = strtotime($endtime); 
             $criteria->addCondition("next_time<=$iendTime"); 
         }
         // $criteria->addCondition("eno = '".Yii::app()->user->identity->eno."'");
@@ -198,11 +200,11 @@ class CustomerInfo extends CActiveRecord {
             'corp_name' => array('asc' => 'corp_name asc', 'desc' => 'corp_name desc'),
             'category' => array('asc' => 'category asc', 'desc' => 'category desc'),
             'assign_time' => array('asc' => 'assign_time asc', 'desc' => 'assign_time desc','default'=>'desc'),
-            'next_time' => array('asc' => 'next_time asc', 'desc' => 'next_time desc','default'=>'desc'),
+            'next_time' => array('asc' => 'next_time asc', 'desc' => 'next_time desc','default'=>'asc'),
             'last_time' => array('asc' => 'last_time asc', 'desc' => 'last_time desc','default'=>'desc'),
             'shop_addr' => array('asc' => 'shop_addr asc', 'desc' => 'shop_addr desc'),
         );
-        $sort->defaultOrder=array("next_time"=>"desc");
+        $sort->defaultOrder=array("next_time"=>CSORT::SORT_ASC);
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
             'sort'=>$sort,
@@ -215,7 +217,7 @@ class CustomerInfo extends CActiveRecord {
     public function searchMyList() {
         $type = intval(Yii::app()->request->getParam('type'));
         $criteria = new CDbCriteria;
-        $criteria->addInCondition("cust_type", array(0, 1, 2, 3, 4, 5, 7, 8));
+        $criteria->addInCondition("cust_type", array(0, 1, 2, 3, 4, 5, 6, 7, 8));
         $criteria->addInCondition("status", array(0, 3)); 
         //只看到自己的客户,及下属客户
         $user_arr = Userinfo::getAllChildUsersId(Yii::app()->user->id);
@@ -246,9 +248,25 @@ class CustomerInfo extends CActiveRecord {
         if ($this->iskey>-1) {
             $criteria->compare('iskey', $this->iskey);
         } 
+        $sort = new CSort();
+        $sort->attributes=array(
+            'id' => array('asc' => 'id asc', 'desc' => 'id desc','default'=>'desc'),
+            'eno' => array('asc' => 'eno asc', 'desc' => 'eno desc'),
+            'cust_type' => array('asc' => 'cust_type asc', 'desc' => 'cust_type desc'),
+            'cust_name' => array('asc' => 'cust_name asc', 'desc' => 'cust_name desc'),
+            'shop_name' => array('asc' => 'shop_name asc', 'desc' => 'shop_name desc'),
+            'corp_name' => array('asc' => 'corp_name asc', 'desc' => 'corp_name desc'),
+            'category' => array('asc' => 'category asc', 'desc' => 'category desc'),
+            'assign_time' => array('asc' => 'assign_time asc', 'desc' => 'assign_time desc','default'=>'desc'),
+            'next_time' => array('asc' => 'next_time asc', 'desc' => 'next_time desc','default'=>'asc'),
+            'last_time' => array('asc' => 'last_time asc', 'desc' => 'last_time desc','default'=>'desc'),
+            'shop_addr' => array('asc' => 'shop_addr asc', 'desc' => 'shop_addr desc'),
+        );
+        $sort->defaultOrder=array("next_time"=>CSort::SORT_ASC);
         // $criteria->addCondition("eno = '".Yii::app()->user->identity->eno."'");
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
+            'sort'=>$sort,
         ));
     }
 
@@ -292,8 +310,24 @@ class CustomerInfo extends CActiveRecord {
         $iDate = $iDate+86400;
         $criteria->addCondition("t.next_time<" . $iDate);
         // $criteria->addCondition("eno = '".Yii::app()->user->identity->eno."'");
+        $sort = new CSort();
+        $sort->attributes=array(
+            'id' => array('asc' => 'id asc', 'desc' => 'id desc','default'=>'desc'),
+            'eno' => array('asc' => 'eno asc', 'desc' => 'eno desc'),
+            'cust_type' => array('asc' => 'cust_type asc', 'desc' => 'cust_type desc'),
+            'cust_name' => array('asc' => 'cust_name asc', 'desc' => 'cust_name desc'),
+            'shop_name' => array('asc' => 'shop_name asc', 'desc' => 'shop_name desc'),
+            'corp_name' => array('asc' => 'corp_name asc', 'desc' => 'corp_name desc'),
+            'category' => array('asc' => 'category asc', 'desc' => 'category desc'),
+            'assign_time' => array('asc' => 'assign_time asc', 'desc' => 'assign_time desc','default'=>'desc'),
+            'next_time' => array('asc' => 'next_time asc', 'desc' => 'next_time desc','default'=>'asc'),
+            'last_time' => array('asc' => 'last_time asc', 'desc' => 'last_time desc','default'=>'desc'),
+            'shop_addr' => array('asc' => 'shop_addr asc', 'desc' => 'shop_addr desc'),
+        );
+        $sort->defaultOrder=array("next_time"=>CSort::SORT_ASC);
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
+            'sort'=>$sort,
         ));
     }
 

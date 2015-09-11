@@ -71,7 +71,7 @@ $form = $this->beginWidget('CActiveForm', array(
 
 <?php $this->endWidget(); ?>
 <?php
-$form = $this->beginWidget('CActiveForm', array(
+$form1 = $this->beginWidget('CActiveForm', array(
     'action' => Yii::app()->createUrl('Chance/customerInfo/assignNextTime'),
     'method' => 'post',
     'id' =>'form_1'
@@ -152,7 +152,7 @@ $this->widget('GGridView', array(
             'buttons' => array(
                 'upda' => array(
                     'label' => '查看客户详情',
-                    'url' => 'Yii::app()->controller->createUrl("update",array("id"=>$data->primaryKey))',
+                    'url' => 'Yii::app()->controller->createUrl("update",array("id"=>$data->primaryKey,"module"=>"admin"))',
                     'imageUrl' => '',
                     'options' => array('class' => 'editNode btn btn-info btn-minier tooltip-info', 'data-placement' => "bottom"),
                 ),

@@ -15,4 +15,12 @@ Yii::app()->clientScript->registerScript('tab', "
  });  
 "); 
 ?>
-<?php $this->renderPartial('_form_read', array('model'=>$model,'user'=>$user,'noteinfo'=>$noteinfo,'historyNote' =>$historyNote,'sharedNote' => $sharedNote)); ?>
+<?php $this->renderPartial('_form_read', 
+        array(
+            'model'=>$model,
+            'user'=>$user,
+            'noteinfo'=>$noteinfo,
+            'historyNote' =>$historyNote,
+            'sharedNote' => $sharedNote,
+            'module'=>$module,
+        )); ?>
