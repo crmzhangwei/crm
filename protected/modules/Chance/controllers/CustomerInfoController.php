@@ -78,6 +78,23 @@ class CustomerInfoController extends GController {
                 $noteinfo->setAttribute("eno", Yii::app()->user->id);
                 $noteinfo->setAttribute("create_time", time());
                 $noteinfo->save();
+                //更新电话拔打记录
+                if ($noteinfo->dial_id > 0) {
+                    $dialdetail = DialDetail::model()->findByPk($noteinfo->dial_id); 
+                    //获取通知录音路径，通知时长 
+                    $uid = $dialdetail->uid;
+                    if($uid==null||empty(trim($uid))){
+                        $uid = UnCall::getUid2($dialdetail);
+                        $dialdetail->uid=$uid;
+                        //$noteinfo->addError("dial_id", "请获取通话时长!");
+                    }
+                    $dial_long = UnCall::getDialLength($uid);
+                    $record_path = UnCall::getRecord($uid);
+                    $dialdetail->isok = 1;
+                    $dialdetail->dial_long = $dial_long;
+                    $dialdetail->record_path = $record_path;
+                    $dialdetail->save(); 
+                }
             }
             $model->save();
             if ($noteinfo->hasErrors() || $model->hasErrors()) {
@@ -148,6 +165,7 @@ class CustomerInfoController extends GController {
         $noteinfo->setAttribute("iskey", 0);
         $noteinfo->setAttribute("isvalid", 1);
         $noteinfo->setAttribute("dial_id", 0);
+        $noteinfo->setAttribute("uid", '');
         $noteinfo->setAttribute("message_id", 0);
         $noteinfo->setAttribute("next_contact", '');
         $noteinfo->cust_id = $id;
@@ -264,12 +282,13 @@ class CustomerInfoController extends GController {
                 $model->save();
                 //更新电话拔打记录
                 if ($noteinfo->dial_id > 0) {
-                    $dialdetail = DialDetail::model()->findByPk($noteinfo->dial_id);
+                    $dialdetail = DialDetail::model()->findByPk($noteinfo->dial_id); 
                     //获取通知录音路径，通知时长 
                     $uid = $dialdetail->uid;
                     if($uid==null||empty(trim($uid))){
                         $uid = UnCall::getUid2($dialdetail);
-                        $dialdetail->uid=$uid;
+                         $dialdetail->uid=$uid;
+                         //$noteinfo->addError("dial_id", "请获取通话时长!");
                     }
                     $dial_long = UnCall::getDialLength($uid);
                     $record_path = UnCall::getRecord($uid);

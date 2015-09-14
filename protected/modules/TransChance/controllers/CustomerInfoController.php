@@ -219,6 +219,7 @@ class CustomerInfoController extends GController {
                     if($uid==null||empty(trim($uid))){
                         $uid = UnCall::getUid2($dialdetail);
                         $dialdetail->uid=$uid;
+                         //$noteinfo->addError("dial_id", "请获取通话时长!");
                     }
                     $dial_long = UnCall::getDialLength($uid);
                     $record_path = UnCall::getRecord($uid);

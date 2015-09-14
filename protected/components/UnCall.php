@@ -103,6 +103,7 @@ class UnCall {
             $sql = "update {{customer_info}} set $field='$phonenumber' where id=$cust_id";
             Yii::app()->db->createCommand($sql)->execute();
         } 
+        $phonenumber = str_replace("-", "", $phonenumber);
         $result = $client->OnClickCall($user->extend_no, $phonenumber, ""); 
         $xml = simplexml_load_string($result);
         if ($xml&&((string) $xml->OnClickCall->Response) == 'Success') {
@@ -116,13 +117,13 @@ class UnCall {
             $dialdetail->dial_num = 1;
             $dialdetail->record_path = '';
             $dialdetail->isok = 0; 
-            $dialdetail->uid = UnCall::getUid2($dialdetail);
+            $dialdetail->uid = '';
             $dialdetail->save();
-            $ret['status'] = 1;
+            $ret['status'] = 1; 
             $ret['dial_id'] = $dialdetail->primaryKey;
             $ret['message'] = '电话拔打成功，请按下接听!';
         } else {
-            $ret['message'] = '电话拔打失败!';
+            $ret['message'] = '电话拔打失败!'; 
         }
         return $ret;
     }
@@ -252,6 +253,14 @@ class UnCall {
                                                 array(":ext" => $dialdetail->extend_no,":phone"=>$dialdetail->phone)); 
         if (!empty($result) && is_array($result)) {
             $uid = $result['uniqueid'];
+            $sql = "select id from {{dial_detail}} where uid=:uid";
+            $temp = Yii::app()->db->createCommand($sql)->queryRow(TRUE,array(":uid" => $uid));
+            if($temp&&is_array($temp)&&$temp['id']>0){
+                $uid='';
+            }else{
+                $sql = "update {{dial_detail}} set uid=:uid where id=:id";
+                Yii::app()->db->createCommand($sql)->execute(array(':uid'=>$uid,":id"=>$dialdetail->id));
+            }
         }
         return $uid;
     }

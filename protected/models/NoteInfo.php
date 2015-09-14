@@ -16,6 +16,7 @@
  * @property integer $iskey
  * @property integer $next_contact
  * @property integer $dial_id
+ * @property integer $uid
  * @property integer $message_id
  * @property integer $eno
  * @property string $cust_type
@@ -28,6 +29,7 @@ class NoteInfo extends CActiveRecord
         public $next_contact_repeat;
         public $stime;//开始时间
         public $etime;//结束时间
+        public $uid;
 	/**
 	 * @return string the associated database table name
 	 */
@@ -50,7 +52,7 @@ class NoteInfo extends CActiveRecord
 			array('cust_info, requirement, service, dissent, next_followup, memo', 'length', 'max'=>500), 
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, cust_id, cust_info, requirement, service, dissent, next_followup, memo, isvalid, iskey, next_contact, dial_id, eno, create_time', 'safe', 'on'=>'search'),
+			array('id, cust_id, cust_info, requirement, service, dissent, next_followup, memo, isvalid, iskey, next_contact, dial_id,uid, eno, create_time', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -85,6 +87,7 @@ class NoteInfo extends CActiveRecord
 			'iskey' => '是否重点',
 			'next_contact' => '下次联系时间',
 			'dial_id' => '电话拔打记录',
+			'uid' => '电话拔打识别号',
 			'message_id' => '短信发送记录',
 			'eno' => '工号',
                         'cust_type'=>'客户分类',

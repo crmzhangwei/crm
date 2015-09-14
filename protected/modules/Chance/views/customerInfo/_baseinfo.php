@@ -4,23 +4,18 @@
  
 
 Yii::app()->clientScript->registerScript('baseinfo', "
-function dial_ret(data){
+ 
+function dial_ret(data){ 
+var dialid=$('#NoteInfo_dial_id').val();
+ if(dialid>0&&dialid==''){
+    bootbox.alert('请先获取通话时长!');
+    return ;
+ }
   var obj = $.parseJSON(data);
-  $('#NoteInfo_dial_id').val(obj.dial_id);
+  $('#NoteInfo_dial_id').val(obj.dial_id); 
   bootbox.alert(obj.message);
-}
-
-function mail_ret(data){
- alert(data);
-}
-function listen_ret(data){
- alert(data);
-}
-$('#btn_cancel').click(
-            function(){
-                
-            }
-        );
+} 
+  
 ");
 ?> 
 <script type="text/javascript">
@@ -29,6 +24,40 @@ function sendMessage(cust_id,seq){
 }
 function sendMail(cust_id){
     window.open('http://exmail.qq.com/login');  
+}
+function dial(cust_id,seq){
+    var dialid=$('#NoteInfo_dial_id').val();
+    $uid = $('#NoteInfo_uid').val();
+    if(dialid>0&&uid==''){
+        bootbox.alert('请先获取通话时长!');
+        return ;
+    }
+    $.getJSON('index.php?r=Service/service/dial&cust_id='+cust_id+"&seq="+seq,function(obj){
+         $('#NoteInfo_dial_id').val(obj.dial_id); 
+         bootbox.alert(obj.message);
+    });
+}
+function popUid(){
+    var dialid = $('#NoteInfo_dial_id').val();  
+    if(dialid=='0'||dialid==''){
+        bootbox.alert('未拔打电话');
+        return;
+    } 
+    $uid = $('#NoteInfo_uid').val();
+    if($uid!=''){
+        bootbox.alert('已经获取');
+        return ;
+    }
+    $.getJSON('index.php?r=Service/service/dialUid&dial_id='+dialid,function(obj){
+       
+        if(obj&&obj.uid!=''){
+            $('#NoteInfo_uid').val(obj.uid); 
+            bootbox.alert('获取成功');
+        }else{
+            bootbox.alert('稍等片刻重新获取');
+        }
+        
+    });
 }
 function changeCustType(obj){
     var value = $('#cust_type').val();
@@ -77,7 +106,9 @@ function changeCustType(obj){
                 <td nowrap="nowrap"><?php echo $form->labelEx($model,'phone'); ?></td>
                 <td>
                     <?php echo Utils::hidePhone($model->phone);echo "&nbsp;"; 
-                           echo CHtml::ajaxButton("拔打电话", Yii::app()->createUrl('Service/service/dial',array('cust_id'=>$model->id,'seq'=>'1')), array('success'=>'dial_ret'),array('class' => 'editNode btn btn-info btn-minier tooltip-info', 'data-placement' => "bottom"));  
+                           echo CHtml::button("拔打电话", array('onclick'=>'javascript:dial('.$model->id.',1)','class' => 'editNode btn btn-info btn-minier tooltip-info', 'data-placement' => "bottom"));  
+                           echo "&nbsp;";
+                           echo CHtml::button("获取通话时长",array('onclick'=>'javascript:popUid()','class' => 'editNode btn btn-info btn-minier tooltip-info', 'data-placement' => "bottom"));  
                            echo "&nbsp;";
                            echo CHtml::button("发送短信", array('onclick'=>'javascript:sendMessage('.$model->id.',1)','class' => 'editNode btn btn-info btn-minier tooltip-info', 'data-placement' => "bottom"));
                     ?>  
@@ -85,7 +116,7 @@ function changeCustType(obj){
                     if(!empty($model->phone2)){
                         echo "&nbsp;&nbsp;";
                         echo Utils::hidePhone($model->phone2);echo "&nbsp;";
-                        echo CHtml::ajaxButton("拔打电话", Yii::app()->createUrl('Service/service/dial',array('cust_id'=>$model->id,'seq'=>'2')), array('success'=>'dial_ret'),array('class' => 'editNode btn btn-info btn-minier tooltip-info', 'data-placement' => "bottom"));
+                        echo CHtml::button("拔打电话", array('onclick'=>'javascript:dial('.$model->id.',2)','class' => 'editNode btn btn-info btn-minier tooltip-info', 'data-placement' => "bottom"));  
                         echo "&nbsp;";
                         echo CHtml::button("发送短信", array('onclick'=>'javascript:sendMessage('.$model->id.',2)','class' => 'editNode btn btn-info btn-minier tooltip-info', 'data-placement' => "bottom"));
                     } 
@@ -94,7 +125,7 @@ function changeCustType(obj){
                     if(!empty($model->phone3)){
                         echo "<br/><br/>";
                         echo Utils::hidePhone($model->phone3);echo "&nbsp;";
-                        echo CHtml::ajaxButton("拔打电话", Yii::app()->createUrl('Service/service/dial',array('cust_id'=>$model->id,'seq'=>'3')), array('success'=>'dial_ret'),array('class' => 'editNode btn btn-info btn-minier tooltip-info', 'data-placement' => "bottom"));
+                        echo CHtml::button("拔打电话", array('onclick'=>'javascript:dial('.$model->id.',3)','class' => 'editNode btn btn-info btn-minier tooltip-info', 'data-placement' => "bottom"));  
                         echo "&nbsp;";
                         echo CHtml::button("发送短信", array('onclick'=>'javascript:sendMessage('.$model->id.',3)','class' => 'editNode btn btn-info btn-minier tooltip-info', 'data-placement' => "bottom"));
                     } 
@@ -103,7 +134,7 @@ function changeCustType(obj){
                     if(!empty($model->phone4)){
                         echo "&nbsp;&nbsp;";
                         echo Utils::hidePhone($model->phone4);
-                        echo CHtml::ajaxButton("拔打电话", Yii::app()->createUrl('Service/service/dial',array('cust_id'=>$model->id,'seq'=>'4')), array('success'=>'dial_ret'),array('class' => 'editNode btn btn-info btn-minier tooltip-info', 'data-placement' => "bottom"));
+                        echo CHtml::button("拔打电话", array('onclick'=>'javascript:dial('.$model->id.',4)','class' => 'editNode btn btn-info btn-minier tooltip-info', 'data-placement' => "bottom"));  
                         echo "&nbsp;";
                         echo CHtml::button("发送短信", array('onclick'=>'javascript:sendMessage('.$model->id.',4)','class' => 'editNode btn btn-info btn-minier tooltip-info', 'data-placement' => "bottom"));
                     } 
@@ -112,7 +143,7 @@ function changeCustType(obj){
                     if(!empty($model->phone5)){
                         echo "<br/><br/>";
                         echo Utils::hidePhone($model->phone5);
-                        echo CHtml::ajaxButton("拔打电话", Yii::app()->createUrl('Service/service/dial',array('cust_id'=>$model->id,'seq'=>'5')), array('success'=>'dial_ret'),array('class' => 'editNode btn btn-info btn-minier tooltip-info', 'data-placement' => "bottom"));
+                        echo CHtml::button("拔打电话", array('onclick'=>'javascript:dial('.$model->id.',5)','class' => 'editNode btn btn-info btn-minier tooltip-info', 'data-placement' => "bottom"));  
                         echo "&nbsp;";
                         echo CHtml::button("发送短信", array('onclick'=>'javascript:sendMessage('.$model->id.',5)','class' => 'editNode btn btn-info btn-minier tooltip-info', 'data-placement' => "bottom"));
                     } 

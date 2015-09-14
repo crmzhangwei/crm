@@ -261,6 +261,14 @@ class ServiceController extends GController {
         $result = UnCall::dial($cust_id,$seq); 
         echo json_encode($result);
     }
+    
+    public function actionDialUid($dial_id){
+        $result = array('uid'=>'');
+        $dialdetail = DialDetail::model()->findByPk($dial_id);
+        $uid = UnCall::getUid2($dialdetail);
+        $result['uid']=$uid;
+        echo json_encode($result);
+    }
 
     /**
      * 发短信

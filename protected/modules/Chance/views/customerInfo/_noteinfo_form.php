@@ -12,6 +12,7 @@
                 <td width="20%" nowrap="nowrap">
                     <?php echo Yii::app()->session['user']['name'];?>
                     <?php echo $form->hiddenField($model, 'dial_id'); ?>
+                    <?php echo $form->hiddenField($model, 'uid'); ?>
                     <?php echo $form->hiddenField($model, 'message_id'); ?>
                     <?php  echo CHtml::hiddenField('NoteInfo[cust_id]',$custmodel->id) ?>
                     <?php echo $form->error($model,'eno'); ?>
