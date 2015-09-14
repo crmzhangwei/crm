@@ -131,14 +131,20 @@ class CustomerBlack extends CActiveRecord
 		// @todo Please modify the following code to remove attributes that should not be searched.
 
 		$criteria=new CDbCriteria; 
+		$criteria->join = 'left join {{black_info}} as b on b.cust_id =t.id';
 		if($this->cust_type != -1){
-			$criteria->join = 'left join {{black_info}} as b on b.cust_id =t.id';
+			
 			//$criteria->addCondition(b.cust_type = ')
 			$criteria->compare('b.old_cust_type',$this->cust_type);
 		} 
+		if($this->phone){
+			$ph = $this->phone;
+			$criteria->addCondition("phone like '%$ph%' or phone2 like '%$ph%' or phone3 like '%$ph%' or phone4 like '%$ph%' or phone5 like '%$ph%' "); //查询条件  
+		}
+		$criteria->select="t.id,t.cust_name,t.shop_name,t.corp_name,t.shop_url,t.shop_addr,t.phone,t.qq,t.mail,t.assign_time,t.next_time,b.old_cust_type,b.lib_type";
+
 		$criteria->addCondition("status=1"); //查询条件  
-                $criteria->select="t.id,t.cust_name,t.shop_name,t.corp_name,t.shop_url,t.shop_addr,t.phone,t.qq,t.mail,t.assign_time,t.next_time,b.old_cust_type,b.lib_type";
-		return new CActiveDataProvider($this, array(
+        return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
 		));
 	}

@@ -35,7 +35,10 @@ $('.search-form form').submit(function(){
        <div class="form-group">
             <?php echo $form->labelEx($model,'cust_type').': ';?>
             <?php echo $form->dropDownList($model,'cust_type',$custtype);?>
-             <button class="btn btn-sm btn-primary" type="submit">
+		   
+		    <?php echo $form->labelEx($model,'phone').': ';?>
+            <?php echo $form->textField($model, 'phone', array('size' => 25, 'maxlength' => 25)); ?>
+            <button class="btn btn-sm btn-primary" type="submit">
             <i class="icon-search"></i>
             搜 索
             </button>
