@@ -284,7 +284,8 @@ class CustomerinfoController extends GController
 						}
 						if ($v[1]){
 							$phone = trim($v[1]);
-							$phoneSQL = "select cust_name from c_customer_info where (phone='$phone' or phone2='$phone' or phone3='$phone' or phone4='$phone' or phone5='$phone') and status<>2";
+							$phone_0 = '0'.$phone;
+							$phoneSQL = "select cust_name from c_customer_info where (phone in($phone,$phone_0) or phone2 in($phone,$phone_0) or phone3 in($phone,$phone_0) or phone4 in($phone,$phone_0) or phone5 in($phone,$phone_0) ) and status<>2";
 							$ret = Yii::app()->db->createCommand($phoneSQL)->execute();
 							if($ret){
 								/*exit("<script>alert(\"对不起, 第".$k."行中的电话号码已存在, 请填写后重新提交。\");
