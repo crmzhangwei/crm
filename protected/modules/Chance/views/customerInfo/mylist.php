@@ -174,4 +174,7 @@ $this->widget('GLinkPager', array('pages' => $dataProvider->getPagination(),));
          $("#form_1").attr('action',url);
          $("#form_1").submit();
     }
+	$(function(){
+        $(".button-column").find("a").attr("target","_blank");
+    });
 </script>

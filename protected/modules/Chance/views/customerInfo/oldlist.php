@@ -166,4 +166,8 @@ $this->widget('GLinkPager', array('pages' => $dataProvider->getPagination(),));
 </div>
 
 <script src="/static/js/secondlevel.js"></script>
- 
+<script>
+	$(function(){
+        $(".button-column").find("a").attr("target","_blank");
+    });
+</script>
