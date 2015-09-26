@@ -41,7 +41,8 @@ class Utils {
      * @param type $phone
      */
     public static function hidePhone($phone) {
-        return substr_replace($phone, '****', 3, 4);
+        //return substr_replace($phone, '****', 3, 4);
+		return $phone;
     }
 
     /**
