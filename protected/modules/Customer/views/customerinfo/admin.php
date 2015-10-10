@@ -94,17 +94,18 @@ $('.search-form form').submit(function(){
 				),
 			),
 		//'id',
+		array('name'=>'eno', 'value'=>array($this, 'get_eno_text')),
 		'cust_name',
 		'shop_name',
 		'shop_url',
-		'shop_addr',
+		//'shop_addr',
 		//array('name' => 'phone', 'value' => 'substr_replace($data->phone,"****",3,4)'),
 		'phone',
 		array('name' => 'qq', 'value' => 'substr_replace($data->qq,"****",3,4)'),
 		array('name'=>'category', 'value'=>array($this, 'get_category_text')),
 		array('name' => 'mail', 'value' => 'substr_replace($data->mail,"****",0,4)'),
 		//'eno',
-		array('name'=>'eno', 'value'=>array($this, 'get_eno_text')),
+		
 		array('name'=>'assign_eno', 'value'=>array($this, 'get_assign_text')),
 		array('name'=>'assign_time', 'value'=>array($this, 'get_assign_time'),),
 		array('name'=>'next_time', 'value'=>array($this, 'get_next_time'),),
@@ -120,11 +121,11 @@ $('.search-form form').submit(function(){
 		array(
 			'class'=>'CButtonColumn',
 			'deleteButtonOptions'=>array(),
-			'viewButtonOptions'=>array('style'=>'background-color:red'),
+			'viewButtonOptions'=>array('style'=>'background-color:red;'),
 			'header' => '操作', 
-			'template'=>'{upda}',
+			'template'=>'{upda}  {show}',
 			'htmlOptions' => array(
-				'width' => '50',
+				'width' => '105',
 				'style' => 'text-align:center',
 			),
 			'buttons'=>array(
@@ -134,6 +135,12 @@ $('.search-form form').submit(function(){
 					'imageUrl'=>'',
 					'options'=>array('class'=>'editNode btn btn-info btn-minier tooltip-info','data-placement'=>"bottom",'onclick'=>"updatarow(this)"),
 				),
+				'show' => array(
+                    'label' => '详情',
+                    'url' => 'Yii::app()->controller->createUrl("/Chance/CustomerInfo/update",array("id"=>$data->primaryKey,"module"=>"admin"))',
+                    'imageUrl' => '',
+                    'options' => array('class' => 'editNode btn btn-info btn-minier tooltip-info', 'data-placement' => "bottom"),
+                ),
 			)          
 		),
 		
@@ -217,6 +224,9 @@ $('.search-form form').submit(function(){
 		}
 	}
 	
+	$(function(){
+        $("[title='详情']").attr("target","_blank");
+    });
 </script>  	
 <script src="/static/js/secondlevel.js"></script>
 

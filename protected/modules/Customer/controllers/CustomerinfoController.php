@@ -110,6 +110,11 @@ class CustomerinfoController extends GController
 		if(isset($_POST['CustomerInfo']))
 		{
 			$model->attributes=$_POST['CustomerInfo'];
+			if($model->phone) $this->check_phone_ext($model->phone,$id,1);//检查电话号码是否已经存在
+			if($model->phone2) $this->check_phone_ext($model->phone2,$id,2);
+			if($model->phone3) $this->check_phone_ext($model->phone3,$id,3);
+			if($model->phone4) $this->check_phone_ext($model->phone4,$id,4);
+			if($model->phone5) $this->check_phone_ext($model->phone5,$id,5);
 			$aNewEno = $model->eno;
 			$aOldEno = $model->oldEno;
 			if($aNewEno == $aOldEno){//没有修改所属工号
@@ -164,6 +169,18 @@ class CustomerinfoController extends GController
 	}
 
 	/**
+	 * 检查电话是否存在
+	 */
+	public function check_phone_ext($_phone,$id,$num){
+		$phone = trim($_phone);
+		$phone_0 = '0'.$phone;
+		$res = CustomerInfo::model()->findAll("(phone in($phone,$phone_0) or phone2 in($phone,$phone_0) or phone3 in($phone,$phone_0) or phone4 in($phone,$phone_0) or phone5 in($phone,$phone_0) ) and `status`<>2 and id<>$id");
+		if($res){
+			//$this->addError('phone', "电话".$num."已经存在");
+			Utils::showMsg (0, '电话'.$num.'已经存在');
+		}
+	}
+	/**
 	 * Deletes a particular model.
 	 * If deletion is successful, the browser will be redirected to the 'admin' page.
 	 * @param integer $id the ID of the model to be deleted
@@ -213,6 +230,11 @@ class CustomerinfoController extends GController
 			$model->customerId = Yii::app()->request->getParam('customerId');
 			//Yii::app()->db->createCommand()->delete('{{tip_info}}',"id in( {$model->customerId} )"); 
 		}
+		
+		if(!isset($_GET['CustomerInfo_sort'])){//默认排序
+			$_GET['CustomerInfo_sort'] = 'assign_time.desc';
+		}
+		
 		if(isset($_GET['CustomerInfo']))
 			$model->attributes=$_GET['CustomerInfo'];
 		
