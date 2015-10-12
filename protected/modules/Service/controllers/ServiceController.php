@@ -445,7 +445,7 @@ class ServiceController extends GController {
      * @param type $dial_id 
      */
     public function actionViewNote($id) {
-        $noteinfo = NoteInfo::model()->findByPk($id);
+        $noteinfo = NoteInfoP::model()->findBySql("select id,cust_id,isvalid,iskey,next_contact,dial_id,message_id,userid,lib_type,create_time,cust_type,memo from {{note_info_p}} where id=:id",array(":id"=>$id));
         $this->renderPartial("noteinfo", array('model' => $noteinfo));
     }
 

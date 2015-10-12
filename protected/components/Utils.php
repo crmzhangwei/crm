@@ -304,7 +304,7 @@ class Utils {
      */
     public static function isNeedSaveNoteInfo($noteinfo,$custtype) {
         
-        if ($noteinfo['cust_info'] != '') {
+        /*if ($noteinfo['cust_info'] != '') {
             return true;
         }
         if ($noteinfo['requirement'] != '') {
@@ -318,7 +318,7 @@ class Utils {
         }
         if ($noteinfo['next_followup'] != '') {
             return true;
-        }
+        }*/
         if ($noteinfo['memo'] != '') {
             return true;
         }
@@ -340,7 +340,7 @@ class Utils {
      */
     public static function isNeedSaveNoteInfoForAfter($noteinfo,$custtype) {
         
-        if ($noteinfo['cust_info'] != '') {
+       /*i if ($noteinfo['cust_info'] != '') {
             return true;
         }
         if ($noteinfo['requirement'] != '') {
@@ -354,7 +354,7 @@ class Utils {
         }
         if ($noteinfo['next_followup'] != '') {
             return true;
-        }
+        }*/
         if ($noteinfo['memo'] != '') {
             return true;
         }
@@ -479,8 +479,8 @@ class Utils {
      * @param type $record
      */
     public static function genNoteDisplayRecord($record) {
-        $str ='<font style="font-weight:bold">'. Userinfo::getNameById($record['eno'])."</font>&nbsp;&nbsp;&nbsp;<font color='gray'>".date("Y-m-d H:i:s", $record->create_time) ." 添加了跟进记录 </font><br/><br/> ";
-        $str = $str." ".$record['cust_info']." ".$record['requirement']." ".$record['service']." ".$record['dissent']." ".$record['next_followup']." ".$record['memo']." "; 
+        $str ='<font style="font-weight:bold">'. Userinfo::getNameById($record['userid'])."</font>&nbsp;&nbsp;&nbsp;<font color='gray'>".date("Y-m-d H:i:s", $record->create_time) ." 添加了跟进记录 </font><br/><br/> ";
+        $str = $str." ".$record['memo']." "; 
         $custtype = CustType::findByTypeAndNo($record['lib_type'], $record['cust_type']); 
         $str = $str . " "; 
         $str = $str . "【".$record['cust_type'] . " 类 - " . $custtype['type_name'] . "】&nbsp;&nbsp;->&nbsp;下次联系时间：" ;

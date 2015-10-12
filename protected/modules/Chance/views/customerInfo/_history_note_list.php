@@ -15,10 +15,10 @@ $this->widget('GGridView', array(
             'headerTemplate' => '{item}',
             'htmlOptions' => array('width' => '20'),
         ),
-        array('name' => 'cust_info',  'value'=>array($this, 'genNoteRecordInfo'),'type'=>'html'), 
+        array('name' => 'memo',  'value'=>array($this, 'genNoteRecordInfo'),'type'=>'html'), 
         array(
             'class' => 'CButtonColumn', 
-            'template' => '{play} {view}',
+            'template' => '{view}',
             'header' => '操作',
             'buttons' => array(
                 'play' => array(
@@ -36,7 +36,7 @@ $this->widget('GGridView', array(
                 ),
             ),
             'htmlOptions' => array(
-                'width' => '200',
+                'width' => '100',
             )
         ),
     ),

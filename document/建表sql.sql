@@ -332,10 +332,41 @@ CREATE TABLE `c_sync_conf` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='同步跟踪表';
 
+ CREATE TABLE `c_note_info_p` (
+  `id` int(10) COMMENT '主键',
+  `cust_id` int(11) NOT NULL COMMENT '客户id',  
+  `isvalid` tinyint(1) DEFAULT '0' COMMENT '是否有效',
+  `iskey` tinyint(1) DEFAULT '0' COMMENT '是否重点',
+  `next_contact` int(11) DEFAULT '0' COMMENT '下次联系时间',
+  `dial_id` int(11) DEFAULT '0' COMMENT '电话拔打记录',
+  `message_id` int(11) NOT NULL DEFAULT '0',
+  `userid` int(11) NOT NULL DEFAULT '0' COMMENT '用户id', 
+  `lib_type` int(11) NOT NULL DEFAULT '0' COMMENT '库类型',
+  `create_time` int(11) NOT NULL DEFAULT '0' COMMENT '创建时间',
+  `cust_type` varchar(5) NOT NULL DEFAULT '' COMMENT '客户分类',
+  `memo` varchar(2000) DEFAULT '' COMMENT '备注',
+  KEY `idx_noteinfop_01` (`id`) USING BTREE,
+  KEY `idx_noteinfop_02` (`cust_id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8
+/*!50100 PARTITION BY RANGE (id)
+(PARTITION p0 VALUES LESS THAN (1000000) ENGINE = InnoDB,
+ PARTITION p1 VALUES LESS THAN (2000000) ENGINE = InnoDB,
+ PARTITION p2 VALUES LESS THAN (3000000) ENGINE = InnoDB,
+ PARTITION p3 VALUES LESS THAN MAXVALUE ENGINE = InnoDB) */;
+
+ CREATE TABLE `c_seq_note_id` (
+  `seq` int(10) NOT NULL DEFAULT '1'
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+insert into c_note_info_p select id,cust_id,isvalid,iskey,next_contact,dial_id,message_id,eno,lib_type,create_time,cust_type,
+  concat(cust_info,requirement,service,dissent,next_followup,memo) from c_note_info ;
+
+insert into `c_seq_note_id` select max(id) from c_note_info;
+
 create unique index idx_black_info_01 on c_black_info(cust_id);
 create index idx_customerinfo_01 on c_customer_info(eno);
 create index idx_dialdetail_01 on c_dial_detail(cust_id);
 create index idx_dialdetail_02 on c_dial_detail(eno);
 create index idx_dialdetail_03 on c_dial_detail(uid);
 
-alter table c_customer_info add column update_time int not null default 0  comment '保存时间' after assign_time;
+ 

@@ -22,7 +22,7 @@ class TodayController extends GController {
      * @param type $id 客户id
      */
     public function actionEdit($id) {
-        $noteinfo = new NoteInfo(); 
+        $noteinfo = new NoteInfoP(); 
         $noteinfo->setAttribute("isvalid", 1);
         $noteinfo->setAttribute("dial_id", 0);
         $noteinfo->setAttribute("message_id", 0);
@@ -54,9 +54,9 @@ class TodayController extends GController {
         $contractmodel->setAttribute("pay_time", date("Y-m-d H:i:s", $contractmodel->getAttribute("pay_time")));
         $creator2 = Users::model()->findByPk($contractmodel->creator);
         $contractmodel->creator = $creator2->getAttribute('eno');
-        $sharedNote = NoteInfo::model();
+        $sharedNote = NoteInfoP::model();
         $sharedNote->setAttribute("cust_id", $model->id);
-        $historyNote = NoteInfo::model();
+        $historyNote = NoteInfoP::model();
         $historyNote->setAttribute("cust_id", $model->id);
         $user = Users::model()->findByPk(Yii::app()->user->id);
         $this->render('update', array(
@@ -76,7 +76,7 @@ class TodayController extends GController {
      * @param integer $id the ID of the model to be updated
      */
     public function actionUpdate($id) {
-        $noteinfo = new NoteInfo(); 
+        $noteinfo = new NoteInfoP(); 
         $noteinfo->setAttribute("isvalid", 1);
         $noteinfo->setAttribute("dial_id", 0);
         $noteinfo->setAttribute("message_id", 0);
@@ -114,10 +114,10 @@ class TodayController extends GController {
             //保存合同信息
             $contractmodel->save();
             //保存小记信息
-            if (Utils::isNeedSaveNoteInfoForAfter($_POST['NoteInfo'],$newCustType)) {
+            if (Utils::isNeedSaveNoteInfoForAfter($_POST['NoteInfoP'],$newCustType)) {
                 //保存小记 
-                $nextcontact=$_POST['NoteInfo']['next_contact'];
-                $noteinfo->attributes = $_POST['NoteInfo'];
+                $nextcontact=$_POST['NoteInfoP']['next_contact'];
+                $noteinfo->attributes = $_POST['NoteInfoP'];
                 if ($model->iskey != $noteinfo->iskey) {
                     $model->iskey = $noteinfo->iskey;
                 }
@@ -126,8 +126,9 @@ class TodayController extends GController {
                 $noteinfo->next_contact = strtotime($noteinfo->next_contact);
                 $aftermodel->next_time = $noteinfo->next_contact;
                 $model->next_time = $noteinfo->next_contact;
-                $noteinfo->setAttribute("eno", Yii::app()->user->id);
-                $noteinfo->setAttribute("create_time", time());
+                Yii::app()->db->createCommand("update {{seq_note_id}} set seq=seq+1 where 1=1")->execute();
+                $seqnoteid=SeqNoteId::model()->findBySql("select seq from {{seq_note_id}} where 1=1 limit 1");
+                $noteinfo->id=$seqnoteid->seq;
                 $noteinfo->save();
                 //更新电话拔打记录
                 if ($noteinfo->dial_id > 0) {
@@ -215,9 +216,9 @@ class TodayController extends GController {
         $contractmodel->setAttribute("pay_time", date("Y-m-d H:i:s", $contractmodel->getAttribute("pay_time")));
         $creator2 = Users::model()->findByPk($contractmodel->creator);
         $contractmodel->creator = $creator2->getAttribute('eno');
-        $sharedNote = NoteInfo::model();
+        $sharedNote = NoteInfoP::model();
         $sharedNote->setAttribute("cust_id", $model->id);
-        $historyNote = NoteInfo::model();
+        $historyNote = NoteInfoP::model();
         $historyNote->setAttribute("cust_id", $model->id);
 
         $user = Users::model()->findByPk(Yii::app()->user->id);
@@ -236,10 +237,10 @@ class TodayController extends GController {
      * 搜索共享小记列表数据
      */
     public function actionSharedNoteList() {
-        $model = new NoteInfo('search');
+        $model = new NoteInfoP('search');
         $model->unsetAttributes();  // clear any default values
-        if (isset($_GET['NoteInfo']))
-            $model->attributes = $_GET['NoteInfo'];
+        if (isset($_GET['NoteInfoP']))
+            $model->attributes = $_GET['NoteInfoP'];
         if (isset($_GET['cust_id'])) {
             $custid = $_GET['cust_id'];
             $model->setAttribute("cust_id", $custid);
@@ -255,10 +256,10 @@ class TodayController extends GController {
      * 搜索历史小记列表数据
      */
     public function actionHistoryNoteList() {
-        $model = new NoteInfo('search');
+        $model = new NoteInfoP('search');
         $model->unsetAttributes();  // clear any default values
-        if (isset($_GET['NoteInfo']))
-            $model->attributes = $_GET['NoteInfo'];
+        if (isset($_GET['NoteInfoP']))
+            $model->attributes = $_GET['NoteInfoP'];
 
         if (isset($_GET['cust_id'])) {
             $custid = $_GET['cust_id'];

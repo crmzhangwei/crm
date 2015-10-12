@@ -58,15 +58,15 @@ class CustomerInfoController extends GController {
 
         // Uncomment the following line if AJAX validation is needed
         // $this->performAjaxValidation($model);
-        $noteinfo = new NoteInfo();
+        $noteinfo = new NoteInfoP();
         $nextcontact='';
         if (isset($_POST['CustomerInfo'])) {
             $transaction = Yii::app()->db->beginTransaction();
             $model->attributes = $_POST['CustomerInfo'];
             $model->toTimestamp();
             $newCustType = $_POST['CustomerInfo']['cust_type'];
-            if (Utils::isNeedSaveNoteInfo($_POST['NoteInfo'],$newCustType)) {
-                $noteinfo->attributes = $_POST['NoteInfo'];
+            if (Utils::isNeedSaveNoteInfo($_POST['NoteInfoP'],$newCustType)) {
+                $noteinfo->attributes = $_POST['NoteInfoP'];
                 $nextcontact=$noteinfo->next_contact;
                 if ($model->iskey != $noteinfo->iskey) {
                     $model->iskey = $noteinfo->iskey;
@@ -77,8 +77,11 @@ class CustomerInfoController extends GController {
                 $noteinfo->cust_type = $model->cust_type;
                 $noteinfo->lib_type = "1";
                 $model->last_time = time(); //最后联系时间等于今天
-                $noteinfo->setAttribute("eno", Yii::app()->user->id);
+                $noteinfo->setAttribute("userid", Yii::app()->user->id);
                 $noteinfo->setAttribute("create_time", time());
+                Yii::app()->db->createCommand("update {{seq_note_id}} set seq=seq+1 where 1=1")->execute();
+                $seqnoteid=SeqNoteId::model()->findBySql("select seq from {{seq_note_id}} where 1=1 limit 1");
+                $noteinfo->id=$seqnoteid->seq;
                 $noteinfo->save();
                 //更新电话拔打记录
                 if ($noteinfo->dial_id > 0) {
@@ -128,9 +131,9 @@ class CustomerInfoController extends GController {
                 } else {
                     $model->setAttribute("visit_date", date("Y-m-d H:i:s", intval($model->getAttribute("visit_date"))));
                 }
-                $sharedNote = NoteInfo::model();
+                $sharedNote = NoteInfoP::model();
                 $sharedNote->setAttribute("cust_id", $model->id);
-                $historyNote = NoteInfo::model();
+                $historyNote = NoteInfoP::model();
                 $historyNote->setAttribute("cust_id", $model->id);
                 $user = Users::model()->findByPk($model->creator);
                 $this->render("view", array(
@@ -167,7 +170,7 @@ class CustomerInfoController extends GController {
         return $ret;
     }
     public function actionEdit($id){
-        $noteinfo = new NoteInfo();
+        $noteinfo = new NoteInfoP();
         $noteinfo->setAttribute("isvalid", 1);
         $noteinfo->setAttribute("dial_id", 0);
         $noteinfo->setAttribute("uid", '');
@@ -201,9 +204,9 @@ class CustomerInfoController extends GController {
         } else {
             $model->setAttribute("visit_date", date("Y-m-d H:i:s", intval($model->getAttribute("visit_date"))));
         }
-        $sharedNote = NoteInfo::model();
+        $sharedNote = NoteInfoP::model();
         $sharedNote->setAttribute("cust_id", $model->id);
-        $historyNote = NoteInfo::model();
+        $historyNote = NoteInfoP::model();
         $historyNote->setAttribute("cust_id", $model->id);
         $user = Users::model()->findByPk($model->creator);
         if ($oldcusttype == "6") {
@@ -233,7 +236,7 @@ class CustomerInfoController extends GController {
         }
     }
     public function actionUpdate($id) {
-        $noteinfo = new NoteInfo();
+        $noteinfo = new NoteInfoP();
         $noteinfo->setAttribute("isvalid", 1);
         $noteinfo->setAttribute("dial_id", 0);
         $noteinfo->setAttribute("uid", '');
@@ -246,7 +249,7 @@ class CustomerInfoController extends GController {
         $loginuser = Users::model()->findByPk(Yii::app()->user->id);
         $nextcontact='';
         if (isset($_POST['CustomerInfo'])) {
-            $nextcontact=$_POST['NoteInfo']['next_contact'];
+            $nextcontact=$_POST['NoteInfoP']['next_contact'];
             //保存  
             // $sql = "select * from {{aftermarket_cust_info}} where cust_id=:cust_id";
             //$aftermodel = AftermarketCustInfo::model()->findBySql($sql, array(':cust_id' => $id));  
@@ -254,7 +257,7 @@ class CustomerInfoController extends GController {
             $oldCustType = $model->getAttribute("cust_type");
             $model->attributes = $_POST['CustomerInfo'];
             $model->trans_user = $_POST['CustomerInfo']['trans_user'];
-            $noteinfo->attributes = $_POST['NoteInfo'];
+            $noteinfo->attributes = $_POST['NoteInfoP'];
             $transaction = Yii::app()->db->beginTransaction();
             if ($this->validCustomerInfo($model)) {
                 if ($oldCustType != $newCustType) {
@@ -281,7 +284,7 @@ class CustomerInfoController extends GController {
                         $tran->assign_time = time();
                         $tran->creator = $loginuser->id;
                         $tran->create_time = time();
-                        if (isset($_POST['NoteInfo']) && !empty($noteinfo->next_contact)) {
+                        if (isset($_POST['NoteInfoP']) && !empty($noteinfo->next_contact)) {
                             $tran->next_time = strtotime($noteinfo->next_contact);
                         }
                         $tran->save();
@@ -289,7 +292,7 @@ class CustomerInfoController extends GController {
                         Yii::app()->db->createCommand()->update('{{trans_cust_info}}', array('eno' => $loginuser->eno,
                             'assign_eno' => $loginuser->eno,
                             'assign_time' => time(),
-                            'next_time' => (isset($_POST['NoteInfo']) && !empty($noteinfo->next_contact)) ? strtotime($noteinfo->next_contact) : 0,
+                            'next_time' => (isset($_POST['NoteInfoP']) && !empty($noteinfo->next_contact)) ? strtotime($noteinfo->next_contact) : 0,
                             'creator' => $loginuser->id,
                             'create_time' => time()
                                 ), "cust_id =$id");
@@ -328,7 +331,7 @@ class CustomerInfoController extends GController {
                     $sql = "update {{users}} set cust_num=cust_num-1 where eno='{$model->eno}'";
                     Yii::app()->db->createCommand($sql)->execute();
                 }
-                if (Utils::isNeedSaveNoteInfo($_POST['NoteInfo'],$newCustType)) {
+                if (Utils::isNeedSaveNoteInfo($_POST['NoteInfoP'],$newCustType)) {
                     //保存小记  
                     if ($model->iskey != $noteinfo->iskey) {
                         $model->iskey = $noteinfo->iskey;
@@ -337,8 +340,11 @@ class CustomerInfoController extends GController {
                     $noteinfo->next_contact = strtotime($noteinfo->next_contact);
                     $noteinfo->cust_type = $newCustType;
                     $noteinfo->lib_type = "1"; 
-                    $noteinfo->setAttribute("eno", Yii::app()->user->id);
+                    $noteinfo->setAttribute("userid", Yii::app()->user->id);
                     $noteinfo->setAttribute("create_time", time());
+                    Yii::app()->db->createCommand("update {{seq_note_id}} set seq=seq+1 where 1=1")->execute();
+                    $seqnoteid=SeqNoteId::model()->findBySql("select seq from {{seq_note_id}} where 1=1 limit 1");
+                    $noteinfo->id=$seqnoteid->seq;
                     if ($noteinfo->save()) {
                         //保存销售库
                         $model->next_time = $noteinfo->next_contact;
@@ -416,9 +422,9 @@ class CustomerInfoController extends GController {
         } else {
             $model->setAttribute("visit_date", date("Y-m-d H:i:s", intval($model->getAttribute("visit_date"))));
         }
-        $sharedNote = NoteInfo::model();
+        $sharedNote = NoteInfoP::model();
         $sharedNote->setAttribute("cust_id", $model->id);
-        $historyNote = NoteInfo::model();
+        $historyNote = NoteInfoP::model();
         $historyNote->setAttribute("cust_id", $model->id);
         $user = Users::model()->findByPk($model->creator);
         if ($oldcusttype == "6") {
@@ -454,10 +460,10 @@ class CustomerInfoController extends GController {
         $model = $this->loadModel($id);
         $noteinfo = new NoteInfo();
         $user = Users::model()->findByPk($model->creator);
-        if (isset($_POST['NoteInfo'])) {
+        if (isset($_POST['NoteInfoP'])) {
             //保存小记
             $noteinfo->unsetAttributes();
-            $noteinfo->attributes = $_POST['NoteInfo'];
+            $noteinfo->attributes = $_POST['NoteInfoP'];
             $noteinfo->next_contact = strtotime($noteinfo->next_contact);
             $noteinfo->setAttribute("eno", Yii::app()->user->id);
             $noteinfo->setAttribute("create_time", time());
@@ -519,10 +525,10 @@ class CustomerInfoController extends GController {
      * 搜索共享小记列表数据
      */
     public function actionSharedNoteList() {
-        $model = new NoteInfo('search');
+        $model = new NoteInfoP('search');
         $model->unsetAttributes();  // clear any default values
-        if (isset($_GET['NoteInfo']))
-            $model->attributes = $_GET['NoteInfo'];
+        if (isset($_GET['NoteInfoP']))
+            $model->attributes = $_GET['NoteInfoP'];
         if (isset($_GET['cust_id'])) {
             $custid = $_GET['cust_id'];
             $model->setAttribute("cust_id", $custid);
@@ -540,10 +546,10 @@ class CustomerInfoController extends GController {
      * 搜索历史小记列表数据
      */
     public function actionHistoryNoteList() {
-        $model = new NoteInfo('search');
+        $model = new NoteInfoP('search');
         $model->unsetAttributes();  // clear any default values
-        if (isset($_GET['NoteInfo']))
-            $model->attributes = $_GET['NoteInfo'];
+        if (isset($_GET['NoteInfoP']))
+            $model->attributes = $_GET['NoteInfoP'];
 
         if (isset($_GET['cust_id'])) {
             $custid = $_GET['cust_id'];
