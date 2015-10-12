@@ -12,6 +12,7 @@ return array(
 			array('label' => '公海资源', 'url' => array('/Customer/customerblack/admin')),
 			array('label' => '联系记录', 'url' => array('/Customer/customerinfo/contact')),
 			array('label' => '短信记录', 'url' => array('/Customer/message/admin')),
+			array('label' => '电话记录', 'url' => array('/Customer/contact/index')),
 		),
     ),
    

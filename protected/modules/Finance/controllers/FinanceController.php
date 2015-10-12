@@ -398,7 +398,7 @@ class FinanceController extends GController {
          echo gmstrftime('%H:%M:%S',6235);
     }
      public function actionTest8(){
-         echo UnCall::getPhoneZone("18589075189");
+           
     }
      public function actionTest9(){
         echo "<pre>"; 

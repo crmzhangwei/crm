@@ -22,4 +22,4 @@ Yii::app()->clientScript->registerScript('tab', "
                         'noteinfo'=>$noteinfo,
                         'historyNote' =>$historyNote,
                         'sharedNote' => $sharedNote,
-                        'module'=>$module)); ?>
+                        )); ?>

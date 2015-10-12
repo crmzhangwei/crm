@@ -23,6 +23,5 @@ Yii::app()->clientScript->registerScript('tab', "
             'noteinfo'=>$noteinfo,
             'historyNote' =>$historyNote,
             'sharedNote' => $sharedNote,
-            'contract'=>$contract,
-            'module'=>$module,
+            'contract'=>$contract, 
         )); ?>

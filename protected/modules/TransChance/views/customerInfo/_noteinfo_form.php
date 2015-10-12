@@ -5,7 +5,7 @@
 ?>
    
 <div class="form"> 
-	<?php echo $form->errorSummary($model); ?>
+    <font color="red"><?php echo $form->errorSummary($model); ?></font>
          <table class="table table-bordered" width="80%"> 
             <tr>
                 <td width="10%" nowrap="nowrap"><?php echo $form->labelEx($model,'eno'); ?></td>
@@ -20,7 +20,7 @@
                 <td width="10%" nowrap="nowrap"><?php echo $form->labelEx($model,'next_contact'); ?></td>
                 <td> 
                     <?php echo $form->textField($model,'next_contact',array('class'=>"Wdate", 'onClick'=>"WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})",'style'=>'height:30px;')); ?>
-                    <?php echo $form->error($model,'next_contact'); ?>
+                    <font color="red"><?php echo $form->error($model,'next_contact'); ?></font>
                 </td>
             </tr>
             <tr>

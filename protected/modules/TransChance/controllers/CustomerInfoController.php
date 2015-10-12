@@ -91,22 +91,64 @@ class CustomerInfoController extends GController {
         }
         return $ret;
     }
-
-    public function actionUpdate($id,$module) {
-        $noteinfo = new NoteInfo();
-        $noteinfo->setAttribute("iskey", 0);
+    public function actionEdit($id){
+        $noteinfo = new NoteInfo(); 
         $noteinfo->setAttribute("isvalid", 1);
         $noteinfo->setAttribute("dial_id", 0);
         $noteinfo->setAttribute("message_id", 0);
         $noteinfo->setAttribute("next_contact", '');
         $noteinfo->cust_id = $id;
         $model = $this->loadModel($id);
+        $noteinfo->setAttribute("iskey", $model->iskey);
+        $trans_info = TransCustInfo::model()->findBySql("select * from {{trans_cust_info}} where cust_id=:cust_id", array(":cust_id" => $id));
+        $contract = new ContractInfo(); 
+        $next_contact='';
+        $loginuser = Users::model()->findByPk(Yii::app()->user->id);
+        $model->setAttribute("create_time", date("Y-m-d H:i:s", intval($model->getAttribute("create_time"))));
+        $model->setAttribute("assign_time", date("Y-m-d H:i:s", intval($model->getAttribute("assign_time"))));
+        if (intval($model->next_time) < 100) {
+            $model->setAttribute("next_time", '无');
+        } else {
+            $model->setAttribute("next_time", date("Y-m-d H:i:s", intval($model->getAttribute("next_time"))));
+        }
+        if (intval($model->last_time) < 100) {
+            $model->setAttribute("last_time", '无');
+        } else {
+            $model->setAttribute("last_time", date("Y-m-d H:i:s", intval($model->getAttribute("last_time"))));
+        }
+
+        $sharedNote = NoteInfo::model();
+        $sharedNote->setAttribute("cust_id", $model->id);
+        $historyNote = NoteInfo::model();
+        $historyNote->setAttribute("cust_id", $model->id);
+        $user = Users::model()->findByPk($model->creator);
+
+        $this->render('update', array(
+            'model' => $model,
+            'trans_model' => $trans_info,
+            'sharedNote' => $sharedNote,
+            'historyNote' => $historyNote,
+            'noteinfo' => $noteinfo,
+            'contract' => $contract,
+            'user' => $user, 
+        ));
+    }
+    public function actionUpdate($id) {
+        $noteinfo = new NoteInfo(); 
+        $noteinfo->setAttribute("isvalid", 1);
+        $noteinfo->setAttribute("dial_id", 0);
+        $noteinfo->setAttribute("message_id", 0);
+        $noteinfo->setAttribute("next_contact", '');
+        $noteinfo->cust_id = $id;
+        $model = $this->loadModel($id);
+        $noteinfo->setAttribute("iskey", $model->iskey);
         $trans_info = TransCustInfo::model()->findBySql("select * from {{trans_cust_info}} where cust_id=:cust_id", array(":cust_id" => $id));
         $contract = new ContractInfo();
 //        ContractInfo::model()->findBySql("select * from {{contract_info}} where cust_id=:cust_id", array(":cust_id" => $id));
 //        if (empty($contract)) {
 //            $contract = new ContractInfo();
 //        }
+        $next_contact='';
         $loginuser = Users::model()->findByPk(Yii::app()->user->id);
         if (isset($_POST['CustomerInfo'])) {
             //保存  
@@ -136,7 +178,7 @@ class CustomerInfoController extends GController {
                 }
                 if ($oldCustType != $newCustType && $newCustType == 17) {
                     //到店 生成售后库
-                    $temp = BlackInfo::model()->findBySql("select * from {{aftermarket_cust_info}} where cust_id=$id");
+                    $temp = AftermarketCustInfo::model()->findBySql("select * from {{aftermarket_cust_info}} where cust_id=$id");
                     if (empty($temp)) {
                         $after = new AftermarketCustInfo();
                         $after->eno = '';
@@ -166,9 +208,10 @@ class CustomerInfoController extends GController {
                     //$contract->comm_pay_time = strtotime($contract->comm_pay_time);
                     $contract->save();
                 }
-                if (Utils::isNeedSaveNoteInfo($_POST['NoteInfo'])) {
+                if (Utils::isNeedSaveNoteInfo($_POST['NoteInfo'],$newCustType)) {
                     //保存小记 
                     $noteinfo->attributes = $_POST['NoteInfo'];
+                    $next_contact=$noteinfo->next_contact;
                     if ($model->iskey != $noteinfo->iskey) {
                         $model->iskey = $noteinfo->iskey;
                     }
@@ -186,7 +229,7 @@ class CustomerInfoController extends GController {
                     }
                 }
                 if ($newCustType == 18) {
-                    //客户分类转成9（公海），生成公海资源数据
+                    //客户分类转成18（公海），生成公海资源数据
                     $temp = BlackInfo::model()->findBySql("select * from {{black_info}} where cust_id=$id");
                     if (empty($temp)) {
                         $blackinfo = new BlackInfo();
@@ -210,6 +253,7 @@ class CustomerInfoController extends GController {
                 } else {
                     $trans_info->save();
                 }
+                $model->update_time=time();
                 $model->save();
                 //更新电话拔打记录
                 if ($noteinfo->dial_id > 0) {
@@ -233,29 +277,22 @@ class CustomerInfoController extends GController {
             if (!$noteinfo->hasErrors() && !$model->hasErrors()) {
                 //提交事务
                 $transaction->commit();
-                /*if ($newCustType == 17 || $newCustType == 18) {
-                    //客户已经转入到售后库或进入公海资源，跳转到成功页面
-                    $this->render("result");
-                    return;
+                 if ($newCustType == 17) {
+                     Yii::app()->user->setFlash('success',"成功转入售后库!");
+                     $this->redirect($this->createUrl("result"));  
+                }else if ($newCustType == 18) {
+                     Yii::app()->user->setFlash('success',"成功放入公海!");
+                     $this->redirect($this->createUrl("result"));  
                 } else {
-                    //保存成功，没有错误，清除数据
-                    $noteinfo->unsetAttributes();
-                    $noteinfo->setAttribute("iskey", 0);
-                    $noteinfo->setAttribute("isvalid", 1);
-                    $noteinfo->setAttribute("dial_id", 0);
-                    $noteinfo->setAttribute("message_id", 0);
-                    $noteinfo->setAttribute("next_contact", '');
-                    $noteinfo->cust_id = $id;
-                }*/
-                $this->redirect($this->createAbsoluteUrl($module));
+                    Yii::app()->user->setFlash('success',"保存成功!");
+                    $this->redirect($this->createUrl("edit",array("id"=>$id)));
+                }  
             } else {
                 //回滚事务
                 $transaction->rollback();
-                $noteinfo->setAttribute("next_contact", '');
+                $noteinfo->setAttribute("next_contact", $next_contact);
             }
-        }
-
-
+        } 
         $model->setAttribute("create_time", date("Y-m-d H:i:s", intval($model->getAttribute("create_time"))));
         $model->setAttribute("assign_time", date("Y-m-d H:i:s", intval($model->getAttribute("assign_time"))));
         if (intval($model->next_time) < 100) {
@@ -282,8 +319,7 @@ class CustomerInfoController extends GController {
             'historyNote' => $historyNote,
             'noteinfo' => $noteinfo,
             'contract' => $contract,
-            'user' => $user,
-            'module'=>$module,
+            'user' => $user, 
         ));
     }
 
@@ -433,6 +469,8 @@ class CustomerInfoController extends GController {
             $model->contact_7_day = $_GET['CustomerInfo']['contact_7_day'];
             $model->next_time_from = $_GET['CustomerInfo']['next_time_from'];
             $model->next_time_to = $_GET['CustomerInfo']['next_time_to']; 
+            $model->search_dept=$_GET['search']['dept'];
+            $model->search_group=$_GET['search']['group'];
             if(isset($_SESSION['_transchance_search_condi_'.$userid])){
                 unset($_SESSION['_transchance_search_condi_'.$userid]);
             }
@@ -480,6 +518,8 @@ class CustomerInfoController extends GController {
             $model->cust_type_from = $_GET['CustomerInfo']['cust_type_from'];
             $model->cust_type_to = $_GET['CustomerInfo']['cust_type_to'];
             $model->contact_7_day = $_GET['CustomerInfo']['contact_7_day'];
+            $model->search_dept=$_GET['search']['dept'];
+            $model->search_group=$_GET['search']['group'];
             if(isset($_SESSION['_transchance_search_mylist_condi_'.$userid])){
                 unset($_SESSION['_transchance_search_mylist_condi_'.$userid]);
             }
@@ -524,6 +564,8 @@ class CustomerInfoController extends GController {
             $model->cust_type_from = $_GET['CustomerInfo']['cust_type_from'];
             $model->cust_type_to = $_GET['CustomerInfo']['cust_type_to'];
             $model->contact_7_day = $_GET['CustomerInfo']['contact_7_day'];
+            $model->search_dept=$_GET['search']['dept'];
+            $model->search_group=$_GET['search']['group'];
             if(isset($_SESSION['_transchance_search_oldlist_condi_'.$userid])){
                 unset($_SESSION['_transchance_search_oldlist_condi_'.$userid]);
             }
@@ -870,5 +912,8 @@ class CustomerInfoController extends GController {
         unset($_SESSION['_transchance_search_oldlist_condi_'.$userid]);
         unset($_SESSION['_transchance_search_oldlist_condi_level_'.$userid]);
         return $this->redirect($this->createAbsoluteUrl("oldList"));
+    }
+    public function genNoteRecordInfo($data){
+        return Utils::genNoteDisplayRecord($data);
     }
 }

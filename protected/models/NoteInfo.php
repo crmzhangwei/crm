@@ -145,8 +145,11 @@ class NoteInfo extends CActiveRecord
 	    $criteria->compare('t.service',$this->service,true);
             $uid = Yii::app()->user->id;
             $criteria->addCondition("t.eno<>$uid"); 
+            $sort = new CSort(); 
+            $sort->defaultOrder=array("create_time"=>CSORT::SORT_DESC);
             return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
+                        'sort'=>$sort,
 		));
         }
         /**
@@ -160,9 +163,11 @@ class NoteInfo extends CActiveRecord
 	    $criteria->compare('service',$this->service,true); 
             $uid = Yii::app()->user->id;
 	    $criteria->addCondition("eno=$uid"); 
-            
+            $sort = new CSort(); 
+            $sort->defaultOrder=array("create_time"=>CSORT::SORT_DESC);
             return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
+                        'sort'=>$sort,
 		));
         }
 	/**

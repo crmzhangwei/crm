@@ -29,6 +29,7 @@
  * @property string $memo
  * @property string $status
  * @property integer $create_time
+ * @property integer $update_time
  * @property integer $creator
  */
 class CustomerInfo extends CActiveRecord {
@@ -43,6 +44,8 @@ class CustomerInfo extends CActiveRecord {
     public $trans_user;
     public $next_time_from;
     public $next_time_to;
+    public $search_dept;
+    public $search_group;
 
     /**
      * @return string the associated database table name
@@ -113,6 +116,7 @@ class CustomerInfo extends CActiveRecord {
             'last_time'=>'最后联系时间',
             'memo' => '备注',
             'create_time' => '创建时间',
+            'update_time' => '保存时间',
             'creator' => '创建人',
             'visit_date' => '到访时间',
             'abandon_reason' => '放弃原因',
@@ -153,7 +157,7 @@ class CustomerInfo extends CActiveRecord {
         $criteria->join="join {{trans_cust_info}} tci ";
         $criteria->addInCondition("tci.cust_type", array(10,11,12,13,14,15,16));
         $criteria->addInCondition("t.status", array(0,3));
-        $criteria->select="t.id,tci.eno,t.cust_name,t.shop_name,t.corp_name,t.category,t.last_time,t.iskey,t.shop_addr,tci.cust_type,tci.assign_time,tci.assign_eno,tci.next_time";
+        $criteria->select="t.id,tci.eno,t.cust_name,t.shop_name,t.corp_name,t.category,t.update_time,t.last_time,t.iskey,t.shop_addr,tci.cust_type,tci.assign_time,tci.assign_eno,tci.next_time";
         $criteria->addCondition("t.id=tci.cust_id"); 
         //只看到自己的客户,及下属客户
         $user_arr = Userinfo::getAllChildUsersId(Yii::app()->user->id);
@@ -166,6 +170,12 @@ class CustomerInfo extends CActiveRecord {
         }
         if ($this->phone) {
             $criteria->compare('phone', $this->phone, true);
+        }
+        if($this->search_dept){
+            $criteria->addCondition(" exists (select 1 from {{users}} where eno=tci.eno and dept_id=$this->search_dept)") ; 
+        }
+        if($this->search_group){
+            $criteria->addCondition(" exists (select 1 from {{users}} where eno=tci.eno and group_id=$this->search_group)") ; 
         }
         if ($this->eno) {
             $criteria->compare('tci.eno', $this->eno, true);
@@ -203,6 +213,7 @@ class CustomerInfo extends CActiveRecord {
             'assign_time' => array('asc' => 'tci.assign_time asc', 'desc' => 'tci.assign_time desc','default'=>'desc'),
             'next_time' => array('asc' => 'tci.next_time asc', 'desc' => 'tci.next_time desc','default'=>'asc'),
             'last_time' => array('asc' => 't.last_time asc', 'desc' => 't.last_time desc','default'=>'desc'),
+            'update_time' => array('asc' => 't.update_time asc', 'desc' => 't.update_time desc','default'=>'desc'),
             'shop_addr' => array('asc' => 't.shop_addr asc', 'desc' => 't.shop_addr desc'),
         );
         $sort->defaultOrder=array("next_time"=>CSort::SORT_ASC);
@@ -221,7 +232,7 @@ class CustomerInfo extends CActiveRecord {
         $criteria->join="join {{trans_cust_info}} tci "; 
         $criteria->addInCondition("tci.cust_type", array(10,11,12,13,14,15,16));
         $criteria->addInCondition("t.status", array(0,3));
-        $criteria->select="t.id,tci.eno,t.cust_name,t.shop_name,t.corp_name,t.iskey,t.category,t.shop_addr,tci.cust_type,tci.assign_time,tci.assign_eno,tci.next_time";
+        $criteria->select="t.id,tci.eno,t.cust_name,t.shop_name,t.corp_name,t.iskey,t.category,t.last_time,t.update_time,t.shop_addr,tci.cust_type,tci.assign_time,tci.assign_eno,tci.next_time";
         $criteria->addCondition("t.id=tci.cust_id"); 
         //只看到自己的客户,及下属客户
         $user_arr = Userinfo::getAllChildUsersId(Yii::app()->user->id);
@@ -237,6 +248,12 @@ class CustomerInfo extends CActiveRecord {
         }
         if ($this->qq) {
             $criteria->compare('qq', $this->qq, true);
+        }
+        if($this->search_dept){
+            $criteria->addCondition(" exists (select 1 from {{users}} where eno=tci.eno and dept_id=$this->search_dept)") ; 
+        }
+        if($this->search_group){
+            $criteria->addCondition(" exists (select 1 from {{users}} where eno=tci.eno and group_id=$this->search_group)") ; 
         }
         if ($this->eno) {
             $criteria->compare('tci.eno', $this->eno, true);
@@ -264,6 +281,7 @@ class CustomerInfo extends CActiveRecord {
             'assign_time' => array('asc' => 'tci.assign_time asc', 'desc' => 'tci.assign_time desc','default'=>'desc'),
             'next_time' => array('asc' => 'tci.next_time asc', 'desc' => 'tci.next_time desc','default'=>'asc'),
             'last_time' => array('asc' => 't.last_time asc', 'desc' => 't.last_time desc','default'=>'desc'),
+            'update_time' => array('asc' => 't.update_time asc', 'desc' => 't.update_time desc','default'=>'desc'),
             'shop_addr' => array('asc' => 't.shop_addr asc', 'desc' => 't.shop_addr desc'),
         );
         $sort->defaultOrder=array("next_time"=>CSort::SORT_ASC);    
@@ -283,7 +301,7 @@ class CustomerInfo extends CActiveRecord {
         $criteria->join="join {{trans_cust_info}} tci ";
         $criteria->addInCondition("tci.cust_type", array(10,11,12,13,14,15,16));
         $criteria->addInCondition("t.status", array(0,3));
-        $criteria->select="t.id,tci.eno,t.cust_name,t.shop_name,t.corp_name,t.iskey,t.category,t.shop_addr,tci.cust_type,tci.assign_time,tci.assign_eno,tci.next_time";
+        $criteria->select="t.id,tci.eno,t.cust_name,t.shop_name,t.corp_name,t.last_time,t.update_time,t.iskey,t.category,t.shop_addr,tci.cust_type,tci.assign_time,tci.assign_eno,tci.next_time";
         $criteria->addCondition("t.id=tci.cust_id"); 
         //只看到自己的客户,及下属客户
         $user_arr = Userinfo::getAllChildUsersId(Yii::app()->user->id);
@@ -304,6 +322,12 @@ class CustomerInfo extends CActiveRecord {
             $itime = time();
             $itime = $itime - 86400*7;
             $criteria->addCondition("last_time>=$itime");
+        }
+        if($this->search_dept){
+            $criteria->addCondition(" exists (select 1 from {{users}} where eno=tci.eno and dept_id=$this->search_dept)") ; 
+        }
+        if($this->search_group){
+            $criteria->addCondition(" exists (select 1 from {{users}} where eno=tci.eno and group_id=$this->search_group)") ; 
         }
         if ($this->eno) {
             $criteria->compare('tci.eno', $this->eno, true);
@@ -328,6 +352,7 @@ class CustomerInfo extends CActiveRecord {
             'assign_time' => array('asc' => 'tci.assign_time asc', 'desc' => 'tci.assign_time desc','default'=>'desc'),
             'next_time' => array('asc' => 'tci.next_time asc', 'desc' => 'tci.next_time desc','default'=>'asc'),
             'last_time' => array('asc' => 't.last_time asc', 'desc' => 't.last_time desc','default'=>'desc'),
+            'update_time' => array('asc' => 't.update_time asc', 'desc' => 't.update_time desc','default'=>'desc'),
             'shop_addr' => array('asc' => 't.shop_addr asc', 'desc' => 't.shop_addr desc'),
         );
         $sort->defaultOrder=array("next_time"=>CSort::SORT_ASC);

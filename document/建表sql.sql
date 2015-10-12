@@ -139,6 +139,7 @@ CREATE TABLE `c_customer_info` (
   `memo` varchar(100) DEFAULT '' COMMENT '备注',
   `status` int(11) DEFAULT '0' COMMENT '状态',
   `create_time` int(11) NOT NULL default 0 COMMENT '创建时间',
+  `update_time` int(11) NOT NULL default 0 COMMENT '修改时间',
   `creator` int(11) NOT NULL default 0 COMMENT '创建人',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -305,8 +306,36 @@ CREATE TABLE c_note_template(
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+CREATE TABLE `c_dial_detail_p` ( 
+  `uid` varchar(20) NOT NULL DEFAULT '' COMMENT '接口id',
+  `userid` int(11) NOT NULL DEFAULT '0' COMMENT '用户id',
+  `cust_id` int(11) NOT NULL DEFAULT '0' COMMENT '客户id',
+  `extend_no` varchar(10) NOT NULL DEFAULT '' COMMENT '分机号',
+  `phone` varchar(20) NOT NULL DEFAULT '' COMMENT '电话',
+  `dial_time` int(11) NOT NULL DEFAULT '0' COMMENT '拔打时间',
+  `dial_long` int(11) NOT NULL DEFAULT '0' COMMENT '拔打时长', 
+  `record_path` varchar(200) DEFAULT '' COMMENT '录音路径',  
+  KEY `idx_dialdetailp_01` (`uid`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8
+/*!50100 PARTITION BY RANGE (dial_time)
+(PARTITION p0 VALUES LESS THAN (UNIX_TIMESTAMP('2015-12-31 23:59:59')) ENGINE = MyISAM,
+ PARTITION p1 VALUES LESS THAN (UNIX_TIMESTAMP('2016-12-31 23:59:59')) ENGINE = MyISAM,
+ PARTITION p2 VALUES LESS THAN (UNIX_TIMESTAMP('2017-12-31 23:59:59')) ENGINE = MyISAM,
+ PARTITION p3 VALUES LESS THAN MAXVALUE ENGINE = MyISAM) */; 
+ 
+ 
+CREATE TABLE `c_sync_conf` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `sync_date` datetime NULL COMMENT '同步日期',
+  `table` varchar(20) NULL COMMENT '同步表',
+  `status` int DEFAULT 0 COMMENT '是否同步',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='同步跟踪表';
+
 create unique index idx_black_info_01 on c_black_info(cust_id);
 create index idx_customerinfo_01 on c_customer_info(eno);
 create index idx_dialdetail_01 on c_dial_detail(cust_id);
 create index idx_dialdetail_02 on c_dial_detail(eno);
 create index idx_dialdetail_03 on c_dial_detail(uid);
+
+alter table c_customer_info add column update_time int not null default 0  comment '保存时间' after assign_time;

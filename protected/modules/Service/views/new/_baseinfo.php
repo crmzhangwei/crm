@@ -26,9 +26,12 @@ function sendMail(cust_id){
     window.open('http://exmail.qq.com/login');   
 }
 </script> 
+<font color="red">
 	<?php echo $form->errorSummary($model); ?>
         <?php echo $form->errorSummary($note); ?>
         <?php echo $form->errorSummary($contract); ?>
+        <?php echo Yii::app()->user->getFlash('success');  ?>
+</font>
         <table class="table table-bordered"> 
             <tr>
                 <td width="10%" nowrap="nowrap"><?php echo $form->labelEx($model,'cust_name'); ?></td>

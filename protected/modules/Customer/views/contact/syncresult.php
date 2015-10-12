@@ -4,7 +4,7 @@
 
 $this->breadcrumbs=array(
 	'安排联系机会'=>array('admin'),
-	'结果页面',
+	'同步结果页面',
 );
 
 $this->menu=array(
@@ -16,5 +16,5 @@ $this->menu=array(
  
 <font color="red"><?php echo Yii::app()->user->getFlash('success');  ?></font> 
 <?php  
-echo "<p><a href='#' onclick='javascript:window.close();'>关闭</a></p>";
+echo "<p><a href='index.php?r=Customer/contact/index' >返回列表</a></p>";
 ?> 

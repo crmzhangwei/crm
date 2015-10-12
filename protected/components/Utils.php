@@ -302,10 +302,8 @@ class Utils {
      * 检查是否需要保存小记信息
      * @param type $noteinfo
      */
-    public static function isNeedSaveNoteInfo($noteinfo) {
-        if ($noteinfo['next_contact'] != '') {
-            return true;
-        }
+    public static function isNeedSaveNoteInfo($noteinfo,$custtype) {
+        
         if ($noteinfo['cust_info'] != '') {
             return true;
         }
@@ -324,10 +322,49 @@ class Utils {
         if ($noteinfo['memo'] != '') {
             return true;
         }
-        if (intval($noteinfo['dial_id']) > 0) {
+        if (intval($noteinfo['dial_id']) > 0 && $custtype!=9) {
             return true;
         }
-        if (intval($noteinfo['message_id']) > 0) {
+        if (intval($noteinfo['message_id']) > 0 && $custtype!=9) {
+            return true;
+        }
+        if ($noteinfo['next_contact'] != '') {
+            return true;
+        }
+        return false;
+    }
+    
+    /**
+     * 检查是否需要保存小记信息
+     * @param type $noteinfo
+     */
+    public static function isNeedSaveNoteInfoForAfter($noteinfo,$custtype) {
+        
+        if ($noteinfo['cust_info'] != '') {
+            return true;
+        }
+        if ($noteinfo['requirement'] != '') {
+            return true;
+        }
+        if ($noteinfo['service'] != '') {
+            return true;
+        }
+        if ($noteinfo['dissent'] != '') {
+            return true;
+        }
+        if ($noteinfo['next_followup'] != '') {
+            return true;
+        }
+        if ($noteinfo['memo'] != '') {
+            return true;
+        }
+        if (intval($noteinfo['dial_id']) > 0 && $custtype!=8) {
+            return true;
+        }
+        if (intval($noteinfo['message_id']) > 0 && $custtype!=8) {
+            return true;
+        }
+        if ($noteinfo['next_contact'] != '') {
             return true;
         }
         return false;
@@ -441,20 +478,16 @@ class Utils {
      * 生成小记显示记录,need to do
      * @param type $record
      */
-    public static function genNoteDisplayRecord($row, $record) {
-        $str = ($row + 1) . "、" . date("Y-m-d H:i:s", $record->create_time) . " " . $record['cust_id'] . " " . Userinfo::getNameById($record['eno']) . " " . $record['cust_type'];
-        $dial_detail = DialDetail::model()->findByPk($record['dial_id']);
-        $custtype = CustType::findByTypeAndNo($record['lib_type'], $record['cust_type']);
-        if ($record['dial_id'] > 0) {
-            $str = $str . " 已拔打电话";
-            if ($dial_detail['dial_long'] > 0) {
-                $str = $str . " <a href='#' onclick='javascript:playAndDown()'>播放和下载</a>";
-            }
-        }
-        $str = $str . "<br/>";
-
-        $str = $str . $record['cust_type'] . ":" . $custtype['type_name'] . "->下次联系时间：" . date("Y-m-d H:i:s", $record->next_contact) . "<br/>";
-        $str = $str . "电话接通状态->";
+    public static function genNoteDisplayRecord($record) {
+        $str ='<font style="font-weight:bold">'. Userinfo::getNameById($record['eno'])."</font>&nbsp;&nbsp;&nbsp;<font color='gray'>".date("Y-m-d H:i:s", $record->create_time) ." 添加了跟进记录 </font><br/><br/> ";
+        $str = $str." ".$record['cust_info']." ".$record['requirement']." ".$record['service']." ".$record['dissent']." ".$record['next_followup']." ".$record['memo']." "; 
+        $custtype = CustType::findByTypeAndNo($record['lib_type'], $record['cust_type']); 
+        $str = $str . " "; 
+        $str = $str . "【".$record['cust_type'] . " 类 - " . $custtype['type_name'] . "】&nbsp;&nbsp;->&nbsp;下次联系时间：" ;
+        if($record->next_contact ){
+            $str=$str.date("Y-m-d H:i:s", $record->next_contact) ;
+        } 
+        return $str;    
     }
 
     /**

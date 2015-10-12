@@ -29,7 +29,7 @@
             // controller action is handling ajax validation correctly.
             // There is a call to performAjaxValidation() commented in generated controller code.
             // See class documentation of CActiveForm for details on this.
-            'action' => Yii::app()->controller->createUrl('update', array('id' => $model->id,'module'=>$module)),
+            'action' => Yii::app()->controller->createUrl('update', array('id' => $model->id)),
             'enableAjaxValidation' => false,
         ));
         ?>

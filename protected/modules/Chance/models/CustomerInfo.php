@@ -28,6 +28,7 @@
  * @property integer $last_time
  * @property string $memo
  * @property integer $create_time
+ * @property integer $update_time
  * @property integer $creator
  * @property integer visit_date 
  * @property integer abandon_reason 
@@ -44,6 +45,8 @@ class CustomerInfo extends CActiveRecord {
     public $trans_user;
     public $next_time_from;
     public $next_time_to;
+    public $search_dept;
+    public $search_group;
 
     /**
      * @return string the associated database table name
@@ -60,7 +63,7 @@ class CustomerInfo extends CActiveRecord {
         // will receive user inputs.
         return array( 
             array('category, cust_type, iskey, status, creator', 'numerical', 'integerOnly' => true),
-            array('cust_name, shop_name, corp_name, shop_url, shop_addr, datafrom, memo', 'length', 'max' => 100), 
+            array('cust_name, shop_name, corp_name, shop_url, shop_addr, datafrom, memo', 'length', 'max' => 500), 
             array('phone, qq', 'length', 'max' => 20),
             array('visit_date, assign_time, next_time,last_time, create_time', 'safe'),
             array('mail', 'length', 'max' => 50),
@@ -112,6 +115,7 @@ class CustomerInfo extends CActiveRecord {
             'last_time' => '最后联系时间',
             'memo' => '备注',
             'create_time' => '创建时间',
+            'update_time' => '保存时间',
             'creator' => '创建人',
             'visit_date' => '到访时间',
             'abandon_reason' => '放弃原因',
@@ -160,11 +164,16 @@ class CustomerInfo extends CActiveRecord {
             if(!empty($wherestr)){
                $criteria->addCondition(" exists (select 1 from {{users}} where eno=t.eno and $wherestr)") ; 
             } 
-        }
-           
+        } 
         if ($this->phone) {
             $criteria->compare('phone', $this->phone, true);
         } 
+        if($this->search_dept){
+            $criteria->addCondition(" exists (select 1 from {{users}} where eno=t.eno and dept_id=$this->search_dept)") ; 
+        }
+        if($this->search_group){
+            $criteria->addCondition(" exists (select 1 from {{users}} where eno=t.eno and group_id=$this->search_group)") ; 
+        }
 	if ($this->eno) {
             $criteria->compare('eno', $this->eno, true);
         } 
@@ -202,6 +211,7 @@ class CustomerInfo extends CActiveRecord {
             'assign_time' => array('asc' => 'assign_time asc', 'desc' => 'assign_time desc','default'=>'desc'),
             'next_time' => array('asc' => 'next_time asc', 'desc' => 'next_time desc','default'=>'asc'),
             'last_time' => array('asc' => 'last_time asc', 'desc' => 'last_time desc','default'=>'desc'),
+            'update_time' => array('asc' => 'update_time asc', 'desc' => 'update_time desc','default'=>'desc'),
             'shop_addr' => array('asc' => 'shop_addr asc', 'desc' => 'shop_addr desc'),
         );
         $sort->defaultOrder=array("next_time"=>CSORT::SORT_ASC);
@@ -234,6 +244,12 @@ class CustomerInfo extends CActiveRecord {
         if ($this->qq) {
             $criteria->compare('qq', $this->qq, true);
         }
+        if($this->search_dept){
+            $criteria->addCondition(" exists (select 1 from {{users}} where eno=t.eno and dept_id=$this->search_dept)") ; 
+        }
+        if($this->search_group){
+            $criteria->addCondition(" exists (select 1 from {{users}} where eno=t.eno and group_id=$this->search_group)") ; 
+        }
         if ($this->eno) {
             $criteria->compare('eno', $this->eno, true);
         }
@@ -260,6 +276,7 @@ class CustomerInfo extends CActiveRecord {
             'assign_time' => array('asc' => 'assign_time asc', 'desc' => 'assign_time desc','default'=>'desc'),
             'next_time' => array('asc' => 'next_time asc', 'desc' => 'next_time desc','default'=>'asc'),
             'last_time' => array('asc' => 'last_time asc', 'desc' => 'last_time desc','default'=>'desc'),
+            'update_time' => array('asc' => 'update_time asc', 'desc' => 'update_time desc','default'=>'desc'),
             'shop_addr' => array('asc' => 'shop_addr asc', 'desc' => 'shop_addr desc'),
         );
         $sort->defaultOrder=array("next_time"=>CSort::SORT_ASC);
@@ -293,6 +310,12 @@ class CustomerInfo extends CActiveRecord {
         if ($this->cust_type_from>-1 && $this->cust_type_to>-1) {
             $criteria->addBetweenCondition('cust_type', intval($this->cust_type_from), intval($this->cust_type_to));
         }
+        if($this->search_dept){
+            $criteria->addCondition(" exists (select 1 from {{users}} where eno=t.eno and dept_id=$this->search_dept)") ; 
+        }
+        if($this->search_group){
+            $criteria->addCondition(" exists (select 1 from {{users}} where eno=t.eno and group_id=$this->search_group)") ; 
+        }
         if ($this->eno) {
             $criteria->compare('eno', $this->eno, true);
         }
@@ -322,6 +345,7 @@ class CustomerInfo extends CActiveRecord {
             'assign_time' => array('asc' => 'assign_time asc', 'desc' => 'assign_time desc','default'=>'desc'),
             'next_time' => array('asc' => 'next_time asc', 'desc' => 'next_time desc','default'=>'asc'),
             'last_time' => array('asc' => 'last_time asc', 'desc' => 'last_time desc','default'=>'desc'),
+            'update_time' => array('asc' => 'update_time asc', 'desc' => 'update_time desc','default'=>'desc'),
             'shop_addr' => array('asc' => 'shop_addr asc', 'desc' => 'shop_addr desc'),
         );
         $sort->defaultOrder=array("next_time"=>CSort::SORT_ASC);

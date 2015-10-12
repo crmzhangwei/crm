@@ -346,12 +346,26 @@ class CustomerinfoController extends GController
         public function actionContact(){
             $model = new DialDetail('search');
             $model->unsetAttributes();
+            //部门组别人员三级联动
+	    $uInfo = Userinfo::secondlevel();
             if(isset($_GET['DialDetail'])){
                 $model->attributes= $_GET['DialDetail'];
                 $model->searchtype= $_GET['DialDetail']['searchtype'];
                 $model->keyword= $_GET['DialDetail']['keyword'];
+                $model->timetype = $_GET['DialDetail']['timetype'];
+                $model->stime = $_GET['DialDetail']['stime'];
+                $model->etime = $_GET['DialDetail']['etime'];
+                $model->dept=$_GET['search']['dept'];
+                $model->group=$_GET['search']['group'];
             }
-            $this->render("contact",array('model'=>$model));
+            $this->render("contact",
+                    array(
+                        'model'=>$model,
+                        'deptArr'=>$uInfo['deptArr'],
+			'groupArr'=>$uInfo['groupArr'],
+                        'user_info'=>$uInfo['user_info'],
+                        'infoArr'=>$uInfo['infoArr'],
+                    ));
         }
 	/**
 	 * Returns the data model based on the primary key given in the GET variable.

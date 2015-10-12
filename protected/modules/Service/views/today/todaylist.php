@@ -69,6 +69,9 @@ $this->widget('GGridView', array(
         array('name'=>'next_time',  
                     'value'=>'date("Y-m-d H:i:s",$data->next_time)',//格式化日期  
                 ),
+        array('name'=>'update_time',  
+                    'value'=>'date("Y-m-d H:i:s",$data->update_time)',//格式化日期  
+                ),
         array('name'=>'last_time',  
                     'value'=>'date("Y-m-d H:i:s",$data->last_time)',//格式化日期  
                 ),
@@ -80,7 +83,7 @@ $this->widget('GGridView', array(
                     'label' => '查看客户详情',
                     'url' => 'Yii::app()->controller->createUrl("edit",array("id"=>$data->primaryKey))',
                     'imageUrl' => '',
-                    'options' => array('class' => 'editNode btn btn-info btn-minier tooltip-info', 'data-placement' => "bottom"),
+                    'options' => array('class' => 'editNode btn btn-info btn-minier tooltip-info', 'data-placement' => "bottom",'target'=>'_blank'),
                 ),
             ),
         ),

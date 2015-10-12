@@ -3,7 +3,7 @@
 /* @var $model CustomerInfo */
 
 $this->breadcrumbs = array(
-    '安排联系机会' => array('admin'),
+    '我的机会' => array('todaylist'),
     '合并客户',
 );
 
