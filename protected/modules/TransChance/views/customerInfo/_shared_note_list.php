@@ -8,7 +8,7 @@ $this->widget('GGridView', array(
     'columns' => array(
         array('class' => 'CCheckBoxColumn',
             'name' => 'id',
-            'id' => 'select',
+            'id' => 'select_shared',
             'selectableRows' => 0,
             'headerTemplate' => '{item}',
             'htmlOptions' => array('width' => '20'),
@@ -29,7 +29,7 @@ $this->widget('GGridView', array(
                     'label' => '查看',
                     'url' => '',
                     'imageUrl' => '',
-                    'options' => array('class' => 'btn btn-info btn-minier tooltip-info', 'onclick'=>'viewit(this)'),
+                    'options' => array('class' => 'btn btn-info btn-minier tooltip-info', 'onclick'=>'viewit_shared(this)'),
                 ),
             ),
             'htmlOptions' => array(
@@ -74,10 +74,10 @@ $this->widget('GGridView', array(
         ?> 
         public.dialog('播放和下载录音', url + '&id=' + note_id);
     }
-     function viewit(obj)
+     function viewit_shared(obj)
     { 
         var trindex = $(obj).parents('tr').index();
-        var note_id = $('#select_' + trindex).val();
+        var note_id = $('#select_shared_' + trindex).val();
         var url;
         <?php $a = Yii::app()->createurl('Service/service/viewNote');
         echo 'url=' . "'$a'";
