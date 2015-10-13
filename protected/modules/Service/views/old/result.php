@@ -12,10 +12,9 @@ $this->menu=array(
 );
 ?>
 
-<h1>信息提示</h1>
-
-<?php 
-$url = Yii::app()->createUrl("Service/old/list");
-echo CHtml::errorSummary($model,"<p>操作结果信息如下：</p>","<p><a href='$url'>返回列表</a></p>",null); 
-
-?> 
+<h1>操作提示</h1>
+ 
+<font color="red"><?php echo Yii::app()->user->getFlash('success');  ?></font> 
+<?php  
+echo "<p><a href='#' onclick='javascript:window.close();'>关闭</a></p>";
+?>

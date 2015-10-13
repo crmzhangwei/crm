@@ -13,19 +13,11 @@
         
         <table class="table table-bordered" style="width:50%;">
             <tr>
-                <td width="5%" nowrap="nowrap"><?php echo $form->labelEx($model,'cust_info'); ?></td>
+                <td width="5%" nowrap="nowrap"><?php echo $form->labelEx($model,'memo'); 
+                echo Chtml::hiddenField("NoteInfoP[cust_id]", $custmodel->id);
+                ?></td> 
                 <td width="5%" nowrap="nowrap">
-                     <?php echo $form->textField($model,'cust_info'); 
-                        echo Chtml::hiddenField("NoteInfo[cust_id]", $custmodel->id);
-                     ?>
-                </td> 
-                <td width="5%" nowrap="nowrap"><?php echo $form->labelEx($model,'requirement'); ?></td>
-                <td width="5%" nowrap="nowrap">
-                     <?php echo $form->textField($model,'requirement'); ?>
-                </td>
-                <td width="5%" nowrap="nowrap"><?php echo $form->labelEx($model,'service'); ?></td>
-                <td width="5%" nowrap="nowrap">
-                     <?php echo $form->textField($model,'service'); ?>
+                     <?php echo $form->textField($model,'memo',array('maxlength'=>200,'size'=>100)); ?>
                 </td> 
                 <td><?php echo CHtml::submitButton('搜索',array('class' => 'btn btn-sm btn-primary')); ?></td>
             </tr> 

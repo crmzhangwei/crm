@@ -80,7 +80,7 @@ $this->widget('GGridView', array(
                     'label' => '查看客户详情',
                     'url' => 'Yii::app()->controller->createUrl("edit",array("id"=>$data->primaryKey))',
                     'imageUrl' => '',
-                    'options' => array('class' => 'editNode btn btn-info btn-minier tooltip-info', 'data-placement' => "bottom"),
+                    'options' => array('class' => 'editNode btn btn-info btn-minier tooltip-info', 'data-placement' => "bottom",'target'=>'_blank'),
                 ),
             ),
         ),

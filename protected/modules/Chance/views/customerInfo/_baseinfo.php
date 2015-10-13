@@ -27,13 +27,14 @@ function sendMail(cust_id){
 }
 function dial(cust_id,seq){
     var dialid=$('#NoteInfo_dial_id').val();
-    $uid = $('#NoteInfo_uid').val();
+    var uid = $('#NoteInfo_uid').val();
     if(dialid>0&&uid==''){
         bootbox.alert('请先获取通话时长!');
         return ;
     }
     $.getJSON('index.php?r=Service/service/dial&cust_id='+cust_id+"&seq="+seq,function(obj){
          $('#NoteInfo_dial_id').val(obj.dial_id); 
+         $('#NoteInfo_uid').val('');
          bootbox.alert(obj.message);
     });
 }
@@ -74,7 +75,9 @@ function changeCustType(obj){
 }
 </script> 
  
-	<?php echo $form->errorSummary($model);  ?>
+<font color="red"><?php echo $form->errorSummary($model);  ?>
+<?php echo Yii::app()->user->getFlash('success');  ?>
+</font>
        
         <table class="table table-bordered"> 
             <tr>

@@ -98,6 +98,7 @@ class UnCall {
             case 4: $phonenumber=$cust->phone4;break;
             case 5: $phonenumber=$cust->phone5;break;
         }
+        $phonenumber=trim($phonenumber);
         if(substr($phonenumber,0,1)=="1"&&UnCall::getPhoneZone($phonenumber)){
             $phonenumber="0".$phonenumber;
             $sql = "update {{customer_info}} set $field='$phonenumber' where id=$cust_id";

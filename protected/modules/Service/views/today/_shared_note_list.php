@@ -8,24 +8,15 @@ $this->widget('GGridView', array(
     'columns' => array(
         array('class' => 'CCheckBoxColumn',
             'name' => 'id',
-            'id' => 'select',
+            'id' => 'select_shared',
             'selectableRows' => 0,
             'headerTemplate' => '{item}',
             'htmlOptions' => array('width' => '20'),
         ),
-        array('name' => 'cust_type',  'value'=>array($this, 'get_type_text')),
-        'cust_info',
-        'requirement',
-        'service',
-        'dissent',
-        'next_followup',
-        'memo',
-        array('name' => 'next_contact', 'value' => 'date("Y-m-d H:i:s",$data->next_contact)'),
-        array('name' => 'create_time', 'value' => 'date("Y-m-d H:i:s",$data->create_time)'),
-        array('name' => 'eno', 'value' => array($this,'get_user_text')),
+        array('name' => 'memo',  'value'=>array($this, 'genNoteRecordInfo'),'type'=>'html'), 
         array(
             'class' => 'CButtonColumn',
-            'template' => '{play} {view}',
+            'template' => '{view}',
             'header' => '操作',
             'buttons' => array(
                 'play' => array(
@@ -38,11 +29,11 @@ $this->widget('GGridView', array(
                     'label' => '查看',
                     'url' => '',
                     'imageUrl' => '',
-                    'options' => array('class' => 'btn btn-info btn-minier tooltip-info', 'onclick'=>'viewit(this)'),
+                    'options' => array('class' => 'btn btn-info btn-minier tooltip-info', 'onclick'=>'viewit_shared(this)'),
                 ),
             ),
             'htmlOptions' => array(
-                'width' => '200',
+                'width' => '100',
             )
         ),
     ),
@@ -83,10 +74,10 @@ $this->widget('GGridView', array(
         ?> 
         public.dialog('播放和下载录音', url + '&id=' + note_id);
     }
-     function viewit(obj)
+     function viewit_shared(obj)
     { 
         var trindex = $(obj).parents('tr').index();
-        var note_id = $('#select_' + trindex).val();
+        var note_id = $('#select_shared_' + trindex).val();
         var url;
         <?php $a = Yii::app()->createurl('Service/service/viewNote');
         echo 'url=' . "'$a'";

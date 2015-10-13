@@ -16,8 +16,9 @@ class AfterController extends GController {
         $search = Yii::app()->request->getParam("search");
         $isexcel = Yii::app()->request->getParam("isexcel");
         if (empty($search)) {
-            $search['stime'] = '';
-            $search['etime'] = '';
+            $curdate = date("Y-m-d");
+            $search['stime'] = $curdate." 00:00:00";
+            $search['etime'] = $curdate." 23:59:59";
         }
         $offset = ($page - 1) * $this->pageSize;
         
@@ -80,10 +81,10 @@ EOF;
             $filename = "售后-联系量统计.csv";
             header("Content-type:text/csv");
             header("Content-Disposition:attachment;filename=" . $filename); 
-            echo iconv('utf-8','gb2312',$this->yeji_titles);
+            echo iconv('utf-8','GBK',$this->yeji_titles);
             $c=1;
             foreach($res as $record){
-                echo $c.",".iconv('utf-8','gb2312',Utils::array_to_string($this->yeji_title_keys,$record));
+                echo $c.",".iconv('utf-8','GBK',Utils::array_to_string($this->yeji_title_keys,$record));
                 $c++;
             } 
         } else {
@@ -133,8 +134,9 @@ EOF;
         $search = Yii::app()->request->getParam("search");
         $isexcel = Yii::app()->request->getParam("isexcel");
         if (empty($search)) {
-            $search['stime'] = '';
-            $search['etime'] = '';
+            $curdate = date("Y-m-d");
+            $search['stime'] = $curdate." 00:00:00";
+            $search['etime'] = $curdate." 23:59:59";
             $search['dept'] = '';
         }
         $offset = ($page - 1) * $this->pageSize;
@@ -204,10 +206,10 @@ EOF;
             $filename = "售后-新分资源跟踪分析.csv";
             header("Content-type:text/csv");
             header("Content-Disposition:attachment;filename=" . $filename); 
-            echo iconv('utf-8','gb2312',$this->newresource_titles);
+            echo iconv('utf-8','GBK',$this->newresource_titles);
             $c=1;
             foreach($res as $record){
-                echo $c.",".iconv('utf-8','gb2312',Utils::array_to_string($this->newresource_title_keys,$this->calNewResourceRecord($record)));
+                echo $c.",".iconv('utf-8','GBK',Utils::array_to_string($this->newresource_title_keys,$this->calNewResourceRecord($record)));
                 $c++;
             } 
         } else {
@@ -303,10 +305,10 @@ EOF;
             $filename = "售后-续费会员分析.csv";
             header("Content-type:text/csv");
             header("Content-Disposition:attachment;filename=" . $filename); 
-            echo iconv('utf-8','gb2312',$this->renewals_titles);
+            echo iconv('utf-8','GBK',$this->renewals_titles);
             $c=1;
             foreach($res as $record){
-                echo $c.",".iconv('utf-8','gb2312',Utils::array_to_string($this->renewals_title_keys,$record));
+                echo $c.",".iconv('utf-8','GBK',Utils::array_to_string($this->renewals_title_keys,$record));
                 $c++;
             } 
         } else {

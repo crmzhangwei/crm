@@ -14,18 +14,10 @@ $this->widget('GGridView', array(
             'headerTemplate' => '{item}',
             'htmlOptions' => array('width' => '20'),
         ),
-        array('name' => 'cust_type',  'value'=>array($this, 'get_type_text')),
-        'cust_info',
-        'requirement',
-        'service',
-        'dissent',
-        'next_followup',
-        'memo',
-        array('name' => 'next_contact', 'value' => 'date("Y-m-d H:i:s",$data->next_contact)'),
-        array('name' => 'create_time', 'value' => 'date("Y-m-d H:i:s",$data->create_time)'),
+        array('name' => 'memo',  'value'=>array($this, 'genNoteRecordInfo'),'type'=>'html'), 
         array(
             'class' => 'CButtonColumn',
-            'template' => '{play} {view}',
+            'template' => '{view}',
             'header' => '操作',
             'buttons' => array(
                 'play' => array(
@@ -42,7 +34,7 @@ $this->widget('GGridView', array(
                 ),
             ),
             'htmlOptions' => array(
-                'width' => '200',
+                'width' => '100',
             )
         ),
     ),

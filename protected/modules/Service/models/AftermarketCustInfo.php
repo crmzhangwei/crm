@@ -34,6 +34,7 @@ class AftermarketCustInfo extends CActiveRecord {
     public $searchtype;
     public $keyword;
     public $last_time;
+    public $update_time;
     public $iskey;
     public $message_template;
 
@@ -97,6 +98,7 @@ class AftermarketCustInfo extends CActiveRecord {
             'memo' => '备注',
             'creator' => '创建人',
             'create_time' => '创建时间',
+            'update_time' => '保存时间',
             'total_money' => '金额',
             'cust[cust_name]' => '客户名称',
             'cust[shop_name]' => '店铺名称',
@@ -138,7 +140,7 @@ class AftermarketCustInfo extends CActiveRecord {
             $criteria->compare('u.group_id', $this->group);
         }
         $criteria->compare('c.category', $this->category);
-        $criteria->select = "c.id,c.cust_name,t.cust_type,c.category,c.iskey,d.name as category_name,c.qq,t.webchat,t.ww,ci.service_limit,t.eno,t.assign_eno,t.assign_time,t.next_time ";
+        $criteria->select = "c.id,c.cust_name,t.cust_type,c.category,c.iskey,d.name as category_name,c.qq,c.last_time,c.update_time,t.webchat,t.ww,ci.service_limit,t.eno,t.assign_eno,t.assign_time,t.next_time ";
 
         $criteria->join = " left join {{customer_info}} c on t.cust_id = c.id " .
                 " left join {{users}} u on t.eno=u.eno " . 
@@ -170,6 +172,8 @@ class AftermarketCustInfo extends CActiveRecord {
             'eno' => array('asc' => 't.eno asc', 'desc' => 't.eno desc'),
             'assign_eno' => array('asc' => 't.assign_eno asc', 'desc' => 't.assign_eno desc'),
             'assign_time' => array('asc' => 't.assign_time asc', 'desc' => 't.assign_time desc'),
+            'update_time' => array('asc' => 'c.update_time asc', 'desc' => 'c.update_time desc'),
+            'last_time' => array('asc' => 't.last_time asc', 'desc' => 't.last_time desc'),
         );
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
@@ -201,7 +205,7 @@ class AftermarketCustInfo extends CActiveRecord {
                 break;
             default:break;
         }
-        $criteria->select = "c.id,c.cust_name,c.iskey,t.cust_type,c.category,d.name as category_name,c.qq,t.webchat,t.ww,ci.service_limit,t.eno,t.assign_eno,t.assign_time,t.next_time,c.last_time ";
+        $criteria->select = "c.id,c.cust_name,c.iskey,t.cust_type,c.category,d.name as category_name,c.qq,c.update_time,t.webchat,t.ww,ci.service_limit,t.eno,t.assign_eno,t.assign_time,t.next_time,c.last_time ";
         $criteria->join = " left join {{customer_info}} c on t.cust_id = c.id " .
                 " left join {{users}} u on t.eno=u.eno " . 
                 " left join {{dic}} d on c.category=d.code and d.ctype='cust_category' " .
@@ -236,6 +240,7 @@ class AftermarketCustInfo extends CActiveRecord {
             'assign_time' => array('asc' => 't.assign_time asc', 'desc' => 't.assign_time desc'),
             'next_time' => array('asc' => 't.next_time asc', 'desc' => 't.next_time desc'),
             'last_time' => array('asc' => 'c.last_time asc', 'desc' => 'c.last_time desc'),
+            'update_time' => array('asc' => 'c.update_time asc', 'desc' => 'c.update_time desc'), 
         );
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
@@ -265,7 +270,7 @@ class AftermarketCustInfo extends CActiveRecord {
                 break;
             default:break;
         }
-        $criteria->select = "c.id,c.cust_name,c.iskey,t.cust_type,ct.type_name as cust_type_name,c.category,d.name as category_name,c.qq,t.webchat,t.ww,ci.service_limit,t.eno,t.assign_eno,t.assign_time,t.next_time,c.last_time ";
+        $criteria->select = "c.id,c.cust_name,c.iskey,t.cust_type,ct.type_name as cust_type_name,c.category,d.name as category_name,c.qq,c.update_time,t.webchat,t.ww,ci.service_limit,t.eno,t.assign_eno,t.assign_time,t.next_time,c.last_time ";
         $criteria->join = " left join {{customer_info}} c on t.cust_id = c.id " .
                 " left join {{users}} u on t.eno=u.eno " .
                 " left join {{cust_type}} ct on ct.type_no=t.cust_type and ct.lib_type=3 " .
@@ -301,6 +306,7 @@ class AftermarketCustInfo extends CActiveRecord {
             'assign_time' => array('asc' => 't.assign_time asc', 'desc' => 't.assign_time desc'),
             'next_time' => array('asc' => 't.next_time asc', 'desc' => 't.next_time desc'),
             'last_time' => array('asc' => 'c.last_time asc', 'desc' => 'c.last_time desc'),
+            'update_time' => array('asc' => 'c.update_time asc', 'desc' => 'c.update_time desc'),
         );
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,

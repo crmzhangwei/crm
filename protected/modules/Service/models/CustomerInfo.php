@@ -28,6 +28,7 @@
  * @property integer $last_time
  * @property string $memo
  * @property integer $create_time
+ * @property integer $update_time
  * @property integer $creator
  */
 class CustomerInfo extends CActiveRecord {
@@ -118,6 +119,7 @@ class CustomerInfo extends CActiveRecord {
             'last_time' => '最后联系时间',
             'memo' => '备注',
             'create_time' => '创建时间',
+            'update_time' => '保存时间',
             'creator' => '创建人',
             'contract[service_limit]' => '服务期限',
             'contract[total_money]' => '合同总金额',

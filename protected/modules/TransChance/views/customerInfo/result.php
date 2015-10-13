@@ -12,10 +12,9 @@ $this->menu=array(
 );
 ?>
 
-<h1>操作成功</h1>
+<h1>操作提示</h1>
 
-<?php 
-$url = Yii::app()->createUrl("TransChance/customerInfo/admin");
-echo "<p><a href='$url'>返回列表</a></p>"; 
-
+<font color="red"><?php echo Yii::app()->user->getFlash('success');  ?></font> 
+<?php  
+echo "<p><a href='#' onclick='javascript:window.close();'>关闭</a></p>";
 ?> 

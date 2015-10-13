@@ -8,8 +8,9 @@ class ResourceController extends GController {
         $page = max(Yii::app()->request->getParam('page'), 1);
         $search = Yii::app()->request->getParam("search");
         if (empty($search)) {
-            $search['stime'] = '';
-            $search['etime'] = '';
+            $curdate = date("Y-m-d");
+            $search['stime'] = $curdate." 00:00:00";
+            $search['etime'] = $curdate." 23:59:59";
             $search['eno'] = '';
         }
         $offset = ($page - 1) * $this->pageSize;
@@ -63,8 +64,9 @@ EOF;
         $page = max(Yii::app()->request->getParam('page'), 1);
         $search = Yii::app()->request->getParam("search");
         if (empty($search)) {
-            $search['stime'] = '';
-            $search['etime'] = '';
+            $curdate = date("Y-m-d");
+            $search['stime'] = $curdate." 00:00:00";
+            $search['etime'] = $curdate." 23:59:59";
             $search['creator'] = '';
             $search['qq'] = '';
             $search['phone'] = '';

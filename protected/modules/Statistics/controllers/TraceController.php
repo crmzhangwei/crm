@@ -22,8 +22,9 @@ class TraceController extends GController {
         $search = Yii::app()->request->getParam("search");
         $isexcel = Yii::app()->request->getParam("isexcel");
         if (empty($search)) {
-            $search['stime'] = '';
-            $search['etime'] = '';
+            $curdate = date("Y-m-d");
+            $search['stime'] = $curdate." 00:00:00";
+            $search['etime'] = $curdate." 23:59:59";
             $search['ctype'] = '14';
             $search['dept'] = '';
             $search['group'] = '';
@@ -90,10 +91,10 @@ EOF;
             $filename = "成交师开14-15-17类跟踪分析.csv";
             header("Content-type:text/csv");
             header("Content-Disposition:attachment;filename=" . $filename); 
-            echo iconv('utf-8','gb2312',$this->trans_titles);
+            echo iconv('utf-8','GBK',$this->trans_titles);
             $c=1;
             foreach($res as $record){
-                echo $c.",".iconv('utf-8','gb2312',Utils::array_to_string($this->trans_title_keys,$this->calTransRecord($record)));
+                echo $c.",".iconv('utf-8','GBK',Utils::array_to_string($this->trans_title_keys,$this->calTransRecord($record)));
                 $c++;
             } 
         } else {
@@ -150,8 +151,9 @@ EOF;
         $search = Yii::app()->request->getParam("search");
         $isexcel = Yii::app()->request->getParam("isexcel");
         if (empty($search)) {
-            $search['stime'] = '';
-            $search['etime'] = '';
+            $curdate = date("Y-m-d");
+            $search['stime'] = $curdate." 00:00:00";
+            $search['etime'] = $curdate." 23:59:59";
             $search['dept'] = '';
         }
         $offset = ($page - 1) * $this->pageSize;
@@ -222,10 +224,10 @@ EOF;
             $filename = "新分资源分析.csv";
             header("Content-type:text/csv");
             header("Content-Disposition:attachment;filename=" . $filename); 
-            echo iconv('utf-8','gb2312',$this->newresource_titles);
+            echo iconv('utf-8','GBK',$this->newresource_titles);
             $c=1;
             foreach($res as $record){
-                echo $c.",".iconv('utf-8','gb2312',Utils::array_to_string($this->newresource_title_keys,$this->calNewResourceRecord($record)));
+                echo $c.",".iconv('utf-8','GBK',Utils::array_to_string($this->newresource_title_keys,$this->calNewResourceRecord($record)));
                 $c++;
             } 
         } else { 
@@ -270,8 +272,9 @@ EOF;
         $isexcel = Yii::app()->request->getParam("isexcel");
 
         if (empty($search)) {
-            $search['stime'] = '';
-            $search['etime'] = '';
+            $curdate = date("Y-m-d");
+            $search['stime'] = $curdate." 00:00:00";
+            $search['etime'] = $curdate." 23:59:59";
             $search['ctype'] = '3';
             $search['dept'] = '';
             $search['group'] = '';
@@ -337,10 +340,10 @@ EOF;
             $filename = "开3-开4跟踪分析.csv";
             header("Content-type:text/csv");
             header("Content-Disposition:attachment;filename=" . $filename); 
-            echo iconv('utf-8','gb2312',$this->cat34_titles);
+            echo iconv('utf-8','GBK',$this->cat34_titles);
             $c=1;
             foreach($res as $record){
-                echo $c.",".iconv('utf-8','gb2312',Utils::array_to_string($this->cat34_title_keys,$record));
+                echo $c.",".iconv('utf-8','GBK',Utils::array_to_string($this->cat34_title_keys,$record));
                 $c++;
             } 
         } else {
@@ -443,10 +446,10 @@ EOF;
             $filename = "安排时间分布.csv";
             header("Content-type:text/csv");
             header("Content-Disposition:attachment;filename=" . $filename); 
-            echo iconv('utf-8','gb2312',$this->timeanalyse_titles);
+            echo iconv('utf-8','GBK',$this->timeanalyse_titles);
             $c=1;
             foreach($res as $record){
-                echo $c.",".iconv('utf-8','gb2312',Utils::array_to_string($this->timeanalyse_title_keys,$this->calRecordForTimeAnalyse($record,$days)));
+                echo $c.",".iconv('utf-8','GBK',Utils::array_to_string($this->timeanalyse_title_keys,$this->calRecordForTimeAnalyse($record,$days)));
                 $c++;
             } 
         } else {
@@ -495,8 +498,9 @@ EOF;
         $isexcel = Yii::app()->request->getParam("isexcel");
         $param = array();
         if (empty($search)) {
-            $search['stime'] = '';
-            $search['etime'] = '';
+            $curdate = date("Y-m-d");
+            $search['stime'] = $curdate." 00:00:00";
+            $search['etime'] = $curdate." 23:59:59";
             $search['dept'] = '';
             $search['group'] = '';
 			$search['mintimes'] = '';
@@ -515,23 +519,23 @@ EOF;
         $wherestr = "";
         if (!empty($search['stime'])) {
             $istime = strtotime($search['stime']);
-            $wherestr = $wherestr . " and t.dial_time>=$istime";
+            $wherestr = $wherestr . " and d.dial_time>=$istime";
         }
         if (!empty($search['etime'])) {
             $ietime = strtotime($search['etime']);
-            $wherestr = $wherestr . " and t.dial_time<=$ietime";
+            $wherestr = $wherestr . " and d.dial_time<=$ietime";
         }
         if (!empty($search['dept'])) {
-            $wherestr = $wherestr . " and t.dept_id=" . $search['dept'];
+            $wherestr = $wherestr . " and u.dept_id=" . $search['dept'];
         }
         if (!empty($search['group'])) {
-            $wherestr = $wherestr . " and t.group_id=" . $search['group'];
+            $wherestr = $wherestr . " and u.group_id=" . $search['group'];
         }
 		if (!empty($search['mintimes'])) {
-            $wherestr = $wherestr . " and t.dial_long>={$search['mintimes']}";
+            $wherestr = $wherestr . " and d.dial_long>={$search['mintimes']}";
         }
 		if (!empty($search['maxtimes'])) {
-            $wherestr = $wherestr . " and t.dial_long<={$search['maxtimes']}";
+            $wherestr = $wherestr . " and d.dial_long<={$search['maxtimes']}";
         }
 		
         $sql = <<<EOF
@@ -544,18 +548,19 @@ SELECT
     FROM_UNIXTIME(MIN(t.dial_time), '%Y-%m-%d %H:%i:%s') AS min_time
 FROM
     (SELECT 
-        u.eno,
+        d.userid,
             u.name,
+            u.eno,
             u.dept_id,
             u.group_id,
             d.dial_time,
             d.dial_long
     FROM
-        crm.c_dial_detail d left join c_users u on d.eno = u.eno
+        crm.c_dial_detail_p d left join c_users u on d.userid = u.id
     WHERE
-        1=1 $priv ) t
+        1=1 and d.userid>0 $wherestr $priv ) t
 WHERE
-    1 = 1 $wherestr
+    1 = 1 
 GROUP BY t.eno , t.name
 EOF;
         
@@ -570,10 +575,11 @@ EOF;
             $filename = "话务员工作统计.csv";
             header("Content-type:text/csv");
             header("Content-Disposition:attachment;filename=" . $filename); 
-            echo iconv('utf-8','gb2312',$this->workanalyse_titles);
+            echo iconv('utf-8','GBK',$this->workanalyse_titles);
             $c=1;
             foreach($res as $record){
-                echo $c.",".iconv('utf-8','gb2312',Utils::array_to_string($this->workanalyse_title_keys,$record));
+                $record['dial_long']=  gmstrftime('%H:%M:%S',$record['dial_long']);
+                echo $c.",".iconv('utf-8','GBK',Utils::array_to_string($this->workanalyse_title_keys,$record));
                 $c++;
             } 
         } else {

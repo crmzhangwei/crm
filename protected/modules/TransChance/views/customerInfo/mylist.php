@@ -77,9 +77,10 @@ $form1 = $this->beginWidget('CActiveForm', array(
 <div class="form-group">
     <div class="btn-group"> 
         <?php echo CHtml::submitButton('清除查询条件', array('class' => 'btn btn-sm btn-primary')); ?>
+        <?php echo CHtml::button('合并客户', array('class' => 'btn btn-sm btn-primary','onclick'=>'subMerge();')); ?>
     </div>  
 </div>
-<?php $this->endWidget(); ?>
+
 <?php
 $dataProvider=$model->searchMyList();
 $this->widget('GGridView', array(
@@ -122,11 +123,21 @@ $this->widget('GGridView', array(
           'value'=>'date("Y-m-d H:i:s",$data->next_time)',
         ),
         array(
+          'name'=>'update_time',
+          'header'=>'保存时间',
+          'type'=>'raw',
+          'value'=>'date("Y-m-d H:i:s",$data->update_time)',
+        ),
+        array(
           'name'=>'last_time',
           'type'=>'raw',
           'value'=>'date("Y-m-d H:i:s",$data->last_time)',
         ),
-        'shop_addr',
+       array(
+          'name'=>'assign_eno',
+          'type'=>'raw',
+          'value'=>array($this,'get_assign_eno_text'),
+        ),
         /*
           'shop_addr',
           'phone',
@@ -147,15 +158,16 @@ $this->widget('GGridView', array(
             'buttons' => array(
                 'upda' => array(
                     'label' => '查看客户详情',
-                    'url' => 'Yii::app()->controller->createUrl("update",array("id"=>$data->primaryKey,"module"=>"todaylist"))',
+                    'url' => 'Yii::app()->controller->createUrl("edit",array("id"=>$data->primaryKey))',
                     'imageUrl' => '',
-                    'options' => array('class' => 'editNode btn btn-info btn-minier tooltip-info', 'data-placement' => "bottom"),
+                    'options' => array('class' => 'editNode btn btn-info btn-minier tooltip-info', 'data-placement' => "bottom",'target'=>'_blank'),
                 ),
             ),
         ),
     ),
 ));
 ?>
+<?php $this->endWidget(); ?>
 <div class="table-page"> 
     <div class="col-sm-6">
         共<span class="orange"><?= $dataProvider->totalItemCount ?></span>条记录 
@@ -168,3 +180,10 @@ $this->widget('GLinkPager', array('pages' => $dataProvider->getPagination(),));
 </div>
 
 <script src="/static/js/secondlevel.js"></script>
+<script>
+ function subMerge(){
+         var url = "<?php echo Yii::app()->controller->createUrl('customerInfo/merge');?>";
+         $("#form_1").attr('action',url);
+         $("#form_1").submit(); 
+    }
+</script>      

@@ -257,16 +257,16 @@ class ServiceController extends GController {
      * 拔打电话
      * @param type $cust_id
      */
-    public function actionDial($cust_id,$seq) {
-        $result = UnCall::dial($cust_id,$seq); 
+    public function actionDial($cust_id, $seq) {
+        $result = UnCall::dial($cust_id, $seq);
         echo json_encode($result);
     }
-    
-    public function actionDialUid($dial_id){
-        $result = array('uid'=>'');
+
+    public function actionDialUid($dial_id) {
+        $result = array('uid' => '');
         $dialdetail = DialDetail::model()->findByPk($dial_id);
         $uid = UnCall::getUid2($dialdetail);
-        $result['uid']=$uid;
+        $result['uid'] = $uid;
         echo json_encode($result);
     }
 
@@ -274,31 +274,30 @@ class ServiceController extends GController {
      * 发短信
      * @param type $cust_id
      */
-    public function actionMessage($cust_id,$seq) {
+    public function actionMessage($cust_id, $seq) {
         $model = new AftermarketCustInfo();
         $model->cust_id = $cust_id;
         if (isset($_POST['AftermarketCustInfo'])) {
             $model->attributes = $_POST['AftermarketCustInfo'];
             $model->message = $_POST['AftermarketCustInfo']['message'];
-            $message = Utils::sendMessageByCust($model->cust_id,$seq, $model->message, 'post');
+            $message = Utils::sendMessageByCust($model->cust_id, $seq, $model->message, 'post');
             //Utils::showMsg(1, $message->memo, $message->attributes);
-            $out = array('code' => 1, 'msg' => $message->memo,'id'=>$message->id);
+            $out = array('code' => 1, 'msg' => $message->memo, 'id' => $message->id);
             echo json_encode($out);
             exit();
         }
         $temparr = NoteTemplate::model()->findAll();
-        if(!empty($temparr)){
-            $model->message=$temparr[0]->content;
+        if (!empty($temparr)) {
+            $model->message = $temparr[0]->content;
         }
-        $titles = CHtml::listData($temparr, 'id', 'tname');  
+        $titles = CHtml::listData($temparr, 'id', 'tname');
         $this->renderPartial('message', array(
             'model' => $model,
-            'seq'=>$seq,
-            'titles'=>$titles,
-            'contents'=>$temparr
+            'seq' => $seq,
+            'titles' => $titles,
+            'contents' => $temparr
         ));
     }
-     
 
     /**
      * 发邮件
@@ -363,13 +362,13 @@ class ServiceController extends GController {
      */
     public function actionPlay($id) {
         $noteinfo = NoteInfo::model()->findByPk($id);
-        if($noteinfo->dial_id>0){
-           $dialdetail = DialDetail::model()->findByPk($noteinfo->dial_id);
-            $this->renderPartial("playmp3", array('model' => $dialdetail)); 
-        }else{
+        if ($noteinfo->dial_id > 0) {
+            $dialdetail = DialDetail::model()->findByPk($noteinfo->dial_id);
+            $this->renderPartial("playmp3", array('model' => $dialdetail));
+        } else {
             $noteinfo->addError("memo", "该小记不存在电话联系信息");
-            $this->renderPartial("error", array('model' => $noteinfo)); 
-        } 
+            $this->renderPartial("error", array('model' => $noteinfo));
+        }
     }
 
     /**
@@ -391,36 +390,54 @@ class ServiceController extends GController {
             readfile($file);
         }
     }
+
     /**
      * 播放下载
      * @param type $id
      */
-    public function actionPlay2($id){
+    public function actionPlay2($id) {
         $noteinfo = NoteInfo::model()->findByPk($id);
-        $playurl='';
-        if($noteinfo->dial_id>0){
-           $dialdetail = DialDetail::model()->findByPk($noteinfo->dial_id);
-           if (!empty($dialdetail->record_path)) {
+        $playurl = '';
+        if ($noteinfo->dial_id > 0) {
+            $dialdetail = DialDetail::model()->findByPk($noteinfo->dial_id);
+            if (!empty($dialdetail->record_path)) {
                 $uncall = Yii::app()->params['UNCALL'];
-                $playurl = $uncall["playurl"].$dialdetail->record_path;  
+                $playurl = $uncall["playurl"] . $dialdetail->record_path;
             }
-        } 
-        $this->renderPartial("play2", array('playurl' => $playurl)); 
+        }
+        $this->renderPartial("play2", array('playurl' => $playurl));
     }
+
     /**
      * 播放下载
      * @param type $id
      */
-    public function actionPlay3($id){ 
-        $playurl='';
-        if($id>0){
-           $dialdetail = DialDetail::model()->findByPk($id);
-           if (!empty($dialdetail->record_path)) {
+    public function actionPlay3($id) {
+        $playurl = '';
+        if ($id > 0) {
+            $dialdetail = DialDetail::model()->findByPk($id);
+            if (!empty($dialdetail->record_path)) {
                 $uncall = Yii::app()->params['UNCALL'];
-                $playurl = $uncall["playurl"].$dialdetail->record_path;  
+                $playurl = $uncall["playurl"] . $dialdetail->record_path;
             }
-        } 
-        $this->renderPartial("play2", array('playurl' => $playurl)); 
+        }
+        $this->renderPartial("play2", array('playurl' => $playurl));
+    }
+
+    /**
+     * 播放下载
+     * @param type $id
+     */
+    public function actionPlay4($id) {
+        $playurl = '';
+        if ($id > 0) {
+            $result = Yii::app()->db->createCommand("select record_path from {{dial_detail_p}} where uid=:uid")->queryRow(TRUE, array(":uid" => $id));
+            if ($result && is_array($result)) {
+                $uncall = Yii::app()->params['UNCALL'];
+                $playurl = $uncall["playurl"] . $result['record_path'];
+            } 
+        }
+        $this->renderPartial("play2", array('playurl' => $playurl));
     }
 
     /**
@@ -428,34 +445,40 @@ class ServiceController extends GController {
      * @param type $dial_id 
      */
     public function actionViewNote($id) {
-        $noteinfo = NoteInfo::model()->findByPk($id);
+        $noteinfo = NoteInfoP::model()->findBySql("select id,cust_id,isvalid,iskey,next_contact,dial_id,message_id,userid,lib_type,create_time,cust_type,memo from {{note_info_p}} where id=:id",array(":id"=>$id));
         $this->renderPartial("noteinfo", array('model' => $noteinfo));
     }
+
     public function get_eno_text($data) {
         $val = $data->eno;
         $enoArr = $this->getEnoArr($val);
         $res = isset($enoArr[$val]) ? $enoArr[$val] : $val;
         return $res;
     }
+
     public function get_assign_eno_text($data) {
         $val = $data->assign_eno;
         $enoArr = $this->getEnoArr($val);
         $res = isset($enoArr[$val]) ? $enoArr[$val] : $val;
         return $res;
     }
+
     public function getEnoArr($eno) {
         return CHtml::listData(Users::model()->findAll('eno=:eno', array(':eno' => $eno)), 'eno', 'name');
     }
+
     public function get_after_type_text($data) {
         $val = $data->cust_type;
         $lib_type = 3;
-        $typeArr = $this->gettypeArr($val,$lib_type);
-        $res = isset($typeArr[$val]) ? "【".$val."类】".$typeArr[$val] : $val;
+        $typeArr = $this->gettypeArr($val, $lib_type);
+        $res = isset($typeArr[$val]) ? "【" . $val . "类】" . $typeArr[$val] : $val;
         return $res;
     }
-    public function gettypeArr($type_no,$lib_type) {
-        return CHtml::listData(CustType::model()->findAll('lib_type=:lib_type and type_no=:type_no', array(':type_no' => $type_no,'lib_type'=>$lib_type)), 'type_no', 'type_name');
+
+    public function gettypeArr($type_no, $lib_type) {
+        return CHtml::listData(CustType::model()->findAll('lib_type=:lib_type and type_no=:type_no', array(':type_no' => $type_no, 'lib_type' => $lib_type)), 'type_no', 'type_name');
     }
+
     /**
      * 合并客户
      */
@@ -464,10 +487,10 @@ class ServiceController extends GController {
             //合并
             $cust_ids = $_POST['cust_id'];
             $model = $this->loadModel($_POST['CustomerInfo']['id']);
-            $model->attributes = $_POST['CustomerInfo']; 
+            $model->attributes = $_POST['CustomerInfo'];
             $id = $model->id;
-            $transaction = Yii::app()->db->beginTransaction();  
-            $loginuser =  Users::model()->findByPk(Yii::app()->user->id);
+            $transaction = Yii::app()->db->beginTransaction();
+            $loginuser = Users::model()->findByPk(Yii::app()->user->id);
             foreach ($cust_ids as $cust_id) {
                 if ($cust_id != $model->id) {
                     //删除客户
@@ -498,28 +521,27 @@ class ServiceController extends GController {
                     $sql = "update {{finance}} set cust_id=$id where cust_id=$cust_id";
                     Yii::app()->db->createCommand($sql)->execute();
                 }
-            } 
-            $model->eno=$loginuser->eno;
-            $model->create_time=time(); 
-            $model->next_time=strtotime($model->next_time);
-            $model->last_time=strtotime($model->last_time);
-            $model->creator=Yii::app()->user->id;
-            $model->save();  
-            Yii::app()->db->createCommand()->update('{{aftermarket_cust_info}}', 
-                    array(  'eno' => $loginuser->eno,
-                            'assign_eno'=>$loginuser->eno,
-                            'assign_time'=>time(),
-                            'next_time'=>$model->next_time,
-                            'creator'=>$loginuser->id,
-                            'create_time'=>time()
-                        ), "cust_id =$id");
-            if($model->hasErrors()){
+            }
+            $model->eno = $loginuser->eno;
+            $model->create_time = time();
+            $model->next_time = strtotime($model->next_time);
+            $model->last_time = strtotime($model->last_time);
+            $model->creator = Yii::app()->user->id;
+            $model->save();
+            Yii::app()->db->createCommand()->update('{{aftermarket_cust_info}}', array('eno' => $loginuser->eno,
+                'assign_eno' => $loginuser->eno,
+                'assign_time' => time(),
+                'next_time' => $model->next_time,
+                'creator' => $loginuser->id,
+                'create_time' => time()
+                    ), "cust_id =$id");
+            if ($model->hasErrors()) {
                 $transaction->rollback();
-                $this->render("error",array("model"=>$model));
+                $this->render("error", array("model" => $model));
                 return;
-            }else{
+            } else {
                 $transaction->commit();
-                $this->render("result",array("model"=>$model));
+                $this->render("result", array("model" => $model));
                 return;
             }
         }
@@ -581,4 +603,5 @@ class ServiceController extends GController {
             'custlist' => $list)
         );
     }
+
 }

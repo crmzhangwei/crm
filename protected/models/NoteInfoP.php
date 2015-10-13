@@ -1,41 +1,31 @@
 <?php
 
 /**
- * This is the model class for table "{{note_info}}".
+ * This is the model class for table "{{note_info_p}}".
  *
- * The followings are the available columns in table '{{note_info}}':
- * @property string $id
+ * The followings are the available columns in table '{{note_info_p}}':
+ * @property integer $id
  * @property integer $cust_id
- * @property string $cust_info
- * @property string $requirement
- * @property string $service
- * @property string $dissent
- * @property string $next_followup
- * @property string $memo
  * @property integer $isvalid
  * @property integer $iskey
  * @property integer $next_contact
  * @property integer $dial_id
- * @property integer $uid
  * @property integer $message_id
- * @property integer $eno
+ * @property integer $userid
  * @property string $cust_type
- * @property int $lib_type
+ * @property integer $lib_type
  * @property integer $create_time
+ * @property string $memo
  */
-class NoteInfo extends CActiveRecord
+class NoteInfoP extends CActiveRecord
 {
-        public $last_time;
-        public $next_contact_repeat;
-        public $stime;//开始时间
-        public $etime;//结束时间
         public $uid;
 	/**
 	 * @return string the associated database table name
 	 */
 	public function tableName()
 	{
-		return '{{note_info}}';
+		return '{{note_info_p}}';
 	}
 
 	/**
@@ -46,13 +36,13 @@ class NoteInfo extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('cust_id, eno, create_time,next_contact', 'required'),
-                        //array('next_contact','compare','on'=>array('insert','update'),'compareAttribute'=>'last_time','operator'=>'>'),
-			array('cust_id, isvalid, iskey, next_contact, dial_id, eno, create_time', 'numerical', 'integerOnly'=>true),
-			array('cust_info, requirement, service, dissent, next_followup, memo', 'length', 'max'=>500), 
+			array('cust_id', 'required'),
+			array('id, cust_id, isvalid, iskey, next_contact, dial_id, message_id, userid, lib_type, create_time', 'numerical', 'integerOnly'=>true),
+			array('cust_type', 'length', 'max'=>5),
+			array('memo', 'length', 'max'=>2000),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, cust_id, cust_info, requirement, service, dissent, next_followup, memo, isvalid, iskey, next_contact, dial_id,uid, eno, create_time', 'safe', 'on'=>'search'),
+			array('id, cust_id, isvalid, iskey, next_contact, dial_id, message_id, userid, cust_type, lib_type, create_time, memo', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -64,8 +54,6 @@ class NoteInfo extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-                    'dial'=>array(self::BELONGS_TO,'DialDetail','dial_id'), 
-                    'eno'=>array(self::BELONGS_TO,'Users','eno'),
 		);
 	}
 
@@ -77,23 +65,16 @@ class NoteInfo extends CActiveRecord
 		return array(
 			'id' => '主键',
 			'cust_id' => '客户id',
-			'cust_info' => '客户情况',
-			'requirement' => '挖需求',
-			'service' => '介绍服务',
-			'dissent' => '异议处理',
-			'next_followup' => '下次跟进处理',
-			'memo' => '备注',
 			'isvalid' => '是否有效',
 			'iskey' => '是否重点',
 			'next_contact' => '下次联系时间',
 			'dial_id' => '电话拔打记录',
-			'uid' => '电话拔打识别号',
-			'message_id' => '短信发送记录',
-			'eno' => '工号',
-                        'cust_type'=>'客户分类',
-                        'lib_type'=>'库类型',
+			'message_id' => 'Message',
+			'userid' => '用户id',
+			'cust_type' => '客户分类',
+			'lib_type' => '库类型',
 			'create_time' => '创建时间',
-                        'last_time'=>'最后联系时间',
+			'memo' => '备注',
 		);
 	}
 
@@ -115,36 +96,32 @@ class NoteInfo extends CActiveRecord
 
 		$criteria=new CDbCriteria;
 
-		$criteria->compare('id',$this->id,true);
+		$criteria->compare('id',$this->id);
 		$criteria->compare('cust_id',$this->cust_id);
-		$criteria->compare('cust_info',$this->cust_info,true);
-		$criteria->compare('requirement',$this->requirement,true);
-		$criteria->compare('service',$this->service,true);
-		$criteria->compare('dissent',$this->dissent,true);
-		$criteria->compare('next_followup',$this->next_followup,true);
-		$criteria->compare('memo',$this->memo,true);
 		$criteria->compare('isvalid',$this->isvalid);
 		$criteria->compare('iskey',$this->iskey);
 		$criteria->compare('next_contact',$this->next_contact);
 		$criteria->compare('dial_id',$this->dial_id);
-		$criteria->compare('eno',$this->eno);
+		$criteria->compare('message_id',$this->message_id);
+		$criteria->compare('userid',$this->userid);
+		$criteria->compare('cust_type',$this->cust_type,true);
+		$criteria->compare('lib_type',$this->lib_type);
 		$criteria->compare('create_time',$this->create_time);
+		$criteria->compare('memo',$this->memo,true);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
 		));
 	}
-        /**
+         /**
          * 查找共享小记
          */
         public function searchSharedNote($custid){
             $criteria=new CDbCriteria;
-            $criteria->addCondition("t.cust_id=$custid");
-            $criteria->compare('t.cust_info',$this->cust_info,true);
-	    $criteria->compare('t.requirement',$this->requirement,true);
-	    $criteria->compare('t.service',$this->service,true);
+            $criteria->addCondition("t.cust_id=$custid"); 
+            $criteria->compare('memo',$this->memo,true); 
             $uid = Yii::app()->user->id;
-            $criteria->addCondition("t.eno<>$uid"); 
+            $criteria->addCondition("t.userid<>$uid"); 
             $sort = new CSort(); 
             $sort->defaultOrder=array("create_time"=>CSORT::SORT_DESC);
             return new CActiveDataProvider($this, array(
@@ -158,11 +135,9 @@ class NoteInfo extends CActiveRecord
         public function searchHistoryNote($custid){
             $criteria=new CDbCriteria;
             $criteria->addCondition("cust_id=$custid");
-            $criteria->compare('cust_info',$this->cust_info,true);
-	    $criteria->compare('requirement',$this->requirement,true);
-	    $criteria->compare('service',$this->service,true); 
+            $criteria->compare('memo',$this->memo,true); 
             $uid = Yii::app()->user->id;
-	    $criteria->addCondition("eno=$uid"); 
+	    $criteria->addCondition("userid=$uid"); 
             $sort = new CSort(); 
             $sort->defaultOrder=array("create_time"=>CSORT::SORT_DESC);
             return new CActiveDataProvider($this, array(
@@ -174,7 +149,7 @@ class NoteInfo extends CActiveRecord
 	 * Returns the static model of the specified AR class.
 	 * Please note that you should have this exact method in all your CActiveRecord descendants!
 	 * @param string $className active record class name.
-	 * @return NoteInfo the static model class
+	 * @return NoteInfoP the static model class
 	 */
 	public static function model($className=__CLASS__)
 	{

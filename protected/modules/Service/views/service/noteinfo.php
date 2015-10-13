@@ -12,17 +12,7 @@
 	'enableAjaxValidation'=>false,
 )); ?>
 <div class="form">  
-         <table class="table table-bordered" width="90%"> 
-            <tr>
-                <td width="20%" nowrap="nowrap"><?php echo $form->labelEx($model,'eno'); ?></td>
-                <td width="20%" nowrap="nowrap">
-                    <?php echo $model->eno; ?>
-                </td>
-                <td width="10%" nowrap="nowrap"><?php echo $form->labelEx($model,'next_contact'); ?></td>
-                <td>  
-                    <?php echo date('Y-m-d H:i:s',$model->next_contact); ?>
-                </td>
-            </tr>
+         <table class="table table-bordered" width="90%">  
             <tr>
                 <td><?php echo $form->labelEx($model,'iskey'); ?></td>
                 <td> 
@@ -32,34 +22,16 @@
                 <td>
                     <?php echo $form->radioButtonList($model, 'isvalid', array('0'=>'否','1'=> '是'));  ?> 
                 </td>
+            </tr>  
+            <tr> 
+                <td width="10%" nowrap="nowrap"><?php echo $form->labelEx($model,'next_contact'); ?></td>
+                <td colspan="3">  
+                    <?php echo date('Y-m-d H:i:s',$model->next_contact); ?>
+                </td> 
             </tr> 
-            <tr> 
-                <td><?php echo $form->labelEx($model,'cust_info'); ?></td>
-                <td> 
-                    <?php echo $model->cust_info;?> 
-                </td>
-                <td><?php echo $form->labelEx($model,'requirement'); ?></td>
-                <td>  
-		   <?php echo $model->requirement;?> 
-                </td>
-            </tr>
-            <tr> 
-                <td><?php echo $form->labelEx($model,'service'); ?></td>
-                <td>  
-                    <?php echo $model->service;?> 
-                </td>
-                <td><?php echo $form->labelEx($model,'dissent'); ?></td>
-                <td>
-		   <?php echo $model->dissent;?> 
-                </td>
-            </tr>
-            <tr> 
-                <td><?php echo $form->labelEx($model,'next_followup'); ?></td>
-                <td> 
-                    <?php echo $model->next_followup;?> 
-                </td>
+            <tr>  
                 <td><?php echo $form->labelEx($model,'memo'); ?></td>
-                <td> 
+                <td colspan="3"> 
 		  <?php echo $model->memo;?> 
                 </td>
             </tr> 
