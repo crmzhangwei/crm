@@ -49,7 +49,7 @@ class CustomerinfoController extends GController
 			$model->assign_time = time();//分配时间
 			$model->create_time = time();
 			$model->creator = Yii::app()->user->id;
-			$model->cust_type = 0;	//客户分类默认为0
+			//$model->cust_type = 0;	//客户分类默认为0
 			$model->phone = trim($model->phone);
 			$model->phone2 = trim($model->phone2);
 			$model->phone3 = trim($model->phone3);
@@ -176,8 +176,10 @@ class CustomerinfoController extends GController
 		$phone_0 = '0'.$phone;
 		$res = CustomerInfo::model()->findAll("(phone in($phone,$phone_0) or phone2 in($phone,$phone_0) or phone3 in($phone,$phone_0) or phone4 in($phone,$phone_0) or phone5 in($phone,$phone_0) ) and `status`<>2 and id<>$id");
 		if($res){
-			//$this->addError('phone', "电话".$num."已经存在");
-			Utils::showMsg (0, '电话'.$num.'已经存在');
+			$gonghao = $res[0]['eno'];
+			$userName = Users::model()->findAll('eno=:eno', array(':eno'=>$gonghao));
+			$userName = $userName[0]['username'];
+			Utils::showMsg (0, '电话'.$num.'已经存在于 '.$userName.' 库中。');
 		}
 	}
 	/**
@@ -277,25 +279,16 @@ class CustomerinfoController extends GController
 					exit("<script>alert(\"对不起, 为防止一次提交的数据太多消耗大量的服务器资源而影响到其他用户的使用, 一次提交的数据不能超过600条, 请修改后重新提交。\");
 	        				javascript:history.go(-1);</script>");
 				}
-	        	$sql = "insert into {{customer_info}} (cust_name,phone,qq,mail,memo,creator,create_time,eno,assign_eno,assign_time) values";
+	        	$sql = "insert into {{customer_info}} (cust_name,phone,qq,cust_type,memo,creator,create_time,eno,assign_eno,assign_time) values";
 	        	$usql = '';
 				$eno = '';
 				$repetaInfo = '';
 				$i=0;
 				foreach ((array)$fileArr as $k => $v) {
-	        		/*if (!$v[0]) {
-	        			exit("<script>alert(\"对不起, 第".$k."行中的客户姓名不能为空, 请填写后重新提交。\");
-	        				javascript:history.go(-1);</script>");	
-	        		}*/
 	        		if (!$v[1] && !$v[2]) {
 	        			exit("<script>alert(\"对不起, 第".$k."行中的电话和QQ二选一必填, 请填写后重新提交。\");
 	        				javascript:history.go(-1);</script>");
 	        		}
-					
-	        		/*elseif ($v[3] && !preg_match('/^[\w\_\.]+@[\w\_]+[\.\w+]+$/', $v[3])) {//邮箱匹配, 非必填项
-	        			exit("<script>alert(\"对不起, 第".$k."行中的邮箱格式不正确, 请填写后重新提交。\");
-	        				javascript:history.go(-1);</script>");
-	        		}*/
 					elseif (!$v[5] || !array_key_exists($v[5], $userArr)) {
 	        			exit("<script>alert(\"对不起, 第".$k."行中的 所属人员 不能为空或不存在, 请填写后重新提交。\");
 	        				javascript:history.go(-1);</script>");
@@ -307,18 +300,27 @@ class CustomerinfoController extends GController
 						if ($v[1]){
 							$phone = trim($v[1]);
 							$phone_0 = '0'.$phone;
-							$phoneSQL = "select cust_name from c_customer_info where (phone in($phone,$phone_0) or phone2 in($phone,$phone_0) or phone3 in($phone,$phone_0) or phone4 in($phone,$phone_0) or phone5 in($phone,$phone_0) ) and status<>2";
-							$ret = Yii::app()->db->createCommand($phoneSQL)->execute();
+							//$phoneSQL = "select cust_name from c_customer_info where (phone in($phone,$phone_0) or phone2 in($phone,$phone_0) or phone3 in($phone,$phone_0) or phone4 in($phone,$phone_0) or phone5 in($phone,$phone_0) ) and status<>2";
+							$ret = CustomerInfo::model()->findAll("(phone in($phone,$phone_0) or phone2 in($phone,$phone_0) or phone3 in($phone,$phone_0) or phone4 in($phone,$phone_0) or phone5 in($phone,$phone_0) ) and `status`<>2");
+							//$ret = Yii::app()->db->createCommand($phoneSQL)->execute();
 							if($ret){
-								/*exit("<script>alert(\"对不起, 第".$k."行中的电话号码已存在, 请填写后重新提交。\");
-								javascript:history.go(-1);</script>");*/
 								$repetaInfo .= $k.', ';
 								continue;
 							}
 						}
+						$ctype = trim($v[3]);//客户类别
+						if(empty($ctype)){
+							$ctype = 0;
+						}
+						else{
+							if(!in_array($ctype, array('0','1','2','3','4','5','6','7','8','9'),true)){
+								exit("<script>alert(\"对不起, 第".$k."行中的 类别 只能填0--9的数据, 请修正后重新提交。\");
+									javascript:history.go(-1);</script>");
+							}	
+						}
 						$eno = $userArr[$v[5]];
 						$phones = trim($v[1]);
-	        			$sql .= "('{$v[0]}','$phones','{$v[2]}','{$v[3]}','{$v[4]}', $creator, $create_time,'$eno','$assign_eno',$assign_time),";
+	        			$sql .= "('{$v[0]}','$phones','{$v[2]}','$ctype','{$v[4]}', $creator, $create_time,'$eno','$assign_eno',$assign_time),";
 						$usql .= "update {{users}} set cust_num=cust_num+1 where eno='$eno';";	
 						$i++;
 					}	
@@ -327,7 +329,7 @@ class CustomerinfoController extends GController
 					exit("<script>alert(\"表格中的数据已存在，请勿重复导入（电话号码已存在）。\");javascript:history.go(-1);</script>");
 				}
 				$sql = trim($sql, ',');
-				
+
 				///////////////////开启事务///////////////////
 				$transaction = Yii::app()->db->beginTransaction();
 				try {
@@ -352,15 +354,7 @@ class CustomerinfoController extends GController
 					$transaction->rollBack();//事务回滚
 					exit("<script>alert(\"对不起, 由于未知的错误, 本次操作失败, 请重新操作。\");javascript:history.go(-1);</script>");
 				}
-				//////////////////////////////////////////
 				
-	        	/*$command=yii::app()->db->createCommand($sql);
-	        	$num = $command->execute();
-				if($num>0){
-					$sql2 = "update {{users}} set cust_num=cust_num+$num where eno='$eno'";
-					yii::app()->db->createCommand($sql2)->execute();
-				}
-	        	exit("<script>alert(\"恭喜你, 成功导入".$num."条数据。\");javascript:history.go(-1);</script>");	*/
 	        }
 		}
 		$this->renderPartial('batchCustomer', array('model'=>$model));

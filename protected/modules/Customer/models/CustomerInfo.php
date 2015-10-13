@@ -56,7 +56,7 @@ class CustomerInfo extends CActiveRecord
 			array('phone, qq', 'check_contact'),
 			array('mail', 'length', 'max'=>50),
 			array('oldEno, cust_name, keyword, shop_name, corp_name, shop_url, shop_addr, datafrom, memo, searchtype, customerId', 'safe'),
-			array('id, cust_name, shop_name, corp_name, shop_url, shop_addr, phone, qq, mail, datafrom, category, cust_type, eno, assign_eno, assign_time, next_time, memo, create_time, creator', 'safe', 'on'=>'search'),
+			array('id, cust_name, shop_name, corp_name, shop_url, shop_addr, phone, qq, mail, datafrom, category, eno, assign_eno, assign_time, next_time, memo, create_time, creator', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -78,7 +78,10 @@ class CustomerInfo extends CActiveRecord
 				$phone_0 = '0'.$phone;
 				$res = CustomerInfo::model()->findAll("(phone in($phone,$phone_0) or phone2 in($phone,$phone_0) or phone3 in($phone,$phone_0) or phone4 in($phone,$phone_0) or phone5 in($phone,$phone_0) ) and `status`<>2");
 				if($res){
-					$this->addError('phone', '电话1已经存在');
+					$gonghao = $res[0]['eno'];
+					$userName = Users::model()->findAll('eno=:eno', array(':eno'=>$gonghao));
+					$userName = $userName[0]['username'];
+					$this->addError('phone', '电话1已经存在于 '.$userName." 库中。");
 				}
 			}
 			if($this->phone2){
@@ -86,7 +89,10 @@ class CustomerInfo extends CActiveRecord
 				$phone2_0 = '0'.$phone2;
 				$res = CustomerInfo::model()->findAll("(phone in($phone2,$phone2_0) or phone2 in($phone2,$phone2_0) or phone3 in($phone2,$phone2_0) or phone4 in($phone2,$phone2_0) or phone5 in($phone2,$phone2_0) ) and `status`<>2");
 				if($res){
-					$this->addError('phone2', '电话2已经存在');
+					$gonghao = $res[0]['eno'];
+					$userName = Users::model()->findAll('eno=:eno', array(':eno'=>$gonghao));
+					$userName = $userName[0]['username'];
+					$this->addError('phone2', '电话2已经存在于 '.$userName.' 库中。');
 				}
 			}
 			if($this->phone3){
@@ -94,7 +100,10 @@ class CustomerInfo extends CActiveRecord
 				$phone3_0 = '0'.$phone3;
 				$res = CustomerInfo::model()->findAll("(phone in($phone3,$phone3_0) or phone2 in($phone3,$phone3_0) or phone3 in($phone3,$phone3_0) or phone4 in($phone3,$phone3_0) or phone5 in($phone3,$phone3_0) ) and `status`<>2");
 				if($res){
-					$this->addError('phone3', '电话3已经存在');
+					$gonghao = $res[0]['eno'];
+					$userName = Users::model()->findAll('eno=:eno', array(':eno'=>$gonghao));
+					$userName = $userName[0]['username'];
+					$this->addError('phone3', '电话3已经存在于 '.$userName.' 库中。');
 				}
 			}
 			if($this->phone4){
@@ -102,7 +111,10 @@ class CustomerInfo extends CActiveRecord
 				$phone4_0 = '0'.$phone4;
 				$res = CustomerInfo::model()->findAll("(phone in($phone4,$phone4_0) or phone2 in($phone4,$phone4_0) or phone3 in($phone4,$phone4_0) or phone4 in($phone4,$phone4_0) or phone5 in($phone4,$phone4_0) ) and `status`<>2");
 				if($res){
-					$this->addError('phone4', '电话4已经存在');
+					$gonghao = $res[0]['eno'];
+					$userName = Users::model()->findAll('eno=:eno', array(':eno'=>$gonghao));
+					$userName = $userName[0]['username'];
+					$this->addError('phone4', '电话4已经存在于 '.$userName.' 库中。');
 				}
 			}
 			if($this->phone5){
@@ -110,7 +122,10 @@ class CustomerInfo extends CActiveRecord
 				$phone5_0 = '0'.$phone5;
 				$res = CustomerInfo::model()->findAll("(phone in($phone5,$phone5_0) or phone2 in($phone5,$phone5_0) or phone3 in($phone5,$phone5_0) or phone4 in($phone5,$phone5_0) or phone5 in($phone5,$phone5_0) ) and `status`<>2");
 				if($res){
-					$this->addError('phone5', '电话5已经存在');
+					$gonghao = $res[0]['eno'];
+					$userName = Users::model()->findAll('eno=:eno', array(':eno'=>$gonghao));
+					$userName = $userName[0]['username'];
+					$this->addError('phone5', '电话5已经存在于 '.$userName.' 库中。');
 				}
 			}	
 		}
@@ -147,7 +162,7 @@ class CustomerInfo extends CActiveRecord
 			'mail' => '邮箱',
 			'datafrom' => '数据来源',
 			'category' => '所属类目',
-			'cust_type' => '客户分类',
+			'cust_type' => '类别',
 			'eno' => '所属工号',
 			'iskey' => '是否重点',
 			'assign_eno' => '分配人',
@@ -211,7 +226,7 @@ class CustomerInfo extends CActiveRecord
                $criteria->addCondition(" exists (select 1 from {{users}} where eno=t.eno and $wherestr)") ; 
             } 
         }
-		if ($this->keyword) {
+		if (isset($this->keyword)) {
 			switch ($this->searchtype) {
 				case 1:
 					$criteria->addCondition("cust_name like :keyword");
@@ -232,6 +247,9 @@ class CustomerInfo extends CActiveRecord
 					break;
 				case 5:
 					$criteria->compare('qq', $this->keyword, true);
+					break;
+				case 6:
+					$criteria->compare('cust_type', $this->keyword);
 					break;
 			}
 		}
@@ -261,6 +279,7 @@ class CustomerInfo extends CActiveRecord
             3=>'公司名称',
             4=>'电话',
             5=>'QQ',
+			6=>'客户类别'
         );
     }
 }

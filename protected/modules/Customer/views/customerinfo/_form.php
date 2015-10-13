@@ -86,8 +86,11 @@
 	</tr>
 	<tr>
 		<td><?php echo $form->labelEx($model,'category'); ?></td>
-		<td colspan="3"><?php echo $form->dropDownList($model, 'category' ,$category);?>
+		<td><?php echo $form->dropDownList($model, 'category' ,$category);?>
 		<?php echo $form->error($model,'category'); ?></td>
+		<td><?php echo $form->labelEx($model,'cust_type'); ?></td>
+		<td><?php echo $form->textField($model,'cust_type',array('size'=>15,'maxlength'=>30));?>
+		<?php echo $form->error($model,'cust_type'); ?></td>
 	</tr>
 	<tr>
 		<td><?php echo $form->labelEx($model,'memo'); ?></td>
