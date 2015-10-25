@@ -48,15 +48,14 @@ class CustomerInfo extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			//array('phone, phone2, phone3, phone4, phone5', 'unique', 'message'=>'该电话号码已经存在'),
-			array('phone, phone2, phone3, phone4, phone5', 'unique_phone'),
+			//array('phone, phone2, phone3, phone4, phone5', 'unique_phone'),
 			array('eno', 'required'),
 			array('phone, phone2, phone3, phone4, phone5, qq, category, cust_type, iskey', 'numerical', 'integerOnly'=>true),
 			//array('mail', 'email', 'allowEmpty'=>true, 'message'=>'邮箱不正确'),
 			array('phone, qq', 'check_contact'),
 			array('mail', 'length', 'max'=>50),
-			array('oldEno, cust_name, keyword, shop_name, corp_name, shop_url, shop_addr, datafrom, memo, searchtype, customerId', 'safe'),
-			array('id, cust_name, shop_name, corp_name, shop_url, shop_addr, phone, qq, mail, datafrom, category, eno, assign_eno, assign_time, next_time, memo, create_time, creator', 'safe', 'on'=>'search'),
+			array('apageSize,oldEno, cust_name, keyword, shop_name, corp_name, shop_url, shop_addr, datafrom, memo, searchtype, customerId', 'safe'),
+			array('id, cust_name, shop_name, corp_name, shop_url, shop_addr, phone, phone2, phone3, phone4, phone5, qq, mail, datafrom, category, eno, assign_eno, assign_time, next_time, memo, create_time, creator', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -70,7 +69,7 @@ class CustomerInfo extends CActiveRecord
 	}
 	/**
 	 * @检查电话号码是否已存在
-	 */
+	 
 	public function unique_phone(){
 		if($this->isNewRecord){
 			if($this->phone){
@@ -129,7 +128,7 @@ class CustomerInfo extends CActiveRecord
 				}
 			}	
 		}
-	}
+	}*/
 	/**
 	 * @return array relational rules.
 	 */

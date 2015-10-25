@@ -68,3 +68,18 @@ function listgroup(obj){
          $("#user-form").submit();
      }
     
+    
+function pageSizeShow(){
+   
+    var pageSizeId = $("#pageSizeShow").val();
+    var sourceUrl = window.location.href;
+    $.ajax({
+            url:'/index.php?r=Customer/customerinfo/pageSizeShow',
+            type: 'post',
+            data: {pageSizeId: pageSizeId,sourceUrl: sourceUrl},
+            dataType: 'json',
+            success: function(result1){
+                    window.location.href=sourceUrl;
+            }
+    });
+}

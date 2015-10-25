@@ -26,9 +26,8 @@
  */
 class CustomerBlack extends CActiveRecord
 {
-
-	//public $keyword;
-	//public $searchtype;
+	public $keyword;
+	public $searchtype;
 	public $old_custtype;//原客户类别
         public $lib_type;
         public $old_cust_type;
@@ -49,7 +48,7 @@ class CustomerBlack extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			array('cust_name', 'unique', 'message'=>'客户名称已经存在'),
-			array('cust_name, eno', 'required'),
+			//array('cust_name, eno', 'required'),
 			array('phone, qq, category, cust_type, iskey', 'numerical', 'integerOnly'=>true),
 			//array('eno, assign_eno', 'length', 'max'=>10),
 			//array('cust_name, shop_name, corp_name, shop_url, shop_addr, datafrom, memo', 'length', 'max'=>100),
@@ -102,7 +101,7 @@ class CustomerBlack extends CActiveRecord
 			'datafrom' => '数据来源',
 			'category' => '所属类目',
 			'cust_type' => '原客户分类',
-			'eno' => '所属工号',
+			'eno' => '原跟进人',
 			'iskey' => '是否重点',
 			'assign_eno' => '分配人',
 			'assign_time' => '分配时间',
@@ -110,7 +109,8 @@ class CustomerBlack extends CActiveRecord
 			'memo' => '备注',
 			'create_time' => '创建时间',
 			'creator' => '创建人',
-			'old_custtype' => '原客户类别',
+			'old_cust_type' => '原客户类别',
+			'last_time' => '最后联系时间',
 		);
 	}
 
@@ -141,9 +141,56 @@ class CustomerBlack extends CActiveRecord
 			$ph = $this->phone;
 			$criteria->addCondition("phone like '%$ph%' or phone2 like '%$ph%' or phone3 like '%$ph%' or phone4 like '%$ph%' or phone5 like '%$ph%' "); //查询条件  
 		}
-		$criteria->select="t.id,t.cust_name,t.shop_name,t.corp_name,t.shop_url,t.shop_addr,t.phone,t.qq,t.mail,t.assign_time,t.next_time,b.old_cust_type,b.lib_type";
+		$criteria->select="t.id,t.eno,t.last_time,t.cust_name,t.shop_name,t.corp_name,t.shop_url,t.shop_addr,t.phone,t.qq,t.mail,t.assign_time,t.next_time,b.old_cust_type,b.lib_type";
 
 		$criteria->addCondition("status=1"); //查询条件  
+		
+		if($this->keyword)
+        {
+            switch ($this->searchtype)
+           {
+               case 1:
+                   $criteria->addCondition("cust_name like :keyword");
+                   $criteria->params[':keyword'] = "%{$this->keyword}%";
+                   break;
+               case 2:
+                   $criteria->addCondition("shop_name like :keyword");
+                   $criteria->params[':keyword'] = "%{$this->keyword}%";
+                   break;
+               case 3:
+                   $criteria->addCondition("corp_name like :keyword");
+                   $criteria->params[':keyword'] = "%{$this->keyword}%";
+                   break;
+               case 4:
+                   $criteria->compare('phone', $this->keyword, true);
+                   break;
+               case 5:
+                   $criteria->compare('qq', $this->keyword, true);
+                   break;
+			   case 6:
+                   $criteria->addCondition("mail like :keyword");
+                   $criteria->params[':keyword'] = "%{$this->keyword}%";
+                   break;
+			   case 7:
+                   $criteria->addCondition("shop_addr like :keyword");
+                   $criteria->params[':keyword'] = "%{$this->keyword}%";
+                   break;
+			   case 8:
+				   $userinfo = Userinfo::getEnoByName($this->keyword);
+				   $enostr = '';
+				   if($userinfo){
+					   foreach ($userinfo as $k=>$v){
+						   $enostr .= "'".$v['eno']."',";
+					   }
+					   $enostr = trim($enostr, ',');
+				   }
+				   else{
+					   $enostr = -111;//搜索不到结果
+				   }
+				   $criteria->addCondition("eno in($enostr)");
+                   break;
+           }
+        }
         return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
 		));
@@ -160,10 +207,24 @@ class CustomerBlack extends CActiveRecord
 		return parent::model($className);
 	}
 
-	static function getSearchArr()
+	/*static function getSearchArr()
     {
         return array(
             1=>'原客户类别',    
         );
+    }*/
+	static function getSearchArr()
+    {
+        return array(
+            1=>'客户名称',
+            2=>'店铺名称',
+            3=>'公司名称',
+            4=>'电话',
+            5=>'QQ',
+            6=>'邮箱',
+            7=>'店铺地址',
+			8=>'原跟进人'
+        );
     }
+	
 }

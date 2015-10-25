@@ -153,8 +153,9 @@ $('.search-form form').submit(function(){
 		<?php if($isdel==1){ ?>
 		<a href="javascript:void(0);" col='0' class="btn  btn-minier btn-sm btn-success publish" onclick="batch_del()">批量删除</a>
 		<?php }?>
-		共<span class="orange"><?=$dataProvider->totalItemCount ?></span>条记录
-    </div>
+		共<span class="orange"><?=$dataProvider->totalItemCount ?></span>条记录，每页显示 
+		<?php echo CHtml::dropDownList('apageSize', $_SESSION['uPageSize'], UserInfo::getPagesize(), array('onchange'=>"pageSizeShow()",'id'=>'pageSizeShow','style' => "height:23px;")); ?>条
+	</div>
     <div class="col-sm-6 no-padding-right">
         <?php
         $this->widget('GLinkPager', array('pages' => $dataProvider->pagination,));
@@ -163,6 +164,7 @@ $('.search-form form').submit(function(){
 </div>
 
 <script>
+	
     $(function()
     {
         $('#add_customer').click(function()

@@ -275,5 +275,9 @@ class Userinfo {
         }
         return $priv;
     }
+	
+	public static function getPagesize(){
+		return array(10=>10,50=>50,100=>100,200=>200);
+	}
 
 }

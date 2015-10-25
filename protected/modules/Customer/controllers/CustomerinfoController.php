@@ -50,12 +50,12 @@ class CustomerinfoController extends GController
 			$model->create_time = time();
 			$model->creator = Yii::app()->user->id;
 			//$model->cust_type = 0;	//客户分类默认为0
-			$model->phone = trim($model->phone);
-			$model->phone2 = trim($model->phone2);
-			$model->phone3 = trim($model->phone3);
-			$model->phone4 = trim($model->phone4);
-			$model->phone5 = trim($model->phone5);
- 		   if($model->save()){
+			if($model->phone) $this->check_phone_ext($model->phone,0,1);//检查电话号码是否已经存在
+			if($model->phone2) $this->check_phone_ext($model->phone2,0,2);
+			if($model->phone3) $this->check_phone_ext($model->phone3,0,3);
+			if($model->phone4) $this->check_phone_ext($model->phone4,0,4);
+			if($model->phone5) $this->check_phone_ext($model->phone5,0,5);
+ 		    if($model->save()){
 				Yii::app()->db->createCommand()->update('{{users}}',array('cust_num' =>new CDbExpression('cust_num+1')),"eno='{$model->eno}'");
 				Utils::showMsg (1, '增加成功!');
 			}else{
@@ -172,16 +172,25 @@ class CustomerinfoController extends GController
 	 * 检查电话是否存在
 	 */
 	public function check_phone_ext($_phone,$id,$num){
+		$addWhere = '';
+		if($id) $addWhere = " and id<>$id";
 		$phone = trim($_phone);
 		$phone_0 = '0'.$phone;
-		$res = CustomerInfo::model()->findAll("(phone in($phone,$phone_0) or phone2 in($phone,$phone_0) or phone3 in($phone,$phone_0) or phone4 in($phone,$phone_0) or phone5 in($phone,$phone_0) ) and `status`<>2 and id<>$id");
+		$res = CustomerInfo::model()->findAll("(phone in($phone,$phone_0) or phone2 in($phone,$phone_0) or phone3 in($phone,$phone_0) or phone4 in($phone,$phone_0) or phone5 in($phone,$phone_0) ) and `status`<>2 $addWhere");
 		if($res){
 			$gonghao = $res[0]['eno'];
-			$userName = Users::model()->findAll('eno=:eno', array(':eno'=>$gonghao));
-			$userName = $userName[0]['username'];
-			Utils::showMsg (0, '电话'.$num.'已经存在于 '.$userName.' 库中。');
+			$custInfo = Users::model()->findAll('eno=:eno', array(':eno'=>$gonghao));
+			$userName = $custInfo[0]['username'];
+			if($res[0]['status'] == 0){
+				Utils::showMsg (0, '电话'.$num.'已经存在于 '.$userName.' 库中。');
+			}
+			elseif($res[0]['status'] == 1){
+				Utils::showMsg (0, '电话'.$num.'已经存在于 公海 中。');
+			}
+			
 		}
 	}
+	
 	/**
 	 * Deletes a particular model.
 	 * If deletion is successful, the browser will be redirected to the 'admin' page.
@@ -225,7 +234,7 @@ class CustomerinfoController extends GController
 	 */
 	public function actionAdmin()
 	{	
-		$aPageSize = 200;
+		$aPageSize = isset($_SESSION['uPageSize']) ? $_SESSION['uPageSize'] : 10;
 		$model=new CustomerInfo('search');
 		$model->unsetAttributes();  // clear any default values
 		if(Yii::app()->request->getParam('customerId')){
@@ -536,12 +545,36 @@ class CustomerinfoController extends GController
 			$userArr[$v->eno] = $v->cust_num;
 		}
 		foreach ($userArr as $k1 => $v1) {
-			$cust_num = CustomerInfo::model()->findAllBySql("select count(*) as id from c_customer_info where eno='$k1' and `status`<>2 and `status`<>1");
+			$cust_num = CustomerInfo::model()->findAllBySql("select count(*) as id from c_customer_info where eno='$k1' and `status`=0");
 			$num = $cust_num[0]['id'];
 			if($v1 != $num){
 				Users::model()->updateAll(array('cust_num'=>$num),'eno=:eno',array(':eno'=>"$k1"));
 			}
 		}	
 		echo '更新成功';
+	}
+	
+	/**
+	 * 用户选择了第页显示多少条后会触发AJAX请求此方法
+	 */
+	public function actionPageSizeShow(){
+		$pageSizeId = Yii::app()->request->getParam('pageSizeId');
+		$sourceUrl = Yii::app()->request->getParam('sourceUrl');
+		switch ($pageSizeId) {
+			case 50:
+				$_SESSION['uPageSize'] = 50;
+				break;
+			case 100:
+				$_SESSION['uPageSize'] = 100;
+				break;
+			case 200:
+				$_SESSION['uPageSize'] = 200;
+				break;
+			default:
+				$_SESSION['uPageSize'] = 10;
+				break;
+		}
+		//echo "<script>window.location.href=".$sourceUrl."</script>";
+		echo 1;
 	}
 }

@@ -42,6 +42,7 @@ class CustomerassController extends GController
 		$deptArr = array('0'=>'--请选择部门--') + $deptArr;
 		$category = Userinfo::getCategory();//类目
 		$ids = Yii::app()->request->getParam('ids');
+		$flag = Yii::app()->request->getParam('flag');//判断是不是从公海资源领取那来的
 		$model->ids = $ids;
 		if(isset($_POST['CustomerAss']))
 		{
@@ -59,7 +60,7 @@ class CustomerassController extends GController
 				{
 					exit("<script>alert(\"对不起, 您没有选择被分配人, 本次操作失败。\");javascript:history.go(-1);</script>");
 				}
-				$allocation = Yii::app()->db->createCommand("select id from {{customer_info}} where eno='$eno'")->queryAll();//已分配的
+				$allocation = Yii::app()->db->createCommand("select id from {{customer_info}} where eno='$eno' and `status`=0")->queryAll();//已分配的
 				if($allocation){
 					$alArr = array();
 					foreach ($allocation as $k1=>$v1){
@@ -67,7 +68,6 @@ class CustomerassController extends GController
 					}
 					
 					$idArr = explode(',', $model->ids);
-					//$intersectArr = array_intersect($alArr, $idArr);//取出已分配给该员工的客户ID
 					$diffArr = array_diff($idArr, $alArr);
 					if($diffArr){
 						$model->ids = implode(',', $diffArr);
@@ -80,8 +80,14 @@ class CustomerassController extends GController
 				}
 				$assign_eno = Yii::app()->session['user']['eno'];
 				$assign_time = time();
-				$sql = "update {{customer_info}} set eno='$eno',assign_time=$assign_time,assign_eno='$assign_eno' where id in({$model->ids})";
+				$addSet = '';
+				if($flag){//如果是从公海领取,status置为1
+					$addSet = ",`status`=0,cust_type=0 ";
+					$del_black = "delete from {{black_info}} where cust_id in ({$model->ids})";
+				}
+				$sql = "update {{customer_info}} set eno='$eno',assign_time=$assign_time,assign_eno='$assign_eno' $addSet where id in({$model->ids})";
 				$sql2 = "update {{users}} set cust_num=cust_num+$assCount where eno='{$model->eno}'";
+		
 				/////////////分配资源的时候原所属工号减1/////////
 				if($model->ids){
 					$reduce = explode(',', $model->ids);
@@ -112,6 +118,7 @@ class CustomerassController extends GController
 				try {
 					$res = Yii::app()->db->createCommand($sql)->execute();
 					$res2 = Yii::app()->db->createCommand($sql2)->execute();
+					$res3 = Yii::app()->db->createCommand($del_black)->execute();
 					if($reduceArr){
 						foreach ($reduceArr as $k3=>$v3){
 							Yii::app()->db->createCommand($v3)->execute();
@@ -178,7 +185,7 @@ class CustomerassController extends GController
 	 */
 	public function actionAdmin()
 	{
-		$aPageSize = 200;
+		$aPageSize = isset($_SESSION['uPageSize']) ? $_SESSION['uPageSize'] : 10;
 		/*$psizeid = Yii::app()->request->getparam('psizeid');
 		if($psizeid){
 			switch ($psizeid) {

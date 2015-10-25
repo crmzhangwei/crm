@@ -122,7 +122,7 @@ class CustomerblackController extends GController
 	 */
 	public function actionAdmin()
 	{
-		$aPageSize = 200;
+		$aPageSize = isset($_SESSION['uPageSize']) ? $_SESSION['uPageSize'] : 10;
 		$model=new CustomerBlack('search');
 		$model->unsetAttributes();  // clear any default values
 		$custtype = Userinfo::genCustTypeArray();
@@ -178,14 +178,15 @@ class CustomerblackController extends GController
 		return $res;
 	}
         public function get_old_cust_type($data){
-            $libtype = $data->lib_type;
+            /*$libtype = $data->lib_type;
             $typeno = $data->old_cust_type;
             $res =  Yii::app()->db->createCommand()
 				->select('type_name')
 				->from('{{cust_type}}')
 				->where("lib_type = $libtype and type_no=$typeno")
 				->queryRow();
-            return $res ? current($res) : '';
+            return $res ? current($res) : '';*/
+			return $data->old_cust_type.'类';
         }
 	/**
 	 *领取公海资源
@@ -207,5 +208,17 @@ class CustomerblackController extends GController
 			$transaction->rollBack();//事务回滚
 			echo json_encode(false);
 		}
+	}
+	
+	public function  get_eno_text($data)
+	{
+		$val = $data->eno;
+		$enoArr = $this->getEnoArr($val);
+		$res = isset($enoArr[$val])? $enoArr[$val]:$val;
+		return $res;
+	}
+
+	public function getEnoArr($eno){
+		return CHtml::listData(Users::model()->findAll('eno=:eno', array(':eno'=>$eno)), 'eno', 'name');
 	}
 }
