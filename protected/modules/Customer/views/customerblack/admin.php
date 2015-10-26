@@ -89,7 +89,7 @@ $('.search-form form').submit(function(){
     <div class="col-sm-6">
 		<a href="javascript:void(0);" js_type="publish"  col='0' class="btn  btn-minier btn-sm btn-success publish"><i class=" icon-ok icon-large"></i>领取资源</a> 
         共<span class="orange"><?=$dataProvider->totalItemCount ?></span>条记录, 每页显示
-		<?php echo CHtml::dropDownList('apageSize', $_SESSION['uPageSize'], UserInfo::getPagesize(), array('onchange'=>"pageSizeShow()",'id'=>'pageSizeShow','style' => "height:23px;")); ?>条
+		<?php echo CHtml::dropDownList('apageSize', isset($_SESSION['uPageSize'])?$_SESSION['uPageSize']:10, UserInfo::getPagesize(), array('onchange'=>"pageSizeShow()",'id'=>'pageSizeShow','style' => "height:23px;")); ?>条
 	</div> 
     <div class="col-sm-6 no-padding-right">
         <?php
