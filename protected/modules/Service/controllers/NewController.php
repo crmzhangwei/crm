@@ -133,8 +133,10 @@ class NewController extends GController {
                 Yii::app()->db->createCommand("update {{seq_note_id}} set seq=seq+1 where 1=1")->execute();
                 $seqnoteid=SeqNoteId::model()->findBySql("select seq from {{seq_note_id}} where 1=1 limit 1");
                 $noteinfo->id=$seqnoteid->seq;
+                $noteinfo->memo=Utils::parseText($noteinfo->memo); 
                 $noteinfo->save();
                 //更新电话拔打记录
+                /*
                 if ($noteinfo->dial_id > 0) {
                     $dialdetail = DialDetail::model()->findByPk($noteinfo->dial_id);
                     //获取通知录音路径，通知时长 
@@ -149,7 +151,7 @@ class NewController extends GController {
                     $dialdetail->dial_long = $dial_long;
                     $dialdetail->record_path = $record_path;
                     $dialdetail->save();
-                }
+                }*/
             }
             if ($newCustType == 8) {
                 //客户分类转成8，生成公海资源数据

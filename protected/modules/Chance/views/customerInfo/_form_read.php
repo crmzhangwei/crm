@@ -50,7 +50,7 @@
     <script>
 
         $(function() {
-            var value = $('#cust_type').val();
+            var value = $('#CustomerInfo_cust_type').val(); 
             if (value == 6) {
                 $("#tr_visit").show();
                 $("#tr_abandon").hide();

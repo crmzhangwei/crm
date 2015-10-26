@@ -26,12 +26,12 @@ function sendMail(cust_id){
     window.open('http://exmail.qq.com/login');  
 }
 function dial(cust_id,seq){
-    var dialid=$('#NoteInfo_dial_id').val();
+    /*var dialid=$('#NoteInfo_dial_id').val();
     var uid = $('#NoteInfo_uid').val();
     if(dialid>0&&uid==''){
         bootbox.alert('请先获取通话时长!');
         return ;
-    }
+    }*/
     $.getJSON('index.php?r=Service/service/dial&cust_id='+cust_id+"&seq="+seq,function(obj){
          $('#NoteInfo_dial_id').val(obj.dial_id); 
          $('#NoteInfo_uid').val('');
@@ -111,7 +111,7 @@ function changeCustType(obj){
                     <?php echo Utils::hidePhone($model->phone);echo "&nbsp;"; 
                            echo CHtml::button("拔打电话", array('onclick'=>'javascript:dial('.$model->id.',1)','class' => 'editNode btn btn-info btn-minier tooltip-info', 'data-placement' => "bottom"));  
                            echo "&nbsp;";
-                           echo CHtml::button("获取通话时长",array('onclick'=>'javascript:popUid()','class' => 'editNode btn btn-info btn-minier tooltip-info', 'data-placement' => "bottom"));  
+                           //echo CHtml::button("获取通话时长",array('onclick'=>'javascript:popUid()','class' => 'editNode btn btn-info btn-minier tooltip-info', 'data-placement' => "bottom"));  
                            echo "&nbsp;";
                            echo CHtml::button("发送短信", array('onclick'=>'javascript:sendMessage('.$model->id.',1)','class' => 'editNode btn btn-info btn-minier tooltip-info', 'data-placement' => "bottom"));
                     ?>  

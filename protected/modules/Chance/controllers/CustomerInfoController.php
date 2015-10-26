@@ -82,8 +82,10 @@ class CustomerInfoController extends GController {
                 Yii::app()->db->createCommand("update {{seq_note_id}} set seq=seq+1 where 1=1")->execute();
                 $seqnoteid=SeqNoteId::model()->findBySql("select seq from {{seq_note_id}} where 1=1 limit 1");
                 $noteinfo->id=$seqnoteid->seq;
+                $noteinfo->memo=Utils::parseText($noteinfo->memo); 
                 $noteinfo->save();
                 //更新电话拔打记录
+                /*
                 if ($noteinfo->dial_id > 0) {
                     $dialdetail = DialDetail::model()->findByPk($noteinfo->dial_id);
                     //获取通知录音路径，通知时长 
@@ -99,7 +101,7 @@ class CustomerInfoController extends GController {
                     $dialdetail->dial_long = $dial_long;
                     $dialdetail->record_path = $record_path;
                     $dialdetail->save();
-                }
+                }*/
             }
             $model->update_time=time();
             $model->save();
@@ -337,7 +339,8 @@ class CustomerInfoController extends GController {
                         $model->iskey = $noteinfo->iskey;
                     }
                     //$noteinfo->last_time=$model->last_time;//仅用于比较
-                    $noteinfo->next_contact = strtotime($noteinfo->next_contact);
+                    $noteinfo->next_contact = strtotime($noteinfo->next_contact); 
+                    $noteinfo->memo=Utils::parseText($noteinfo->memo); 
                     $noteinfo->cust_type = $newCustType;
                     $noteinfo->lib_type = "1"; 
                     $noteinfo->setAttribute("userid", Yii::app()->user->id);
@@ -361,6 +364,7 @@ class CustomerInfoController extends GController {
                 $model->update_time=time();
                 $model->save();
                 //更新电话拔打记录
+                /*
                 if ($noteinfo->dial_id > 0) {
                     $dialdetail = DialDetail::model()->findByPk($noteinfo->dial_id);
                     //获取通知录音路径，通知时长 
@@ -381,7 +385,7 @@ class CustomerInfoController extends GController {
                         $dialdetail->record_path = $record_path;
                         $dialdetail->save();
                     }
-                }
+                }*/
             }
             //加载页面数据
             if (!$noteinfo->hasErrors() && !$model->hasErrors()) {
@@ -890,7 +894,7 @@ class CustomerInfoController extends GController {
         }
         if (!isset($_POST['select'])) {
             //没有选择记录的情况
-            $this->redirect($this->createUrl("customerinfo/todaylist"));
+            $this->redirect($this->createUrl("customerInfo/todaylist"));
             return;
         }
         //跳转到合并页面
@@ -900,7 +904,7 @@ class CustomerInfoController extends GController {
         if (is_array($ids)) {
             $sql = "select * from {{customer_info}} where id in (" . implode(",", $ids) . ")";
         } else {
-            $this->redirect($this->createUrl("customerinfo/todaylist"));
+            $this->redirect($this->createUrl("customerInfo/todaylist"));
             return;
         }
         $list = $model->findAllBySql($sql);
@@ -1069,6 +1073,56 @@ class CustomerInfoController extends GController {
     
     public function genNoteRecordInfo($data){
         return Utils::genNoteDisplayRecord($data);
+    }
+     /**
+     * 批量放入公海
+     */
+    public function actionBatchBlack() {
+        if (!isset($_POST['select'])) {
+            //没有选择记录的情况
+            Yii::app()->user->setFlash('success','请选择客户!');
+            $this->redirect($this->createUrl("customerInfo/todaylist"));
+            return;
+        }else{
+            $ids = $_POST['select']; 
+            foreach($ids as $k=>$v){ 
+                    $model = CustomerInfo::model()->findByPk($v);  
+                    $temp = BlackInfo::model()->findBySql("select * from {{black_info}} where cust_id=$v");
+                    if (empty($temp)) {
+                        $blackinfo = new BlackInfo();
+                        $blackinfo->setAttribute("cust_id", $v);
+                        $blackinfo->setAttribute('lib_type', 1);
+                        $blackinfo->setAttribute('old_cust_type', $model->cust_type);
+                        $blackinfo->setAttribute('create_time', time());
+                        $blackinfo->setAttribute('creator', Yii::app()->user->id);
+                        $blackinfo->save();
+                    }else{
+                        Yii::app()->db->createCommand()->update('{{black_info}}', 
+                                array('lib_type' => 1,
+                                      'old_cust_type'=>$model->cust_type,
+                                      'create_time'=>time(),
+                                      'creator'=>Yii::app()->user->id
+                            ),"cust_id=$v");
+                    }
+                    $model->status=1;
+                    $model->cust_type=9;
+                    $model->update_time=time();
+                    $model->save();
+                    //已分配资源数减1
+                    $sql = "update {{users}} set cust_num=cust_num-1 where eno='{$model->eno}'";
+                    Yii::app()->db->createCommand($sql)->execute();
+                    //删除成交师库和售后库
+                    $sql = "delete from {{trans_cust_info}} where cust_id=$v";
+                    Yii::app()->db->createCommand($sql)->execute();
+                    $sql = "delete from {{aftermarket_cust_info}} where cust_id=$v";
+                    Yii::app()->db->createCommand($sql)->execute();
+                    $sql = "delete from {{contract_info}} where cust_id=$v";
+                    Yii::app()->db->createCommand($sql)->execute();
+            } 
+            Yii::app()->user->setFlash('success','成功放入公海!');
+            $this->redirect($this->createUrl("customerInfo/todaylist"));
+        }
+        
     }
 
 }
