@@ -221,6 +221,7 @@ class CustomerInfoController extends GController {
                     $model->last_time = time(); //最后联系时间等于今天
                     $noteinfo->setAttribute("userid", Yii::app()->user->id);
                     $noteinfo->setAttribute("create_time", time());
+                    $noteinfo->memo=Utils::parseText($noteinfo->memo); 
                     Yii::app()->db->createCommand("update {{seq_note_id}} set seq=seq+1 where 1=1")->execute();
                     $seqnoteid=SeqNoteId::model()->findBySql("select seq from {{seq_note_id}} where 1=1 limit 1");
                     $noteinfo->id=$seqnoteid->seq;
@@ -250,7 +251,9 @@ class CustomerInfoController extends GController {
                                       'creator'=>Yii::app()->user->id
                             ),"cust_id=$id");
                     }
-
+                    //成交师已分配资源数减1
+                    $sql = "update {{users}} set cust_num=cust_num-1 where eno in('{$model->eno}','{$trans_info->eno}')";
+                    Yii::app()->db->createCommand($sql)->execute();    
                     $trans_info->delete(); //删除成交师库记录
                     $model->status = '1';
                 } else {
@@ -259,6 +262,7 @@ class CustomerInfoController extends GController {
                 $model->update_time=time();
                 $model->save();
                 //更新电话拔打记录
+                /*
                 if ($noteinfo->dial_id > 0) {
                     $dialdetail = DialDetail::model()->findByPk($noteinfo->dial_id);
                     //获取通知录音路径，通知时长 
@@ -274,7 +278,7 @@ class CustomerInfoController extends GController {
                     $dialdetail->dial_long = $dial_long;
                     $dialdetail->record_path = $record_path;
                     $dialdetail->save();
-                }
+                }*/
             }
             //加载页面数据
             if (!$noteinfo->hasErrors() && !$model->hasErrors()) {
@@ -325,7 +329,9 @@ class CustomerInfoController extends GController {
             'user' => $user, 
         ));
     }
-
+    public function actionResult(){
+        $this->render("result");
+    }
     public function actionNoteInfo($id) {
         $model = $this->loadModel($id);
         $noteinfo = new NoteInfoP();

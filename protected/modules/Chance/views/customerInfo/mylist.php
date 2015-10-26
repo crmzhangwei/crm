@@ -68,6 +68,7 @@ $form = $this->beginWidget('CActiveForm', array(
 </div>
 
 <?php $this->endWidget(); ?>
+<font color="red"><?php echo Yii::app()->user->getFlash('success');Yii::app()->user->setFlash('success','') ?></font>
 <?php
 $form1 = $this->beginWidget('CActiveForm', array(
     'action' => Yii::app()->createUrl('Chance/customerInfo/clearcondiForMyList'),
@@ -78,6 +79,7 @@ $form1 = $this->beginWidget('CActiveForm', array(
 <div class="form-group">
     <div class="btn-group"> 
         <?php echo CHtml::button('合并客户', array('class' => 'btn btn-sm btn-primary','onclick'=>'subMerge();')); ?>
+        <?php echo CHtml::button('批量放入公海', array('class' => 'btn btn-sm btn-primary','onclick'=>'subBatchBlack();')); ?>
         <?php echo CHtml::submitButton('清除查询条件', array('class' => 'btn btn-sm btn-primary')); ?>
     </div>  
 </div>
@@ -95,7 +97,7 @@ $this->widget('GGridView', array(
         array('class' => 'CCheckBoxColumn',
             'name' => 'id',
             'id' => 'select',
-            'selectableRows' => 2,
+            'selectableRows' => 2, 
             'headerTemplate' => '{item}',
             'htmlOptions' => array(
                 'width' => '20',
@@ -192,5 +194,12 @@ $this->widget('GLinkPager', array('pages' => $dataProvider->getPagination(),));
          var url = "<?php echo Yii::app()->controller->createUrl('customerInfo/merge');?>";
          $("#form_1").attr('action',url);
          $("#form_1").submit();
+    }
+    function subBatchBlack(){
+        if(confirm('确定将选中客户放放公海')){
+            var url = "<?php echo Yii::app()->controller->createUrl('customerInfo/batchBlack');?>";
+            $("#form_1").attr('action',url);
+            $("#form_1").submit();
+        } 
     }
 </script>

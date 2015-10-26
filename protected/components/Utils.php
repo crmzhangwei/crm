@@ -483,10 +483,11 @@ class Utils {
         $str = $str." ".$record['memo']." "; 
         $custtype = CustType::findByTypeAndNo($record['lib_type'], $record['cust_type']); 
         $str = $str . " "; 
-        $str = $str . "【".$record['cust_type'] . " 类 - " . $custtype['type_name'] . "】&nbsp;&nbsp;->&nbsp;下次联系时间：" ;
+        $str = $str . "<br/><font color='green'>【".$record['cust_type'] . " 类 - " . $custtype['type_name'] . "】&nbsp;&nbsp;->&nbsp;下次联系时间：" ;
         if($record->next_contact ){
             $str=$str.date("Y-m-d H:i:s", $record->next_contact) ;
         } 
+        $str=$str."</font>";
         return $str;    
     }
 
@@ -538,6 +539,11 @@ class Utils {
            }
         }
         return $time;
+    }
+    public static function parseText($text){
+        $str = str_replace(chr(13),"<br>",$text);
+        $str = str_replace(chr(10),"<br>",$text);
+        return $str;
     }
 
 }

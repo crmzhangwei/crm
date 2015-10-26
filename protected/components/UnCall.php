@@ -108,7 +108,7 @@ class UnCall {
         $result = $client->OnClickCall($user->extend_no, $phonenumber, ""); 
         $xml = simplexml_load_string($result);
         if ($xml&&((string) $xml->OnClickCall->Response) == 'Success') {
-            $dialdetail = new DialDetail();
+            /*$dialdetail = new DialDetail();
             $dialdetail->eno = $user->eno;
             $dialdetail->cust_id = $cust_id;
             $dialdetail->extend_no = $user->extend_no;
@@ -119,9 +119,9 @@ class UnCall {
             $dialdetail->record_path = '';
             $dialdetail->isok = 0; 
             $dialdetail->uid = '';
-            $dialdetail->save();
+            $dialdetail->save();*/
             $ret['status'] = 1; 
-            $ret['dial_id'] = $dialdetail->primaryKey;
+            $ret['dial_id'] = 99;
             $ret['message'] = '电话拔打成功，请按下接听!';
         } else {
             $ret['message'] = '电话拔打失败!'; 
