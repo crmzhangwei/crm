@@ -67,68 +67,7 @@ class CustomerInfo extends CActiveRecord
 			$this->addError('qq, phone', 'QQ和电话1必须任填一项');
 		}
 	}
-	/**
-	 * @检查电话号码是否已存在
 	 
-	public function unique_phone(){
-		if($this->isNewRecord){
-			if($this->phone){
-				$phone = trim($this->phone);
-				$phone_0 = '0'.$phone;
-				$res = CustomerInfo::model()->findAll("(phone in($phone,$phone_0) or phone2 in($phone,$phone_0) or phone3 in($phone,$phone_0) or phone4 in($phone,$phone_0) or phone5 in($phone,$phone_0) ) and `status`<>2");
-				if($res){
-					$gonghao = $res[0]['eno'];
-					$userName = Users::model()->findAll('eno=:eno', array(':eno'=>$gonghao));
-					$userName = $userName[0]['username'];
-					$this->addError('phone', '电话1已经存在于 '.$userName." 库中。");
-				}
-			}
-			if($this->phone2){
-				$phone2 = trim($this->phone2);
-				$phone2_0 = '0'.$phone2;
-				$res = CustomerInfo::model()->findAll("(phone in($phone2,$phone2_0) or phone2 in($phone2,$phone2_0) or phone3 in($phone2,$phone2_0) or phone4 in($phone2,$phone2_0) or phone5 in($phone2,$phone2_0) ) and `status`<>2");
-				if($res){
-					$gonghao = $res[0]['eno'];
-					$userName = Users::model()->findAll('eno=:eno', array(':eno'=>$gonghao));
-					$userName = $userName[0]['username'];
-					$this->addError('phone2', '电话2已经存在于 '.$userName.' 库中。');
-				}
-			}
-			if($this->phone3){
-				$phone3 = trim($this->phone3);
-				$phone3_0 = '0'.$phone3;
-				$res = CustomerInfo::model()->findAll("(phone in($phone3,$phone3_0) or phone2 in($phone3,$phone3_0) or phone3 in($phone3,$phone3_0) or phone4 in($phone3,$phone3_0) or phone5 in($phone3,$phone3_0) ) and `status`<>2");
-				if($res){
-					$gonghao = $res[0]['eno'];
-					$userName = Users::model()->findAll('eno=:eno', array(':eno'=>$gonghao));
-					$userName = $userName[0]['username'];
-					$this->addError('phone3', '电话3已经存在于 '.$userName.' 库中。');
-				}
-			}
-			if($this->phone4){
-				$phone4 = trim($this->phone4);
-				$phone4_0 = '0'.$phone4;
-				$res = CustomerInfo::model()->findAll("(phone in($phone4,$phone4_0) or phone2 in($phone4,$phone4_0) or phone3 in($phone4,$phone4_0) or phone4 in($phone4,$phone4_0) or phone5 in($phone4,$phone4_0) ) and `status`<>2");
-				if($res){
-					$gonghao = $res[0]['eno'];
-					$userName = Users::model()->findAll('eno=:eno', array(':eno'=>$gonghao));
-					$userName = $userName[0]['username'];
-					$this->addError('phone4', '电话4已经存在于 '.$userName.' 库中。');
-				}
-			}
-			if($this->phone5){
-				$phone5 = trim($this->phone5);
-				$phone5_0 = '0'.$phone5;
-				$res = CustomerInfo::model()->findAll("(phone in($phone5,$phone5_0) or phone2 in($phone5,$phone5_0) or phone3 in($phone5,$phone5_0) or phone4 in($phone5,$phone5_0) or phone5 in($phone5,$phone5_0) ) and `status`<>2");
-				if($res){
-					$gonghao = $res[0]['eno'];
-					$userName = Users::model()->findAll('eno=:eno', array(':eno'=>$gonghao));
-					$userName = $userName[0]['username'];
-					$this->addError('phone5', '电话5已经存在于 '.$userName.' 库中。');
-				}
-			}	
-		}
-	}*/
 	/**
 	 * @return array relational rules.
 	 */
@@ -212,7 +151,7 @@ class CustomerInfo extends CActiveRecord
 		$criteria->compare('memo',$this->memo,true);
 		$criteria->compare('create_time',$this->create_time);
 		$criteria->compare('creator',$this->creator);
-		$criteria->addCondition("`status` <>'2' and `status` <>'1'");  
+		$criteria->addCondition("`status`=0");  
 		if($this->customerId){
 			$criteria->addCondition("id in({$this->customerId})"); //查询条件 
 		}

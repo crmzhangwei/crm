@@ -154,7 +154,7 @@ class CustomerInfo extends CActiveRecord {
         $type = intval(Yii::app()->request->getParam('type'));
         $criteria = new CDbCriteria;
         $criteria->addInCondition("cust_type", array(0, 1, 2, 3, 4, 5, 6, 7, 8));
-        $criteria->addInCondition("status", array(0, 3));
+        $criteria->addInCondition("status", array(0));
 		//$criteria->compare('eno',$this->eno,true);
         //只看到自己的客户,及下属客户
         $user_arr = Userinfo::getAllChildUsersId(Yii::app()->user->id);
@@ -228,7 +228,7 @@ class CustomerInfo extends CActiveRecord {
         $type = intval(Yii::app()->request->getParam('type'));
         $criteria = new CDbCriteria;
         $criteria->addInCondition("cust_type", array(0, 1, 2, 3, 4, 5, 6, 7, 8));
-        $criteria->addInCondition("status", array(0, 3)); 
+        $criteria->addInCondition("status", array(0)); 
         //只看到自己的客户,及下属客户
         $user_arr = Userinfo::getAllChildUsersId(Yii::app()->user->id);
         $user_arr[]=Yii::app()->user->id;
@@ -294,7 +294,7 @@ class CustomerInfo extends CActiveRecord {
         $type = intval(Yii::app()->request->getParam('type'));
         $criteria = new CDbCriteria;
         $criteria->addInCondition("cust_type", array(0, 1, 2, 3, 4, 5, 7, 8));
-        $criteria->addInCondition("status", array(0, 3)); 
+        $criteria->addInCondition("status", array(0)); 
         //只看到自己的客户,及下属客户
         $user_arr = Userinfo::getAllChildUsersId(Yii::app()->user->id);
         $user_arr[]=Yii::app()->user->id;

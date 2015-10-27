@@ -221,4 +221,8 @@ class CustomerblackController extends GController
 	public function getEnoArr($eno){
 		return CHtml::listData(Users::model()->findAll('eno=:eno', array(':eno'=>$eno)), 'eno', 'name');
 	}
+	
+	public function get_last_time($data){
+		return $data->last_time ? date("Y-m-d H:i:s",$data->last_time) : '未联系过';
+	}
 }
