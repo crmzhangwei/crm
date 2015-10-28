@@ -152,9 +152,9 @@ class CustomerInfo extends CActiveRecord {
     public function search() {
         // @todo Please modify the following code to remove attributes that should not be searched.
         $type = intval(Yii::app()->request->getParam('type'));
-        $criteria = new CDbCriteria;
+        $criteria = new CDbCriteria; 
         $criteria->addInCondition("cust_type", array(0, 1, 2, 3, 4, 5, 6, 7, 8, -9));
-        $criteria->addCondition("status=0");
+        $criteria->addCondition("status=0"); 
 		//$criteria->compare('eno',$this->eno,true);
         //只看到自己的客户,及下属客户
         $user_arr = Userinfo::getAllChildUsersId(Yii::app()->user->id);
@@ -227,9 +227,10 @@ class CustomerInfo extends CActiveRecord {
      */
     public function searchMyList() {
         $type = intval(Yii::app()->request->getParam('type'));
-        $criteria = new CDbCriteria;
+        $criteria = new CDbCriteria; 
         $criteria->addInCondition("cust_type", array(0, 1, 2, 3, 4, 5, 6, 7, 8,-9));
         $criteria->addCondition("status=0");
+ 
         //只看到自己的客户,及下属客户
         $user_arr = Userinfo::getAllChildUsersId(Yii::app()->user->id);
         $user_arr[]=Yii::app()->user->id;
@@ -294,9 +295,9 @@ class CustomerInfo extends CActiveRecord {
      */
     public function searchOldList() {
         $type = intval(Yii::app()->request->getParam('type'));
-        $criteria = new CDbCriteria;
+        $criteria = new CDbCriteria; 
         $criteria->addInCondition("cust_type", array(0, 1, 2, 3, 4, 5, 7, 8,-9));
-        $criteria->addCondition("status=0");
+        $criteria->addCondition("status=0"); 
         //只看到自己的客户,及下属客户
         $user_arr = Userinfo::getAllChildUsersId(Yii::app()->user->id);
         $user_arr[]=Yii::app()->user->id;

@@ -87,9 +87,12 @@ class Userinfo {
 
     public static function genCustTypeArray() {
         $custTypeArr = Utils::mapArray(CustType::findByType(1), 'type_no', 'type_name');
-        $custTypeArr[-1] = '--请选择客户分类--';
+        
         ksort($custTypeArr);
-        return $custTypeArr;
+		//$custTypeArr[-1] = '--请选择客户分类--';
+		$addKey[-1] = '--请选择客户分类--';
+		$cust_array = $addKey+$custTypeArr;
+        return $cust_array;
     }
 
     /**

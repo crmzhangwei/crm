@@ -755,11 +755,12 @@ class CustomerInfoController extends GController {
         }
     }
 
-    protected function genCustTypeArray() {
-        $custTypeArr = Utils::mapArray(CustType::findByType(1), 'type_no', 'type_name');
-        $custTypeArr[-1] = '--请选择--';
+    protected function genCustTypeArray() {		
+		$custTypeArr = Utils::mapArray(CustType::findByType(1), 'type_no', 'type_name');
         ksort($custTypeArr);
-        return $custTypeArr;
+		$addKey[-1] = '--请选择--';
+		$cust_array = $addKey+$custTypeArr;
+        return $cust_array;
     }
 
     protected function getTranUsers() {

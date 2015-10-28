@@ -154,7 +154,7 @@ $('.search-form form').submit(function(){
 		<a href="javascript:void(0);" col='0' class="btn  btn-minier btn-sm btn-success publish" onclick="batch_del()">批量删除</a>
 		<?php }?>
 		共<span class="orange"><?=$dataProvider->totalItemCount ?></span>条记录，每页显示 
-		<?php echo CHtml::dropDownList('apageSize', $_SESSION['uPageSize'], UserInfo::getPagesize(), array('onchange'=>"pageSizeShow()",'id'=>'pageSizeShow','style' => "height:23px;")); ?>条
+		<?php echo CHtml::dropDownList('apageSize', isset($_SESSION['uPageSize'])?$_SESSION['uPageSize']:10, UserInfo::getPagesize(), array('onchange'=>"pageSizeShow()",'id'=>'pageSizeShow','style' => "height:23px;")); ?>条
 	</div>
     <div class="col-sm-6 no-padding-right">
         <?php

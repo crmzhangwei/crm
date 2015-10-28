@@ -82,14 +82,14 @@ class CustomerassController extends GController
 				$assign_time = time();
 				$addSet = '';
 				if($flag){//如果是从公海领取,status置为1
-					$addSet = ",`status`=0,cust_type=0 ";
+					$addSet = ",`status`=0,cust_type=-9 ";
 					$del_black = "delete from {{black_info}} where cust_id in ({$model->ids})";
 				}
 				$sql = "update {{customer_info}} set eno='$eno',assign_time=$assign_time,assign_eno='$assign_eno' $addSet where id in({$model->ids})";
 				$sql2 = "update {{users}} set cust_num=cust_num+$assCount where eno='{$model->eno}'";
-		
+
 				/////////////分配资源的时候原所属工号减1/////////
-				if($model->ids){
+				if($model->ids && !$flag){
 					$reduce = explode(',', $model->ids);
 					$reduceArr = array();
 					foreach ($reduce as $k2=>$v2){
@@ -119,7 +119,7 @@ class CustomerassController extends GController
 					$res = Yii::app()->db->createCommand($sql)->execute();
 					$res2 = Yii::app()->db->createCommand($sql2)->execute();
 					$res3 = Yii::app()->db->createCommand($del_black)->execute();
-					if($reduceArr){
+					if(isset($reduceArr)){
 						foreach ($reduceArr as $k3=>$v3){
 							Yii::app()->db->createCommand($v3)->execute();
 						}
