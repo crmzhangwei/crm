@@ -153,8 +153,8 @@ class CustomerInfo extends CActiveRecord {
         // @todo Please modify the following code to remove attributes that should not be searched.
         $type = intval(Yii::app()->request->getParam('type'));
         $criteria = new CDbCriteria;
-        $criteria->addInCondition("cust_type", array(0, 1, 2, 3, 4, 5, 6, 7, 8));
-        $criteria->addInCondition("status", array(0, 3));
+        $criteria->addInCondition("cust_type", array(0, 1, 2, 3, 4, 5, 6, 7, 8, -9));
+        $criteria->addCondition("status=0");
 		//$criteria->compare('eno',$this->eno,true);
         //只看到自己的客户,及下属客户
         $user_arr = Userinfo::getAllChildUsersId(Yii::app()->user->id);
@@ -175,9 +175,10 @@ class CustomerInfo extends CActiveRecord {
             $criteria->addCondition(" exists (select 1 from {{users}} where eno=t.eno and group_id=$this->search_group)") ; 
         }
 	if ($this->eno) {
-            $criteria->compare('eno', $this->eno, true);
+            $criteria->compare('eno', $this->eno);
         } 
-        if ($this->cust_type_from>-1 && $this->cust_type_to>-1) {
+        if ($this->cust_type_from!=null&&$this->cust_type_from!=''&& $this->cust_type_from!=-1 
+                && $this->cust_type_to!=null&&$this->cust_type_to!='' && $this->cust_type_to !=-1) {
             $criteria->addBetweenCondition('cust_type', intval($this->cust_type_from), intval($this->cust_type_to));
         }
         if ($this->contact_7_day) {
@@ -227,8 +228,8 @@ class CustomerInfo extends CActiveRecord {
     public function searchMyList() {
         $type = intval(Yii::app()->request->getParam('type'));
         $criteria = new CDbCriteria;
-        $criteria->addInCondition("cust_type", array(0, 1, 2, 3, 4, 5, 6, 7, 8));
-        $criteria->addInCondition("status", array(0, 3)); 
+        $criteria->addInCondition("cust_type", array(0, 1, 2, 3, 4, 5, 6, 7, 8,-9));
+        $criteria->addCondition("status=0");
         //只看到自己的客户,及下属客户
         $user_arr = Userinfo::getAllChildUsersId(Yii::app()->user->id);
         $user_arr[]=Yii::app()->user->id;
@@ -251,9 +252,10 @@ class CustomerInfo extends CActiveRecord {
             $criteria->addCondition(" exists (select 1 from {{users}} where eno=t.eno and group_id=$this->search_group)") ; 
         }
         if ($this->eno) {
-            $criteria->compare('eno', $this->eno, true);
-        }
-        if ($this->cust_type_from>-1 && $this->cust_type_to >-1) {
+            $criteria->compare('eno', $this->eno);
+        } 
+        if ($this->cust_type_from!=null&&$this->cust_type_from!=''&& $this->cust_type_from!=-1 
+                && $this->cust_type_to!=null&&$this->cust_type_to!='' && $this->cust_type_to !=-1) {
             $criteria->addBetweenCondition('cust_type', intval($this->cust_type_from), intval($this->cust_type_to));
         }
         if ($this->contact_7_day) {
@@ -293,8 +295,8 @@ class CustomerInfo extends CActiveRecord {
     public function searchOldList() {
         $type = intval(Yii::app()->request->getParam('type'));
         $criteria = new CDbCriteria;
-        $criteria->addInCondition("cust_type", array(0, 1, 2, 3, 4, 5, 7, 8));
-        $criteria->addInCondition("status", array(0, 3)); 
+        $criteria->addInCondition("cust_type", array(0, 1, 2, 3, 4, 5, 7, 8,-9));
+        $criteria->addCondition("status=0");
         //只看到自己的客户,及下属客户
         $user_arr = Userinfo::getAllChildUsersId(Yii::app()->user->id);
         $user_arr[]=Yii::app()->user->id;
@@ -306,10 +308,7 @@ class CustomerInfo extends CActiveRecord {
         }
         if ($this->phone) {
             $criteria->compare('phone', $this->phone, true);
-        }
-        if ($this->cust_type_from>-1 && $this->cust_type_to>-1) {
-            $criteria->addBetweenCondition('cust_type', intval($this->cust_type_from), intval($this->cust_type_to));
-        }
+        }  
         if($this->search_dept){
             $criteria->addCondition(" exists (select 1 from {{users}} where eno=t.eno and dept_id=$this->search_dept)") ; 
         }
@@ -317,7 +316,11 @@ class CustomerInfo extends CActiveRecord {
             $criteria->addCondition(" exists (select 1 from {{users}} where eno=t.eno and group_id=$this->search_group)") ; 
         }
         if ($this->eno) {
-            $criteria->compare('eno', $this->eno, true);
+            $criteria->compare('eno', $this->eno);
+        } 
+         if ($this->cust_type_from!=null&&$this->cust_type_from!=''&& $this->cust_type_from!=-1 
+                && $this->cust_type_to!=null&&$this->cust_type_to!='' && $this->cust_type_to !=-1) {
+            $criteria->addBetweenCondition('cust_type', intval($this->cust_type_from), intval($this->cust_type_to));
         }
         if ($this->contact_7_day) {
             $itime = time();

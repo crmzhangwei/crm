@@ -147,7 +147,7 @@ class AftermarketCustInfo extends CActiveRecord {
                 " left join {{dic}} d on c.category=d.code and d.ctype='cust_category' " .
                 " left join {{contract_info}} ci on t.cust_id=ci.cust_id ";
         $criteria->addCondition(" t.cust_type=0");
-        $criteria->addInCondition("c.status", array(0, 3)); 
+        $criteria->addCondition("c.status=0"); 
         //只看到自己的客户,及下属客户
         $user_arr = Userinfo::getAllChildUsersId(Yii::app()->user->id);
         $user_arr[] = Yii::app()->user->id;
@@ -214,7 +214,7 @@ class AftermarketCustInfo extends CActiveRecord {
         $iDate = strtotime($curDate);
         $iDate = $iDate+86400;
         $criteria->addCondition("t.next_time<" . $iDate);
-        $criteria->addInCondition("c.status", array(0, 3));
+        $criteria->addCondition("c.status=0"); 
         //只看到自己的客户,及下属客户
         $user_arr = Userinfo::getAllChildUsersId(Yii::app()->user->id);
         $user_arr[] = Yii::app()->user->id;
@@ -280,7 +280,7 @@ class AftermarketCustInfo extends CActiveRecord {
         $istartTime = strtotime($curDate);
         $iendTime = $istartTime+86400;
         $criteria->addBetweenCondition("t.next_time", $istartTime, $iendTime);
-        $criteria->addInCondition("c.status", array(0, 3));
+        $criteria->addCondition("c.status=0"); 
         //只看到自己的客户,及下属客户
         $user_arr = Userinfo::getAllChildUsersId(Yii::app()->user->id);
         $user_arr[] = Yii::app()->user->id;
