@@ -203,6 +203,19 @@ class FinanceController extends GController {
         $deptarr = array_merge(array($dept_empty), $deptarr);
         return CHtml::listData($deptarr, "id", "name");
     }
+    /**
+     * 获取到单类型
+     */
+    public function getFinanceTypeArr() {
+        $financetypearr = Dic::model()->findAllBySql("select * from {{dic}} where ctype='finance_type'");
+        $dic_empty = new Dic();
+        $dic_empty->id = 0;
+        $dic_empty->code = '';
+        $dic_empty->name = '--请选择到单类型--';
+        $financetypearr = array_merge(array($dic_empty), $financetypearr);
+        return CHtml::listData($financetypearr, "code", "name");
+    }
+    
 
     /**
      * ajax获取部门下组别数组 

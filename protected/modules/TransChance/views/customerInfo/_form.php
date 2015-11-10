@@ -34,9 +34,9 @@
         ));
         ?>
         <div id="tabs-1" aria-labelledby="ui-id-29" class="ui-tabs-panel ui-widget-content ui-corner-bottom" role="tabpanel" aria-hidden="false" style="display: block;">
-            <?php $this->renderPartial('_baseinfo', array('model' => $model, 'trans_model' => $trans_model, 'user' => $user, 'contract' => $contract, 'form' => $form)); ?>
+            <?php $this->renderPartial('_baseinfo', array('model' => $model,  'user' => $user,  'form' => $form)); ?>
             <br/>
-            <?php $this->renderPartial('_noteinfo_form', array('model' => $noteinfo, 'custmodel' => $model, 'form' => $form)); ?>
+            <?php $this->renderPartial('_noteinfo_form', array('model' => $noteinfo, 'custmodel' => $model,'trans_model' => $trans_model,'contract' => $contract, 'user' => $user,'form' => $form)); ?>
             <br/>
             <?php $this->endWidget(); ?> 
             <?php $this->renderPartial('history_note', array('model' => $historyNote, 'custmodel' => $model)); ?>

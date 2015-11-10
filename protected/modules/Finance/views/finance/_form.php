@@ -49,9 +49,9 @@
 	'enableAjaxValidation'=>false,
 )); ?>
 
-	<p class="note"><span class="required">*</span>字段为必填项.</p>
+    <p class="note"><font color="red"><span class="required">*</span>字段为必填项.</p></font>
 
-	<?php echo $form->errorSummary($model); ?>
+	<font color="red"><?php echo $form->errorSummary($model); ?></font>
         
         <table class="table table-bordered">
             <tr>
@@ -61,6 +61,13 @@
                     <?php echo $form->textField($model,'cust_name'); ?>
                     <?php  echo CHtml::button("...",array('name'=>'btn_cust_pop','id'=>'id_btn_cust_pop','class' => 'editNode btn btn-info btn-minier tooltip-info'));?>
                     <?php echo $form->error($model,'cust_id'); ?> 
+                </td>
+            </tr> 
+            <tr>
+                <td width="10%"> <?php echo $form->labelEx($model,'finance_type'); ?></td> 
+                <td> 
+                    <?php echo $form->dropDownList($model, "finance_type", $this->getFinanceTypeArr()) ?> 
+                    <?php echo $form->error($model,'finance_type'); ?>
                 </td>
             </tr> 
             <tr>

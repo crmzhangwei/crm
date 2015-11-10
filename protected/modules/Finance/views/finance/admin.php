@@ -34,8 +34,9 @@ $this->widget('GGridView', array(
 	'dataProvider'=>$dataProvider,
 	'filter'=>null,
 	'columns'=>array(
-		'id', 
+		'id',  
                 array('name'=>'cust_id','value'=>'$data->cust_name'),
+                array('name'=>'finance_type','value'=>'$data->finance_type'),
 		array('name'=>'sale_user','value'=>'$data->sale_user_name'),
                 array('name'=>'trans_user','value'=>'$data->trans_user_name'), 
 		'acct_number',

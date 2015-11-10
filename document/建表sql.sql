@@ -369,4 +369,5 @@ create index idx_dialdetail_01 on c_dial_detail(cust_id);
 create index idx_dialdetail_02 on c_dial_detail(eno);
 create index idx_dialdetail_03 on c_dial_detail(uid);
 
- 
+alter table c_note_info_p add column note_type int not null default 0 comment '小记类型' after userid ; 
+alter table c_finance add column finance_type int not null default 0 comment '到单类型' after cust_id;

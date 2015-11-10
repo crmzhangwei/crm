@@ -12,6 +12,7 @@
  * @property integer $dial_id
  * @property integer $message_id
  * @property integer $userid
+ * @property integer $note_type
  * @property string $cust_type
  * @property integer $lib_type
  * @property integer $create_time
@@ -19,6 +20,12 @@
  */
 class NoteInfoP extends CActiveRecord
 {
+        public static $NOTE_TYPE_DEFAULT='0';
+        public static $NOTE_TYPE_ADD_CUST='1';
+        public static $NOTE_TYPE_DIAL='2';
+        public static $NOTE_TYPE_PUT_PUBLIC='3';
+        public static $NOTE_TYPE_GET_FROM_PUBLIC='4'; 
+        public static $NOTE_TYPE_SEND_MESSAGE='5'; 
         public $uid;
 	/**
 	 * @return string the associated database table name
@@ -42,7 +49,7 @@ class NoteInfoP extends CActiveRecord
 			array('memo', 'length', 'max'=>2000),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, cust_id, isvalid, iskey, next_contact, dial_id, message_id, userid, cust_type, lib_type, create_time, memo', 'safe', 'on'=>'search'),
+			array('id, cust_id, isvalid, iskey, next_contact, dial_id, message_id, userid, cust_type, lib_type, create_time, memo,note_type', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -65,7 +72,8 @@ class NoteInfoP extends CActiveRecord
 		return array(
 			'id' => '主键',
 			'cust_id' => '客户id',
-			'isvalid' => '是否有效',
+			'isvalid' => '是否有效', 
+			'note_type' => '小记类型',
 			'iskey' => '是否重点',
 			'next_contact' => '下次联系时间',
 			'dial_id' => '电话拔打记录',

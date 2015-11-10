@@ -90,7 +90,7 @@ class NewController extends GController {
         $aftermodel = AftermarketCustInfo::model()->findBySql($sql, array(':cust_id' => $id));
         $sql = "select * from {{contract_info}} where cust_id=:cust_id";
         $contractmodel = ContractInfo::model()->findBySql($sql, array(':cust_id' => $id));
-        $nextcontact='';
+        $nextcontact = '';
         if (isset($_POST['AftermarketCustInfo'])) {
             //保存   
             $newCustType = $_POST['AftermarketCustInfo']['cust_type'];
@@ -104,6 +104,7 @@ class NewController extends GController {
             $contractmodel->comm_pay_time = strtotime($contractmodel->comm_pay_time);
             if ($aftermodel->cust_type != $newCustType) {
                 //客户分类调整，生成转换明细数据
+                $model->update_time = time();
                 $convt = new CustConvtDetail();
                 $convt->setAttribute('lib_type', 3); //售后库
                 $convt->setAttribute('cust_id', $id);
@@ -118,7 +119,7 @@ class NewController extends GController {
             //保存小记信息
             if (Utils::isNeedSaveNoteInfoForAfter($_POST['NoteInfoP'], $newCustType)) {
                 //保存小记 
-                $nextcontact=$_POST['NoteInfoP']['next_contact'];
+                $nextcontact = $_POST['NoteInfoP']['next_contact'];
                 $noteinfo->attributes = $_POST['NoteInfoP'];
                 if ($model->iskey != $noteinfo->iskey) {
                     $model->iskey = $noteinfo->iskey;
@@ -131,27 +132,27 @@ class NewController extends GController {
                 $noteinfo->setAttribute("userid", Yii::app()->user->id);
                 $noteinfo->setAttribute("create_time", time());
                 Yii::app()->db->createCommand("update {{seq_note_id}} set seq=seq+1 where 1=1")->execute();
-                $seqnoteid=SeqNoteId::model()->findBySql("select seq from {{seq_note_id}} where 1=1 limit 1");
-                $noteinfo->id=$seqnoteid->seq;
-                $noteinfo->memo=Utils::parseText($noteinfo->memo); 
+                $seqnoteid = SeqNoteId::model()->findBySql("select seq from {{seq_note_id}} where 1=1 limit 1");
+                $noteinfo->id = $seqnoteid->seq;
+                $noteinfo->memo = Utils::parseText($noteinfo->memo);
                 $noteinfo->save();
                 //更新电话拔打记录
                 /*
-                if ($noteinfo->dial_id > 0) {
-                    $dialdetail = DialDetail::model()->findByPk($noteinfo->dial_id);
-                    //获取通知录音路径，通知时长 
-                    $uid = $dialdetail->uid;
-                    if ($uid == null || empty(trim($uid))) {
-                        $uid = UnCall::getUid2($dialdetail);
-                        $dialdetail->uid = $uid;
-                    }
-                    $dial_long = UnCall::getDialLength($uid);
-                    $record_path = UnCall::getRecord($uid);
-                    //$dialdetail->uid = $uid;
-                    $dialdetail->dial_long = $dial_long;
-                    $dialdetail->record_path = $record_path;
-                    $dialdetail->save();
-                }*/
+                  if ($noteinfo->dial_id > 0) {
+                  $dialdetail = DialDetail::model()->findByPk($noteinfo->dial_id);
+                  //获取通知录音路径，通知时长
+                  $uid = $dialdetail->uid;
+                  if ($uid == null || empty(trim($uid))) {
+                  $uid = UnCall::getUid2($dialdetail);
+                  $dialdetail->uid = $uid;
+                  }
+                  $dial_long = UnCall::getDialLength($uid);
+                  $record_path = UnCall::getRecord($uid);
+                  //$dialdetail->uid = $uid;
+                  $dialdetail->dial_long = $dial_long;
+                  $dialdetail->record_path = $record_path;
+                  $dialdetail->save();
+                  } */
             }
             if ($newCustType == 8) {
                 //客户分类转成8，生成公海资源数据
@@ -167,11 +168,15 @@ class NewController extends GController {
                     $aftermodel->delete(); //删除售后库
                 } else {
                     Yii::app()->db->createCommand()->update('{{black_info}}', array('lib_type' => 3,
-                            'old_cust_type' => $aftermodel->cust_type,
-                            'create_time' => time(),
-                            'creator' => Yii::app()->user->id
-                             ), "cust_id=$id");
+                        'old_cust_type' => $aftermodel->cust_type,
+                        'create_time' => time(),
+                        'creator' => Yii::app()->user->id
+                            ), "cust_id=$id");
                 }
+                $noteinfo1 = new NoteInfoP();
+                $noteinfo1->setAttribute("cust_id", $id);
+                $noteinfo1->setAttribute("note_type", NoteInfoP::$NOTE_TYPE_PUT_PUBLIC);
+                Utils::addNoteInfo($noteinfo1);
                 $model->status = "1";
                 //售后员已分配资源数减1
                 $sql = "update {{users}} set cust_num=cust_num-1 where eno='{$aftermodel->eno}'";
@@ -193,16 +198,16 @@ class NewController extends GController {
                 $transaction->commit();
                 if ($newCustType == 8) {
                     //转入成功页面
-                    Yii::app()->user->setFlash('success',"成功放入公海!");
+                    Yii::app()->user->setFlash('success', "成功放入公海!");
                     $this->render("result");
                     return;
                 } else {
-                    Yii::app()->user->setFlash('success',"保存成功!");
+                    Yii::app()->user->setFlash('success', "保存成功!");
                     $this->redirect($this->createUrl("edit", array('id' => $id)));
                 }
             } else {
                 $transaction->rollback();
-                if(!empty($nextcontact)){
+                if (!empty($nextcontact)) {
                     $noteinfo->setAttribute("next_contact", $nextcontact);
                 }
             }

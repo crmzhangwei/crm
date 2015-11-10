@@ -123,6 +123,11 @@ class UnCall {
             $ret['status'] = 1; 
             $ret['dial_id'] = 99;
             $ret['message'] = '电话拔打成功，请按下接听!';
+            $noteinfo = new NoteInfoP();  
+            $noteinfo->setAttribute("cust_id", $cust_id);
+            $noteinfo->setAttribute("note_type", NoteInfoP::$NOTE_TYPE_DIAL);
+            $noteinfo->setAttribute("memo", $phonenumber);
+            Utils::addNoteInfo($noteinfo);
         } else {
             $ret['message'] = '电话拔打失败!'; 
         }

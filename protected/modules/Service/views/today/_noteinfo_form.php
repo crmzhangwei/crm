@@ -22,6 +22,14 @@
                 </td>
             </tr>
             <tr>
+                <td nowrap="nowrap"><?php echo $form->labelEx($base,'cust_type'); ?></td>
+                <td colspan="3"> 
+                    <?php echo  $form->dropDownList($after, "cust_type", $this->getCustTypeArr()) ?>
+                    <?php echo $form->error($after,'cust_type'); ?>
+                </td>
+                 
+            </tr>
+            <tr>
                 <td><?php echo $form->labelEx($model,'iskey'); ?></td>
                 <td> 
                    <?php echo $form->radioButtonList($model, 'iskey', array('0'=>'否','1'=> '是'));  ?>

@@ -176,39 +176,19 @@ function changeCustType(obj){
                 <td>
                     <?php echo  $form->dropDownList($model, "category", $this->getCategoryArr()) ?>
 		<?php echo $form->error($model,'category'); ?></td>
-            </tr>
-            <tr>
-                <td nowrap="nowrap"><?php echo $form->labelEx($model,'cust_type'); ?></td>
-                <td> 
-                    <?php echo $form->dropDownList($model, 'cust_type',$this->genCustTypeArray(), array('id'=>'cust_type','style' => "height:34px;",'onchange'=>'changeCustType(this)')); ?>
-                    <?php echo $form->error($model,'cust_type'); ?>
+            </tr> 
+            <tr> 
+                <td nowrap="nowrap">
+                <?php echo $form->labelEx($model,'assign_eno'); ?><br/>
+                <?php echo $form->labelEx($model,'assign_time'); ?>
                 </td>
+                <td>
+                    <?php echo $this->get_assign_eno_text($model); ?><br/>
+                    <?php echo $model->assign_time; ?>  
+                </td> 
                 <td nowrap="nowrap"><?php echo $form->labelEx($model,'eno'); ?></td>
                 <td><?php echo $this->get_eno_text($model); ?>
 		<?php echo $form->error($model,'eno'); ?></td>
-            </tr>
-            <tr style="display:none;" id="tr_visit"> 
-                <td nowrap="nowrap"><?php echo $form->labelEx($model,'visit_date'); ?></td>
-                <td><?php echo $form->textField($model,'visit_date',array('class'=>"Wdate", 'onClick'=>"WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})",'style'=>'height:30px;')); ?></td>
-                <td nowrap="nowrap"><?php echo $form->labelEx($model,'trans_user'); ?></td>
-                <td> 
-                  <?php echo $form->dropDownList($model, 'trans_user',$this->getTranUsers(), array('style' => "height:34px;")); ?>   
-                </td>
-            </tr>
-            <tr style="display:none;" id="tr_abandon"> 
-                <td nowrap="nowrap"><?php echo $form->labelEx($model,'abandon_reason'); ?></td>
-                <td><?php echo $form->textArea($model,'abandon_reason',array('rows'=>3,'cols'=>50)); ?></td>
-                <td nowrap="nowrap"></td>
-                <td> 
-                </td>
-            </tr>
-            <tr> 
-                <td nowrap="nowrap"><?php echo $form->labelEx($model,'assign_eno'); ?></td>
-                <td><?php echo $this->get_assign_eno_text($model); ?></td>
-                <td nowrap="nowrap"><?php echo $form->labelEx($model,'assign_time'); ?></td>
-                <td>
-                   <?php echo $model->assign_time; ?>  
-                </td>
             </tr> 
             <tr> 
                 <td nowrap="nowrap"><?php echo $form->labelEx($model,'next_time'); ?><br/><br/>最后联系时间<br/><br/>是否重点</td>

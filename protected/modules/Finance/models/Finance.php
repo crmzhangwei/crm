@@ -6,6 +6,7 @@
  * The followings are the available columns in table '{{finance}}':
  * @property string $id
  * @property integer $cust_id
+ * @property integer $finance_type
  * @property integer $sale_user
  * @property integer $trans_user
  * @property integer $acct_number
@@ -44,12 +45,12 @@ class Finance extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('cust_id, sale_user, trans_user, acct_number, acct_amount, acct_time, creator, create_time', 'required'),
+			array('cust_id,finance_type, sale_user, trans_user, acct_number, acct_amount, acct_time, creator, create_time', 'required'),
 			array('cust_id, sale_user, trans_user, acct_number, acct_time, creator,', 'numerical', 'integerOnly'=>true),
 			array('acct_amount', 'numerical'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('sale_user, trans_user, acct_number, acct_amount, acct_time_start,acct_time_end, keyword, searchtype', 'safe', 'on'=>'search'),
+			array('sale_user,finance_type, trans_user, acct_number, acct_amount, acct_time_start,acct_time_end, keyword, searchtype', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -72,6 +73,7 @@ class Finance extends CActiveRecord
 		return array(
 			'id' => 'ID',
 			'cust_id' => '客户',
+			'finance_type' => '到单类型',
 			'sale_user' => '销售人员',
 			'trans_user' => '谈单师',
 			'acct_number' => '到账单数',
@@ -126,9 +128,13 @@ class Finance extends CActiveRecord
                     default:break;
                 }
                     
-                $criteria->select="f.id,f.cust_id,f.sale_user,f.trans_user,f.acct_number,f.acct_amount,f.acct_time,f.creator,f.create_time,cust.cust_name,u1.username as sale_user_name,u2.username as trans_user_name";
+                $criteria->select="f.id,f.cust_id,d.name as finance_type,f.sale_user,f.trans_user,f.acct_number,f.acct_amount,f.acct_time,f.creator,f.create_time,cust.cust_name,u1.username as sale_user_name,u2.username as trans_user_name";
                 $criteria->alias="f";
-                $criteria->join=" left join c_customer_info cust on f.cust_id=cust.id left join c_users u1 on f.sale_user=u1.id left join c_users u2 on f.trans_user=u2.id";
+                $criteria->join=" left join c_customer_info cust on f.cust_id=cust.id "
+                              . " left join c_users u1 on f.sale_user=u1.id "
+                                . "left join c_users u2 on f.trans_user=u2.id"
+                                . " left join c_dic d on f.finance_type=d.code and d.ctype='finance_type'"
+                        ;
  		$dataProvider = new CActiveDataProvider($this, array(
 			'criteria'=>$criteria, 
 		)); 

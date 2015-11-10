@@ -61,7 +61,7 @@ class CustomerInfo extends CActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('cust_name,shop_name,mail', 'required'),
+            array('cust_name', 'required'),
             array('mail', 'email'),
             array('category, cust_type, iskey, status, creator', 'numerical', 'integerOnly' => true),
             array('cust_name, shop_name, corp_name, shop_url, shop_addr, datafrom, memo', 'length', 'max' => 100),

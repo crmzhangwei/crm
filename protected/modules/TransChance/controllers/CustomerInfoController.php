@@ -167,6 +167,7 @@ class CustomerInfoController extends GController {
             if ($this->validCustomerInfo($newCustType, $model, $contract)) {
                 if ($oldCustType != $newCustType) {
                     //客户分类调整，生成转换明细数据
+                    $model->update_time=time();
                     $convt = new CustConvtDetail();
                     $convt->setAttribute('lib_type', 2);
                     $convt->setAttribute('cust_id', $id);
@@ -256,10 +257,13 @@ class CustomerInfoController extends GController {
                     Yii::app()->db->createCommand($sql)->execute();    
                     $trans_info->delete(); //删除成交师库记录
                     $model->status = '1';
+                    $noteinfo1 = new NoteInfoP(); 
+                    $noteinfo1->setAttribute("cust_id", $id);
+                    $noteinfo1->setAttribute("note_type", NoteInfoP::$NOTE_TYPE_PUT_PUBLIC); 
+                    Utils::addNoteInfo($noteinfo1);
                 } else {
                     $trans_info->save();
-                }
-                $model->update_time=time();
+                } 
                 $model->save();
                 //更新电话拔打记录
                 /*
@@ -638,10 +642,11 @@ class CustomerInfoController extends GController {
     }
 
     protected function genCategoryArray() {
-        $custTypeArr = Utils::mapArray(CustType::findByType(1), 'type_no', 'type_name');
-        $custTypeArr[0] = '--请选择--';
+        $custTypeArr = Utils::mapArray(CustType::findByType(1), 'type_no', 'type_name'); 
         ksort($custTypeArr);
-        return $custTypeArr;
+        $addKey[''] = '--请选择--';
+		$cust_array = $addKey+$custTypeArr;
+        return $cust_array;
     }
 
     /**

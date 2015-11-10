@@ -126,20 +126,16 @@ function sendMail(cust_id){
                 <td>
                     <?php echo  $form->dropDownList($model, "category", $this->getCategoryArr()) ?>
 		<?php echo $form->error($model,'category'); ?></td>
-            </tr>
-            <tr>
-                <td nowrap="nowrap"><?php echo $form->labelEx($model,'cust_type'); ?></td>
-                <td> 
-                    <?php echo  $form->dropDownList($after, "cust_type", $this->getCustTypeArr()) ?>
-                    <?php echo $form->error($after,'cust_type'); ?>
-                </td>
-                <td nowrap="nowrap"><?php echo $form->labelEx($model,'eno'); ?></td>
-                <td><?php echo $this->get_eno_text($model); ?>
-		<?php echo $form->error($model,'eno'); ?></td>
-            </tr>
+            </tr> 
             <tr> 
-                <td nowrap="nowrap"><?php echo $form->labelEx($after,'assign_eno'); ?></td>
-                <td><?php echo $this->get_assign_eno_text($after); ?></td>
+                <td nowrap="nowrap">
+                    <?php echo $form->labelEx($after,'assign_eno'); ?><br/>
+                    <?php echo $form->labelEx($model,'eno'); ?>
+                </td>
+                <td>
+                    <?php echo $this->get_assign_eno_text($after); ?><br/>
+                    <?php echo $this->get_eno_text($model); ?>
+                </td>
                 <td nowrap="nowrap"><?php echo $form->labelEx($after,'assign_time'); ?></td>
                 <td>
                    <?php echo $after->assign_time; ?>  

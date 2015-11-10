@@ -42,7 +42,7 @@ class Utils {
      */
     public static function hidePhone($phone) {
         //return substr_replace($phone, '****', 3, 4);
-		return $phone;
+        return $phone;
     }
 
     /**
@@ -110,13 +110,13 @@ class Utils {
         }
         $result = Utils::sendMessage($phone, $msg, $method);
         $xml = simplexml_load_string($result);
-        $memo="";
-        $status=0;
+        $memo = "";
+        $status = 0;
         if ($xml && ((string) $xml->message) == 'ok') {
             $memo = "发送成功";
         } else {
             $memo = $xml->message;
-            $status=1;
+            $status = 1;
         }
         $message = new Message();
         $message->setAttribute('cust_id', $cust_id);
@@ -127,6 +127,12 @@ class Utils {
         $message->setAttribute('status', $status);
         $message->setAttribute('memo', $memo);
         $message->save();
+        $noteinfo = new NoteInfoP();
+        $noteinfo->setAttribute("cust_id", $cust_id);
+        $noteinfo->setAttribute("message_id", $message->id);
+        $noteinfo->setAttribute("note_type", NoteInfoP::$NOTE_TYPE_SEND_MESSAGE);
+        $noteinfo->setAttribute("memo", $msg);
+        Utils::addNoteInfo($noteinfo);
         return $message;
     }
 
@@ -138,14 +144,14 @@ class Utils {
             $phone = substr($phone, 1);
         }
         $data = array(
-            'action' => 'send', 
-            'userid' => $sms['uid'], 
+            'action' => 'send',
+            'userid' => $sms['uid'],
             'account' => $sms['account'],
             'password' => $sms['auth'],
             'mobile' => $phone,
-            'content' => $content, 
+            'content' => $content,
             'time' => '',
-            'extno' => ''    
+            'extno' => ''
         );
         return Utils::postSMS($sms['url'], $data);   //POST方式提交 
     }
@@ -156,11 +162,11 @@ class Utils {
      * @param type $data
      * @return 
      * <returnsms>
-        <returnstatus>Success</returnstatus>
-        <message>ok</message>
-        <remainpoint>4977</remainpoint>
-        <taskid>8236763</taskid>
-        <successcounts>1</successcounts>
+      <returnstatus>Success</returnstatus>
+      <message>ok</message>
+      <remainpoint>4977</remainpoint>
+      <taskid>8236763</taskid>
+      <successcounts>1</successcounts>
      * </returnsms>
      */
     private static function postSMS($url, $data = '') {
@@ -302,30 +308,30 @@ class Utils {
      * 检查是否需要保存小记信息
      * @param type $noteinfo
      */
-    public static function isNeedSaveNoteInfo($noteinfo,$custtype) {
-        
-        /*if ($noteinfo['cust_info'] != '') {
-            return true;
-        }
-        if ($noteinfo['requirement'] != '') {
-            return true;
-        }
-        if ($noteinfo['service'] != '') {
-            return true;
-        }
-        if ($noteinfo['dissent'] != '') {
-            return true;
-        }
-        if ($noteinfo['next_followup'] != '') {
-            return true;
-        }*/
+    public static function isNeedSaveNoteInfo($noteinfo, $custtype) {
+
+        /* if ($noteinfo['cust_info'] != '') {
+          return true;
+          }
+          if ($noteinfo['requirement'] != '') {
+          return true;
+          }
+          if ($noteinfo['service'] != '') {
+          return true;
+          }
+          if ($noteinfo['dissent'] != '') {
+          return true;
+          }
+          if ($noteinfo['next_followup'] != '') {
+          return true;
+          } */
         if ($noteinfo['memo'] != '') {
             return true;
         }
-        if (intval($noteinfo['dial_id']) > 0 && $custtype!=9) {
+        if (intval($noteinfo['dial_id']) > 0 && $custtype != 9) {
             return true;
         }
-        if (intval($noteinfo['message_id']) > 0 && $custtype!=9) {
+        if (intval($noteinfo['message_id']) > 0 && $custtype != 9) {
             return true;
         }
         if ($noteinfo['next_contact'] != '') {
@@ -333,35 +339,35 @@ class Utils {
         }
         return false;
     }
-    
+
     /**
      * 检查是否需要保存小记信息
      * @param type $noteinfo
      */
-    public static function isNeedSaveNoteInfoForAfter($noteinfo,$custtype) {
-        
-       /*i if ($noteinfo['cust_info'] != '') {
-            return true;
-        }
-        if ($noteinfo['requirement'] != '') {
-            return true;
-        }
-        if ($noteinfo['service'] != '') {
-            return true;
-        }
-        if ($noteinfo['dissent'] != '') {
-            return true;
-        }
-        if ($noteinfo['next_followup'] != '') {
-            return true;
-        }*/
+    public static function isNeedSaveNoteInfoForAfter($noteinfo, $custtype) {
+
+        /* i if ($noteinfo['cust_info'] != '') {
+          return true;
+          }
+          if ($noteinfo['requirement'] != '') {
+          return true;
+          }
+          if ($noteinfo['service'] != '') {
+          return true;
+          }
+          if ($noteinfo['dissent'] != '') {
+          return true;
+          }
+          if ($noteinfo['next_followup'] != '') {
+          return true;
+          } */
         if ($noteinfo['memo'] != '') {
             return true;
         }
-        if (intval($noteinfo['dial_id']) > 0 && $custtype!=8) {
+        if (intval($noteinfo['dial_id']) > 0 && $custtype != 8) {
             return true;
         }
-        if (intval($noteinfo['message_id']) > 0 && $custtype!=8) {
+        if (intval($noteinfo['message_id']) > 0 && $custtype != 8) {
             return true;
         }
         if ($noteinfo['next_contact'] != '') {
@@ -479,16 +485,32 @@ class Utils {
      * @param type $record
      */
     public static function genNoteDisplayRecord($record) {
-        $str ='<font style="font-weight:bold">'. Userinfo::getNameById($record['userid'])."</font>&nbsp;&nbsp;&nbsp;<font color='gray'>".date("Y-m-d H:i:s", $record->create_time) ." 添加了跟进记录 </font><br/><br/> ";
-        $str = $str." ".$record['memo']." "; 
-        $custtype = CustType::findByTypeAndNo($record['lib_type'], $record['cust_type']); 
-        $str = $str . " "; 
-        $str = $str . "<br/><font color='green'>【".$record['cust_type'] . " 类 - " . $custtype['type_name'] . "】&nbsp;&nbsp;->&nbsp;下次联系时间：" ;
-        if($record->next_contact ){
-            $str=$str.date("Y-m-d H:i:s", $record->next_contact) ;
+        $notetype = $record['note_type'];
+        $notedesc = "添加了跟进记录";
+        switch ($notetype) {
+            case 1:$notedesc = "新增了客户";
+                break;
+            case 2:$notedesc = "拔打对方电话";
+                break;
+            case 3:$notedesc = "放入公海";
+                break;
+            case 4:$notedesc = "从公海获取";
+                break;
+            case 5:$notedesc = "发送短信";
+                break;
+        }
+        $str = '<font style="font-weight:bold">' . Userinfo::getNameById($record['userid']) . "</font>&nbsp;&nbsp;&nbsp;<font color='gray'>" . date("Y-m-d H:i:s", $record->create_time) . " $notedesc </font><br/><br/> ";
+        $str = $str . " " . $record['memo'] . " ";
+        if ($notetype == 0) {
+            $custtype = CustType::findByTypeAndNo($record['lib_type'], $record['cust_type']);
+            $str = $str . " ";
+            $str = $str . "<br/><font color='green'>【" . $record['cust_type'] . " 类 - " . $custtype['type_name'] . "】&nbsp;&nbsp;->&nbsp;下次联系时间：";
+            if ($record->next_contact) {
+                $str = $str . date("Y-m-d H:i:s", $record->next_contact);
+            }
+            $str = $str . "</font>";
         } 
-        $str=$str."</font>";
-        return $str;    
+        return $str;
     }
 
     /**
@@ -511,39 +533,58 @@ class Utils {
         }
         return $arr;
     }
-    
-    public static function paraseSeconds($seconds){
-        $time="00:00:00";
-        if($seconds>0){
-            $second=$seconds%60;
-            $minute = intval(($seconds-$second)/60);
-            $hour=0;
-            if($minute>60){
-                $hour=intval($minute/60);
-                $minute=$minute%60;
-            } 
-           if($hour<10){
-               $time="0".$hour.":";
-           }else{
-               $time=$hour.":";
-           }
-           if($minute<10){
-               $time=$time."0".$minute.":";
-           }else{
-               $time=$time.$minute.":";
-           }
-           if($second<10){
-               $time=$time."0".$second;
-           }else{
-               $time=$time.$second;
-           }
+
+    public static function paraseSeconds($seconds) {
+        $time = "00:00:00";
+        if ($seconds > 0) {
+            $second = $seconds % 60;
+            $minute = intval(($seconds - $second) / 60);
+            $hour = 0;
+            if ($minute > 60) {
+                $hour = intval($minute / 60);
+                $minute = $minute % 60;
+            }
+            if ($hour < 10) {
+                $time = "0" . $hour . ":";
+            } else {
+                $time = $hour . ":";
+            }
+            if ($minute < 10) {
+                $time = $time . "0" . $minute . ":";
+            } else {
+                $time = $time . $minute . ":";
+            }
+            if ($second < 10) {
+                $time = $time . "0" . $second;
+            } else {
+                $time = $time . $second;
+            }
         }
         return $time;
     }
-    public static function parseText($text){
-        $str = str_replace(chr(13),"<br>",$text);
-        $str = str_replace(chr(10),"<br>",$text);
+
+    public static function parseText($text) {
+        $str = str_replace(chr(13), "<br>", $text);
+        $str = str_replace(chr(10), "<br>", $text);
         return $str;
+    }
+
+    public static function addNoteInfo($noteinfo) {
+        $noteinfo->setAttribute("isvalid", 1);
+        $noteinfo->setAttribute("dial_id", 0);
+        $noteinfo->setAttribute("iskey", 0);
+        if (empty($noteinfo->message_id)) {
+            $noteinfo->setAttribute("message_id", 0);
+        }
+        $noteinfo->setAttribute("next_contact", '0');
+        $noteinfo->setAttribute("userid", Yii::app()->user->id);
+        $noteinfo->setAttribute("lib_type", 99);
+        $noteinfo->setAttribute("cust_type", '99');
+        $noteinfo->setAttribute("create_time", time());
+        Yii::app()->db->createCommand("update {{seq_note_id}} set seq=seq+1 where 1=1")->execute();
+        $seqnoteid = SeqNoteId::model()->findBySql("select seq from {{seq_note_id}} where 1=1 limit 1");
+        $noteinfo->id = $seqnoteid->seq;
+        $noteinfo->save();
     }
 
 }

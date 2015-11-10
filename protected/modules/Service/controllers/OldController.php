@@ -102,6 +102,7 @@ class OldController extends GController {
             $contractmodel->comm_pay_time = strtotime($contractmodel->comm_pay_time);
             if ($aftermodel->cust_type != $newCustType) {
                 //客户分类调整，生成转换明细数据
+                $model->update_time=time();
                 $convt = new CustConvtDetail();
                 $convt->setAttribute('lib_type', 3); //售后库
                 $convt->setAttribute('cust_id', $id);
@@ -168,6 +169,10 @@ class OldController extends GController {
                             'creator' => Yii::app()->user->id
                              ), "cust_id=$id");
                 }
+                $noteinfo1 = new NoteInfoP();
+                $noteinfo1->setAttribute("cust_id", $id);
+                $noteinfo1->setAttribute("note_type", NoteInfoP::$NOTE_TYPE_PUT_PUBLIC);
+                Utils::addNoteInfo($noteinfo1);
                 $model->status = "1";
                 //售后员已分配资源数减1
                 $sql = "update {{users}} set cust_num=cust_num-1 where eno='{$aftermodel->eno}'";

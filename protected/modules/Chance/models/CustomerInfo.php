@@ -177,8 +177,8 @@ class CustomerInfo extends CActiveRecord {
 	if ($this->eno) {
             $criteria->compare('eno', $this->eno);
         } 
-        if ($this->cust_type_from!=null&&$this->cust_type_from!=''&& $this->cust_type_from!=-1 
-                && $this->cust_type_to!=null&&$this->cust_type_to!='' && $this->cust_type_to !=-1) {
+        if ($this->cust_type_from!=null&&$this->cust_type_from!='' 
+                && $this->cust_type_to!=null&&$this->cust_type_to!='') {
             $criteria->addBetweenCondition('cust_type', intval($this->cust_type_from), intval($this->cust_type_to));
         }
         if ($this->contact_7_day) {
@@ -255,8 +255,8 @@ class CustomerInfo extends CActiveRecord {
         if ($this->eno) {
             $criteria->compare('eno', $this->eno);
         } 
-        if ($this->cust_type_from!=null&&$this->cust_type_from!=''&& $this->cust_type_from!=-1 
-                && $this->cust_type_to!=null&&$this->cust_type_to!='' && $this->cust_type_to !=-1) {
+        if ($this->cust_type_from!=null&&$this->cust_type_from!='' 
+                && $this->cust_type_to!=null&&$this->cust_type_to!='') {
             $criteria->addBetweenCondition('cust_type', intval($this->cust_type_from), intval($this->cust_type_to));
         }
         if ($this->contact_7_day) {
@@ -319,8 +319,8 @@ class CustomerInfo extends CActiveRecord {
         if ($this->eno) {
             $criteria->compare('eno', $this->eno);
         } 
-         if ($this->cust_type_from!=null&&$this->cust_type_from!=''&& $this->cust_type_from!=-1 
-                && $this->cust_type_to!=null&&$this->cust_type_to!='' && $this->cust_type_to !=-1) {
+        if ($this->cust_type_from!=null&&$this->cust_type_from!='' 
+                && $this->cust_type_to!=null&&$this->cust_type_to!='') {
             $criteria->addBetweenCondition('cust_type', intval($this->cust_type_from), intval($this->cust_type_to));
         }
         if ($this->contact_7_day) {

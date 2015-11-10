@@ -28,7 +28,7 @@
     <div id="tabs-1" aria-labelledby="ui-id-29" class="ui-tabs-panel ui-widget-content ui-corner-bottom" role="tabpanel" aria-hidden="false" style="display: block;">
 	<?php $this->renderPartial('_baseinfo', array('model'=>$model,'form'=>$form,'note'=>$noteinfo,'after'=>$after,'contract'=>$contract)); ?> 
         <br/>
-        <?php $this->renderPartial('_noteinfo_form', array('model'=>$noteinfo,'form'=>$form,'loginuser'=>$loginuser)); ?>
+        <?php $this->renderPartial('_noteinfo_form', array('model'=>$noteinfo,'form'=>$form,'loginuser'=>$loginuser,'base'=>$model,'after'=>$after)); ?>
         <br/>
         <?php $this->renderPartial('_contractinfo_form', array('model'=>$model,'form'=>$form,'contract'=>$contract)); ?>
         <?php $this->endWidget(); ?>
