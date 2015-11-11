@@ -136,6 +136,7 @@ class Users extends CActiveRecord {
         $criteria->compare('group_id', $this->group_id);
         $criteria->compare('ismaster', $this->ismaster);
         $criteria->compare('status', $this->status);
+		$criteria->addCondition("`status`=1");
         //只看到自己的用户,及下属
         $loginuser = Users::model()->findByPk(Yii::app()->user->id);
         if (in_array($loginuser->name, $this->priv_users)) {

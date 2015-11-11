@@ -144,7 +144,19 @@ class UsersController extends GController
                 Utils::showMsg(0,'设置失败');
             }
             $col = $col?'status':'ismaster';
+			if($col){
+				$cust_arr = Users::model()->findAll("id in($ids)");
+				foreach ($cust_arr as $v5){
+					if($v5['cust_num'] > 0){
+						Utils::showMsg(0,"注意: 请先将 $v5[username] 的资源分配给其他人员，本次操作失败。");
+					}
+				}
+			}
             $sql = "UPDATE {{users}} SET {$col}={$display} WHERE id in ({$ids})";
+			if($col){
+				$sql2 = "UPDATE {{users}} SET extend_no=0 WHERE id in ({$ids})";
+				Yii::app()->db->createCommand($sql2)->execute();
+			}			
             $status = Yii::app()->db->createCommand($sql)->execute();
             if (!isset($_REQUEST['ajax']))
             {

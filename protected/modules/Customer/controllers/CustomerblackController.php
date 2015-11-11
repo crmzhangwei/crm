@@ -128,12 +128,59 @@ class CustomerblackController extends GController
 		$custtype = Userinfo::genCustTypeArray();
 		if(isset($_GET['CustomerBlack']))
 			$model->attributes=$_GET['CustomerBlack'];
+		
+		//////////
+		$out = Yii::app()->request->getParam('out');
+		if($out){
+			$dataProvider = $model->search(); 
+			$dataProvider->pagination->pageVar = 'page';
+			$dataProvider->pagination->pageSize = $aPageSize;
+			$data = $dataProvider->getData();
+			/**********************/
+			$objPHPExcel = new PHPExcel();
+			$name = '公海资源';
+			$objPHPExcel->setActiveSheetIndex(0)
+						//Excel的第A列，uid是你查出数组的键值，下面以此类推
+						->setCellValue('A1', '原跟进人')    
+						->setCellValue('B1', '最后联系时间')
+						->setCellValue('C1', '客户名称')
+						->setCellValue('D1', '原客户类别')
+						->setCellValue('E1', '店铺名称')
+						->setCellValue('F1', '电话')
+						->setCellValue('G1', 'QQ')
+						->setCellValue('H1', '邮箱');
+				
+			$num=2;
+			foreach($data as $k => $v){
+				$objPHPExcel->setActiveSheetIndex(0)
+							 //Excel的第A列，uid是你查出数组的键值，下面以此类推 
+							  ->setCellValue('A'.$num, Userinfo::getNameByEno($v['eno']))    
+							  ->setCellValue('B'.$num, date('Y-m-d H:i:s',$v['last_time']))
+							  ->setCellValue('C'.$num, $v['cust_name'])
+							  ->setCellValue('D'.$num, $v['old_cust_type'].'类')
+							  ->setCellValue('E'.$num, $v['shop_name'])
+							  ->setCellValue('F'.$num, $v['phone'])
+							  ->setCellValue('G'.$num, $v['qq'])
+							  ->setCellValue('H'.$num, $v['mail']);
+				$num++;
+			}
 
-		$this->render('admin',array(
-			'model'=>$model,
-			'custtype'=>$custtype,
-			'aPageSize' => $aPageSize,
-		));
+			$objPHPExcel->getActiveSheet()->setTitle('User');
+			$objPHPExcel->setActiveSheetIndex(0);
+			header('Content-Type: application/vnd.ms-excel');
+			header('Content-Disposition: attachment;filename="'.$name.'.xls"');
+			header('Cache-Control: max-age=0');
+			$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
+			$objWriter->save('php://output');
+			exit;	
+		}
+		else{
+			$this->render('admin',array(
+				'model'=>$model,
+				'custtype'=>$custtype,
+				'aPageSize' => $aPageSize,
+			));
+		}	
 	}
     
 	/**
@@ -224,5 +271,6 @@ class CustomerblackController extends GController
 	
 	public function get_last_time($data){
 		return $data->last_time ? date("Y-m-d H:i:s",$data->last_time) : '未联系过';
-	}
+	}  
+	
 }

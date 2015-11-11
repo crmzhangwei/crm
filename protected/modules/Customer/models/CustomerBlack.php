@@ -162,8 +162,10 @@ class CustomerBlack extends CActiveRecord
                    $criteria->params[':keyword'] = "%{$this->keyword}%";
                    break;
                case 4:
-                   $criteria->compare('phone', $this->keyword, true);
-                   break;
+					//$criteria->compare('phone', $this->keyword, true);
+					$ph = $this->keyword;
+					$criteria->addCondition("phone like '%$ph%' or phone2 like '%$ph%' or phone3 like '%$ph%' or phone4 like '%$ph%' or phone5 like '%$ph%' "); //查询条件  
+					break;
                case 5:
                    $criteria->compare('qq', $this->keyword, true);
                    break;

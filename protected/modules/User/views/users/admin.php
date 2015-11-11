@@ -110,8 +110,10 @@ $this->widget('GGridView', array(
 <div class="table-page"> 
     <div class="col-sm-6">
         共<span class="orange"><?= $dataProvider->totalItemCount ?></span>条记录
-        <a href="javascript:void(0);" js_type="publish"  col='0' class="btn  btn-minier btn-sm btn-success publish"><i class=" icon-ok icon-large"></i>设置精英</a> <a href="javascript:void(0);" js_type="cancel_publish" col='0' class="btn  btn-minier btn-sm btn-warning publish"> <i class="icon-lock icon-large"></i>取消精英</a>
-        <a href="javascript:void(0);" js_type="publish"  col='1' class="btn  btn-minier btn-sm btn-success publish"><i class=" icon-ok icon-large"></i>设置在职</a> <a href="javascript:void(0);" js_type="cancel_publish" col='1' class="btn  btn-minier btn-sm btn-warning publish"> <i class="icon-lock icon-large"></i>设置离职</a> 
+        <a href="javascript:void(0);" js_type="publish"  col='0' class="btn  btn-minier btn-sm btn-success publish"><i class=" icon-ok icon-large"></i>设置精英</a> 
+		<a href="javascript:void(0);" js_type="cancel_publish" col='0' class="btn  btn-minier btn-sm btn-warning publish"> <i class="icon-lock icon-large"></i>取消精英</a>
+        <!--<a href="javascript:void(0);" js_type="publish"  col='1' class="btn  btn-minier btn-sm btn-success publish"><i class=" icon-ok icon-large"></i>设置在职</a> -->
+		<a href="javascript:void(0);" js_type="cancel_publish" col='1' class="btn  btn-minier btn-sm btn-warning publish"> <i class="icon-lock icon-large"></i>设置离职</a> 
     </div>
     <div class="col-sm-6 no-padding-right">
 <?php

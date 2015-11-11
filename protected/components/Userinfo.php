@@ -20,7 +20,7 @@ class Userinfo {
     }
 
     public static function getUserbygid($gid, $deptid) {
-        $where = $gid == '-1' ? "ismaster=1 and dept_id=$deptid and username not like 'admin%'" : " dept_id=:deptid and group_id=:id and ismaster<>1 and username not like 'admin%'"; //-1为精英组
+        $where = $gid == '-1' ? "ismaster=1 and `status`=1 and dept_id=$deptid and username not like 'admin%'" : " dept_id=:deptid and group_id=:id and ismaster<>1 and `status`=1 and username not like 'admin%'"; //-1为精英组
         $modelgroup = Yii::app()->db->createCommand()
                 ->select('eno, name, cust_num')
                 ->from('{{users}}')
