@@ -132,9 +132,7 @@ class CustomerBlack extends CActiveRecord
 
 		$criteria=new CDbCriteria; 
 		$criteria->join = 'left join {{black_info}} as b on b.cust_id =t.id';
-		if($this->cust_type != -1){
-			
-			//$criteria->addCondition(b.cust_type = ')
+		if($this->cust_type != ''){
 			$criteria->compare('b.old_cust_type',$this->cust_type);
 		} 
 		if($this->phone){

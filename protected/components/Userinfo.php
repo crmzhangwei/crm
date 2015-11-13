@@ -85,7 +85,7 @@ class Userinfo {
         return $deptArr;
     }
 
-    public static function genCustTypeArray() {
+    /*public static function genCustTypeArray() {
         $custTypeArr = Utils::mapArray(CustType::findByType(1), 'type_no', 'type_name');
         
         ksort($custTypeArr);
@@ -93,7 +93,7 @@ class Userinfo {
 		$addKey[-1] = '--请选择客户分类--';
 		$cust_array = $addKey+$custTypeArr;
         return $cust_array;
-    }
+    }*/
 
     /**
      * 取出manager id 为$managerid 的所有用户及其下属用户列表
@@ -283,4 +283,11 @@ class Userinfo {
 		return array(10=>10,50=>50,100=>100,200=>200);
 	}
 
+	public static function genCustTypeArray() {
+        $custTypeArr = Utils::mapArray(CustType::findByType(1), 'type_no', 'type_name');
+        ksort($custTypeArr);
+        $addKey[''] = '--请选择--';
+        $cust_array = $addKey + $custTypeArr;
+        return $cust_array;
+    }
 }

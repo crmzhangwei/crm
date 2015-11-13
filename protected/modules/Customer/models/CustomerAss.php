@@ -136,7 +136,7 @@ class CustomerAss extends CActiveRecord
 		$criteria->compare('mail',$this->mail,true);
 		$criteria->compare('datafrom',$this->datafrom,true);
 		$criteria->compare('category',$this->category);
-		if($this->cust_type != -1){
+		if($this->cust_type != ''){
 			$criteria->compare('cust_type',$this->cust_type);
 		}
 		$criteria->compare('eno',$this->eno,true);
