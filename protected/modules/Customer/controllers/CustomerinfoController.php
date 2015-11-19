@@ -288,8 +288,11 @@ class CustomerinfoController extends GController
 					exit("<script>alert(\"对不起, 为防止一次提交的数据太多消耗大量的服务器资源而影响到其他用户的使用, 一次提交的数据不能超过600条, 请修改后重新提交。\");
 	        				javascript:history.go(-1);</script>");
 				}
-	        	$sql = "insert into {{customer_info}} (cust_name,phone,qq,cust_type,memo,creator,create_time,eno,assign_eno,assign_time) values";
-	        	$usql = '';
+				$max_id = Customerinfo::model()->findAll(array('order'=>'id DESC','limit'=>1,));
+				$maxid = $max_id[0]['id'] + 10;
+	        	$sql = "insert into {{customer_info}} (id,cust_name,phone,qq,cust_type,memo,creator,create_time,eno,assign_eno,assign_time) values";
+	        	$sql3 = "insert into {{note_info_p}} (note_type,cust_id,userid,create_time,memo) value ";
+				$usql = '';
 				$eno = '';
 				$repetaInfo = '';
 				$i=0;
@@ -327,22 +330,26 @@ class CustomerinfoController extends GController
 									javascript:history.go(-1);</script>");
 							}	
 						}
+						$memo = $v[1] ? "$v[0]".':电话'."$v[1]" : "$v[0]".':QQ'."$v[2]";
 						$eno = $userArr[$v[5]];
 						$phones = trim($v[1]);
-	        			$sql .= "('{$v[0]}','$phones','{$v[2]}','$ctype','{$v[4]}', $creator, $create_time,'$eno','$assign_eno',$assign_time),";
+	        			$sql .= "($maxid,'{$v[0]}','$phones','{$v[2]}','$ctype','{$v[4]}', $creator, $create_time,'$eno','$assign_eno',$assign_time),";
+						$sql3 .= "(1,$maxid,$creator,$assign_time,'$memo'),";
 						$usql .= "update {{users}} set cust_num=cust_num+1 where eno='$eno';";	
 						$i++;
+						$maxid++;
 					}	
 	        	}
 				if(!$i){
 					exit("<script>alert(\"表格中的数据已存在，请勿重复导入（电话号码已存在）。\");javascript:history.go(-1);</script>");
 				}
 				$sql = trim($sql, ',');
-
+				$sql3 = trim($sql3,',');
 				///////////////////开启事务///////////////////
 				$transaction = Yii::app()->db->beginTransaction();
 				try {
 					$num = Yii::app()->db->createCommand($sql)->execute();
+					Yii::app()->db->createCommand($sql3)->execute();
 					$res2 = Yii::app()->db->createCommand($usql)->execute();
 					$tip_info = CustomerInfo::model()->findAll( array('select'=>array('id','eno'),
 																		'condition' => 'create_time=:create_time', 

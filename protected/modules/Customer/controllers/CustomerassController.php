@@ -52,6 +52,7 @@ class CustomerassController extends GController
 			$enoNum = $enoNum ? (int)$enoNum[0]['cust_num'] : 0;//该用户已分配的资源数
 			$assCount = explode(',', $model->ids);
 			$assCount = count($assCount);//待分配的资源个数
+			$idArr = explode(',', $model->ids);
 			if( ($assCount + $enoNum) > 300 ){//每个用户的分配资源数不能超过300个
 				exit("<script>alert(\"对不起, 该用户当前已分配了".$enoNum."个资源, 每个用户最多只能分配300个资源, 本次操作失败。\");javascript:history.go(-1);</script>");
 			}
@@ -66,8 +67,6 @@ class CustomerassController extends GController
 					foreach ($allocation as $k1=>$v1){
 						$alArr[] = $v1['id'];
 					}
-					
-					$idArr = explode(',', $model->ids);
 					$diffArr = array_diff($idArr, $alArr);
 					if($diffArr){
 						$model->ids = implode(',', $diffArr);
@@ -84,6 +83,22 @@ class CustomerassController extends GController
 				if($flag){//如果是从公海领取,status置为1
 					$addSet = ",`status`=0,cust_type=-9 ";
 					$del_black = "delete from {{black_info}} where cust_id in ({$model->ids})";
+					/*********从公海领取时向c_note_info_p表中添加一条记录*********/
+					/*$custinfo = Customerinfo::model()->findAll("id in($model->ids)");
+					$custArr = array();
+					foreach ($custinfo as $k10 => $v10) {
+						$custArr[$v10['id']] = $v10;
+					}*/
+					$creator = Yii::app()->user->id;
+					$noteinfo_sql = "insert into {{note_info_p}} (note_type,cust_id,userid,create_time) value ";
+					foreach ($idArr as $cust_id) {
+						/*$mobile = $custArr[$cust_id['phone']];
+						$qq = $custArr[$cust_id['qq']];
+						$cust_name = $custArr[$cust_id['cust_name']];
+						$memo = $mobile ? "$cust_name.'：电话'.$mobile" : "$cust_name.'：电话'.$qq";*/
+						$noteinfo_sql .= "(4,$cust_id,$creator,$assign_time),";
+					}
+					$noteinfo_sql = trim($noteinfo_sql, ',');
 				}
 				$sql = "update {{customer_info}} set eno='$eno',assign_time=$assign_time,assign_eno='$assign_eno' $addSet where id in({$model->ids})";
 				$sql2 = "update {{users}} set cust_num=cust_num+$assCount where eno='{$model->eno}'";
@@ -125,6 +140,7 @@ class CustomerassController extends GController
 						}
 					}
 					Yii::app()->db->createCommand($sql5)->execute();/////新分资源弹窗提示用户
+					Yii::app()->db->createCommand($noteinfo_sql)->execute();/////公海资源领取时向note_info_p表中插入一条记录
 					$transaction->commit();
 					
 					exit("<script>alert(\"恭喜你, 成功分配了".$assCount."个资源。\");javascript:history.go(-1);</script>");	
