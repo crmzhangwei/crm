@@ -133,7 +133,9 @@ class CustomerassController extends GController
 				try {
 					$res = Yii::app()->db->createCommand($sql)->execute();
 					$res2 = Yii::app()->db->createCommand($sql2)->execute();
-					$res3 = Yii::app()->db->createCommand($del_black)->execute();
+					if(isset($del_black)){
+						$res3 = Yii::app()->db->createCommand($del_black)->execute();
+					}
 					if(isset($reduceArr)){
 						foreach ($reduceArr as $k3=>$v3){
 							Yii::app()->db->createCommand($v3)->execute();
@@ -202,41 +204,80 @@ class CustomerassController extends GController
 	public function actionAdmin()
 	{
 		$aPageSize = isset($_SESSION['uPageSize']) ? $_SESSION['uPageSize'] : 10;
-		/*$psizeid = Yii::app()->request->getparam('psizeid');
-		if($psizeid){
-			switch ($psizeid) {
-				case 2:
-					$aPageSize = 50;
-					break;
-				case 3:
-					$aPageSize = 100;
-					break;
-				case 4:
-					$aPageSize = 200;
-					break;
-				default:
-					$aPageSize = 10;
-					break;
-			}
-		}*/
 		$model=new CustomerAss('search');
 		$model->unsetAttributes();  // clear any default values
 		$custtype = Userinfo::genCustTypeArray();
+		
 		if(isset($_GET['CustomerAss']))
 			$model->attributes=$_GET['CustomerAss'];
 		
 		//部门组别人员三级联动
 		$uInfo = Userinfo::secondlevel();
-		$this->render('admin',array(
-			'model'=>$model,	
-			'custtype'=>$custtype,
-			'deptArr'=>$uInfo['deptArr'],
-			'groupArr'=>$uInfo['groupArr'],
-			'infoArr'=>$uInfo['infoArr'],
-			'user_info'=>$uInfo['user_info'],
-			'aPageSize' => $aPageSize,
-			//'psizeid' => $psizeid,
-		));
+		
+		$out = Yii::app()->request->getParam('out');
+		if($out){
+			$category_arr = Userinfo::getCategory();
+			$dataProvider = $model->search(); 
+			$dataProvider->pagination->pageVar = 'page';
+			$dataProvider->pagination->pageSize = $aPageSize;
+			$data = $dataProvider->getData();
+			/**********************/
+			$objPHPExcel = new PHPExcel();
+			$name = '资源分配';
+			$objPHPExcel->setActiveSheetIndex(0)
+						//Excel的第A列，uid是你查出数组的键值，下面以此类推
+						->setCellValue('A1', '客户名称')    
+						->setCellValue('B1', '公司名称')
+						->setCellValue('C1', '店铺名称')
+						->setCellValue('D1', '店铺地址')
+						->setCellValue('E1', '电话')
+						->setCellValue('F1', 'QQ')
+						->setCellValue('G1', '所属类目')
+						->setCellValue('H1', '邮箱')
+						->setCellValue('I1', '客户分类')
+						->setCellValue('J1', '分配给')
+						->setCellValue('K1', '分配人')
+						->setCellValue('L1', '分配时间');
+							
+			$num=2;
+			foreach($data as $k => $v){
+				$objPHPExcel->setActiveSheetIndex(0)
+							 //Excel的第A列，uid是你查出数组的键值，下面以此类推 
+							  ->setCellValue('A'.$num, $v['cust_name'])    
+							  ->setCellValue('B'.$num, $v['corp_name'])
+							  ->setCellValue('C'.$num, $v['shop_name'])
+							  ->setCellValue('D'.$num, $v['shop_addr'])
+							  ->setCellValue('E'.$num, $v['phone'])
+							  ->setCellValue('F'.$num, $v['qq'])
+							  ->setCellValue('G'.$num, $category_arr[$v['category']])
+							  ->setCellValue('H'.$num, $v['mail'])
+							  ->setCellValue('I'.$num, $v['cust_type'].'类')
+							  ->setCellValue('J'.$num, Userinfo::getNameByEno($v['eno']))
+							  ->setCellValue('K'.$num, Userinfo::getNameByEno($v['assign_eno']))
+							  ->setCellValue('L'.$num, date('Y-m-d H:i:s',$v['assign_time']));
+				$num++;
+			}
+
+			$objPHPExcel->getActiveSheet()->setTitle('User');
+			$objPHPExcel->setActiveSheetIndex(0);
+			header('Content-Type: application/vnd.ms-excel');
+			header('Content-Disposition: attachment;filename="'.$name.'.xls"');
+			header('Cache-Control: max-age=0');
+			$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
+			$objWriter->save('php://output');
+			exit;	
+		}
+		else{
+			$this->render('admin',array(
+				'model'=>$model,	
+				'custtype'=>$custtype,
+				'deptArr'=>$uInfo['deptArr'],
+				'groupArr'=>$uInfo['groupArr'],
+				'infoArr'=>$uInfo['infoArr'],
+				'user_info'=>$uInfo['user_info'],
+				'aPageSize' => $aPageSize,
+			));
+		}
 	}
     
 	/**

@@ -60,6 +60,11 @@ $('.search-form form').submit(function(){
             <i class="icon-search"></i>
             搜 索
             </button>
+		    <div class="btn-group" style="float:right;">
+				<a href="javascript:void(0)" id="out_excel" class="btn btn-sm btn-primary" > 
+					<i class="icon-plus"></i>导出EXCEL
+				</a>
+			</div> 
         </div>
 
 <?php $this->endWidget(); ?>
@@ -126,13 +131,19 @@ $('.search-form form').submit(function(){
     </div>
 </div>
 <script>
-function getIds(dom){
+	function getIds(dom){
         var ids = '';
         dom.each(function (index, element) {
                 ids += ',' + $(this).val();
         });
         return  ids.substring(1);
     }
+	
+	$('#out_excel').click(function()
+	{
+		var sourceUrl = window.location.href;
+		location.href=sourceUrl+"&out=1";
+	});
 </script>
 
 <?php
