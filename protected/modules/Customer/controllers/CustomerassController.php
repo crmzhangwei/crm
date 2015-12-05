@@ -142,7 +142,9 @@ class CustomerassController extends GController
 						}
 					}
 					Yii::app()->db->createCommand($sql5)->execute();/////新分资源弹窗提示用户
-					Yii::app()->db->createCommand($noteinfo_sql)->execute();/////公海资源领取时向note_info_p表中插入一条记录
+					if( isset($noteinfo_sql) ){
+						Yii::app()->db->createCommand($noteinfo_sql)->execute();/////公海资源领取时向note_info_p表中插入一条记录
+					}
 					$transaction->commit();
 					
 					exit("<script>alert(\"恭喜你, 成功分配了".$assCount."个资源。\");javascript:history.go(-1);</script>");	

@@ -325,8 +325,8 @@ class CustomerinfoController extends GController
 							$ctype = 0;
 						}
 						else{
-							if(!in_array($ctype, array('0','1','2','3','4','5','6','7','8','9'),true)){
-								exit("<script>alert(\"对不起, 第".$k."行中的 类别 只能填0--9的数据, 请修正后重新提交。\");
+							if(!in_array($ctype, array('0','1','2','3','4','5','6','7','8','9','-1','-9'),true)){
+								exit("<script>alert(\"对不起, 第".$k."行中的 类别 只能填0--9或-1,-9的数字, 请修正后重新提交。\");
 									javascript:history.go(-1);</script>");
 							}	
 						}
