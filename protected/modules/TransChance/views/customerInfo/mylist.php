@@ -35,8 +35,12 @@ $form = $this->beginWidget('CActiveForm', array(
     <?php echo $form->dropDownList($model, 'iskey', array('-1'=>'--请选择--','1'=> '是','0'=> '否'), array('style' => "height:34px;")); ?>
     <?php echo $form->label($model, 'phone'); ?>
     <?php echo $form->textField($model, 'phone', array('size' => 12, 'maxlength' => 15)); ?>
+    <?php echo $form->label($model, 'cust_name'); ?>
+    <?php echo $form->textField($model, 'cust_name', array('size' => 20, 'maxlength' => 100)); ?>
+    <?php echo $form->label($model, 'assign_eno'); ?>
+    <?php echo $form->textField($model, 'assign_eno', array('size' => 20, 'maxlength' => 100)); ?>
      <?php echo $form->label($model, 'qq'); ?>
-    <?php echo $form->textField($model, 'qq', array('size' => 12, 'maxlength' => 15)); ?>
+    <?php echo $form->textField($model, 'qq', array('size' => 12, 'maxlength' => 15)); ?><br/>
     <?php echo $form->labelEx($model, 'eno'); ?>
 	<?php echo CHtml::dropDownList('search[dept]', $infoArr['dept'], $deptArr, array('onchange' => 'listgroup(this)')); ?>
 	<?php if(!$user_info['group_arr']):?>
@@ -67,6 +71,7 @@ $form = $this->beginWidget('CActiveForm', array(
 </div>
 
 <?php $this->endWidget(); ?>
+
 <?php
 $form1 = $this->beginWidget('CActiveForm', array(
     'action' => Yii::app()->createUrl('TransChance/customerInfo/clearcondiForMyList'),
@@ -78,9 +83,10 @@ $form1 = $this->beginWidget('CActiveForm', array(
     <div class="btn-group"> 
         <?php echo CHtml::submitButton('清除查询条件', array('class' => 'btn btn-sm btn-primary')); ?>
         <?php echo CHtml::button('合并客户', array('class' => 'btn btn-sm btn-primary','onclick'=>'subMerge();')); ?>
+        <?php echo CHtml::button('批量分类', array('class' => 'btn btn-sm btn-primary','onclick'=>'subBatchCategory();')); ?>
     </div>  
 </div>
-
+<font color="red"><?php echo Yii::app()->user->getFlash('success');Yii::app()->user->setFlash('success','') ?></font>
 <?php
 $dataProvider=$model->searchMyList();
 $this->widget('GGridView', array(
@@ -185,5 +191,10 @@ $this->widget('GLinkPager', array('pages' => $dataProvider->getPagination(),));
          var url = "<?php echo Yii::app()->controller->createUrl('customerInfo/merge');?>";
          $("#form_1").attr('action',url);
          $("#form_1").submit(); 
+    }
+     function subBatchCategory(){
+        var url = "<?php echo Yii::app()->controller->createUrl('customerInfo/batchCategory');?>";
+        $("#form_1").attr('action',url);
+        $("#form_1").submit();
     }
 </script>      

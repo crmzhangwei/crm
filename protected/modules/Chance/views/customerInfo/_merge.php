@@ -56,23 +56,23 @@ function changeCustType(obj){
             <?php echo $form->dropDownList($model, "shop_addr", $shop_addr) ?> 
         </td>
         <td width="10%" nowrap="nowrap"><?php echo $form->labelEx($model, 'phone'); ?></td>
-        <td><?php echo $form->dropDownList($model, "phone", $phone) ?> </td>
+        <td><?php echo $form->dropDownList($model, "phone", $phones) ?> </td>
     </tr>
     <tr>
         <td width="10%" nowrap="nowrap"><?php echo $form->labelEx($model, 'phone2'); ?></td>
         <td width="20%" nowrap="nowrap">
-            <?php echo $form->dropDownList($model, "phone2", $phone2) ?> 
+            <?php echo $form->dropDownList($model, "phone2", $phones) ?> 
         </td>
         <td width="10%" nowrap="nowrap"><?php echo $form->labelEx($model, 'phone3'); ?></td>
-        <td><?php echo $form->dropDownList($model, "phone3", $phone3) ?> </td>
+        <td><?php echo $form->dropDownList($model, "phone3", $phones) ?> </td>
     </tr> 
     <tr>
         <td width="10%" nowrap="nowrap"><?php echo $form->labelEx($model, 'phone4'); ?></td>
         <td width="20%" nowrap="nowrap">
-            <?php echo $form->dropDownList($model, "phone4", $phone4) ?> 
+            <?php echo $form->dropDownList($model, "phone4", $phones) ?> 
         </td>
         <td width="10%" nowrap="nowrap"><?php echo $form->labelEx($model, 'phone5'); ?></td>
-        <td><?php echo $form->dropDownList($model, "phone5", $phone5) ?> </td>
+        <td><?php echo $form->dropDownList($model, "phone5", $phones) ?> </td>
     </tr>
     <tr>
         <td width="10%" nowrap="nowrap"><?php echo $form->labelEx($model, 'qq'); ?></td>

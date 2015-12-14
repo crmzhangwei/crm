@@ -55,6 +55,29 @@ class UnCall {
         }
        return $ret;  
     }
+    public static function dialOnly($phonenumber){
+        $user = Users::model()->findByPk(Yii::app()->user->id);
+        if (empty($user)) {
+            return "请先登录系统";
+        }
+        $uncall = Yii::app()->params['UNCALL'];
+        $client = new SoapClient($uncall['webservice']);
+        $phonenumber=trim($phonenumber);
+        if(substr($phonenumber,0,1)=="1"&&UnCall::getPhoneZone($phonenumber)){
+            $phonenumber="0".$phonenumber; 
+        } 
+        $phonenumber = str_replace("-", "", $phonenumber);
+        $result = $client->OnClickCall($user->extend_no, $phonenumber, ""); 
+        $xml = simplexml_load_string($result);
+        $ret = array('status' => 0, 'message' => '');
+        if ($xml&&((string) $xml->OnClickCall->Response) == 'Success') {
+            $ret['status'] = 1;  
+            $ret['message'] = '电话拔打成功，请按下接听!';
+        }else{
+            $ret['message'] = '电话拔打失败!'; 
+        }
+        return $ret;
+    }
     /**
      * 根据客户id 拔打客户电话
      * 1.根据客户id，取客户信息

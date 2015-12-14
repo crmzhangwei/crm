@@ -244,7 +244,47 @@ class CustomerInfo extends CActiveRecord {
             } 
         }
         if ($this->phone) {
-            $criteria->compare('phone', $this->phone, true);
+            $phones = explode(",", $this->phone);
+            $ic=count($phones);
+            if($ic>1){
+                $condi = "";
+                for($i=0;$i<$ic;$i++){
+                    if($i==0){
+                        $condi=" ( phone like '%".$phones[$i]."%'";
+                    }else if($i==($ic-1)){
+                        $condi=$condi."  or phone like '%".$phones[$i]."%')";
+                    }else{
+                        $condi=$condi." or phone like '%".$phones[$i]."%'";
+                    } 
+                }
+            
+                $criteria->addCondition($condi); 
+            }else{
+                $criteria->compare('phone', $this->phone, true);
+            } 
+        }
+        if ($this->cust_name) {
+            $names = explode(",", $this->cust_name);
+            $ic=count($names);
+            if($ic>1){
+                $condi = "";
+                for($i=0;$i<$ic;$i++){
+                    if($i==0){
+                        $condi=" ( cust_name like '%".$names[$i]."%'";
+                    }else if($i==($ic-1)){
+                        $condi=$condi."  or cust_name like '%".$names[$i]."%')";
+                    }else{
+                        $condi=$condi." or cust_name like '%".$names[$i]."%'";
+                    } 
+                }
+            
+                $criteria->addCondition($condi); 
+            }else{
+                $criteria->compare('cust_name', $this->cust_name, true);
+            } 
+        }
+        if($this->assign_eno){
+            $criteria->addCondition(" exists (select 1 from {{users}} where eno=tci.assign_eno and name like '%".$this->assign_eno."%')") ; 
         }
         if ($this->qq) {
             $criteria->compare('qq', $this->qq, true);

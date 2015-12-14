@@ -26,8 +26,13 @@
             <tr>
                 <td nowrap="nowrap"><?php echo $form->labelEx($custmodel,'cust_type'); ?></td>
                 <td colspan="3"> 
+                    <?php if( $custmodel->cust_type==6 ){ ?>
+                    <?php  $custTypes = $this->genCustTypeArray();
+                            echo $custTypes[$custmodel->cust_type];?>
+                    <?php }else{ ?>
                     <?php echo $form->dropDownList($custmodel, 'cust_type',$this->genCustTypeArray(), array('id'=>'cust_type','style' => "height:34px;",'onchange'=>'changeCustType(this)')); ?>
                     <?php echo $form->error($custmodel,'cust_type'); ?>
+                    <?php }?>
                 </td> 
             </tr>
             <tr style="display:none;" id="tr_visit"> 

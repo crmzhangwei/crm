@@ -34,7 +34,7 @@ class NewController extends GController {
         $noteinfo->setAttribute("iskey", $model->iskey);
         $sql = "select * from {{aftermarket_cust_info}} where cust_id=:cust_id";
         $aftermodel = AftermarketCustInfo::model()->findBySql($sql, array(':cust_id' => $id));
-        if ($aftermodel->cust_type == 8) {
+        if ($model->cust_type == 9) {
             //公海资源
             Yii::app()->user->setFlash('success', '不能打开公海资源!');
             $this->render("result");
@@ -164,8 +164,7 @@ class NewController extends GController {
                     $blackinfo->setAttribute('old_cust_type', $aftermodel->cust_type);
                     $blackinfo->setAttribute('create_time', time());
                     $blackinfo->setAttribute('creator', Yii::app()->user->id);
-                    $blackinfo->save();
-                    $aftermodel->delete(); //删除售后库
+                    $blackinfo->save(); 
                 } else {
                     Yii::app()->db->createCommand()->update('{{black_info}}', array('lib_type' => 3,
                         'old_cust_type' => $aftermodel->cust_type,
@@ -173,14 +172,22 @@ class NewController extends GController {
                         'creator' => Yii::app()->user->id
                             ), "cust_id=$id");
                 }
+                $trans=TransCustInfo::model()->findBySql("select * from {{trans_cust_info}} where cust_id=:cust_id",array(":cust_id"=>$id));
+                 //售后员已分配资源数减1
+                $sql = "update {{users}} set cust_num=cust_num-1 where eno='{$aftermodel->eno}' and cust_num>0";
+                Yii::app()->db->createCommand($sql)->execute();
+                $sql = "update {{users}} set cust_num=cust_num-1 where eno='{$trans->eno}' and cust_num>0";
+                Yii::app()->db->createCommand($sql)->execute();
+                $sql = "update {{users}} set cust_num=cust_num-1 where eno='{$model->eno}' and cust_num>0";
+                Yii::app()->db->createCommand($sql)->execute();
+                $aftermodel->delete(); //删除售后库
+                $trans->delete();//删除成交师库 
                 $noteinfo1 = new NoteInfoP();
                 $noteinfo1->setAttribute("cust_id", $id);
                 $noteinfo1->setAttribute("note_type", NoteInfoP::$NOTE_TYPE_PUT_PUBLIC);
                 Utils::addNoteInfo($noteinfo1);
-                $model->status = "1";
-                //售后员已分配资源数减1
-                $sql = "update {{users}} set cust_num=cust_num-1 where eno='{$aftermodel->eno}'";
-                Yii::app()->db->createCommand($sql)->execute();
+                $model->status = "1"; 
+                $model->cust_type = "9"; 
             } else {
                 //保存售后库 
                 $aftermodel->cust_type = $newCustType;

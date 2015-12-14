@@ -330,13 +330,13 @@ class CustomerInfoController extends GController {
                             'creator' => Yii::app()->user->id
                                 ), "cust_id=$id");
                     }
-                    $noteinfo1 = new NoteInfoP(); 
+                    $noteinfo1 = new NoteInfoP();
                     $noteinfo1->setAttribute("cust_id", $id);
-                    $noteinfo1->setAttribute("note_type", NoteInfoP::$NOTE_TYPE_PUT_PUBLIC); 
+                    $noteinfo1->setAttribute("note_type", NoteInfoP::$NOTE_TYPE_PUT_PUBLIC);
                     Utils::addNoteInfo($noteinfo1);
                     $model->status = "1"; //将客户状态改为1(无效）
                     //成交师已分配资源数减1
-                    $sql = "update {{users}} set cust_num=cust_num-1 where eno='{$model->eno}'";
+                    $sql = "update {{users}} set cust_num=cust_num-1 where eno='{$model->eno}' and cust_num>0";
                     Yii::app()->db->createCommand($sql)->execute();
                 }
                 if (Utils::isNeedSaveNoteInfo($_POST['NoteInfoP'], $newCustType)) {
@@ -821,6 +821,112 @@ class CustomerInfoController extends GController {
     }
 
     /**
+     * 批量分类
+     */
+    public function actionBatchCategory() {
+        if (isset($_POST['CustomerInfo'])) {
+            //批量分类
+            $cust_ids = $_POST['cust_id'];
+            $cust_type = $_POST['CustomerInfo']['cust_type'];
+            $trans_user = $_POST['CustomerInfo']['trans_user'];
+            $visit_date = $_POST['CustomerInfo']['visit_date'];
+            $loginuser=Users::model()->findByPk(Yii::app()->user->id);
+            foreach ($cust_ids as $cust_id) {
+                $cust = $this->loadModel($cust_id);
+                if ($cust->cust_type != $cust_type) {  
+                    //生成转换明细
+                        $convt = new CustConvtDetail();
+                        $convt->setAttribute('lib_type', 1);
+                        $convt->setAttribute('cust_id', $cust_id);
+                        $convt->setAttribute('cust_type_1', $cust->cust_type);
+                        $convt->setAttribute('cust_type_2', $cust_type);
+                        $convt->setAttribute('convt_time', time());
+                        $convt->setAttribute('user_id', Yii::app()->user->id);
+                        $convt->save();
+                    if($cust->cust_type==6){
+                        //从6类转入非6类，删除售后库及成交师库
+                        $temp = AftermarketCustInfo::model()->findBySql("select * from {{aftermarket_cust_info}} where cust_id=$cust_id");
+                        if($temp){
+                            $sql = "update {{users}} set cust_num=cust_num-1 where eno=:eno and cust_num>1";
+                            Yii::app()->db->createCommand($sql)->execute(array(":eno"=>$temp->eno)); 
+                            $sql = "delete from {{contract_info}} where cust_id=:cust_id ";
+                            Yii::app()->db->createCommand($sql)->execute(array(":cust_id"=>$cust_id));
+                            $sql = "delete from {{aftermarket_cust_info}} where cust_id=:cust_id ";
+                            Yii::app()->db->createCommand($sql)->execute(array(":cust_id"=>$cust_id)); 
+                        }
+                        //取成交师库
+                        $temp=null;
+                        $temp = TransCustInfo::model()->findBySql("select * from {{trans_cust_info}} where cust_id=$cust_id");
+                        if($temp){
+                            $sql = "update {{users}} set cust_num=cust_num-1 where eno=:eno and cust_num>0";
+                            Yii::app()->db->createCommand($sql)->execute(array(":eno"=>$temp->eno)); 
+                            $sql = "delete from {{trans_cust_info}} where cust_id=:cust_id ";
+                            Yii::app()->db->createCommand($sql)->execute(array(":cust_id"=>$cust_id)); 
+                        } 
+                        $sql = "update {{customer_info}} set cust_type=:cust_type where id=:cust_id";
+                        Yii::app()->db->createCommand($sql)->execute(array(":cust_type"=>$cust_type,":cust_id"=>$cust_id)); 
+                    }
+                    if ($cust_type == 6) { 
+                        //从非6类转入6类，生成成交师库
+                        $temp = TransCustInfo::model()->findBySql("select * from {{trans_cust_info}} where cust_id=$cust_id");
+                        if (empty($temp)) {
+                            $tran = new TransCustInfo();
+                            $tranuser = Users::model()->findByPk($trans_user);
+                            $tran->eno = $tranuser->eno;
+                            $tran->cust_id = $cust_id;
+                            $tran->cust_type = 10;
+                            $tran->assign_eno = $loginuser->eno;
+                            $tran->assign_time = time();
+                            $tran->creator = $loginuser->id;
+                            $tran->create_time = time();
+                            $tran->next_time = strtotime($visit_date);
+                            $tran->save(); 
+                        } else {
+                            Yii::app()->db->createCommand()->update('{{trans_cust_info}}', array('eno' => $loginuser->eno,
+                                'assign_eno' => $loginuser->eno,
+                                'assign_time' => time(),
+                                'next_time' => strtotime($visit_date),
+                                'creator' => $loginuser->id,
+                                'create_time' => time()
+                                    ), "cust_id =$cust_id");
+                        }
+                        $sql = "update {{users}} set cust_num=cust_num+1 where eno=:eno";
+                        Yii::app()->db->createCommand($sql)->execute(array(":eno"=>$tranuser->eno)); 
+                    }
+                    Yii::app()->db->createCommand()->update('{{customer_info}}',  array('cust_type' => $cust_type), "id =$cust_id");
+                }
+            }
+            Yii::app()->user->setFlash('success','成功完成批量分类');
+            $this->redirect($this->createUrl("customerInfo/todaylist"));
+        }
+        if (!isset($_POST['select'])) {
+            //没有选择记录的情况
+            Yii::app()->user->setFlash('success', '请选择客户!');
+            $this->redirect($this->createUrl("customerInfo/todaylist"));
+            return;
+        }
+        //跳转到批量分类页面
+        $ids = $_POST['select'];
+        $model = CustomerInfo::model();
+        $sql = "";
+        if (is_array($ids)) {
+            $sql = "select * from {{customer_info}} where id in (" . implode(",", $ids) . ")";
+        } else {
+            $this->redirect($this->createUrl("customerInfo/todaylist"));
+            return;
+        }
+        $list = $model->findAllBySql($sql);
+        $sql = "select type_no,concat('【',type_no,'类】',type_name) as type_name from {{cust_type}} where lib_type=1 and type_no<>9";
+        $custtype = CustType::model()->findAllBySql($sql);
+        $custtype = CHtml::listData($custtype, "type_no", "type_name");
+        $this->render('batchCategory', array('model' => $model,
+            'custlist' => $list,
+            'custtype' => $custtype
+                )
+        );
+    }
+
+    /**
      * 合并客户
      */
     public function actionMerge() {
@@ -901,6 +1007,7 @@ class CustomerInfoController extends GController {
         }
         if (!isset($_POST['select'])) {
             //没有选择记录的情况
+            Yii::app()->user->setFlash('success', '请选择客户!');
             $this->redirect($this->createUrl("customerInfo/todaylist"));
             return;
         }
@@ -925,6 +1032,7 @@ class CustomerInfoController extends GController {
         $phone3 = CHtml::listData($list, "phone3", "phone3");
         $phone4 = CHtml::listData($list, "phone4", "phone4");
         $phone5 = CHtml::listData($list, "phone5", "phone5");
+        $phones=  array_merge($phone,$phone2,$phone3,$phone4,$phone5);
         $qq = CHtml::listData($list, "qq", "qq");
         $mail = CHtml::listData($list, "mail", "mail");
         $datafrom = CHtml::listData($list, "datafrom", "datafrom");
@@ -939,7 +1047,7 @@ class CustomerInfoController extends GController {
             'corp_name' => $corp_name,
             'shop_url' => $shop_url,
             'shop_addr' => $shop_addr,
-            'phone' => $phone,
+            'phones' => $phones,
             'phone2' => $phone2,
             'phone3' => $phone3,
             'phone4' => $phone4,
@@ -1115,9 +1223,19 @@ class CustomerInfoController extends GController {
                 $model->cust_type = 9;
                 $model->update_time = time();
                 $model->save();
+                $after=AftermarketCustInfo::model()->findBySql("select * from {{aftermarket_cust_info}} where cust_id=:cust_id",array(":cust_id"=>$v));
+                $trans=TransCustInfo::model()->findBySql("select * from {{trans_cust_info}} where cust_id=:cust_id",array(":cust_id"=>$v));
                 //已分配资源数减1
-                $sql = "update {{users}} set cust_num=cust_num-1 where eno='{$model->eno}'";
+                $sql = "update {{users}} set cust_num=cust_num-1 where eno='{$model->eno}' and cust_num>0";
                 Yii::app()->db->createCommand($sql)->execute();
+                if($after){
+                    $sql = "update {{users}} set cust_num=cust_num-1 where eno='{$after->eno}' and cust_num>0";
+                    Yii::app()->db->createCommand($sql)->execute();
+                }
+                if($trans){
+                    $sql = "update {{users}} set cust_num=cust_num-1 where eno='{$trans->eno}' and cust_num>0";
+                    Yii::app()->db->createCommand($sql)->execute();
+                }
                 //删除成交师库和售后库
                 $sql = "delete from {{trans_cust_info}} where cust_id=$v";
                 Yii::app()->db->createCommand($sql)->execute();
@@ -1125,7 +1243,7 @@ class CustomerInfoController extends GController {
                 Yii::app()->db->createCommand($sql)->execute();
                 $sql = "delete from {{contract_info}} where cust_id=$v";
                 Yii::app()->db->createCommand($sql)->execute();
-                $noteinfo = new NoteInfoP(); 
+                $noteinfo = new NoteInfoP();
                 $noteinfo->setAttribute("cust_id", $v);
                 $noteinfo->setAttribute("note_type", NoteInfoP::$NOTE_TYPE_PUT_PUBLIC);
                 $noteinfo->setAttribute("memo", $model->cust_name);

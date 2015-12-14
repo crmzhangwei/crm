@@ -80,78 +80,106 @@ class CountController extends GController {
             $search['dept'] = '';
             $search['group'] = '';
             $search['user'] = ''; 
+            $search['cust_name'] = ''; 
+            $search['phone'] = ''; 
+            $search['finace_type'] = ''; 
         } else {
             $param["search[stime]"] = $search['stime'];
             $param["search[etime]"] = $search['etime'];
             $param["search[dept]"] = $search['dept'];
             $param["search[group]"] = $search['group'];
             $param["search[user]"] = $search['user']; 
+            $param["search[cust_name]"] = $search['cust_name']; 
+            $param["search[phone]"] = $search['phone']; 
+            $param["search[finace_type]"] = $search['finace_type']; 
         }
         $offset = ($page - 1) * $this->pageSize;
         $priv = Userinfo::getPrivCondiForReport();
 
         $wherestr = "";
+        $timestr="";
         if (!empty($search['stime'])) {
             $istime = strtotime($search['stime']);
-            $wherestr = $wherestr . " and t.acct_time>=$istime";
+            $timestr = $timestr . " and f.acct_time>=$istime";
         }
         if (!empty($search['etime'])) {
             $ietime = strtotime($search['etime']);
-            $wherestr = $wherestr . " and t.acct_time<=$ietime";
+            $timestr = $timestr . " and f.acct_time<=$ietime";
         }
+        if (!empty($search['finace_type'])) {  
+            $timestr = $timestr . " and f.finance_type=".$search['finace_type'];
+        }
+        if (!empty($search['cust_name'])) { 
+            $cust_name=trim($search['cust_name']);
+            $wherestr = $wherestr . " and c.cust_name like '%$cust_name%'";
+        }
+        if (!empty($search['phone'])) { 
+            $phone=trim($search['phone']);
+            $wherestr = $wherestr . " and c.phone like '%$phone%'";
+        }
+        
         if (!empty($search['dept'])) {
-            $wherestr = $wherestr . " and t.dept_id=" . $search['dept'];
+            $wherestr = $wherestr." and d.id=" . $search['dept'];
         }
         if (!empty($search['group'])) {
-            $wherestr = $wherestr . " and t.group_id=" . $search['group'];
+            $wherestr = $wherestr . " and g.id=" . $search['group'];
         }
         if (!empty($search['user'])) {
-            $wherestr = $wherestr . " and t.eno='" . $search['user']."'";
+            $wherestr = $wherestr . " and u.eno='" . $search['user']."'";
         }  
-        $columns="t.dept_name,t.group_name,t.user_name";
+        $columns="t1.dept_name,t1.group_name,t1.user_name";
         $titles=$this->yeji_0_titles;
         $title_keys=$this->yeji_0_title_keys;
         if(!empty($search['user'])){
-            $columns="t.dept_name,t.group_name,t.user_name";
+            $columns="t1.dept_name,t1.group_name,t1.user_name";
             $titles=$this->yeji_0_titles;
             $title_keys=$this->yeji_0_title_keys;
         }else if(!empty($search['group'])){
-            $columns="t.dept_name,t.group_name";
+            $columns="t1.dept_name,t1.group_name,t1.user_name";
+            $titles=$this->yeji_0_titles;
+            $title_keys=$this->yeji_0_title_keys;
+        }else if(!empty($search['dept'])){
+            $columns="t1.dept_name,t1.group_name";
             $titles=$this->yeji_1_titles;
             $title_keys=$this->yeji_1_title_keys;
-        }else if(!empty($search['dept'])){
-            $columns="t.dept_name";
-            $titles=$this->yeji_2_titles;
-            $title_keys=$this->yeji_2_title_keys;
         } 
         $sql = <<<EOF
+ select $columns,sum(t1.acct_number) as acct_number,sum(t1.acct_amount) as acct_amount from (
  SELECT 
-    $columns,sum(acct_number) as acct_number,sum(acct_amount) as acct_amount 
+    u.name AS user_name,
+    d.name AS dept_name,
+    g.name AS group_name,
+    IFNULL(t.acct_number, 0) AS acct_number,
+    IFNULL(t.acct_amount, 0) AS acct_amount
 FROM
     (SELECT 
-        u.id AS user_id,
-            u.eno,
-            u.dept_id,
-            u.group_id,
-            u.name AS user_name,
-            d.name AS dept_name,
-            g.name AS group_name,
-            f.acct_number,
-            f.acct_amount,
-            f.acct_time 
+        f.cust_id,
+        f.sale_user,
+            IFNULL(f.acct_number, 0) acct_number,
+            IFNULL(f.acct_amount, 0) acct_amount,
+            IFNULL(f.acct_time, 0) acct_time
     FROM
         c_finance f
-    LEFT JOIN c_users u ON f.sale_user = u.id
-    LEFT JOIN c_dept_info d ON u.dept_id = d.id
-    LEFT JOIN c_group_info g ON u.group_id = g.id 
-   where 1=1  $priv    
-   ) t
+    LEFT JOIN c_users u ON f.sale_user = u.id 
+    WHERE
+        1 = 1 and u.status=1 $timestr
+            AND (u.id IN (18 , 20, 21, 22, 23, 30, 34, 35, 36, 37, 38, 39, 40, 41, 42, 24, 25, 48, 69, 19))) t
+        left join c_customer_info c on t.cust_id=c.id
+        RIGHT JOIN
+    c_users u ON t.sale_user = u.id
+        RIGHT JOIN
+    c_dept_group dg ON u.dept_id = dg.dept_id
+        AND u.group_id = dg.group_id
+        LEFT JOIN
+    c_dept_info d ON dg.dept_id = d.id
+        LEFT JOIN
+    c_group_info g ON dg.group_id = g.id
 WHERE
-    1 = 1 $wherestr 
-group by $columns
+    1=1 and u.status=1 $wherestr
+    ) t1 where 1=1 group by $columns order by acct_amount desc
 EOF;
-
-        $cnt = 0;
+    
+         $cnt = 0;
         $result1 = Yii::app()->db->createCommand("select count(*) as cnt from ($sql) tmp")->queryRow(true);
         if ($result1 && is_array($result1)) {
             $cnt = $result1['cnt'];
@@ -186,7 +214,7 @@ EOF;
                 'search' => $search,
             );
             $this->render("yeji", $data);
-        }
+        } 
     }
 
     public function actionYeji_old() {
@@ -315,24 +343,58 @@ EOF;
     }
 
     public function actionMonth() {
-
-        $sql = "select FROM_UNIXTIME(acct_time,'%Y年%m月') as acct_time,SUM(acct_amount) as amount,SUM(acct_number) as number from `c_finance` 
-				 group by FROM_UNIXTIME(acct_time,'%Y%m')";
+        $sql = <<<EOF
+         select d.name as finance_type,FROM_UNIXTIME(acct_time,'%Y年%m月') as acct_time,SUM(acct_amount) as amount,SUM(acct_number) as number from {{finance}} f 
+                left join {{dic}} d on f.finance_type=d.code and d.ctype='finance_type' 
+				 group by d.name ,FROM_UNIXTIME(acct_time,'%Y%m') order by 2  
+EOF;
+        
         $result = Yii::app()->db->createCommand($sql)->queryAll();
 
         $total = 0;
         if ($result) {
-            $amount = array();
-            foreach ($result as $k => $v) {
-                $amount[] = $v['amount'];
-            }
-            array_multisort($amount, SORT_DESC, $result);
+//            $amount = array();
+//            foreach ($result as $k => $v) {
+//                $amount[] = $v['amount'];
+//            }
+//            array_multisort($amount, SORT_DESC, $result);
             $total = count($result);
         }
         $ret = array('result' => $result, 'total' => $total);
         $this->render("month", $ret);
     }
+    
+    public function actionDuplicateExtend() {
+        $sql = <<<EOF
+         SELECT 
+    name, extend_no
+FROM
+    c_users
+WHERE
+    extend_no IN (SELECT 
+            extend_no
+        FROM
+            crm.c_users
+        WHERE
+            extend_no <> 0
+        GROUP BY extend_no
+        HAVING COUNT(*) > 1) order by 2 
+EOF;
+        
+        $result = Yii::app()->db->createCommand($sql)->queryAll();
 
+        $total = 0;
+        if ($result) {
+//            $amount = array();
+//            foreach ($result as $k => $v) {
+//                $amount[] = $v['amount'];
+//            }
+//            array_multisort($amount, SORT_DESC, $result);
+            $total = count($result);
+        }
+        $ret = array('result' => $result, 'total' => $total);
+        $this->render("duplicate_user", $ret);
+    }
     public function actionEveryday() {
         $search = Yii::app()->request->getParam("search");
         //$times = strtotime(date('Y-m', time()));
@@ -764,5 +826,14 @@ EOF;
         $user_empty->name = '--请选择人员--';
         $userarr = array_merge(array($user_empty), $userarr);
         return CHtml::listData($userarr, 'eno', 'name');
+    }
+    public function getFinaceTypeArr() { 
+        $sql = "select code,name from {{dic}} where ctype='finance_type'";
+        $dicarr = Dic::model()->findAllBySql($sql);
+        $dic_empty = new Dic();
+        $dic_empty->code = 0;
+        $dic_empty->name = '--请选择到单类型--';
+        $dicarr = array_merge(array($dic_empty), $dicarr);
+        return CHtml::listData($dicarr, 'code', 'name');
     }
 }

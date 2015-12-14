@@ -153,7 +153,8 @@ class CustomerInfo extends CActiveRecord {
         // @todo Please modify the following code to remove attributes that should not be searched.
         $type = intval(Yii::app()->request->getParam('type'));
         $criteria = new CDbCriteria; 
-        $criteria->addInCondition("cust_type", array(0, 1, 2, 3, 4, 5, 6, 7, 8, -9));
+        $criteria->addInCondition("cust_type", array(0, 1, 2, 3, 4, 5, 6, 7, 8, -9,-1));
+        $criteria->addCondition(" not exists (select 1 from {{aftermarket_cust_info}} where cust_id=t.id)"); 
         $criteria->addCondition("status=0"); 
 		//$criteria->compare('eno',$this->eno,true);
         //只看到自己的客户,及下属客户
@@ -228,9 +229,9 @@ class CustomerInfo extends CActiveRecord {
     public function searchMyList() {
         $type = intval(Yii::app()->request->getParam('type'));
         $criteria = new CDbCriteria; 
-        $criteria->addInCondition("cust_type", array(0, 1, 2, 3, 4, 5, 6, 7, 8,-9));
+        $criteria->addInCondition("cust_type", array(0, 1, 2, 3, 4, 5, 6, 7, 8,-9,-1));
         $criteria->addCondition("status=0");
- 
+        $criteria->addCondition(" not exists (select 1 from {{aftermarket_cust_info}} where cust_id=t.id)"); 
         //只看到自己的客户,及下属客户
         $user_arr = Userinfo::getAllChildUsersId(Yii::app()->user->id);
         $user_arr[]=Yii::app()->user->id;
@@ -241,7 +242,47 @@ class CustomerInfo extends CActiveRecord {
             } 
         }   
         if ($this->phone) {
-            $criteria->compare('phone', $this->phone, true);
+            $phones = explode(",", $this->phone);
+            $ic=count($phones);
+            if($ic>1){
+                $condi = "";
+                for($i=0;$i<$ic;$i++){
+                    if($i==0){
+                        $condi=" ( phone like '%".$phones[$i]."%'";
+                    }else if($i==($ic-1)){
+                        $condi=$condi."  or phone like '%".$phones[$i]."%')";
+                    }else{
+                        $condi=$condi." or phone like '%".$phones[$i]."%'";
+                    } 
+                }
+            
+                $criteria->addCondition($condi); 
+            }else{
+                $criteria->compare('phone', $this->phone, true);
+            } 
+        }
+        if ($this->cust_name) {
+            $names = explode(",", $this->cust_name);
+            $ic=count($names);
+            if($ic>1){
+                $condi = "";
+                for($i=0;$i<$ic;$i++){
+                    if($i==0){
+                        $condi=" ( cust_name like '%".$names[$i]."%'";
+                    }else if($i==($ic-1)){
+                        $condi=$condi."  or cust_name like '%".$names[$i]."%')";
+                    }else{
+                        $condi=$condi." or cust_name like '%".$names[$i]."%'";
+                    } 
+                }
+            
+                $criteria->addCondition($condi); 
+            }else{
+                $criteria->compare('cust_name', $this->cust_name, true);
+            } 
+        }
+        if($this->assign_eno){
+            $criteria->addCondition(" exists (select 1 from {{users}} where eno=t.assign_eno and name like '%".$this->assign_eno."%')") ; 
         }
         if ($this->qq) {
             $criteria->compare('qq', $this->qq, true);
@@ -296,7 +337,7 @@ class CustomerInfo extends CActiveRecord {
     public function searchOldList() {
         $type = intval(Yii::app()->request->getParam('type'));
         $criteria = new CDbCriteria; 
-        $criteria->addInCondition("cust_type", array(0, 1, 2, 3, 4, 5, 7, 8,-9));
+        $criteria->addInCondition("cust_type", array(0, 1, 2, 3, 4, 5, 7, 8,-9,-1));
         $criteria->addCondition("status=0"); 
         //只看到自己的客户,及下属客户
         $user_arr = Userinfo::getAllChildUsersId(Yii::app()->user->id);

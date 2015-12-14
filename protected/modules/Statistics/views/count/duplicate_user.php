@@ -1,19 +1,16 @@
 <?php
 	$this->breadcrumbs = array(
 		'报表分析' => array('month'),
-		'月份明细',
+		'重复分机号',
 	);
 ?>
 
 <div class="row">
 		<table class="table table-bordered table-hover table-striped table-projects">
 			<thead>
-				<tr>
-					<th style="width: 80px;">排名</th>
-                                        <th>到单类型</th>
-					<th>月份</th>
-					<th>金额</th>
-					<td>到单数</td>
+				<tr> 
+                                        <th>姓名</th>
+					<th>分机号</th> 
 				</tr>
 			</thead>
 			<tbody>
@@ -21,12 +18,9 @@
 				if (!empty($result)):
 					foreach ($result as $k => $v):
 						?>
-						<tr>
-							<td><?php echo $k+1; ?></td>
-                                                        <td><?php echo $v['finance_type']; ?></td>
-							<td><?php echo $v['acct_time']; ?></td>
-							<td><?php echo $v['amount']; ?></td>
-							<td><?php echo $v['number']; ?></td>
+						<tr> 
+                                                        <td><?php echo $v['name']; ?></td>
+							<td><?php echo $v['extend_no']; ?></td> 
 						</tr>
 						<?php
 					endforeach;

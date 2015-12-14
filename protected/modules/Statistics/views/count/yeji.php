@@ -34,6 +34,16 @@ $this->breadcrumbs = array(
             to  
             <input type="text" class="form-control" name="search[etime]" value="<?php echo $search['etime']; ?>" placeholder="" onClick="WdatePicker()">
         </div>
+        <br/>
+        <div class="form-group">
+            &nbsp;&nbsp;客户名称:
+            <input type="text" class="form-control" name="search[cust_name]" value="<?php echo $search['cust_name']; ?>" >
+            &nbsp;&nbsp;客户电话:
+            <input type="text" class="form-control" name="search[phone]" value="<?php echo $search['phone']; ?>" >
+            &nbsp;&nbsp;到单类型:
+            <?php echo CHtml::dropDownList('search[finace_type]', $search['finace_type'], $this->getFinaceTypeArr(), array('id' => 'financetype')); ?>
+           
+        </div>
         <input type="hidden" name="isexcel" value="0" id="isexcel"/>
         <div class="form-group"> 
             <button type="submit" class="btn btn-info form-control" onclick="sub()">
@@ -57,9 +67,10 @@ $this->breadcrumbs = array(
         <div class="space-10"></div>
     </div>
     <div class="col-xs-12">
-        <a href="<?php echo Yii::app()->createUrl('/Statistics/Count/Month'); ?>">查看月份明细</a>&nbsp;&nbsp;
-        <a href="<?php echo Yii::app()->createUrl('/Statistics/Count/Everyday'); ?>">查看每日明细</a>
-        <?php if ($search['dept'] && $search['group'] && $search['user']): ?>
+        <a href="<?php echo Yii::app()->createUrl('/Statistics/Count/Month'); ?>" target="_blank">查看月份明细</a>&nbsp;&nbsp;
+        <a href="<?php echo Yii::app()->createUrl('/Statistics/Count/Everyday'); ?>" target="_blank">查看每日明细</a>
+        <a href="<?php echo Yii::app()->createUrl('/Statistics/Count/duplicateExtend'); ?>" target="_blank">查看重复分机号</a>
+        <?php if (($search['dept'] && $search['group']) or (empty($search['dept']))):?>
             <table class="table table-bordered table-hover table-striped table-projects">
                 <thead>
                     <tr>
@@ -92,7 +103,7 @@ $this->breadcrumbs = array(
                     ?>
                 </tbody>
             </table>
-        <?php elseif ($search['dept'] && $search['group']): ?>
+        <?php elseif ($search['dept']):?>
             <table class="table table-bordered table-hover table-striped table-projects">
                 <thead>
                     <tr>
@@ -122,36 +133,7 @@ $this->breadcrumbs = array(
                     endif;
                     ?>
                 </tbody>
-            </table>
-        <?php else: ?>
-            <table class="table table-bordered table-hover table-striped table-projects">
-                <thead>
-                    <tr>
-                        <th style="width: 80px;">排名</th>
-                        <th>部门</th> 
-                        <th>金额</th>
-                        <th>到单数</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php
-                    if (!empty($list)):
-                        $i = 0;
-                        foreach ($list as $k => $v):
-                            $i++;
-                            ?>
-                            <tr>
-                                <td><?php echo $i; ?></td>
-                                <td><?php echo $v['dept_name']; ?></td> 
-                                <td><?php echo $v['acct_amount']; ?></td>
-                                <td><?php echo $v['acct_number']; ?></td>
-                            </tr>
-                            <?php
-                        endforeach;
-                    endif;
-                    ?>
-                </tbody>
-            </table>
+            </table> 
         <?php endif; ?>
         <!-- .pagination -->
         <div class="row table-page">
