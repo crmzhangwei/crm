@@ -261,7 +261,30 @@ class ServiceController extends GController {
         $result = UnCall::dial($cust_id, $seq);
         echo json_encode($result);
     }
-
+    
+    /**
+     * 拔打电话
+     * @param type $cust_id
+     */
+    public function actionDialOnly($phone) {
+        $phone1=$phone;
+        $phone2=0+$phone; 
+        $sql="select cust_name,eno,status from {{customer_info}} where status <>2 and ( phone in(:phone1,:phone2) or phone2 in(:phone1,:phone2) or phone3 in(:phone1,:phone2) or phone4 in(:phone1,:phone2) or phone5 in(:phone1,:phone2))";
+        $custlist = CustomerInfo::model()->findAllBySql($sql,array(":phone1"=>$phone1,":phone2"=>$phone2)); 
+        $ret = array('status' => 0, 'message' => '');
+        $message="";
+        if($custlist){
+            foreach($custlist as $cust){ 
+                $user = Userinfo::getNameByEno($cust['eno']);
+                $message=$message." 电话【".$phone."】,客户名称【".$cust['cust_name']."】已经存在用户【".$user."】中!\n";
+            }
+            $ret['message']=$message;
+        }
+        if(empty($message)){
+            $ret = UnCall::dialOnly($phone);
+        } 
+        echo json_encode($ret);
+    }
     public function actionDialUid($dial_id) {
         $result = array('uid' => '');
         $dialdetail = DialDetail::model()->findByPk($dial_id);

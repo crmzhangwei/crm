@@ -31,6 +31,9 @@ class CustomerBlack extends CActiveRecord
 	public $old_custtype;//原客户类别
         public $lib_type;
         public $old_cust_type;
+        public $timetype;
+        public $stime;
+        public $etime;
 	/**
 	 * @return string the associated database table name
 	 */
@@ -55,7 +58,7 @@ class CustomerBlack extends CActiveRecord
 			array('mail', 'email', 'allowEmpty'=>true, 'message'=>'邮箱不正确'),
 			array('phone, qq', 'check_contact'),
 			array('mail', 'length', 'max'=>50),
-			array('old_custtype, keyword, shop_name, corp_name, shop_url, shop_addr, datafrom, memo,searchtype', 'safe'),
+			array('old_custtype, keyword, shop_name, corp_name, shop_url, shop_addr, datafrom, memo,searchtype,timetype,stime,etime', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
 			array('id, cust_name, shop_name, corp_name, shop_url, shop_addr, phone, qq, mail, datafrom, category, cust_type, eno, assign_eno, assign_time, next_time, memo, create_time, creator', 'safe', 'on'=>'search'),
@@ -191,6 +194,44 @@ class CustomerBlack extends CActiveRecord
                    break;
            }
         }
+        
+        switch ($this->timetype) {
+            //昨天
+            case '1':
+                $starttime = date("Y-m-d", strtotime('-1 day')) . " 00:00:00";
+                $istartTime = strtotime($starttime);
+                $criteria->addCondition("b.create_time>=$istartTime");
+                $endtime = date("Y-m-d", strtotime('-1 day')) . " 23:59:59";
+                $iendTime = strtotime($endtime);
+                $criteria->addCondition("b.create_time<=$iendTime");
+                break;
+            //最近7天
+            case '2':
+                $starttime = date("Y-m-d", strtotime('-7 day')) . " 00:00:00";
+                $istartTime = strtotime($starttime);
+                $criteria->addCondition("b.create_time>=$istartTime");
+                break;
+            case '3':
+                $starttime = date("Y-m-d", strtotime('-30 day')) . " 00:00:00";
+                $istartTime = strtotime($starttime);
+                $criteria->addCondition("b.create_time>=$istartTime");
+                break;
+            case '0':
+                if ($this->stime) {
+                    $starttime = $this->stime . " 00:00:00";
+                    $istartTime = strtotime($starttime);
+                    $criteria->addCondition("b.create_time>=$istartTime");
+                }
+                if ($this->etime) {
+                    $endtime = $this->etime . " 23:59:59";
+                    $iendTime = strtotime($endtime);
+                    $criteria->addCondition("b.create_time<=$iendTime");
+                }
+                break;
+            default :  
+                break;
+        }
+        
         return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
 		));

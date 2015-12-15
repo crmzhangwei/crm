@@ -29,6 +29,7 @@ $('.search-form form').submit(function(){
 <!-- search-form -->
 
 <?php $form=$this->beginWidget('CActiveForm', array(
+        'id'=>'form1',
 	'action'=>Yii::app()->createUrl($this->route),
 	'method'=>'get',
 )); ?>
@@ -38,7 +39,23 @@ $('.search-form form').submit(function(){
 			
 			<?php echo $form->dropDownList($model, 'searchtype', CustomerBlack::getsearchArr(), array('style' => "height:34px;")); ?>
 			<?php echo $form->textField($model, 'keyword', array('size' => 25, 'maxlength' => 25)); ?>
-            <button class="btn btn-sm btn-primary" type="submit">
+           <br/><br/>
+           创建时间:
+           <?php echo $form->hiddenField($model, 'timetype', array("id" => "id_timetype")); ?> 
+                <button class="btn btn-sm btn-primary" type="button" onclick="subCotact(1);"> 
+                    昨天
+                </button>
+                <button class="btn btn-sm btn-primary" type="button" onclick="subCotact(2);"> 
+                    最近7天
+                </button>
+                <button class="btn btn-sm btn-primary" type="button" onclick="subCotact(3);"> 
+                    最近30天
+                </button>
+                &nbsp;&nbsp;自定义:
+                <?php echo $form->textField($model, 'stime', array('size' => 25, 'maxlength' => 25, 'onclick' => 'WdatePicker()')); ?> 
+                to  
+                <?php echo $form->textField($model, 'etime', array('size' => 25, 'maxlength' => 25, 'onclick' => 'WdatePicker()')); ?>  
+            <button class="btn btn-sm btn-primary" type="button" onclick="subCotact(0);">
             <i class="icon-search"></i>
             搜 索
             </button>
@@ -120,6 +137,10 @@ $('.search-form form').submit(function(){
 		var sourceUrl = window.location.href;
 		location.href=sourceUrl+"&out=1";
 	});
+    function subCotact(timetype) {
+        $("#id_timetype").val(timetype);
+        $("#form1").submit();
+    }
 </script>
 
 <?php

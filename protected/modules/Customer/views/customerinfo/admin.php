@@ -72,6 +72,11 @@ $('.search-form form').submit(function(){
 
 <?php $this->endWidget(); ?>
 
+ 
+<?php echo $form->textField($model, 'phone', array('size' => 25, 'maxlength' => 25)); ?>&nbsp;
+<?php echo CHtml::button("拔打电话", array('onclick'=>'javascript:dial()','class' => 'btn btn-sm btn-primary', 'data-placement' => "bottom"));  ?>
+
+ 
 <?php 
 	$dataProvider = $model->search();
 	$dataProvider->pagination->pageVar = 'page';
@@ -230,6 +235,16 @@ $('.search-form form').submit(function(){
 	$(function(){
         $("[title='详情']").attr("target","_blank");
     });
+    function dial(){
+        var phone = $("#CustomerInfo_phone").val();
+        if(phone==''){
+            bootbox.alert('请输入电话号码!');
+            return ;
+        }
+        $.getJSON('index.php?r=Service/service/dialOnly&phone='+$("#CustomerInfo_phone").val(),function(obj){ 
+         bootbox.alert(obj.message);
+    });
+    }
 </script>  	
 <script src="/static/js/secondlevel.js"></script>
 
