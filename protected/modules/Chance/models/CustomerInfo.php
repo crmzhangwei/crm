@@ -64,7 +64,7 @@ class CustomerInfo extends CActiveRecord {
         return array( 
             array('category, cust_type, iskey, status, creator', 'numerical', 'integerOnly' => true),
             array('cust_name, shop_name, corp_name, shop_url, shop_addr, datafrom, memo', 'length', 'max' => 500), 
-            array('phone, qq', 'length', 'max' => 20),
+            array('phone,phone2,phone3,phone4,phone5, qq', 'length', 'max' => 20),
             array('visit_date, assign_time, next_time,last_time, create_time', 'safe'),
             array('mail', 'length', 'max' => 50),
             array('eno, assign_eno', 'length', 'max' => 10),

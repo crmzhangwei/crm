@@ -261,6 +261,7 @@ class CustomerInfoController extends GController {
             $oldCustType = $model->getAttribute("cust_type");
             $model->attributes = $_POST['CustomerInfo'];
             $model->trans_user = $_POST['CustomerInfo']['trans_user'];
+            $tranuser = Users::model()->findByPk($model->trans_user);
             $noteinfo->attributes = $_POST['NoteInfoP'];
             $transaction = Yii::app()->db->beginTransaction();
             if ($this->validCustomerInfo($model)) {
@@ -278,10 +279,9 @@ class CustomerInfoController extends GController {
                 }
                 if ($oldCustType != $newCustType && $newCustType == 6) {
                     //到店 生成成交师库
+                    $tran = new TransCustInfo();
                     $temp = TransCustInfo::model()->findBySql("select * from {{trans_cust_info}} where cust_id=$id");
-                    if (empty($temp)) {
-                        $tran = new TransCustInfo();
-                        $tranuser = Users::model()->findByPk($model->trans_user);
+                    if (empty($temp)) {  
                         $tran->eno = $tranuser->eno;
                         $tran->cust_id = $id;
                         $tran->cust_type = 10;
@@ -301,14 +301,12 @@ class CustomerInfoController extends GController {
                             'creator' => $loginuser->id,
                             'create_time' => time()
                                 ), "cust_id =$id");
-                    }
-
-
+                    } 
                     //业务员已分配资源数减1
                     $sql = "update {{users}} set cust_num=cust_num-1 where id={$loginuser->id}";
                     Yii::app()->db->createCommand($sql)->execute();
                     //成交师已分配资源数加1
-                    $sql = "update {{users}} set cust_num=cust_num+1 where eno='{$tran->eno}'";
+                    $sql = "update {{users}} set cust_num=cust_num+1 where eno='{$tranuser->eno}'";
                     Yii::app()->db->createCommand($sql)->execute();
                 }
 
@@ -868,10 +866,10 @@ class CustomerInfoController extends GController {
                     }
                     if ($cust_type == 6) { 
                         //从非6类转入6类，生成成交师库
+                        $tranuser = Users::model()->findByPk($trans_user);
                         $temp = TransCustInfo::model()->findBySql("select * from {{trans_cust_info}} where cust_id=$cust_id");
                         if (empty($temp)) {
-                            $tran = new TransCustInfo();
-                            $tranuser = Users::model()->findByPk($trans_user);
+                            $tran = new TransCustInfo(); 
                             $tran->eno = $tranuser->eno;
                             $tran->cust_id = $cust_id;
                             $tran->cust_type = 10;
