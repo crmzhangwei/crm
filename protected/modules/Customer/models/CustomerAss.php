@@ -148,7 +148,7 @@ class CustomerAss extends CActiveRecord
 		$criteria->compare('create_time',$this->create_time);
 		$criteria->compare('creator',$this->creator);
 		$sess_eno = Yii::app()->session['user']['eno'];
-		$criteria->addCondition("`status`<>'1' and `status`<>'2' or (`status`='3' and eno='$sess_eno')");  
+		$criteria->addCondition("cust_type<>30 and `status`<>'1' and `status`<>'2' or (`status`='3' and eno='$sess_eno')");  
 		//只看到自己的客户,及下属客户
         $user_arr = Userinfo::getAllChildUsersId(Yii::app()->user->id);
         $user_arr[]=Yii::app()->user->id;

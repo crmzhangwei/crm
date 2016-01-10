@@ -278,7 +278,11 @@ class CustomerinfoController extends GController
 			$assign_time = time();
 	        $create_time = time();
 			$userArr = array();
- 			$allUser = Users::model()->findAll( array('select'=>array('eno','username'),));
+ 			$allUser = Users::model()->findAll( array(
+				'select'=>array('eno','username'),
+				'condition' => 'status=:status',
+				'params' => array(':status'=>'1')
+			));
 			foreach ($allUser as $key => $value) {
 				$userArr[$value['username']] = $value['eno'];
 			}
@@ -296,6 +300,7 @@ class CustomerinfoController extends GController
 				$eno = '';
 				$repetaInfo = '';
 				$i=0;
+				$names=$ph=$QQ=$ctype=$mome='';
 				foreach ((array)$fileArr as $k => $v) {
 	        		if (!$v[1] && !$v[2]) {
 	        			exit("<script>alert(\"对不起, 第".$k."行中的电话和QQ二选一必填, 请填写后重新提交。\");
@@ -333,7 +338,12 @@ class CustomerinfoController extends GController
 						$memo = $v[1] ? "$v[0]".':电话'."$v[1]" : "$v[0]".':QQ'."$v[2]";
 						$eno = $userArr[$v[5]];
 						$phones = trim($v[1]);
-	        			$sql .= "($maxid,'{$v[0]}','$phones','{$v[2]}','$ctype','{$v[4]}', $creator, $create_time,'$eno','$assign_eno',$assign_time),";
+						$names = trim($v[0]);
+						$ph = trim($phones);
+						$QQ = trim($v[2]);
+						$ctype = trim($ctype);
+						$mome = trim($v[4]);
+	        			$sql .= "($maxid,'$names','$ph','$QQ','$ctype','$mome', $creator, $create_time,'$eno','$assign_eno',$assign_time),";
 						$sql3 .= "(1,$maxid,$creator,$assign_time,'$memo'),";
 						$usql .= "update {{users}} set cust_num=cust_num+1 where eno='$eno';";	
 						$i++;

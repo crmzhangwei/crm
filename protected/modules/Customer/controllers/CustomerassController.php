@@ -51,6 +51,12 @@ class CustomerassController extends GController
 			$enoNum = Yii::app()->db->createCommand("select cust_num from {{users}} where eno=:eno")->queryAll(TRUE,array(":eno"=>$eno));
 			$enoNum = $enoNum ? (int)$enoNum[0]['cust_num'] : 0;//该用户已分配的资源数
 			$assCount = explode(',', $model->ids);
+			//黑名单资源数
+			$black = Yii::app()->db->createCommand("select id from {{customer_info}} where eno=:eno and cust_type=:cust_type")->queryAll(TRUE,array(":eno"=>$eno,"cust_type"=>30));
+			$blackNum = count($black);
+			$enoNum = $enoNum ? (int)$enoNum[0]['cust_num'] : 0;//该用户已分配的资源数
+			$enoNum = $enoNum - $blackNum;	
+			$assCount = explode(',', $model->ids);
 			$assCount = count($assCount);//待分配的资源个数
 			$idArr = explode(',', $model->ids);
 			if( ($assCount + $enoNum) > 300 ){//每个用户的分配资源数不能超过300个

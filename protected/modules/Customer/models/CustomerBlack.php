@@ -144,7 +144,7 @@ class CustomerBlack extends CActiveRecord
 		}
 		$criteria->select="t.id,t.eno,t.last_time,t.cust_name,t.shop_name,t.corp_name,t.shop_url,t.shop_addr,t.phone,t.qq,t.mail,t.assign_time,t.next_time,b.old_cust_type,b.lib_type";
 
-		$criteria->addCondition("status=1"); //查询条件  
+		$criteria->addCondition("status=1 and cust_type<>30"); //查询条件  
 		
 		if($this->keyword)
         {
