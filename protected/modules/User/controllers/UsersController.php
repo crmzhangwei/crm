@@ -42,6 +42,15 @@ class UsersController extends GController
 		$deptArr = array('0'=>'--请选择部门--') + $deptArr;
 		if(isset($_POST['Users']))
 		{
+			//先判断用户是否存在
+			$username = trim($_POST['Users']['username']);
+			$name = trim($_POST['Users']['name']);
+			$ret = Users::model()->findAll("username in('$username') or `name` in('$name') or (username in('$name') or `name` in('$username')) ");
+			if($ret){
+				Utils::showMsg(0,'该用户名或姓名已经存在，请重新输入');
+                Yii::app()->end;
+			}
+							
 			$_POST['Users']['birth'] = $_POST['Users']['birth'] ? $_POST['Users']['birth'] : Null;
 			$model->attributes=$_POST['Users']; 
                         $validate = json_decode(CActiveForm::validate($model)) ;

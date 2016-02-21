@@ -320,7 +320,7 @@ class CustomerinfoController extends GController
 							//$phoneSQL = "select cust_name from c_customer_info where (phone in($phone,$phone_0) or phone2 in($phone,$phone_0) or phone3 in($phone,$phone_0) or phone4 in($phone,$phone_0) or phone5 in($phone,$phone_0) ) and status<>2";
 							$ret = CustomerInfo::model()->findAll("(phone in($phone,$phone_0) or phone2 in($phone,$phone_0) or phone3 in($phone,$phone_0) or phone4 in($phone,$phone_0) or phone5 in($phone,$phone_0) ) and `status`<>2");
 							//$ret = Yii::app()->db->createCommand($phoneSQL)->execute();
-							if($ret){
+							if($ret || !is_numeric($phone)){
 								$repetaInfo .= $k.', ';
 								continue;
 							}
