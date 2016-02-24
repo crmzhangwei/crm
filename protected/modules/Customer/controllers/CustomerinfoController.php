@@ -562,7 +562,7 @@ class CustomerinfoController extends GController
 			$userArr[$v->eno] = $v->cust_num;
 		}
 		foreach ($userArr as $k1 => $v1) {
-			$cust_num = CustomerInfo::model()->findAllBySql("select count(*) as id from c_customer_info where eno='$k1' and `status`=0");
+			$cust_num = CustomerInfo::model()->findAllBySql("select count(*) as id from c_customer_info where eno='$k1' and `status`=0 and cust_type<>30");
 			$num = $cust_num[0]['id'];
 			if($v1 != $num){
 				Users::model()->updateAll(array('cust_num'=>$num),'eno=:eno',array(':eno'=>"$k1"));
